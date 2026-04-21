@@ -39,6 +39,12 @@ public:
     [[nodiscard]] bool force_blank() const;
     [[nodiscard]] bool hblank_free() const;
 
+    /* Dirty scanline tracking — mark lines that need re-render */
+    void mark_all_dirty();
+    void mark_dirty(int line);
+    [[nodiscard]] bool is_dirty(int line) const;
+    void clear_dirty(int line);
+
 private:
     void render_text_bg(int line, std::span<const u8> vram, std::span<const u8> palette, int bg, u16* row);
     void render_affine_bg(int line, std::span<const u8> vram, std::span<const u8> palette, int bg, u16* row);
@@ -79,6 +85,10 @@ private:
     bool vblank_ = false;
     bool frame_ready_ = false;
     std::optional<int> scanline_ready_;
+
+    /* Dirty tracking — which scanlines need re-render */
+    std::array<bool, kScreenHeight> scanline_dirty_{};
+    bool all_dirty_ = true;
 };
 
 }  // namespace gba

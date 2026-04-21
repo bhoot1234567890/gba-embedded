@@ -163,21 +163,25 @@ u32 Cartridge::read_vector(std::span<const u8> bytes, u32 address, BusWidth widt
     if (bytes.empty()) {
         return 0xFFFFFFFFu;
     }
-
-    const auto normalized = address % static_cast<u32>(bytes.size());
     const auto read_byte = [&](u32 offset) -> u32 {
-        return bytes[offset % static_cast<u32>(bytes.size())];
+        return offset < bytes.size() ? bytes[offset] : 0xFFu;
     };
 
     switch (width) {
     case BusWidth::Byte:
-        return read_byte(normalized);
+        return address < bytes.size() ? read_byte(address) : 0xFFFFFFFFu;
     case BusWidth::Half: {
-        const auto aligned = align_down(normalized, 2u);
+        const auto aligned = align_down(address, 2u);
+        if (aligned + 2u > bytes.size()) {
+            return 0xFFFFFFFFu;
+        }
         return read_byte(aligned) | (read_byte(aligned + 1) << 8u);
     }
     case BusWidth::Word: {
-        const auto aligned = align_down(normalized, 4u);
+        const auto aligned = align_down(address, 4u);
+        if (aligned + 4u > bytes.size()) {
+            return 0xFFFFFFFFu;
+        }
         return read_byte(aligned) | (read_byte(aligned + 1) << 8u) | (read_byte(aligned + 2) << 16u) |
                (read_byte(aligned + 3) << 24u);
     }

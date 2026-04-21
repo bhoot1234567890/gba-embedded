@@ -26,6 +26,7 @@ public:
 
     [[nodiscard]] BusAccessResult read(u32 address, BusWidth width, AccessType access, u64 cycle_now);
     [[nodiscard]] BusAccessResult write(u32 address, u32 value, BusWidth width, AccessType access, u64 cycle_now);
+    [[nodiscard]] u32 peek_word(u32 address) const;
 
     [[nodiscard]] std::span<const u8> vram() const;
     [[nodiscard]] std::span<const u8> palette() const;
@@ -41,13 +42,17 @@ public:
     [[nodiscard]] bool has_bios() const;
     [[nodiscard]] bool halted() const;
     void clear_halt();
+    void service_timers(u64 cycle_now);
+    [[nodiscard]] u32 service_dma(u64 cycle_now);
 
 private:
     [[nodiscard]] static u32 read_array(std::span<const u8> bytes, u32 address, BusWidth width);
     static void write_array(std::span<u8> bytes, u32 address, u32 value, BusWidth width);
+    [[nodiscard]] static u32 expand_bus_latch(u32 value, BusWidth width);
+    void record_open_bus_read(u32 value, BusWidth width);
     void update_keypad_irq();
     [[nodiscard]] u32 region_cycles(u32 address, BusWidth width, AccessType access, u64 cycle_now) const;
-    [[nodiscard]] BusAccessResult read_io(u32 address, BusWidth width, u64 cycle_now);
+    [[nodiscard]] BusAccessResult read_io(u32 address, BusWidth width, AccessType access, u64 cycle_now);
     [[nodiscard]] BusAccessResult write_io(u32 address, u32 value, BusWidth width, u64 cycle_now);
 
     Cartridge& cartridge_;
@@ -67,8 +72,15 @@ private:
     u16 keyinput_ = 0x03FF;
     u16 keycnt_ = 0;
     u16 waitcnt_ = 0;
+    u16 siocnt_ = 0;
+    u16 rcnt_ = 0;
+    u16 mgba_log_enable_ = 0;
     u8 postflg_ = 0;
     bool halted_ = false;
+    bool bios_latch_valid_ = false;
+    bool rom_latch_valid_ = false;
+    u32 bios_latch_ = 0;
+    u32 rom_latch_ = 0;
     u32 open_bus_ = 0;
     DebugOutputCallback debug_callback_;
     std::array<char, 256> debug_string_{};

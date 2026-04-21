@@ -29,10 +29,22 @@ private:
     void append_sample_pair(s16 left, s16 right);
     [[nodiscard]] static s16 clamp_audio_sample(int sample);
 
+    u16 sound1cnt_l_ = 0;
+    u16 sound1cnt_h_ = 0;
+    u16 sound1cnt_x_ = 0;
+    u16 sound2cnt_l_ = 0;
+    u16 sound2cnt_h_ = 0;
+    u16 sound3cnt_l_ = 0;
+    u16 sound3cnt_h_ = 0;
+    u16 sound3cnt_x_ = 0;
+    u16 sound4cnt_l_ = 0;
+    u16 sound4cnt_h_ = 0;
     u16 soundcnt_l_ = 0;
     u16 soundcnt_h_ = 0;
     u16 soundcnt_x_ = 0;
     u16 soundbias_ = 0x0200;
+    std::array<u16, 8> wave_ram_{};
+    std::array<u32, 2> fifo_latch_{};
     std::array<std::deque<s8>, 2> fifo_{};
     std::vector<s16> mix_buffer_{};
     bool fifo_request_a_ = false;

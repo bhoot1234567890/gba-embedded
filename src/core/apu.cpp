@@ -7,10 +7,22 @@
 namespace gba {
 
 void Apu::reset() {
+    sound1cnt_l_ = 0;
+    sound1cnt_h_ = 0;
+    sound1cnt_x_ = 0;
+    sound2cnt_l_ = 0;
+    sound2cnt_h_ = 0;
+    sound3cnt_l_ = 0;
+    sound3cnt_h_ = 0;
+    sound3cnt_x_ = 0;
+    sound4cnt_l_ = 0;
+    sound4cnt_h_ = 0;
     soundcnt_l_ = 0;
     soundcnt_h_ = 0;
     soundcnt_x_ = 0;
     soundbias_ = 0x0200;
+    wave_ram_.fill(0xFFFFu);
+    fifo_latch_.fill(0);
     fifo_[0].clear();
     fifo_[1].clear();
     mix_buffer_.clear();
@@ -21,14 +33,51 @@ void Apu::reset() {
 u32 Apu::read_register(u32 address, BusWidth width) const {
     auto read_half = [&](u32 half_address) -> u16 {
         switch (half_address) {
+        case 0x04000060u:
+            return static_cast<u16>(sound1cnt_l_ & 0x007Fu);
+        case 0x04000062u:
+            return static_cast<u16>(sound1cnt_h_ & 0xFFC0u);
+        case 0x04000064u:
+            return static_cast<u16>(sound1cnt_x_ & 0x4000u);
+        case 0x04000068u:
+            return static_cast<u16>(sound2cnt_l_ & 0xFFC0u);
+        case 0x0400006Cu:
+            return static_cast<u16>(sound2cnt_h_ & 0x4000u);
+        case 0x04000070u:
+            return static_cast<u16>(sound3cnt_l_ & 0x00E0u);
+        case 0x04000072u:
+            return static_cast<u16>(sound3cnt_h_ & 0xE000u);
+        case 0x04000074u:
+            return static_cast<u16>(sound3cnt_x_ & 0x4000u);
+        case 0x04000078u:
+            return static_cast<u16>(sound4cnt_l_ & 0xFF00u);
+        case 0x0400007Cu:
+            return static_cast<u16>(sound4cnt_h_ & 0x40FFu);
         case kSoundCntL:
-            return soundcnt_l_;
+            return static_cast<u16>(soundcnt_l_ & 0xFF77u);
         case kSoundCntH:
-            return soundcnt_h_;
+            return static_cast<u16>(soundcnt_h_ & 0x770Fu);
         case kSoundCntX:
             return soundcnt_x_;
         case kSoundBias:
             return soundbias_;
+        case 0x04000090u:
+        case 0x04000092u:
+        case 0x04000094u:
+        case 0x04000096u:
+        case 0x04000098u:
+        case 0x0400009Au:
+        case 0x0400009Cu:
+        case 0x0400009Eu:
+            return wave_ram_[(half_address - 0x04000090u) / 2u];
+        case kFifoA:
+            return static_cast<u16>(fifo_latch_[0] & 0xFFFFu);
+        case kFifoA + 2u:
+            return static_cast<u16>((fifo_latch_[0] >> 16u) & 0xFFFFu);
+        case kFifoB:
+            return static_cast<u16>(fifo_latch_[1] & 0xFFFFu);
+        case kFifoB + 2u:
+            return static_cast<u16>((fifo_latch_[1] >> 16u) & 0xFFFFu);
         default:
             return 0;
         }
@@ -50,6 +99,36 @@ void Apu::write_register(u32 address, u32 value, BusWidth width, u64 cycle_now) 
 
     auto write_half = [&](u32 half_address, u16 half_value) {
         switch (half_address) {
+        case 0x04000060u:
+            sound1cnt_l_ = half_value;
+            break;
+        case 0x04000062u:
+            sound1cnt_h_ = half_value;
+            break;
+        case 0x04000064u:
+            sound1cnt_x_ = half_value;
+            break;
+        case 0x04000068u:
+            sound2cnt_l_ = half_value;
+            break;
+        case 0x0400006Cu:
+            sound2cnt_h_ = half_value;
+            break;
+        case 0x04000070u:
+            sound3cnt_l_ = half_value;
+            break;
+        case 0x04000072u:
+            sound3cnt_h_ = half_value;
+            break;
+        case 0x04000074u:
+            sound3cnt_x_ = half_value;
+            break;
+        case 0x04000078u:
+            sound4cnt_l_ = half_value;
+            break;
+        case 0x0400007Cu:
+            sound4cnt_h_ = half_value;
+            break;
         case kSoundCntL:
             soundcnt_l_ = half_value;
             break;
@@ -68,17 +147,30 @@ void Apu::write_register(u32 address, u32 value, BusWidth width, u64 cycle_now) 
         case kSoundBias:
             soundbias_ = half_value;
             break;
+        case 0x04000090u:
+        case 0x04000092u:
+        case 0x04000094u:
+        case 0x04000096u:
+        case 0x04000098u:
+        case 0x0400009Au:
+        case 0x0400009Cu:
+        case 0x0400009Eu:
+            wave_ram_[(half_address - 0x04000090u) / 2u] = half_value;
+            break;
         default:
             break;
         }
     };
 
     if (address == kFifoA || address == kFifoA + 2u || address == kFifoB || address == kFifoB + 2u) {
+        const auto fifo_index = address == kFifoB || address == kFifoB + 2u ? 1 : 0;
         if (width == BusWidth::Word) {
-            push_fifo(address == kFifoB || address == kFifoB + 2u ? 1 : 0, value);
+            fifo_latch_[static_cast<std::size_t>(fifo_index)] = value;
+            push_fifo(fifo_index, value);
         } else if (width == BusWidth::Half) {
             const auto word = static_cast<u32>(value & 0xFFFFu) | (static_cast<u32>(value & 0xFFFFu) << 16u);
-            push_fifo(address == kFifoB || address == kFifoB + 2u ? 1 : 0, word);
+            fifo_latch_[static_cast<std::size_t>(fifo_index)] = word;
+            push_fifo(fifo_index, word);
         }
         return;
     }

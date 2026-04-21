@@ -60,6 +60,13 @@ if(GBA_BUILD_TOOLS)
     )
 
     target_link_libraries(gba_trace_runner PRIVATE gba_core)
+
+    add_executable(
+        gba_suite_runner
+        tests/suite_runner.cpp
+    )
+
+    target_link_libraries(gba_suite_runner PRIVATE gba_core)
 endif()
 
 if(GBA_WARNINGS_AS_ERRORS)

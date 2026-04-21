@@ -1,0 +1,24 @@
+# Enable C++ exceptions (test framework uses try/catch)
+CONFIG_CXX_EXCEPTIONS=y
+CONFIG_CXX_EXCEPTIONS_EMULATION_POOL_SIZE=64
+
+# Enable RTTI
+CONFIG_CXX_RTTI=y
+
+# ESP32-S3 target
+CONFIG_IDF_TARGET="esp32s3"
+
+# Minimal partition — app only, no OTA
+CONFIG_PARTITION_TABLE_SINGLE_APP_LARGE=y
+
+# Reduce log verbosity for test output
+CONFIG_LOG_DEFAULT_LEVEL_INFO=y
+
+# Increase main task stack for emulator
+CONFIG_ESP_MAIN_TASK_STACK_SIZE=32768
+
+# Enable PSRAM (QEMU provides 32MB)
+CONFIG_SPIRAM=y
+CONFIG_SPIRAM_MODE_OCT=y
+CONFIG_SPIRAM_FETCH_INSTRUCTIONS=y
+CONFIG_SPIRAM_RODATA=y

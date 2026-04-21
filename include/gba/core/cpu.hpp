@@ -83,12 +83,15 @@ private:
     void update_nz(u32 value);
     void update_nzc_add(u32 lhs, u32 rhs, u64 result);
     void update_nzc_sub(u32 lhs, u32 rhs, u64 result);
+    void update_nzcv_adc(u32 lhs, u32 rhs, bool carry_in, u32 result);
+    void update_nzcv_sbc(u32 lhs, u32 rhs, bool carry_in, u32 result);
 
     Bus& bus_;
     IrqController& irq_;
     TraceLogger* logger_;
     CpuState state_{};
     u64 current_cycle_ = 0;
+    bool hle_swi_enabled_ = false;
 };
 
 }  // namespace gba

@@ -401,6 +401,39 @@ u32 Arm7tdmi::execute_arm(u32 instruction) {
         return 0;
     }
 
+    if ((instruction & 0x0F8000F0u) == 0x00800090u) {
+        const auto accumulate = test_bit(instruction, 21);
+        const auto set_flags = test_bit(instruction, 20);
+        const auto unsigned_mul = !test_bit(instruction, 22);
+        const auto rd_hi = (instruction >> 16u) & 0xFu;
+        const auto rd_lo = (instruction >> 12u) & 0xFu;
+        const auto rs = (instruction >> 8u) & 0xFu;
+        const auto rm = instruction & 0xFu;
+
+        u64 product;
+        if (unsigned_mul) {
+            product = static_cast<u64>(read_reg(rm)) * static_cast<u64>(read_reg(rs));
+        } else {
+            product = static_cast<u64>(static_cast<s64>(sign_extend<32>(read_reg(rm)))
+                                       * static_cast<s64>(sign_extend<32>(read_reg(rs))));
+        }
+
+        u64 result = accumulate
+            ? product + ((static_cast<u64>(state_.regs[rd_hi]) << 32u) | static_cast<u64>(state_.regs[rd_lo]))
+            : product;
+
+        state_.regs[rd_lo] = static_cast<u32>(result);
+        state_.regs[rd_hi] = static_cast<u32>(result >> 32u);
+
+        if (set_flags) {
+            update_nz(static_cast<u32>(result >> 32u));
+            assign_bit(state_.cpsr, 29, (result >> 63u) != 0);
+        }
+
+        current_cycle_ += 3;
+        return 0;
+    }
+
     if ((instruction & 0x0E000090u) == 0x00000090u) {
         const auto pre = test_bit(instruction, 24);
         const auto up = test_bit(instruction, 23);
@@ -482,7 +515,14 @@ u32 Arm7tdmi::execute_arm(u32 instruction) {
             auto& spsr = spsr_for_mode(state_, mode());
             spsr = (spsr & ~mask) | (value & mask);
         } else if (privileged_mode(mode())) {
-            state_.cpsr = (state_.cpsr & ~mask) | (value & mask);
+            const auto old_mode = mode();
+            const auto new_cpsr = (state_.cpsr & ~mask) | (value & mask);
+            const auto new_mode_val = static_cast<CpuMode>(new_cpsr & 0x1Fu);
+            if (new_mode_val != old_mode) {
+                state_.cpsr = (state_.cpsr & ~0x1Fu) | static_cast<u32>(old_mode);
+                switch_mode(new_mode_val);
+            }
+            state_.cpsr = new_cpsr;
         }
         ++current_cycle_;
         return 0;
@@ -552,6 +592,7 @@ u32 Arm7tdmi::execute_arm(u32 instruction) {
         const auto up = test_bit(instruction, 23);
         const auto write_back = test_bit(instruction, 21);
         const auto load = test_bit(instruction, 20);
+        const auto s_bit = test_bit(instruction, 22);
         const auto rn = (instruction >> 16u) & 0xFu;
         const auto register_list = instruction & 0xFFFFu;
         const auto count = std::popcount(register_list);
@@ -566,6 +607,9 @@ u32 Arm7tdmi::execute_arm(u32 instruction) {
         auto address = up ? (base + (pre ? 4u : 0u)) : (base - (4u * count) + (pre ? 0u : 4u));
         auto access = AccessType::NonSequential;
 
+        const auto is_user_bank = s_bit && !load;
+        const auto is_user_bank_ldm = s_bit && load && !test_bit(register_list, 15);
+
         for (u32 reg = 0; reg < 16u; ++reg) {
             if (!test_bit(register_list, reg)) {
                 continue;
@@ -576,20 +620,36 @@ u32 Arm7tdmi::execute_arm(u32 instruction) {
                 current_cycle_ += result.cycles;
                 const auto value = result.value;
                 if (reg == 15u) {
-                    write_pc(value);
+                    if (s_bit && privileged_mode(mode())) {
+                        const auto old_mode = mode();
+                        const auto new_cpsr = spsr_for_mode(state_, mode());
+                        const auto new_mode_val = static_cast<CpuMode>(new_cpsr & 0x1Fu);
+                        if (new_mode_val != old_mode) {
+                            switch_mode(new_mode_val);
+                        }
+                        state_.cpsr = new_cpsr;
+                    }
+                    branch_to(value, test_bit(state_.cpsr, 5));
+                } else if (is_user_bank_ldm && reg >= 8u && reg <= 14u) {
+                    write_user_reg(reg, value);
                 } else {
                     state_.regs[reg] = value;
                 }
             } else {
-                const auto value = reg == 15u ? pc_visible() : state_.regs[reg];
-                const auto result = bus_.write(address, value, BusWidth::Word, access, current_cycle_);
+                u32 val;
+                if (is_user_bank && reg >= 8u && reg <= 14u) {
+                    val = read_user_reg(reg);
+                } else {
+                    val = reg == 15u ? pc_visible() : state_.regs[reg];
+                }
+                const auto result = bus_.write(address, val, BusWidth::Word, access, current_cycle_);
                 current_cycle_ += result.cycles;
             }
             access = AccessType::Sequential;
             address += 4u;
         }
 
-        if (write_back) {
+        if (write_back && !(load && test_bit(register_list, rn))) {
             const auto delta = 4u * count;
             state_.regs[rn] = up ? base + delta : base - delta;
         }
@@ -706,11 +766,13 @@ u32 Arm7tdmi::execute_arm(u32 instruction) {
             result = lhs - operand2.value;
             update_nzc_sub(lhs, operand2.value, static_cast<u64>(result));
             break;
-        case 0xB:
+        case 0xB: {
             write_result = false;
-            result = lhs + operand2.value;
-            update_nzc_add(lhs, operand2.value, static_cast<u64>(result));
+            const auto wide = static_cast<u64>(lhs) + operand2.value;
+            result = static_cast<u32>(wide);
+            update_nzc_add(lhs, operand2.value, wide);
             break;
+        }
         case 0xC:
             result = lhs | operand2.value;
             break;
@@ -731,7 +793,13 @@ u32 Arm7tdmi::execute_arm(u32 instruction) {
         if (write_result) {
             if (rd == 15u) {
                 if (set_flags && privileged_mode(mode())) {
-                    state_.cpsr = spsr_for_mode(state_, mode());
+                    const auto old_mode = mode();
+                    const auto new_cpsr = spsr_for_mode(state_, mode());
+                    const auto new_mode_val = static_cast<CpuMode>(new_cpsr & 0x1Fu);
+                    if (new_mode_val != old_mode) {
+                        switch_mode(new_mode_val);
+                    }
+                    state_.cpsr = new_cpsr;
                     branch_to(result, test_bit(state_.cpsr, 5));
                 } else {
                     write_pc(result);
@@ -922,8 +990,7 @@ u32 Arm7tdmi::execute_thumb(u16 instruction) {
             break;
         }
         case 0x8:
-            reg(rd) &= reg(rs);
-            update_nz(reg(rd));
+            update_nz(reg(rd) & reg(rs));
             break;
         case 0x9: {
             const auto result = 0 - reg(rs);
@@ -1201,7 +1268,7 @@ u32 Arm7tdmi::execute_thumb(u16 instruction) {
         const auto condition = (instruction >> 8u) & 0xFu;
         if (condition_passed(condition)) {
             const auto offset = sign_extend<9>((instruction & 0xFFu) << 1u);
-            branch_to(state_.regs[15] + static_cast<u32>(offset), true);
+            branch_to(state_.regs[15] + 2u + static_cast<u32>(offset), true);
             current_cycle_ += 2;
         } else {
             ++current_cycle_;
@@ -1211,7 +1278,7 @@ u32 Arm7tdmi::execute_thumb(u16 instruction) {
 
     if ((instruction & 0xF800u) == 0xE000u) {
         const auto offset = sign_extend<12>((instruction & 0x7FFu) << 1u);
-        branch_to(state_.regs[15] + static_cast<u32>(offset), true);
+        branch_to(state_.regs[15] + 2u + static_cast<u32>(offset), true);
         current_cycle_ += 2;
         return 0;
     }
@@ -1225,7 +1292,7 @@ u32 Arm7tdmi::execute_thumb(u16 instruction) {
 
     if ((instruction & 0xF800u) == 0xF800u) {
         const auto target = reg(14) + ((instruction & 0x7FFu) << 1u);
-        reg(14) = (state_.regs[15] - 2u) | 1u;
+        reg(14) = (state_.regs[15]) | 1u;
         branch_to(target, true);
         current_cycle_ += 2;
         return 0;
@@ -1241,6 +1308,31 @@ u32 Arm7tdmi::execute_thumb(u16 instruction) {
     raise_exception(ExceptionType::Undefined);
     current_cycle_ += 3;
     return 0;
+}
+
+u32 Arm7tdmi::read_user_reg(u32 reg) {
+    if (reg >= 8u && reg <= 12u) {
+        return state_.banked_usr_r8_r12[reg - 8u];
+    }
+    if (reg == 13u) {
+        return state_.banked_usr_r13_r14[0];
+    }
+    if (reg == 14u) {
+        return state_.banked_usr_r13_r14[1];
+    }
+    return state_.regs[reg];
+}
+
+void Arm7tdmi::write_user_reg(u32 reg, u32 value) {
+    if (reg >= 8u && reg <= 12u) {
+        state_.banked_usr_r8_r12[reg - 8u] = value;
+    } else if (reg == 13u) {
+        state_.banked_usr_r13_r14[0] = value;
+    } else if (reg == 14u) {
+        state_.banked_usr_r13_r14[1] = value;
+    } else {
+        state_.regs[reg] = value;
+    }
 }
 
 void Arm7tdmi::switch_mode(CpuMode new_mode) {

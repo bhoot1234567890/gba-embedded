@@ -78,6 +78,8 @@ private:
     void switch_mode(CpuMode new_mode);
     void enter_exception(ExceptionType type, CpuMode target_mode, u32 vector, bool mask_irq, bool mask_fiq, u32 return_address);
     void branch_to(u32 address, bool thumb);
+    u32 read_user_reg(u32 reg);
+    void write_user_reg(u32 reg, u32 value);
     void update_nz(u32 value);
     void update_nzc_add(u32 lhs, u32 rhs, u64 result);
     void update_nzc_sub(u32 lhs, u32 rhs, u64 result);

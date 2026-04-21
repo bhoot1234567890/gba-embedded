@@ -107,19 +107,25 @@ BusAccessResult Bus::write(u32 address, u32 value, BusWidth width, AccessType ac
     result.value = value;
     result.cycles = region_cycles(address, width, access, cycle_now);
 
+    const auto ewram_w = std::span<u8>{ewram_.get(), kEwramSize};
+    const auto iwram_w = std::span<u8>{iwram_.get(), kIwramSize};
+    const auto palette_w = std::span<u8>{palette_.get(), kPaletteSize};
+    const auto vram_w = std::span<u8>{vram_.get(), kVramSize};
+    const auto oam_w = std::span<u8>{oam_.get(), kOamSize};
+
     if ((address & 0x0F000000u) == 0x02000000u) {
-        write_array(ewram_, address - 0x02000000u, value, width);
+        write_array(ewram_w, address - 0x02000000u, value, width);
     } else if ((address & 0x0F000000u) == 0x03000000u) {
-        write_array(iwram_, address - 0x03000000u, value, width);
+        write_array(iwram_w, address - 0x03000000u, value, width);
     } else if ((address & 0x0F000000u) == 0x04000000u) {
         return write_io(address, value, width, cycle_now);
     } else if ((address & 0x0F000000u) == 0x05000000u) {
         if (width == BusWidth::Byte) {
             const auto aligned = align_down(address - 0x05000000u, 2u);
             const auto replicated = static_cast<u16>((value & 0xFFu) * 0x0101u);
-            write_array(palette_, aligned, replicated, BusWidth::Half);
+            write_array(palette_w, aligned, replicated, BusWidth::Half);
         } else {
-            write_array(palette_, address - 0x05000000u, value, width);
+            write_array(palette_w, address - 0x05000000u, value, width);
         }
     } else if ((address & 0x0F000000u) == 0x06000000u) {
         auto offset = (address - 0x06000000u) & 0x1FFFFu;
@@ -133,13 +139,13 @@ BusAccessResult Bus::write(u32 address, u32 value, BusWidth width, AccessType ac
             }
             const auto aligned = align_down(offset, 2u);
             const auto replicated = static_cast<u16>((value & 0xFFu) * 0x0101u);
-            write_array(vram_, aligned, replicated, BusWidth::Half);
+            write_array(vram_w, aligned, replicated, BusWidth::Half);
         } else {
-            write_array(vram_, offset, value, width);
+            write_array(vram_w, offset, value, width);
         }
     } else if ((address & 0x0F000000u) == 0x07000000u) {
         if (width != BusWidth::Byte) {
-            write_array(oam_, address - 0x07000000u, value, width);
+            write_array(oam_w, address - 0x07000000u, value, width);
         }
     } else if ((address & 0x0E000000u) == 0x0E000000u) {
         cartridge_.write_save(address - 0x0E000000u, value, width);

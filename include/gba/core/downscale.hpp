@@ -29,20 +29,20 @@ constexpr u32 kOutH = 128;
 
 static inline u16 avg565_2(u16 a, u16 b) {
     /* Decompose, average with rounding, recompose */
-    const u32 r = ((a >> 11u) & 0x1Fu) + ((b >> 11u) & 0x1Fu);
-    const u32 g = ((a >>  5u) & 0x3Fu) + ((b >>  5u) & 0x3Fu);
-    const u32 bl = (a & 0x1Fu) + (b & 0x1Fu);
-    return static_cast<u16>(((r + 1u) << 10u) | ((g + 1u) << 4u) | ((bl + 1u) >> 1u));
+    const u32 r = (((a >> 11u) & 0x1Fu) + ((b >> 11u) & 0x1Fu) + 1u) >> 1u;
+    const u32 g = (((a >>  5u) & 0x3Fu) + ((b >>  5u) & 0x3Fu) + 1u) >> 1u;
+    const u32 bl = (((a       ) & 0x1Fu) + ((b       ) & 0x1Fu) + 1u) >> 1u;
+    return static_cast<u16>((r << 11u) | (g << 5u) | bl);
 }
 
 static inline u16 avg565_4(u16 a, u16 b, u16 c, u16 d) {
-    const u32 r = ((a >> 11u) & 0x1Fu) + ((b >> 11u) & 0x1Fu)
-                + ((c >> 11u) & 0x1Fu) + ((d >> 11u) & 0x1Fu);
-    const u32 g = ((a >>  5u) & 0x3Fu) + ((b >>  5u) & 0x3Fu)
-                + ((c >>  5u) & 0x3Fu) + ((d >>  5u) & 0x3Fu);
-    const u32 bl = (a & 0x1Fu) + (b & 0x1Fu)
-                 + (c & 0x1Fu) + (d & 0x1Fu);
-    return static_cast<u16>(((r + 2u) << 9u) | ((g + 2u) << 3u) | ((bl + 2u) >> 2u));
+    const u32 r = (((a >> 11u) & 0x1Fu) + ((b >> 11u) & 0x1Fu)
+                 + ((c >> 11u) & 0x1Fu) + ((d >> 11u) & 0x1Fu) + 2u) >> 2u;
+    const u32 g = (((a >>  5u) & 0x3Fu) + ((b >>  5u) & 0x3Fu)
+                 + ((c >>  5u) & 0x3Fu) + ((d >>  5u) & 0x3Fu) + 2u) >> 2u;
+    const u32 bl = (((a       ) & 0x1Fu) + ((b       ) & 0x1Fu)
+                  + ((c       ) & 0x1Fu) + ((d       ) & 0x1Fu) + 2u) >> 2u;
+    return static_cast<u16>((r << 11u) | (g << 5u) | bl);
 }
 
 /* ── Pre-computed LUT (~1KB, init once) ── */

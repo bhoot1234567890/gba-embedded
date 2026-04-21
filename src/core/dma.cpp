@@ -1,6 +1,7 @@
 #include "gba/core/dma.hpp"
 
 #include <algorithm>
+#include <cstdio>
 
 #include "gba/core/apu.hpp"
 #include "gba/core/bus.hpp"
@@ -11,11 +12,44 @@ namespace gba {
 
 namespace {
 
+#ifndef GBA_TRACE_DMA
+#define GBA_TRACE_DMA 0
+#endif
+
 [[nodiscard]] u16 dma_irq_mask(int index) {
     return static_cast<u16>(IrqDma0 << index);
 }
 
-[[nodiscard]] u32 apply_address_mode(u32 address, u32 transfer_bytes, u32 mode) {
+[[nodiscard]] constexpr u32 src_mask(std::size_t channel) {
+    return channel == 0 ? 0x07FFFFFFu : 0x0FFFFFFFu;
+}
+
+[[nodiscard]] constexpr u32 dst_mask(std::size_t channel) {
+    return channel <= 2 ? 0x07FFFFFFu : 0x0FFFFFFFu;
+}
+
+[[nodiscard]] constexpr u32 len_mask(std::size_t channel) {
+    return channel == 3 ? 0xFFFFu : 0x3FFFu;
+}
+
+[[nodiscard]] constexpr u16 control_read_mask(std::size_t channel) {
+    return channel == 3 ? 0xFFE0u : 0xF7E0u;
+}
+
+[[nodiscard]] u32 apply_src_mode(u32 address, u32 transfer_bytes, u32 mode) {
+    switch (mode) {
+    case 0:
+    case 3:
+        return address + transfer_bytes;
+    case 1:
+        return address - transfer_bytes;
+    case 2:
+    default:
+        return address;
+    }
+}
+
+[[nodiscard]] u32 apply_dst_mode(u32 address, u32 transfer_bytes, u32 mode) {
     switch (mode) {
     case 0:
     case 3:
@@ -53,9 +87,9 @@ u32 DmaEngine::read_register(u32 address, BusWidth width) const {
         case 6:
             return static_cast<u16>((dma.destination >> (((offset - 4u) & 2u) * 8u)) & 0xFFFFu);
         case 8:
-            return dma.word_count;
+            return 0;
         case 10:
-            return dma.control;
+            return static_cast<u16>(dma.control & control_read_mask(channel));
         default:
             return 0;
         }
@@ -96,18 +130,21 @@ void DmaEngine::write_register(u32 address, u32 value, BusWidth width, u64 cycle
             dma.destination = (dma.destination & 0xFFFF0000u) | half_value;
             break;
         case 6:
-            dma.destination = (dma.destination & 0x0000FFFFu) | (static_cast<u32>(half_value) << 16u);
+            dma.destination =
+                (dma.destination & 0x0000FFFFu) | (static_cast<u32>(half_value) << 16u);
             break;
         case 8:
-            dma.word_count = half_value;
+            dma.word_count = static_cast<u16>(half_value & len_mask(channel));
             break;
         case 10: {
-            const auto was_enabled = enabled(dma);
             dma.control = half_value;
             const auto now_enabled = enabled(dma);
-            if (!was_enabled && now_enabled && start_timing(dma) == DmaStartTiming::Immediate) {
-                dma.pending = true;
-                next_event_cycle_ = std::min(next_event_cycle_, cycle_now);
+            if (now_enabled) {
+                latch_transfer_state(channel);
+                if (start_timing(dma) == DmaStartTiming::Immediate) {
+                    dma.pending = true;
+                    next_event_cycle_ = std::min(next_event_cycle_, cycle_now);
+                }
             }
             break;
         }
@@ -139,22 +176,24 @@ void DmaEngine::request_hblank(u64 cycle_now) {
 }
 
 void DmaEngine::request_fifo_a(u64 cycle_now) {
-    for (std::size_t index = 1; index <= 2 && index < channels_.size(); ++index) {
-        auto& channel = channels_[index];
-        if (enabled(channel) && start_timing(channel) == DmaStartTiming::Special && channel.destination == kFifoA) {
-            channel.pending = true;
-            next_event_cycle_ = std::min(next_event_cycle_, cycle_now);
+    auto& channel = channels_[1];
+    if (enabled(channel) && start_timing(channel) == DmaStartTiming::Special) {
+        if (channel.current_count == 0) {
+            latch_transfer_state(1);
         }
+        channel.pending = true;
+        next_event_cycle_ = std::min(next_event_cycle_, cycle_now);
     }
 }
 
 void DmaEngine::request_fifo_b(u64 cycle_now) {
-    for (std::size_t index = 1; index <= 2 && index < channels_.size(); ++index) {
-        auto& channel = channels_[index];
-        if (enabled(channel) && start_timing(channel) == DmaStartTiming::Special && channel.destination == kFifoB) {
-            channel.pending = true;
-            next_event_cycle_ = std::min(next_event_cycle_, cycle_now);
+    auto& channel = channels_[2];
+    if (enabled(channel) && start_timing(channel) == DmaStartTiming::Special) {
+        if (channel.current_count == 0) {
+            latch_transfer_state(2);
         }
+        channel.pending = true;
+        next_event_cycle_ = std::min(next_event_cycle_, cycle_now);
     }
 }
 
@@ -186,38 +225,72 @@ u32 DmaEngine::service_due(u64 cycle_now, Bus& bus, IrqController& irq) {
         }
 
         const auto fifo_mode = (index == 1u || index == 2u) &&
-                               start_timing(channel) == DmaStartTiming::Special &&
-                               (channel.destination == kFifoA || channel.destination == kFifoB);
-        const auto units = fifo_mode ? 4u : transfer_count(channel);
+                               start_timing(channel) == DmaStartTiming::Special;
+        const auto units = fifo_mode ? 4u : channel.current_count;
         const auto unit_bytes = fifo_mode ? 4u : transfer_unit_bytes(channel);
 
         const auto dest_mode = static_cast<u32>((channel.control >> 5u) & 0x3u);
         const auto src_mode = static_cast<u32>((channel.control >> 7u) & 0x3u);
 
-        const auto original_dest = channel.destination;
-        auto source = channel.source;
-        auto destination = channel.destination;
+        const auto addr_align_mask = unit_bytes == 4u ? ~0x3u : ~0x1u;
+        auto source = channel.current_source & addr_align_mask;
+        auto destination = channel.current_destination & addr_align_mask;
+#if GBA_TRACE_DMA
+        std::fprintf(stderr,
+                     "DMA ch=%zu src=%08X dst=%08X cnt=%u bytes=%u ctl=%04X fifo=%d\n",
+                     index, source, destination, units, unit_bytes, channel.control, fifo_mode ? 1 : 0);
+#endif
+
+        bool did_access_rom = false;
 
         for (u32 unit = 0; unit < units; ++unit) {
             const auto transfer_cycle = cycle_now + cycles_consumed;
             const auto width = unit_bytes == 4u ? BusWidth::Word : BusWidth::Half;
-            const auto read_result = bus.read(source, width, AccessType::Dma, transfer_cycle);
+
+            auto src_access = AccessType::Dma;
+            if (source >= 0x08000000u) {
+                src_access = did_access_rom ? (AccessType::Dma | AccessType::Sequential) : AccessType::Dma;
+                did_access_rom = true;
+            }
+
+            const auto read_result = bus.read(source, width, src_access, transfer_cycle);
             cycles_consumed += read_result.cycles;
-            const auto write_result = bus.write(destination, read_result.value, width, AccessType::Dma, transfer_cycle + read_result.cycles);
+            const auto read_value = source < 0x02000000u ? channel.bus_latch : read_result.value;
+            if (source >= 0x02000000u) {
+                channel.bus_latch = unit_bytes == 2u
+                    ? (read_result.value << 16u) | (read_result.value & 0xFFFFu)
+                    : read_result.value;
+            }
+
+            auto dst_access = AccessType::Dma;
+            if (destination >= 0x08000000u && !did_access_rom) {
+                dst_access = AccessType::Dma;
+                did_access_rom = true;
+            }
+
+            const auto write_result = bus.write(destination, read_value, width, dst_access, transfer_cycle + read_result.cycles);
             cycles_consumed += write_result.cycles;
 
-            source = apply_address_mode(source, unit_bytes, src_mode == 3u ? 2u : src_mode);
-            destination = fifo_mode ? destination : apply_address_mode(destination, unit_bytes, dest_mode);
+            source = apply_src_mode(source, unit_bytes, src_mode);
+            destination = fifo_mode ? destination : apply_dst_mode(destination, unit_bytes, dest_mode);
         }
 
-        channel.source = source;
-        channel.destination = destination;
+        channel.current_source = source;
+        channel.current_destination = destination;
+        channel.current_count = units;
         channel.pending = false;
 
         const auto repeat = test_bit(channel.control, 9);
         if (repeat && start_timing(channel) != DmaStartTiming::Immediate) {
-            if (dest_mode == 3u) {
-                channel.destination = original_dest;
+            if (fifo_mode) {
+                channel.current_count = 4;
+            } else {
+                auto new_count = static_cast<u16>(channel.word_count & len_mask(index));
+                channel.current_count = new_count == 0 ? (len_mask(index) + 1u) : new_count;
+            }
+            if (dest_mode == 3u && !fifo_mode) {
+                auto mask = unit_bytes == 4u ? ~3u : ~1u;
+                channel.current_destination = channel.destination & mask;
             }
         } else {
             finish_channel(static_cast<int>(index));
@@ -243,11 +316,11 @@ bool DmaEngine::enabled(const DmaChannel& channel) {
     return test_bit(channel.control, 15);
 }
 
-u32 DmaEngine::transfer_count(const DmaChannel& channel) {
+u32 DmaEngine::transfer_count(const DmaChannel& channel, std::size_t channel_index) {
     if (channel.word_count != 0) {
         return channel.word_count;
     }
-    return 0x4000u;
+    return channel_index == 3u ? 0x10000u : 0x4000u;
 }
 
 u32 DmaEngine::transfer_unit_bytes(const DmaChannel& channel) {
@@ -255,8 +328,12 @@ u32 DmaEngine::transfer_unit_bytes(const DmaChannel& channel) {
 }
 
 void DmaEngine::mark_pending_if_enabled(DmaStartTiming timing, u64 cycle_now) {
-    for (auto& channel : channels_) {
+    for (std::size_t index = 0; index < channels_.size(); ++index) {
+        auto& channel = channels_[index];
         if (enabled(channel) && start_timing(channel) == timing) {
+            if (channel.current_count == 0) {
+                latch_transfer_state(index);
+            }
             channel.pending = true;
             next_event_cycle_ = std::min(next_event_cycle_, cycle_now);
         }
@@ -266,6 +343,14 @@ void DmaEngine::mark_pending_if_enabled(DmaStartTiming timing, u64 cycle_now) {
 void DmaEngine::finish_channel(int index) {
     auto& channel = channels_[static_cast<std::size_t>(index)];
     channel.control = static_cast<u16>(channel.control & ~0x8000u);
+    channel.current_count = 0;
+}
+
+void DmaEngine::latch_transfer_state(std::size_t index) {
+    auto& channel = channels_[index];
+    channel.current_source = channel.source & src_mask(index);
+    channel.current_destination = channel.destination & dst_mask(index);
+    channel.current_count = transfer_count(channel, index);
 }
 
 }  // namespace gba

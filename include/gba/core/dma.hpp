@@ -23,8 +23,10 @@ struct DmaChannel {
     u16 word_count = 0;
     u16 control = 0;
     bool pending = false;
-    bool fifo_a = false;
-    bool fifo_b = false;
+    u32 current_source = 0;
+    u32 current_destination = 0;
+    u32 current_count = 0;
+    u32 bus_latch = 0;
 };
 
 class DmaEngine {
@@ -48,10 +50,11 @@ public:
 private:
     [[nodiscard]] static DmaStartTiming start_timing(const DmaChannel& channel);
     [[nodiscard]] static bool enabled(const DmaChannel& channel);
-    [[nodiscard]] static u32 transfer_count(const DmaChannel& channel);
+    [[nodiscard]] static u32 transfer_count(const DmaChannel& channel, std::size_t channel_index);
     [[nodiscard]] static u32 transfer_unit_bytes(const DmaChannel& channel);
     void mark_pending_if_enabled(DmaStartTiming timing, u64 cycle_now);
     void finish_channel(int index);
+    void latch_transfer_state(std::size_t index);
 
     std::array<DmaChannel, 4> channels_{};
     u64 next_event_cycle_ = std::numeric_limits<u64>::max();

@@ -37,6 +37,38 @@ u8* alloc_memory(size_t size) {
 #endif
 }
 
+[[nodiscard]] u32 narrow_latch(u32 latch, BusWidth width, u32 address) {
+    switch (width) {
+    case BusWidth::Byte:
+        return (latch >> ((address & 3u) * 8u)) & 0xFFu;
+    case BusWidth::Half:
+        return (latch >> ((address & 2u) * 8u)) & 0xFFFFu;
+    case BusWidth::Word:
+        return latch;
+    }
+    return latch;
+}
+
+[[nodiscard]] u32 gamepak_open_bus_value(u32 address, BusWidth width) {
+    const auto half_at = [](u32 half_address) -> u32 {
+        return (align_down(half_address, 2u) >> 1u) & 0xFFFFu;
+    };
+
+    switch (width) {
+    case BusWidth::Byte: {
+        const auto half = half_at(address);
+        return (half >> ((address & 1u) * 8u)) & 0xFFu;
+    }
+    case BusWidth::Half:
+        return half_at(address);
+    case BusWidth::Word: {
+        const auto aligned = align_down(address, 4u);
+        return half_at(aligned) | (half_at(aligned + 2u) << 16u);
+    }
+    }
+    return 0xFFFFFFFFu;
+}
+
 }  // namespace
 
 Bus::Bus(Cartridge& cartridge, Ppu& ppu, Timers& timers, DmaEngine& dma, Apu& apu, IrqController& irq)
@@ -81,20 +113,27 @@ BusAccessResult Bus::read(u32 address, BusWidth width, AccessType access, u64 cy
         const auto bios = cartridge_.bios();
         const auto aligned = align_down(address, static_cast<u32>(width));
         const auto width_bytes = static_cast<u32>(width);
-        if (aligned + width_bytes <= bios.size()) {
+        const auto protected_cpu_read = has_access_flag(access, AccessType::CpuOutsideBios);
+        if (protected_cpu_read && bios_latch_valid_) {
+            result.value = narrow_latch(bios_latch_, width, address);
+        } else if (protected_cpu_read) {
+            result.value = open_bus_;
+            result.open_bus = true;
+        } else if (aligned + width_bytes <= bios.size()) {
             result.value = cartridge_.read_bios(address, width);
-            const auto word_base = align_down(aligned, 4u);
-            if (word_base + 4u <= bios.size()) {
-                bios_latch_ = cartridge_.read_bios(word_base, BusWidth::Word);
-                bios_latch_valid_ = true;
-            } else {
-                bios_latch_ = expand_bus_latch(result.value, width);
-                bios_latch_valid_ = true;
+            if (has_access_flag(access, AccessType::CodeFetch)) {
+                const auto pipeline_offset = width == BusWidth::Word ? 8u : 4u;
+                const auto word_base = align_down(aligned + pipeline_offset, 4u);
+                if (word_base + 4u <= bios.size()) {
+                    bios_latch_ = cartridge_.read_bios(word_base, BusWidth::Word);
+                    bios_latch_valid_ = true;
+                } else {
+                    bios_latch_ = expand_bus_latch(result.value, width);
+                    bios_latch_valid_ = true;
+                }
             }
         } else if (bios_latch_valid_) {
-            result.value = width == BusWidth::Word ? bios_latch_
-                                                   : (width == BusWidth::Half ? (bios_latch_ & 0xFFFFu)
-                                                                              : (bios_latch_ & 0xFFu));
+            result.value = narrow_latch(bios_latch_, width, address);
         } else {
             result.value = open_bus_;
             result.open_bus = true;
@@ -122,21 +161,18 @@ BusAccessResult Bus::read(u32 address, BusWidth width, AccessType access, u64 cy
         const auto width_bytes = static_cast<u32>(width);
         if (aligned + width_bytes <= rom.size()) {
             result.value = cartridge_.read_rom(offset, width);
-            const auto word_base = align_down(aligned, 4u);
-            if (word_base + 4u <= rom.size()) {
-                rom_latch_ = cartridge_.read_rom(word_base, BusWidth::Word);
-                rom_latch_valid_ = true;
-            } else {
-                rom_latch_ = expand_bus_latch(result.value, width);
-                rom_latch_valid_ = true;
+            if (!has_access_flag(access, AccessType::CodeFetch)) {
+                const auto word_base = align_down(aligned, 4u);
+                if (word_base + 4u <= rom.size()) {
+                    rom_latch_ = cartridge_.read_rom(word_base, BusWidth::Word);
+                    rom_latch_valid_ = true;
+                } else {
+                    rom_latch_ = expand_bus_latch(result.value, width);
+                    rom_latch_valid_ = true;
+                }
             }
-        } else if (rom_latch_valid_) {
-            result.value = width == BusWidth::Word ? rom_latch_
-                                                   : (width == BusWidth::Half ? (rom_latch_ & 0xFFFFu)
-                                                                              : (rom_latch_ & 0xFFu));
         } else {
-            result.value = open_bus_;
-            result.open_bus = true;
+            result.value = gamepak_open_bus_value(address, width);
         }
     } else if (address >= 0x0E000000u && address < 0x10000000u) {
         result.value = cartridge_.read_save(address - 0x0E000000u, width);
@@ -564,13 +600,18 @@ u32 Bus::region_cycles(u32 address, BusWidth width, AccessType access, u64 cycle
     if (address >= 0x08000000u && address < 0x0E000000u) {
         const auto sequential = has_access_flag(access, AccessType::Sequential);
         const auto region = (address >> 25u) & 0x3u;
-        const auto first_access = std::array<u32, 4>{5u, 5u, 5u, 5u};
-        const auto second_access = std::array<u32, 4>{3u, 5u, 9u, 3u};
-        const auto half_cycles = sequential ? second_access[region] : first_access[region];
-        return width == BusWidth::Word ? (half_cycles + second_access[region]) : half_cycles;
+        const auto first_shift = std::array<u32, 3>{2u, 5u, 8u};
+        const auto second_bit = std::array<u32, 3>{4u, 7u, 10u};
+        const auto first_cycles = std::array<u32, 4>{5u, 4u, 3u, 9u};
+        const auto slow_second_cycles = std::array<u32, 3>{3u, 5u, 9u};
+        const auto first = first_cycles[(waitcnt_ >> first_shift[region]) & 0x3u];
+        const auto second = test_bit(waitcnt_, second_bit[region]) ? 2u : slow_second_cycles[region];
+        const auto half_cycles = sequential ? second : first;
+        return width == BusWidth::Word ? (half_cycles + second) : half_cycles;
     }
     if (address >= 0x0E000000u && address < 0x10000000u) {
-        return 5;
+        const auto save_cycles = std::array<u32, 4>{5u, 4u, 3u, 9u};
+        return save_cycles[waitcnt_ & 0x3u];
     }
     return 1;
 }

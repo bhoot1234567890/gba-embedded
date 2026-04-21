@@ -32,6 +32,7 @@ enum class AccessType : u8 {
     CodeFetch = 1u << 1,
     Dma = 1u << 2,
     Io = 1u << 3,
+    CpuOutsideBios = 1u << 4,
 };
 
 [[nodiscard]] constexpr AccessType operator|(AccessType lhs, AccessType rhs) {

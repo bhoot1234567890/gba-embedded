@@ -22,7 +22,7 @@ class Timers {
 public:
     void reset();
 
-    [[nodiscard]] u32 read_register(u32 address, BusWidth width) const;
+    [[nodiscard]] u32 read_register(u32 address, BusWidth width, u64 cycle_now);
     void write_register(u32 address, u32 value, BusWidth width, u64 cycle_now);
 
     void advance_to(u64 cycle_now, IrqController& irq, Apu& apu);

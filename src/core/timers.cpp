@@ -1,6 +1,7 @@
 #include "gba/core/timers.hpp"
 
 #include <algorithm>
+#include <cstdio>
 
 #include "gba/core/apu.hpp"
 #include "gba/core/constants.hpp"
@@ -9,6 +10,10 @@
 namespace gba {
 
 namespace {
+
+#ifndef GBA_TRACE_TIMERS
+#define GBA_TRACE_TIMERS 0
+#endif
 
 [[nodiscard]] bool timer_enabled(const TimerChannel& channel) {
     return test_bit(channel.control, 7);
@@ -61,13 +66,14 @@ void Timers::reset() {
     }
 }
 
-u32 Timers::read_register(u32 address, BusWidth width) const {
+u32 Timers::read_register(u32 address, BusWidth width, u64 cycle_now) {
     const auto timer = (address - kTm0CntL) / 4u;
     if (timer >= channels_.size()) {
         return 0;
     }
 
-    const auto& channel = channels_[timer];
+    auto& channel = channels_[timer];
+    update_running_timer(channel, cycle_now);
     const auto read_half = [&](u32 half_address) -> u16 {
         return ((half_address - kTm0CntL) & 0x2u) == 0 ? channel.counter : channel.control;
     };
@@ -119,7 +125,7 @@ void Timers::write_register(u32 address, u32 value, BusWidth width, u64 cycle_no
 
     if (width == BusWidth::Byte) {
         const auto aligned = align_down(address, 2u);
-        const auto current = static_cast<u16>(read_register(aligned, BusWidth::Half));
+        const auto current = static_cast<u16>(read_register(aligned, BusWidth::Half, cycle_now));
         const auto shift = (address & 1u) * 8u;
         const auto merged = static_cast<u16>((current & ~(0xFFu << shift)) | ((value & 0xFFu) << shift));
         write_half(aligned, merged);
@@ -137,16 +143,16 @@ void Timers::advance_to(u64 cycle_now, IrqController& irq, Apu& apu) {
     bool progressed = true;
     while (progressed) {
         progressed = false;
-        for (int index = 0; index < static_cast<int>(channels_.size()); ++index) {
+        for (std::size_t index = 0; index < channels_.size(); ++index) {
             auto& channel = channels_[index];
             if (channel.running && !timer_count_up(channel) && channel.next_event_cycle <= cycle_now) {
-                overflow(index, irq, apu, channel.next_event_cycle);
+                overflow(static_cast<int>(index), irq, apu, channel.next_event_cycle);
                 progressed = true;
             }
         }
     }
 
-    for (int index = 0; index < static_cast<int>(channels_.size()); ++index) {
+    for (std::size_t index = 0; index < channels_.size(); ++index) {
         update_running_timer(channels_[index], cycle_now);
     }
 }
@@ -169,6 +175,7 @@ u32 Timers::timer_period_cycles(const TimerChannel& channel) {
 }
 
 void Timers::refresh_next_event(int index, u64 cycle_now) {
+    (void)cycle_now;
     auto& channel = channels_[static_cast<std::size_t>(index)];
     if (!channel.running || timer_count_up(channel)) {
         channel.next_event_cycle = std::numeric_limits<u64>::max();
@@ -177,7 +184,7 @@ void Timers::refresh_next_event(int index, u64 cycle_now) {
 
     const auto period = timer_period_cycles(channel);
     const auto remaining_ticks = 0x10000u - channel.counter;
-    channel.next_event_cycle = cycle_now + (static_cast<u64>(remaining_ticks) * period);
+    channel.next_event_cycle = channel.last_update_cycle + (static_cast<u64>(remaining_ticks) * period);
 }
 
 void Timers::tick_cascade(int index, IrqController& irq, Apu& apu, u64 cycle_now) {
@@ -194,6 +201,10 @@ void Timers::tick_cascade(int index, IrqController& irq, Apu& apu, u64 cycle_now
 
 void Timers::overflow(int index, IrqController& irq, Apu& apu, u64 cycle_now) {
     auto& channel = channels_[static_cast<std::size_t>(index)];
+#if GBA_TRACE_TIMERS
+    std::fprintf(stderr, "TMR overflow t=%d cyc=%llu cnt=%04X reload=%04X ctl=%04X\n", index,
+                 static_cast<unsigned long long>(cycle_now), channel.counter, channel.reload, channel.control);
+#endif
     channel.counter = channel.reload;
     channel.last_update_cycle = cycle_now;
 

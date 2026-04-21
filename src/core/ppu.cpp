@@ -91,7 +91,9 @@ void Ppu::reset() {
     bg_pd_.fill(0);
     bg_ref_x_.fill(0);
     bg_ref_y_.fill(0);
-    framebuffer_.fill(0x7FFF);
+    if (framebuffer_) {
+        std::fill_n(framebuffer_.get(), kFramebufferPixels, u16{0x7FFF});
+    }
     next_event_cycle_ = 960;
     hblank_ = false;
     vblank_ = false;
@@ -322,12 +324,12 @@ void Ppu::advance_to(u64 cycle_now, IrqController& irq) {
 }
 
 void Ppu::render_scanline(int line, std::span<const u8> vram, std::span<const u8> palette) {
-    if (line < 0 || line >= static_cast<int>(kScreenHeight)) {
+    if (line < 0 || line >= static_cast<int>(kScreenHeight) || !framebuffer_) {
         return;
     }
 
     const auto backdrop = read16(palette, 0);
-    auto* row = framebuffer_.data() + (static_cast<std::size_t>(line) * kScreenWidth);
+    auto* row = framebuffer_.get() + (static_cast<std::size_t>(line) * kScreenWidth);
 
     if (force_blank()) {
         std::fill_n(row, kScreenWidth, static_cast<u16>(0x7FFF));
@@ -551,8 +553,8 @@ bool Ppu::consume_frame_ready() {
     return ready;
 }
 
-const std::array<u16, kFramebufferPixels>& Ppu::framebuffer() const {
-    return framebuffer_;
+std::span<const u16> Ppu::framebuffer() const {
+    return {framebuffer_.get(), kFramebufferPixels};
 }
 
 u16 Ppu::dispcnt() const {

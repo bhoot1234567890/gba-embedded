@@ -1,6 +1,7 @@
 #include "gba/core/ppu.hpp"
 
 #include <algorithm>
+#include <cstring>
 
 #include "gba/core/constants.hpp"
 #include "gba/core/irq.hpp"
@@ -26,6 +27,17 @@ void write_halfword(u16& target, u32 address, u32 value, BusWidth width) {
     }
 }
 
+struct BgCnt {
+    u16 raw;
+    [[nodiscard]] u32 priority() const { return raw & 0x3u; }
+    [[nodiscard]] u32 char_base_block() const { return (raw >> 2u & 0x3u) * 0x4000u; }
+    [[nodiscard]] bool mosaic() const { return (raw >> 6u & 1u) != 0; }
+    [[nodiscard]] u32 color_mode() const { return raw >> 7u & 1u; }  // 0=4bpp, 1=8bpp
+    [[nodiscard]] u32 screen_base_block() const { return (raw >> 8u & 0x1Fu) * 0x800u; }
+    [[nodiscard]] bool wraparound() const { return (raw >> 13u & 1u) != 0; }
+    [[nodiscard]] u32 size() const { return raw >> 14u & 0x3u; }
+};
+
 }  // namespace
 
 void Ppu::reset() {
@@ -44,6 +56,12 @@ void Ppu::reset() {
     bldcnt_ = 0;
     bldalpha_ = 0;
     bldy_ = 0;
+    bg_pa_.fill(0);
+    bg_pb_.fill(0);
+    bg_pc_.fill(0);
+    bg_pd_.fill(0);
+    bg_ref_x_.fill(0);
+    bg_ref_y_.fill(0);
     framebuffer_.fill(0x7FFF);
     next_event_cycle_ = 960;
     hblank_ = false;
@@ -89,6 +107,38 @@ u32 Ppu::read_register(u32 address, BusWidth width) const {
             return winin_;
         case 0x0400004Au:
             return winout_;
+        case kBg2Pa:
+        case 0x04000030u:
+            return static_cast<u16>(bg_pa_[(half_address - kBg2Pa) / 0x10u]);
+        case kBg2Pa + 2u:
+        case 0x04000032u:
+            return static_cast<u16>(bg_pb_[(half_address - kBg2Pa - 2u) / 0x10u]);
+        case kBg2Pa + 4u:
+        case 0x04000034u:
+            return static_cast<u16>(bg_pc_[(half_address - kBg2Pa - 4u) / 0x10u]);
+        case kBg2Pa + 6u:
+        case 0x04000036u:
+            return static_cast<u16>(bg_pd_[(half_address - kBg2Pa - 6u) / 0x10u]);
+        case kBg2X:
+        case 0x04000038u: {
+            const auto idx = (half_address - kBg2X) / 0x10u;
+            return static_cast<u16>(bg_ref_x_[idx] & 0xFFFFu);
+        }
+        case kBg2X + 2u:
+        case 0x0400003Au: {
+            const auto idx = (half_address - kBg2X - 2u) / 0x10u;
+            return static_cast<u16>((bg_ref_x_[idx] >> 16u) & 0xFFFFu);
+        }
+        case kBg2X + 4u:
+        case 0x0400003Cu: {
+            const auto idx = (half_address - kBg2X - 4u) / 0x10u;
+            return static_cast<u16>(bg_ref_y_[idx] & 0xFFFFu);
+        }
+        case kBg2X + 6u:
+        case 0x0400003Eu: {
+            const auto idx = (half_address - kBg2X - 6u) / 0x10u;
+            return static_cast<u16>((bg_ref_y_[idx] >> 16u) & 0xFFFFu);
+        }
         case kMosaic:
             return mosaic_;
         case kBldCnt:
@@ -169,6 +219,46 @@ void Ppu::write_register(u32 address, u32 value, BusWidth width) {
         case kBldCnt + 4u:
             bldy_ = half_value;
             break;
+        case kBg2Pa:
+        case 0x04000030u:
+            bg_pa_[(half_address - kBg2Pa) / 0x10u] = static_cast<s16>(half_value);
+            break;
+        case kBg2Pa + 2u:
+        case 0x04000032u:
+            bg_pb_[(half_address - kBg2Pa - 2u) / 0x10u] = static_cast<s16>(half_value);
+            break;
+        case kBg2Pa + 4u:
+        case 0x04000034u:
+            bg_pc_[(half_address - kBg2Pa - 4u) / 0x10u] = static_cast<s16>(half_value);
+            break;
+        case kBg2Pa + 6u:
+        case 0x04000036u:
+            bg_pd_[(half_address - kBg2Pa - 6u) / 0x10u] = static_cast<s16>(half_value);
+            break;
+        case kBg2X:
+        case 0x04000038u: {
+            const auto idx = (half_address - kBg2X) / 0x10u;
+            bg_ref_x_[idx] = (bg_ref_x_[idx] & 0xFFFF0000u) | half_value;
+            break;
+        }
+        case kBg2X + 2u:
+        case 0x0400003Au: {
+            const auto idx = (half_address - kBg2X - 2u) / 0x10u;
+            bg_ref_x_[idx] = (static_cast<u32>(static_cast<s16>(half_value)) << 16u) | (bg_ref_x_[idx] & 0x0000FFFFu);
+            break;
+        }
+        case kBg2X + 4u:
+        case 0x0400003Cu: {
+            const auto idx = (half_address - kBg2X - 4u) / 0x10u;
+            bg_ref_y_[idx] = (bg_ref_y_[idx] & 0xFFFF0000u) | half_value;
+            break;
+        }
+        case kBg2X + 6u:
+        case 0x0400003Eu: {
+            const auto idx = (half_address - kBg2X - 6u) / 0x10u;
+            bg_ref_y_[idx] = (static_cast<u32>(static_cast<s16>(half_value)) << 16u) | (bg_ref_y_[idx] & 0x0000FFFFu);
+            break;
+        }
         default:
             break;
         }
@@ -215,8 +305,37 @@ void Ppu::render_scanline(int line, std::span<const u8> vram, std::span<const u8
         return;
     }
 
+    std::fill_n(row, kScreenWidth, backdrop);
+
     const auto mode = dispcnt_ & 0x0007u;
+
     switch (mode) {
+    case 0:
+        for (int bg = 3; bg >= 0; --bg) {
+            if (test_bit(dispcnt_, 8u + bg)) {
+                render_text_bg(line, vram, palette, bg, row);
+            }
+        }
+        break;
+    case 1:
+        if (test_bit(dispcnt_, 8u + 2u)) {
+            render_affine_bg(line, vram, palette, 2, row);
+        }
+        if (test_bit(dispcnt_, 8u + 1u)) {
+            render_text_bg(line, vram, palette, 1, row);
+        }
+        if (test_bit(dispcnt_, 8u + 0u)) {
+            render_text_bg(line, vram, palette, 0, row);
+        }
+        break;
+    case 2:
+        if (test_bit(dispcnt_, 8u + 3u)) {
+            render_affine_bg(line, vram, palette, 3, row);
+        }
+        if (test_bit(dispcnt_, 8u + 2u)) {
+            render_affine_bg(line, vram, palette, 2, row);
+        }
+        break;
     case 3: {
         const auto base = static_cast<u32>(line) * kScreenWidth * 2u;
         for (u32 x = 0; x < kScreenWidth; ++x) {
@@ -234,7 +353,6 @@ void Ppu::render_scanline(int line, std::span<const u8> vram, std::span<const u8
         break;
     }
     case 5: {
-        std::fill_n(row, kScreenWidth, backdrop);
         const auto page = test_bit(dispcnt_, 4) ? 0xA000u : 0u;
         if (line >= 128) {
             break;
@@ -246,8 +364,129 @@ void Ppu::render_scanline(int line, std::span<const u8> vram, std::span<const u8
         break;
     }
     default:
-        std::fill_n(row, kScreenWidth, backdrop);
         break;
+    }
+}
+
+void Ppu::render_text_bg(int line, std::span<const u8> vram, std::span<const u8> palette,
+                         int bg, u16* row) {
+    const BgCnt cnt{bgcnt_[bg]};
+    const auto hofs = bghofs_[bg] & 0x1FFu;
+    const auto vofs = bgvofs_[bg] & 0x1FFu;
+
+    const u32 tile_size = cnt.color_mode() ? 0x40u : 0x20u;
+    const u32 map_width = (cnt.size() & 1u) ? 64u : 32u;
+    const u32 map_height = (cnt.size() & 2u) ? 64u : 32u;
+
+    const u32 effective_y = (static_cast<u32>(line) + vofs) & (map_height * 8u - 1u);
+    const u32 tile_row = effective_y / 8u;
+    const u32 fine_y = effective_y & 7u;
+
+    const auto char_base = cnt.char_base_block();
+    const auto screen_base = cnt.screen_base_block();
+
+    for (u32 screen_x = 0; screen_x < kScreenWidth; screen_x += 8u) {
+        const u32 pixel_x = (screen_x + hofs) & (map_width * 8u - 1u);
+        const u32 tile_col = pixel_x / 8u;
+        const u32 fine_x = pixel_x & 7u;
+
+        const u32 screen_col = tile_col & 0x1Fu;
+        const u32 map_block_offset = ((tile_col >= 32u) ? 1u : 0u) + ((tile_row >= 32u) ? 2u : 0u);
+        const u32 map_row = tile_row & 0x1Fu;
+        const u32 entry_addr = screen_base + (map_block_offset * 0x800u) + (map_row * 64u) + (screen_col * 2u);
+
+        const u16 entry = read16(vram, entry_addr);
+        const u32 tile_num = entry & 0x3FFu;
+        const bool h_flip = (entry >> 10u & 1u) != 0;
+        const bool v_flip = (entry >> 11u & 1u) != 0;
+        const u32 pal_bank = (entry >> 12u & 0xFu) << 4u;
+
+        const u32 y_off = v_flip ? (7u - fine_y) : fine_y;
+
+        for (u32 tx = 0; tx < 8u; ++tx) {
+            const u32 out_x = screen_x + tx;
+            if (out_x >= kScreenWidth) {
+                break;
+            }
+
+            const u32 x_off = h_flip ? (7u - tx) : (fine_x + tx - (pixel_x - screen_x - hofs % 8 + tx) % 8u);
+            const u32 real_x = h_flip ? (7u - tx) : tx;
+
+            if (cnt.color_mode()) {
+                const u32 data_addr = char_base + tile_num * 0x40u + y_off * 8u + real_x;
+                const u8 color_idx = vram[data_addr % vram.size()];
+                if (color_idx == 0) {
+                    continue;
+                }
+                row[out_x] = read16(palette, static_cast<u32>(color_idx) * 2u);
+            } else {
+                const u32 byte_addr = char_base + tile_num * 0x20u + y_off * 4u + (real_x / 2u);
+                const u8 byte_val = vram[byte_addr % vram.size()];
+                const u32 color_idx = (real_x & 1u) ? (byte_val >> 4u) : (byte_val & 0xFu);
+                if (color_idx == 0) {
+                    continue;
+                }
+                row[out_x] = read16(palette, (pal_bank + color_idx) * 2u);
+            }
+        }
+    }
+}
+
+void Ppu::render_affine_bg(int line, std::span<const u8> vram, std::span<const u8> palette,
+                           int bg, u16* row) {
+    const BgCnt cnt{bgcnt_[bg]};
+    const auto screen_base = cnt.screen_base_block();
+    const auto char_base = cnt.char_base_block();
+
+    static const u32 size_pixels[] = {128, 256, 512, 1024};
+    static const u32 size_map[] = {16, 32, 64, 128};
+    const u32 bg_size = size_pixels[cnt.size()];
+    const u32 map_size = size_map[cnt.size()];
+
+    const s32 ref_x = bg_ref_x_[bg - 2u];
+    const s32 ref_y = bg_ref_y_[bg - 2u];
+    const s16 pa = bg_pa_[bg - 2u];
+    const s16 pb = bg_pb_[bg - 2u];
+    const s16 pc = bg_pc_[bg - 2u];
+    const s16 pd = bg_pd_[bg - 2u];
+
+    for (u32 screen_x = 0; screen_x < kScreenWidth; ++screen_x) {
+        s32 tex_x = (ref_x + static_cast<s32>(pa) * static_cast<s32>(screen_x)) >> 8;
+        s32 tex_y = (ref_y + static_cast<s32>(pc) * static_cast<s32>(screen_x)) >> 8;
+
+        if (cnt.wraparound()) {
+            tex_x &= static_cast<s32>(bg_size - 1u);
+            tex_y &= static_cast<s32>(bg_size - 1u);
+        } else if (tex_x < 0 || tex_x >= static_cast<s32>(bg_size) ||
+                   tex_y < 0 || tex_y >= static_cast<s32>(bg_size)) {
+            continue;
+        }
+
+        const u32 tile_col = static_cast<u32>(tex_x) / 8u;
+        const u32 tile_row = static_cast<u32>(tex_y) / 8u;
+        const u32 fine_x = static_cast<u32>(tex_x) & 7u;
+        const u32 fine_y = static_cast<u32>(tex_y) & 7u;
+
+        const u32 entry_addr = screen_base + tile_row * map_size + tile_col;
+        const u8 tile_num = vram[entry_addr % vram.size()];
+
+        if (cnt.color_mode()) {
+            const u32 data_addr = char_base + static_cast<u32>(tile_num) * 0x40u + fine_y * 8u + fine_x;
+            const u8 color_idx = vram[data_addr % vram.size()];
+            if (color_idx == 0) {
+                continue;
+            }
+            row[screen_x] = read16(palette, static_cast<u32>(color_idx) * 2u);
+        } else {
+            const u32 byte_addr = char_base + static_cast<u32>(tile_num) * 0x20u + fine_y * 4u + (fine_x / 2u);
+            const u8 byte_val = vram[byte_addr % vram.size()];
+            const u32 color_idx = (fine_x & 1u) ? (byte_val >> 4u) : (byte_val & 0xFu);
+            if (color_idx == 0) {
+                continue;
+            }
+            const u32 pal_bank = (tile_num >> 8u) << 4u;
+            row[screen_x] = read16(palette, (pal_bank + color_idx) * 2u);
+        }
     }
 }
 

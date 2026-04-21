@@ -37,6 +37,8 @@ public:
     [[nodiscard]] bool hblank_free() const;
 
 private:
+    void render_text_bg(int line, std::span<const u8> vram, std::span<const u8> palette, int bg, u16* row);
+    void render_affine_bg(int line, std::span<const u8> vram, std::span<const u8> palette, int bg, u16* row);
     void update_dispstat_flags();
     void enter_hblank(IrqController& irq);
     void leave_hblank(IrqController& irq);
@@ -59,6 +61,13 @@ private:
     u16 bldcnt_ = 0;
     u16 bldalpha_ = 0;
     u16 bldy_ = 0;
+
+    std::array<s16, 2> bg_pa_{};
+    std::array<s16, 2> bg_pb_{};
+    std::array<s16, 2> bg_pc_{};
+    std::array<s16, 2> bg_pd_{};
+    std::array<s32, 2> bg_ref_x_{};
+    std::array<s32, 2> bg_ref_y_{};
 
     std::array<u16, kFramebufferPixels> framebuffer_{};
     u64 next_event_cycle_ = 960;

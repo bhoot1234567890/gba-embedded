@@ -176,27 +176,143 @@ void test_thumb_write_only_io_reads_use_prefetch_bus() {
     }
 }
 
-void test_bus_rom_latch_for_out_of_bounds_reads() {
+void test_bus_rom_out_of_bounds_uses_gamepak_address_pattern() {
     TestBusContext context;
     context.reset();
 
     std::vector<u8> rom(0x20u, 0);
-    write32(std::span<u8>(rom.data(), rom.size()), 0x1Cu, 0x34573456u);
+    write32(std::span<u8>(rom.data(), rom.size()), 0x1Cu, 0xAABBCCDDu);
     context.cartridge.set_rom(std::move(rom));
 
     const auto in_range = context.bus.read(0x0800001Cu, BusWidth::Word, AccessType::NonSequential, 0);
-    expect(in_range.value == 0x34573456u, "in-range ROM reads should still return the stored word");
+    expect(in_range.value == 0xAABBCCDDu, "in-range ROM reads should still return the stored word");
 
-    const auto out_byte = context.bus.read(0x08000020u, BusWidth::Byte, AccessType::NonSequential, 0);
-    const auto out_half = context.bus.read(0x08000020u, BusWidth::Half, AccessType::NonSequential, 0);
-    const auto out_word = context.bus.read(0x08000020u, BusWidth::Word, AccessType::NonSequential, 0);
+    const auto out_byte = context.bus.read(0x092468ACu, BusWidth::Byte, AccessType::NonSequential, 0);
+    const auto out_half = context.bus.read(0x092468ACu, BusWidth::Half, AccessType::NonSequential, 0);
+    const auto out_word = context.bus.read(0x092468ACu, BusWidth::Word, AccessType::NonSequential, 0);
 
-    expect(out_byte.value == 0x56u,
-           "out-of-range ROM byte reads should use the latched low byte from the last in-range ROM word");
+    expect(out_byte.value == 0x56u, "out-of-range ROM byte reads should expose the Game Pak address bus pattern");
     expect(out_half.value == 0x3456u,
-           "out-of-range ROM halfword reads should use the latched low halfword from the last in-range ROM word");
+           "out-of-range ROM halfword reads should expose address>>1 on the Game Pak bus");
     expect(out_word.value == 0x34573456u,
-           "out-of-range ROM word reads should use the latched in-range ROM word instead of modulo-wrapping");
+           "out-of-range ROM word reads should combine two sequential Game Pak address-bus halfwords");
+}
+
+void test_bus_waitcnt_controls_gamepak_waitstates() {
+    TestBusContext context;
+    context.reset();
+    context.cartridge.set_rom(std::vector<u8>(8u, 0));
+
+    expect(context.bus.read(0x08000000u, BusWidth::Half, AccessType::NonSequential, 0).cycles == 5u,
+           "WAITCNT default WS0 nonsequential ROM halfword timing should be 5 cycles");
+    expect(context.bus.read(0x08000000u, BusWidth::Word, AccessType::Sequential, 0).cycles == 6u,
+           "WAITCNT default WS0 sequential ROM word timing should use two slow sequential halfwords");
+
+    const auto fast_seq_write = context.bus.write(kWaitCnt, 1u << 4u, BusWidth::Half, AccessType::Io, 0);
+    (void)fast_seq_write;
+
+    expect(context.bus.read(0x08000000u, BusWidth::Half, AccessType::Sequential, 0).cycles == 2u,
+           "WAITCNT WS0 sequential fast bit should reduce ROM halfword timing to 2 cycles");
+    expect(context.bus.read(0x08000000u, BusWidth::Word, AccessType::Sequential, 0).cycles == 4u,
+           "WAITCNT WS0 sequential fast bit should reduce ROM word timing to 4 cycles");
+    expect(context.bus.read(0x08000000u, BusWidth::Half, AccessType::NonSequential, 0).cycles == 5u,
+           "WAITCNT WS0 sequential fast bit should not change nonsequential ROM timing");
+
+    const auto first_access_write =
+        context.bus.write(kWaitCnt, (2u << 2u) | (1u << 4u), BusWidth::Half, AccessType::Io, 0);
+    (void)first_access_write;
+    expect(context.bus.read(0x08000000u, BusWidth::Half, AccessType::NonSequential, 0).cycles == 3u,
+           "WAITCNT WS0 first-access bits should reduce nonsequential ROM timing");
+}
+
+void test_cpu_rom_oob_reads_use_gamepak_address_pattern() {
+    Emulator emulator;
+
+    std::vector<u8> rom(0x20u, 0);
+    write32(std::span<u8>(rom.data(), rom.size()), 0x1Cu, 0xAABBCCDDu);
+    emulator.load_rom(std::move(rom));
+    emulator.reset();
+
+    const auto seed_latch = emulator.bus().read(0x0800001Cu, BusWidth::Word, AccessType::NonSequential, 0);
+    expect(seed_latch.value == 0xAABBCCDDu, "test setup should seed a distinct ROM latch value");
+
+    auto& cpu = emulator.cpu();
+    auto& state = cpu.state();
+    state.cpsr = static_cast<u32>(CpuMode::System) | (1u << 5);
+    state.regs[1] = 0x092468ACu;
+    state.regs[15] = 0x03000000u;
+
+    auto iwram = emulator.bus().iwram();
+    write16(iwram, 0, 0x6808u);  // LDR r0, [r1]
+    write16(iwram, 2, 0xE000u);  // B +0
+    write32(iwram, 4, 0x34573456u);
+
+    cpu.step();
+
+    expect(state.regs[0] == 0x34573456u,
+           "CPU ROM out-of-bounds reads should use the Game Pak address-bus pattern");
+}
+
+void test_cpu_bios_protected_reads_use_prefetched_bios_latch() {
+    Emulator emulator;
+
+    std::vector<u8> bios(kBiosSize, 0);
+    write32(std::span<u8>(bios.data(), bios.size()), 0x00u, 0xEA000018u);
+    write32(std::span<u8>(bios.data(), bios.size()), 0x188u, 0xE1B0F00Eu);
+    write32(std::span<u8>(bios.data(), bios.size()), 0x190u, 0xE3A02004u);
+    emulator.load_bios(std::move(bios));
+    emulator.reset();
+
+    const auto seed_latch = emulator.bus().read(0x00000188u, BusWidth::Word, AccessType::CodeFetch, 0);
+    expect(seed_latch.value == 0xE1B0F00Eu, "test setup should fetch the BIOS return instruction");
+
+    auto& cpu = emulator.cpu();
+    auto& state = cpu.state();
+    state.cpsr = static_cast<u32>(CpuMode::System) | (1u << 5);
+    state.regs[1] = 0x00000000u;
+    state.regs[15] = 0x03000000u;
+
+    auto iwram = emulator.bus().iwram();
+    write16(iwram, 0, 0x6808u);  // LDR r0, [r1]
+    write16(iwram, 2, 0xE000u);  // B +0
+    write32(iwram, 4, 0x34573456u);
+
+    cpu.step();
+
+    expect(state.regs[0] == 0xE3A02004u,
+           "CPU BIOS reads outside BIOS should return the prefetched BIOS pipeline latch");
+}
+
+void test_cpu_iwram_nop_timing_uses_fetch_cycle_only() {
+    {
+        Emulator emulator;
+        emulator.reset();
+
+        auto& cpu = emulator.cpu();
+        auto& state = cpu.state();
+        state.cpsr = static_cast<u32>(CpuMode::System);
+        state.regs[15] = 0x03000000u;
+
+        write32(emulator.bus().iwram(), 0, 0xE1A00000u);  // MOV r0, r0
+
+        const auto cycles = cpu.step();
+        expect(cycles == 1u, "ARM IWRAM NOP should cost only the instruction fetch cycle");
+    }
+
+    {
+        Emulator emulator;
+        emulator.reset();
+
+        auto& cpu = emulator.cpu();
+        auto& state = cpu.state();
+        state.cpsr = static_cast<u32>(CpuMode::System) | (1u << 5);
+        state.regs[15] = 0x03000000u;
+
+        write16(emulator.bus().iwram(), 0, 0x46C0u);  // MOV r8, r8
+
+        const auto cycles = cpu.step();
+        expect(cycles == 1u, "Thumb IWRAM NOP should cost only the instruction fetch cycle");
+    }
 }
 
 void test_cpu_misaligned_arm_ldr_rotation() {
@@ -1027,7 +1143,11 @@ int main() {
         test_irq_controller();
         test_bus_open_bus_and_alignment();
         test_thumb_write_only_io_reads_use_prefetch_bus();
-        test_bus_rom_latch_for_out_of_bounds_reads();
+        test_bus_rom_out_of_bounds_uses_gamepak_address_pattern();
+        test_bus_waitcnt_controls_gamepak_waitstates();
+        test_cpu_rom_oob_reads_use_gamepak_address_pattern();
+        test_cpu_bios_protected_reads_use_prefetched_bios_latch();
+        test_cpu_iwram_nop_timing_uses_fetch_cycle_only();
         test_cpu_misaligned_arm_ldr_rotation();
         test_hle_swi_halt_without_bios();
         test_cpu_thumb_register_offset_halfword_and_signed_loads();

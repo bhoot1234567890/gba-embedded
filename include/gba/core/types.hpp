@@ -27,12 +27,29 @@ enum class BusWidth : u32 {
 };
 
 enum class AccessType : u8 {
-    NonSequential,
-    Sequential,
-    CodeFetch,
-    Dma,
-    Io,
+    NonSequential = 0,
+    Sequential = 1u << 0,
+    CodeFetch = 1u << 1,
+    Dma = 1u << 2,
+    Io = 1u << 3,
 };
+
+[[nodiscard]] constexpr AccessType operator|(AccessType lhs, AccessType rhs) {
+    return static_cast<AccessType>(static_cast<u8>(lhs) | static_cast<u8>(rhs));
+}
+
+[[nodiscard]] constexpr AccessType operator&(AccessType lhs, AccessType rhs) {
+    return static_cast<AccessType>(static_cast<u8>(lhs) & static_cast<u8>(rhs));
+}
+
+constexpr AccessType& operator|=(AccessType& lhs, AccessType rhs) {
+    lhs = lhs | rhs;
+    return lhs;
+}
+
+[[nodiscard]] constexpr bool has_access_flag(AccessType access, AccessType flag) {
+    return (static_cast<u8>(access) & static_cast<u8>(flag)) != 0;
+}
 
 struct BusAccessResult {
     u32 value = 0;

@@ -1,6 +1,11 @@
 #include "gba/core/bus.hpp"
 
 #include <algorithm>
+#include <cstring>
+
+#ifdef GBA_PLATFORM_ESP32
+#include "esp_heap_caps.h"
+#endif
 
 #include "gba/core/apu.hpp"
 #include "gba/core/constants.hpp"
@@ -11,15 +16,43 @@
 
 namespace gba {
 
+namespace {
+
+/* Allocate memory — prefer PSRAM on ESP32, fall back to heap */
+u8* alloc_memory(size_t size) {
+#ifdef GBA_PLATFORM_ESP32
+    auto* ptr = static_cast<u8*>(heap_caps_malloc(size, MALLOC_CAP_SPIRAM));
+    if (ptr) {
+        std::memset(ptr, 0, size);
+        return ptr;
+    }
+    ptr = static_cast<u8*>(heap_caps_malloc(size, MALLOC_CAP_8BIT));
+    if (ptr) {
+        std::memset(ptr, 0, size);
+        return ptr;
+    }
+    return nullptr;
+#else
+    return new u8[size]();
+#endif
+}
+
+}  // namespace
+
 Bus::Bus(Cartridge& cartridge, Ppu& ppu, Timers& timers, DmaEngine& dma, Apu& apu, IrqController& irq)
-    : cartridge_(cartridge), ppu_(ppu), timers_(timers), dma_(dma), apu_(apu), irq_(irq) {}
+    : cartridge_(cartridge), ppu_(ppu), timers_(timers), dma_(dma), apu_(apu), irq_(irq),
+      ewram_(alloc_memory(kEwramSize)),
+      iwram_(alloc_memory(kIwramSize)),
+      palette_(alloc_memory(kPaletteSize)),
+      vram_(alloc_memory(kVramSize)),
+      oam_(alloc_memory(kOamSize)) {}
 
 void Bus::reset() {
-    ewram_.fill(0);
-    iwram_.fill(0);
-    palette_.fill(0);
-    vram_.fill(0);
-    oam_.fill(0);
+    if (ewram_) std::memset(ewram_.get(), 0, kEwramSize);
+    if (iwram_) std::memset(iwram_.get(), 0, kIwramSize);
+    if (palette_) std::memset(palette_.get(), 0, kPaletteSize);
+    if (vram_) std::memset(vram_.get(), 0, kVramSize);
+    if (oam_) std::memset(oam_.get(), 0, kOamSize);
     keyinput_ = 0x03FF;
     keycnt_ = 0;
     waitcnt_ = 0;
@@ -32,24 +65,30 @@ BusAccessResult Bus::read(u32 address, BusWidth width, AccessType access, u64 cy
     BusAccessResult result{};
     result.cycles = region_cycles(address, width, access, cycle_now);
 
+    const auto ewram_span = std::span<const u8>{ewram_.get(), kEwramSize};
+    const auto iwram_span = std::span<const u8>{iwram_.get(), kIwramSize};
+    const auto palette_span = std::span<const u8>{palette_.get(), kPaletteSize};
+    const auto vram_span = std::span<const u8>{vram_.get(), kVramSize};
+    const auto oam_span = std::span<const u8>{oam_.get(), kOamSize};
+
     if (address < 0x00004000u) {
         result.value = cartridge_.read_bios(address, width);
     } else if ((address & 0x0F000000u) == 0x02000000u) {
-        result.value = read_array(ewram_, address - 0x02000000u, width);
+        result.value = read_array(ewram_span, address - 0x02000000u, width);
     } else if ((address & 0x0F000000u) == 0x03000000u) {
-        result.value = read_array(iwram_, address - 0x03000000u, width);
+        result.value = read_array(iwram_span, address - 0x03000000u, width);
     } else if ((address & 0x0F000000u) == 0x04000000u) {
         return read_io(address, width, cycle_now);
     } else if ((address & 0x0F000000u) == 0x05000000u) {
-        result.value = read_array(palette_, address - 0x05000000u, width);
+        result.value = read_array(palette_span, address - 0x05000000u, width);
     } else if ((address & 0x0F000000u) == 0x06000000u) {
         auto offset = (address - 0x06000000u) & 0x1FFFFu;
         if (offset >= 0x18000u) {
             offset = 0x10000u + (offset & 0x7FFFu);
         }
-        result.value = read_array(vram_, offset, width);
+        result.value = read_array(vram_span, offset, width);
     } else if ((address & 0x0F000000u) == 0x07000000u) {
-        result.value = read_array(oam_, address - 0x07000000u, width);
+        result.value = read_array(oam_span, address - 0x07000000u, width);
     } else if ((address & 0x0E000000u) == 0x08000000u) {
         result.value = cartridge_.read_rom(address - 0x08000000u, width);
     } else if ((address & 0x0E000000u) == 0x0E000000u) {
@@ -111,28 +150,32 @@ BusAccessResult Bus::write(u32 address, u32 value, BusWidth width, AccessType ac
 }
 
 std::span<const u8> Bus::vram() const {
-    return vram_;
+    return {vram_.get(), kVramSize};
 }
 
 std::span<const u8> Bus::palette() const {
-    return palette_;
+    return {palette_.get(), kPaletteSize};
 }
 
 std::span<const u8> Bus::oam() const {
-    return oam_;
+    return {oam_.get(), kOamSize};
 }
 
 std::span<u8> Bus::ewram() {
-    return ewram_;
+    return {ewram_.get(), kEwramSize};
 }
 
 std::span<u8> Bus::iwram() {
-    return iwram_;
+    return {iwram_.get(), kIwramSize};
 }
 
 void Bus::set_keyinput(u16 value) {
     keyinput_ = static_cast<u16>(value & 0x03FFu);
     update_keypad_irq();
+}
+
+void Bus::set_debug_output(DebugOutputCallback callback) {
+    debug_callback_ = std::move(callback);
 }
 
 u16 Bus::keyinput() const {
@@ -295,6 +338,8 @@ BusAccessResult Bus::read_io(u32 address, BusWidth width, u64 cycle_now) {
         result.value = waitcnt_;
     } else if (address == kPostFlg || address == kHaltCnt) {
         result.value = postflg_;
+    } else if (address >= 0x04FFF600u && address < 0x04FFF800u) {
+        result.value = 0;
     } else {
         result.value = open_bus_;
         result.open_bus = true;
@@ -328,6 +373,22 @@ BusAccessResult Bus::write_io(u32 address, u32 value, BusWidth width, u64 cycle_
         postflg_ = static_cast<u8>(value & 0x01u);
     } else if (address == kHaltCnt) {
         halted_ = true;
+    } else if (address >= 0x04FFF600u && address < 0x04FFF700u) {
+        const auto offset = address - 0x04FFF600u;
+        if (width == BusWidth::Byte) {
+            if (offset < debug_string_.size()) {
+                debug_string_[offset] = static_cast<char>(value & 0xFFu);
+            }
+        } else if (width == BusWidth::Half) {
+            const auto aligned = offset & ~1u;
+            if (aligned < debug_string_.size()) debug_string_[aligned] = static_cast<char>(value & 0xFFu);
+            if (aligned + 1 < debug_string_.size()) debug_string_[aligned + 1] = static_cast<char>((value >> 8u) & 0xFFu);
+        }
+    } else if (address >= 0x04FFF700u && address < 0x04FFF702u) {
+        if ((value & 0x100u) && debug_callback_) {
+            debug_string_[255] = '\0';
+            debug_callback_(debug_string_.data());
+        }
     }
 
     open_bus_ = value;

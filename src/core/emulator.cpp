@@ -25,6 +25,10 @@ void Emulator::load_bios(std::vector<u8> bios) {
     cartridge_.set_bios(std::move(bios));
 }
 
+void Emulator::set_save_type(SaveType save_type) {
+    cartridge_.set_save_type(save_type);
+}
+
 void Emulator::reset() {
     irq_.reset();
     ppu_.reset();

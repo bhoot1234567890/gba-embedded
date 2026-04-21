@@ -1,12 +1,16 @@
 #pragma once
 
 #include <array>
+#include <functional>
+#include <memory>
 
 #include "gba/core/cartridge.hpp"
 #include "gba/core/constants.hpp"
 #include "gba/core/types.hpp"
 
 namespace gba {
+
+using DebugOutputCallback = std::function<void(const char*)>;
 
 class Apu;
 class DmaEngine;
@@ -30,6 +34,7 @@ public:
     [[nodiscard]] std::span<u8> iwram();
 
     void set_keyinput(u16 value);
+    void set_debug_output(DebugOutputCallback callback);
     [[nodiscard]] u16 keyinput() const;
     [[nodiscard]] u16 keycnt() const;
     [[nodiscard]] u16 waitcnt() const;
@@ -52,11 +57,12 @@ private:
     Apu& apu_;
     IrqController& irq_;
 
-    std::array<u8, kEwramSize> ewram_{};
-    std::array<u8, kIwramSize> iwram_{};
-    std::array<u8, kPaletteSize> palette_{};
-    std::array<u8, kVramSize> vram_{};
-    std::array<u8, kOamSize> oam_{};
+    /* Heap-allocated memory arrays — use PSRAM on ESP32 when available */
+    std::unique_ptr<u8[]> ewram_;
+    std::unique_ptr<u8[]> iwram_;
+    std::unique_ptr<u8[]> palette_;
+    std::unique_ptr<u8[]> vram_;
+    std::unique_ptr<u8[]> oam_;
 
     u16 keyinput_ = 0x03FF;
     u16 keycnt_ = 0;
@@ -64,6 +70,8 @@ private:
     u8 postflg_ = 0;
     bool halted_ = false;
     u32 open_bus_ = 0;
+    DebugOutputCallback debug_callback_;
+    std::array<char, 256> debug_string_{};
 };
 
 }  // namespace gba

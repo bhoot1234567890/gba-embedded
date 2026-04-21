@@ -4,6 +4,7 @@
 #include <span>
 #include <stdexcept>
 #include <string>
+#include <vector>
 
 #include "gba/core/apu.hpp"
 #include "gba/core/bus.hpp"
@@ -73,6 +74,15 @@ u64 hash_words(std::span<const u16> words) {
     return hash;
 }
 
+bool flag_set(u32 cpsr, u32 bit) {
+    return (cpsr & (1u << bit)) != 0u;
+}
+
+void expect_nzcv(u32 cpsr, bool n, bool z, bool c, bool v, const std::string& message) {
+    expect(flag_set(cpsr, 31) == n && flag_set(cpsr, 30) == z && flag_set(cpsr, 29) == c && flag_set(cpsr, 28) == v,
+           message);
+}
+
 void test_scheduler() {
     Scheduler scheduler;
     scheduler.reset();
@@ -130,7 +140,63 @@ void test_bus_open_bus_and_alignment() {
     (void)keycnt_write;
     const auto open_bus_after_io = context.bus.read(0x01000000u, BusWidth::Word, AccessType::NonSequential, 0);
     expect(open_bus_after_io.open_bus, "unmapped reads after MMIO activity should still be flagged as open bus");
-    expect(open_bus_after_io.value == 0xC123u, "open bus should retain the most recent MMIO bus value");
+    expect(open_bus_after_io.value == ewram_value.value,
+           "MMIO writes should not overwrite the CPU-visible open-bus latch");
+}
+
+void test_thumb_write_only_io_reads_use_prefetch_bus() {
+    for (const auto start_pc : {0x03000000u, 0x03000002u}) {
+        Emulator emulator;
+        emulator.reset();
+
+        auto& cpu = emulator.cpu();
+        auto& state = cpu.state();
+        state.cpsr = static_cast<u32>(CpuMode::System) | (1u << 5);
+        state.regs[0] = 0x04000010u;
+        state.regs[15] = start_pc;
+
+        auto iwram = emulator.bus().iwram();
+        if (start_pc == 0x03000000u) {
+            write16(iwram, 0, 0x8800u);  // LDRH r0, [r0]
+            write16(iwram, 2, 0xE000u);  // B +0
+            write16(iwram, 4, 0xDEADu);
+            write16(iwram, 6, 0xDEADu);
+        } else {
+            write16(iwram, 0, 0x46C0u);  // NOP
+            write16(iwram, 2, 0x8800u);  // LDRH r0, [r0]
+            write16(iwram, 4, 0xE000u);  // B +0
+            write16(iwram, 6, 0xDEADu);
+            write16(iwram, 8, 0xDEADu);
+        }
+
+        cpu.step();
+
+        expect(state.regs[0] == 0xDEADu,
+               "Thumb write-only IO reads should sample the prefetched data word for both halfword alignments");
+    }
+}
+
+void test_bus_rom_latch_for_out_of_bounds_reads() {
+    TestBusContext context;
+    context.reset();
+
+    std::vector<u8> rom(0x20u, 0);
+    write32(std::span<u8>(rom.data(), rom.size()), 0x1Cu, 0x34573456u);
+    context.cartridge.set_rom(std::move(rom));
+
+    const auto in_range = context.bus.read(0x0800001Cu, BusWidth::Word, AccessType::NonSequential, 0);
+    expect(in_range.value == 0x34573456u, "in-range ROM reads should still return the stored word");
+
+    const auto out_byte = context.bus.read(0x08000020u, BusWidth::Byte, AccessType::NonSequential, 0);
+    const auto out_half = context.bus.read(0x08000020u, BusWidth::Half, AccessType::NonSequential, 0);
+    const auto out_word = context.bus.read(0x08000020u, BusWidth::Word, AccessType::NonSequential, 0);
+
+    expect(out_byte.value == 0x56u,
+           "out-of-range ROM byte reads should use the latched low byte from the last in-range ROM word");
+    expect(out_half.value == 0x3456u,
+           "out-of-range ROM halfword reads should use the latched low halfword from the last in-range ROM word");
+    expect(out_word.value == 0x34573456u,
+           "out-of-range ROM word reads should use the latched in-range ROM word instead of modulo-wrapping");
 }
 
 void test_cpu_misaligned_arm_ldr_rotation() {
@@ -207,6 +273,434 @@ void test_cpu_thumb_register_offset_halfword_and_signed_loads() {
            "Thumb LDSB register-offset should sign-extend the loaded byte");
 }
 
+void test_cpu_thumb_sp_relative_load_store() {
+    Emulator emulator;
+    emulator.reset();
+
+    auto& cpu = emulator.cpu();
+    auto& state = cpu.state();
+    state.cpsr = static_cast<u32>(CpuMode::System) | (1u << 5);
+    state.regs[0] = 0x89ABCDEFu;
+    state.regs[13] = 0x02000040u;
+    state.regs[15] = 0x03000000u;
+
+    auto iwram = emulator.bus().iwram();
+    write16(iwram, 0, 0x9005u);  // STR r0, [sp, #20]
+    write16(iwram, 2, 0x9905u);  // LDR r1, [sp, #20]
+
+    cpu.step();
+    cpu.step();
+
+    const auto ewram = emulator.bus().ewram();
+    expect(ewram[0x54] == 0xEFu && ewram[0x57] == 0x89u,
+           "Thumb STR SP-relative should store a word at SP plus the encoded offset");
+    expect(state.regs[1] == 0x89ABCDEFu,
+           "Thumb LDR SP-relative should load the previously stored word back into the destination register");
+}
+
+void test_cpu_thumb_bl_target_and_return() {
+    Emulator emulator;
+
+    std::vector<u8> bios(kBiosSize, 0);
+    write16(bios, 0x193Eu, 0xF7FFu);  // BL first half
+    write16(bios, 0x1940u, 0xF840u);  // BL second half -> target 0x09C2
+    write16(bios, 0x09C2u, 0x2007u);  // MOVS r0, #7
+    write16(bios, 0x09C4u, 0x4770u);  // BX lr
+    emulator.load_bios(std::move(bios));
+    emulator.reset();
+
+    auto& cpu = emulator.cpu();
+    auto& state = cpu.state();
+    state.cpsr = static_cast<u32>(CpuMode::System) | (1u << 5);
+    state.regs[15] = 0x0000193Eu;
+
+    cpu.step();
+    cpu.step();
+    expect(state.regs[15] == 0x000009C2u,
+           "Thumb BL should branch to the correct target instead of landing two bytes early");
+    expect(state.regs[14] == 0x00001943u,
+           "Thumb BL should preserve the return address with bit 0 set in LR");
+
+    cpu.step();
+    expect(state.regs[0] == 7u, "Thumb BL target should execute the subroutine body");
+
+    cpu.step();
+    expect(state.regs[15] == 0x00001942u,
+           "BX lr from a Thumb subroutine should return to the instruction after the BL pair");
+}
+
+void test_cpu_thumb_irq_returns_to_next_instruction() {
+    Emulator emulator;
+
+    std::vector<u8> bios(kBiosSize, 0);
+    write32(bios, 0x18u, 0xEA000000u);  // B 0x20
+    write32(bios, 0x20u, 0xE25EF004u);  // SUBS pc, lr, #4
+    emulator.load_bios(std::move(bios));
+    emulator.reset();
+
+    auto& cpu = emulator.cpu();
+    auto& state = cpu.state();
+    state.cpsr = static_cast<u32>(CpuMode::System) | (1u << 5);
+    state.regs[15] = 0x03000000u;
+
+    auto iwram = emulator.bus().iwram();
+    write16(iwram, 0, 0x2007u);  // MOVS r0, #7
+
+    const auto ie_write = emulator.bus().write(kIe, IrqVBlank, BusWidth::Half, AccessType::Io, 0);
+    (void)ie_write;
+    const auto ime_write = emulator.bus().write(kIme, 1u, BusWidth::Half, AccessType::Io, 0);
+    (void)ime_write;
+    cpu.raise_exception(ExceptionType::Irq);
+
+    cpu.step();
+    cpu.step();
+
+    expect(state.regs[15] == 0x03000000u,
+           "Thumb IRQ return should resume at the interrupted instruction instead of two bytes early");
+
+    cpu.step();
+    expect(state.regs[0] == 7u, "resuming from a Thumb IRQ should allow the interrupted instruction to execute");
+}
+
+void test_cpu_thumb_high_register_pc_read_uses_visible_pc() {
+    Emulator emulator;
+    emulator.reset();
+
+    auto& cpu = emulator.cpu();
+    auto& state = cpu.state();
+    state.cpsr = static_cast<u32>(CpuMode::System) | (1u << 5);
+    state.regs[15] = 0x03000000u;
+
+    auto iwram = emulator.bus().iwram();
+    write16(iwram, 0, 0x4679u);  // MOV r1, pc
+
+    cpu.step();
+
+    expect(state.regs[1] == 0x03000004u,
+           "Thumb high-register MOV from PC should observe the architecturally visible PC");
+}
+
+void test_cpu_thumb_blx_style_thunk_returns_after_bx() {
+    Emulator emulator;
+    emulator.reset();
+
+    auto& cpu = emulator.cpu();
+    auto& state = cpu.state();
+    state.cpsr = static_cast<u32>(CpuMode::System) | (1u << 5);
+    state.regs[0] = 0x02000000u;   // ARM-state target with bit 0 clear
+    state.regs[13] = 0x03007F00u;
+    state.regs[15] = 0x03000000u;
+
+    auto iwram = emulator.bus().iwram();
+    write16(iwram, 0x0000u, 0x4679u);  // MOV r1, pc
+    write16(iwram, 0x0002u, 0x3105u);  // ADD r1, #5
+    write16(iwram, 0x0004u, 0x468Eu);  // MOV lr, r1
+    write16(iwram, 0x0006u, 0x4700u);  // BX r0
+    write16(iwram, 0x0008u, 0x2207u);  // MOVS r2, #7
+
+    auto ewram = emulator.bus().ewram();
+    write32(ewram, 0x0000u, 0xE12FFF1Eu);  // BX lr
+
+    cpu.step();
+    cpu.step();
+    cpu.step();
+    cpu.step();
+    cpu.step();
+
+    expect((state.cpsr & (1u << 5)) != 0u,
+           "Returning through BX lr from an ARM helper should restore Thumb state");
+    expect(state.regs[15] == 0x03000008u,
+           "A Thumb BLX-style thunk should resume after the BX instruction instead of re-entering it");
+
+    cpu.step();
+    expect(state.regs[2] == 7u,
+           "Execution should continue at the Thumb instruction after the BLX-style thunk return");
+}
+
+void test_cpu_arm_register_shift_pc_visibility() {
+    Emulator emulator;
+    emulator.reset();
+
+    auto& cpu = emulator.cpu();
+    auto& state = cpu.state();
+    state.cpsr = static_cast<u32>(CpuMode::System);
+    state.regs[1] = 0u;
+    state.regs[2] = 1u;
+    state.regs[15] = 0x03000000u;
+
+    auto iwram = emulator.bus().iwram();
+    write32(iwram, 0, 0xE1A0011Fu);  // MOV r0, pc, LSL r1
+    write32(iwram, 4, 0xE08F0112u);  // ADD r0, pc, r2, LSL r1
+
+    cpu.step();
+    expect(state.regs[0] == 0x0300000Cu,
+           "ARM register-shift operand reads should observe PC two words ahead when PC is used as Rm");
+
+    cpu.step();
+    expect(state.regs[0] == 0x03000011u,
+           "ARM register-shift data-processing should observe the same PC offset when PC is used as Rn");
+}
+
+void test_cpu_arm_adc_sbc_rsc_flags() {
+    {
+        Emulator emulator;
+        emulator.reset();
+
+        auto& cpu = emulator.cpu();
+        auto& state = cpu.state();
+        state.cpsr = static_cast<u32>(CpuMode::System) | (1u << 29);
+        state.regs[1] = 0x7FFFFFFFu;
+        state.regs[2] = 0u;
+        state.regs[15] = 0x03000000u;
+
+        write32(emulator.bus().iwram(), 0, 0xE0B10002u);  // ADCS r0, r1, r2
+        cpu.step();
+
+        expect(state.regs[0] == 0x80000000u, "ADCS should include carry-in in the final result");
+        expect_nzcv(state.cpsr, true, false, false, true,
+                    "ADCS should compute NZCV from the original operands and carry-in");
+    }
+
+    {
+        Emulator emulator;
+        emulator.reset();
+
+        auto& cpu = emulator.cpu();
+        auto& state = cpu.state();
+        state.cpsr = static_cast<u32>(CpuMode::System);
+        state.regs[1] = 0x80000000u;
+        state.regs[2] = 0x7FFFFFFFu;
+        state.regs[15] = 0x03000000u;
+
+        write32(emulator.bus().iwram(), 0, 0xE0D10002u);  // SBCS r0, r1, r2
+        cpu.step();
+
+        expect(state.regs[0] == 0u, "SBCS should subtract both the operand and the inverted carry bit");
+        expect_nzcv(state.cpsr, false, true, true, true,
+                    "SBCS should preserve the true borrow/overflow semantics instead of folding carry into RHS");
+    }
+
+    {
+        Emulator emulator;
+        emulator.reset();
+
+        auto& cpu = emulator.cpu();
+        auto& state = cpu.state();
+        state.cpsr = static_cast<u32>(CpuMode::System);
+        state.regs[1] = 0x7FFFFFFFu;
+        state.regs[2] = 0x80000000u;
+        state.regs[15] = 0x03000000u;
+
+        write32(emulator.bus().iwram(), 0, 0xE0F10002u);  // RSCS r0, r1, r2
+        cpu.step();
+
+        expect(state.regs[0] == 0u, "RSCS should compute operand2 - Rn - !C");
+        expect_nzcv(state.cpsr, false, true, true, true,
+                    "RSCS should compute overflow from the original subtraction operands");
+    }
+}
+
+void test_cpu_thumb_adc_sbc_flags() {
+    {
+        Emulator emulator;
+        emulator.reset();
+
+        auto& cpu = emulator.cpu();
+        auto& state = cpu.state();
+        state.cpsr = static_cast<u32>(CpuMode::System) | (1u << 5) | (1u << 29);
+        state.regs[0] = 0x7FFFFFFFu;
+        state.regs[1] = 0u;
+        state.regs[15] = 0x03000000u;
+
+        write16(emulator.bus().iwram(), 0, 0x4148u);  // ADC r0, r1
+        cpu.step();
+
+        expect(state.regs[0] == 0x80000000u, "Thumb ADC should include carry-in in the result");
+        expect_nzcv(state.cpsr, true, false, false, true,
+                    "Thumb ADC should derive NZCV from the original operands and carry-in");
+    }
+
+    {
+        Emulator emulator;
+        emulator.reset();
+
+        auto& cpu = emulator.cpu();
+        auto& state = cpu.state();
+        state.cpsr = static_cast<u32>(CpuMode::System) | (1u << 5);
+        state.regs[0] = 0x80000000u;
+        state.regs[1] = 0x7FFFFFFFu;
+        state.regs[15] = 0x03000000u;
+
+        write16(emulator.bus().iwram(), 0, 0x4188u);  // SBC r0, r1
+        cpu.step();
+
+        expect(state.regs[0] == 0u, "Thumb SBC should subtract operand and inverted carry");
+        expect_nzcv(state.cpsr, false, true, true, true,
+                    "Thumb SBC should compute borrow/overflow without folding carry into the subtrahend");
+    }
+}
+
+void test_cpu_arm_long_multiply_preserves_cv() {
+    {
+        Emulator emulator;
+        emulator.reset();
+
+        auto& cpu = emulator.cpu();
+        auto& state = cpu.state();
+        state.cpsr = static_cast<u32>(CpuMode::System) | (1u << 28);
+        state.regs[2] = 0xFFFFFFFFu;
+        state.regs[3] = 0xFFFFFFFFu;
+        state.regs[15] = 0x03000000u;
+
+        write32(emulator.bus().iwram(), 0, 0xE0910293u);  // UMULLS r0, r1, r3, r2
+        cpu.step();
+
+        expect(state.regs[0] == 1u && state.regs[1] == 0xFFFFFFFEu,
+               "UMULLS should produce the full 64-bit unsigned product");
+        expect_nzcv(state.cpsr, true, false, false, true,
+                    "UMULLS should update only N/Z while preserving incoming C/V");
+    }
+
+    {
+        Emulator emulator;
+        emulator.reset();
+
+        auto& cpu = emulator.cpu();
+        auto& state = cpu.state();
+        state.cpsr = static_cast<u32>(CpuMode::System) | (1u << 29);
+        state.regs[2] = 0u;
+        state.regs[3] = 0xFFFFFFFFu;
+        state.regs[15] = 0x03000000u;
+
+        write32(emulator.bus().iwram(), 0, 0xE0D10293u);  // SMULLS r0, r1, r3, r2
+        cpu.step();
+
+        expect(state.regs[0] == 0u && state.regs[1] == 0u,
+               "SMULLS should produce the full 64-bit signed product");
+        expect_nzcv(state.cpsr, false, true, true, false,
+                    "SMULLS should preserve C/V while updating N/Z from the 64-bit result");
+    }
+}
+
+void test_io_register_read_masks_for_ppu() {
+    Emulator emulator;
+    emulator.reset();
+
+    auto& bus = emulator.bus();
+
+    (void)bus.write(kBg0Cnt, 0xFFFFu, BusWidth::Half, AccessType::Io, 0);
+    (void)bus.write(kBg0Cnt + 4u, 0xFFFFu, BusWidth::Half, AccessType::Io, 0);
+    (void)bus.write(0x04000048u, 0xFFFFu, BusWidth::Half, AccessType::Io, 0);
+    (void)bus.write(0x0400004Au, 0xFFFFu, BusWidth::Half, AccessType::Io, 0);
+    (void)bus.write(kBldCnt, 0xFFFFu, BusWidth::Half, AccessType::Io, 0);
+    (void)bus.write(kBldCnt + 2u, 0xFFFFu, BusWidth::Half, AccessType::Io, 0);
+
+    expect(bus.read(kBg0Cnt, BusWidth::Half, AccessType::Io, 0).value == 0xDFFFu,
+           "BG control reads should mask bit 13 like hardware");
+    expect(bus.read(kBg0Cnt + 4u, BusWidth::Half, AccessType::Io, 0).value == 0xFFFFu,
+           "Affine BG control reads should preserve the wraparound bit");
+    expect(bus.read(0x04000048u, BusWidth::Half, AccessType::Io, 0).value == 0x3F3Fu,
+           "WININ reads should mask unreadable window bits");
+    expect(bus.read(0x0400004Au, BusWidth::Half, AccessType::Io, 0).value == 0x3F3Fu,
+           "WINOUT reads should mask unreadable window bits");
+    expect(bus.read(kBldCnt, BusWidth::Half, AccessType::Io, 0).value == 0x3FFFu,
+           "BLDCNT reads should mask unused blend-control bits");
+    expect(bus.read(kBldCnt + 2u, BusWidth::Half, AccessType::Io, 0).value == 0x1F1Fu,
+           "BLDALPHA reads should clamp both EVA and EVB to 5 bits");
+}
+
+void test_io_register_read_masks_for_sound() {
+    Emulator emulator;
+    emulator.reset();
+
+    auto& bus = emulator.bus();
+
+    (void)bus.write(0x04000060u, 0xFFFFu, BusWidth::Half, AccessType::Io, 0);  // SOUND1CNT_L
+    (void)bus.write(0x04000062u, 0xFFFFu, BusWidth::Half, AccessType::Io, 0);  // SOUND1CNT_H
+    (void)bus.write(0x04000064u, 0xFFFFu, BusWidth::Half, AccessType::Io, 0);  // SOUND1CNT_X
+    (void)bus.write(0x04000068u, 0xFFFFu, BusWidth::Half, AccessType::Io, 0);  // SOUND2CNT_L
+    (void)bus.write(0x0400006Cu, 0xFFFFu, BusWidth::Half, AccessType::Io, 0);  // SOUND2CNT_H
+    (void)bus.write(0x04000070u, 0xFFFFu, BusWidth::Half, AccessType::Io, 0);  // SOUND3CNT_L
+    (void)bus.write(0x04000072u, 0xFFFFu, BusWidth::Half, AccessType::Io, 0);  // SOUND3CNT_H
+    (void)bus.write(0x04000074u, 0xFFFFu, BusWidth::Half, AccessType::Io, 0);  // SOUND3CNT_X
+    (void)bus.write(0x04000078u, 0xFFFFu, BusWidth::Half, AccessType::Io, 0);  // SOUND4CNT_L
+    (void)bus.write(0x0400007Cu, 0xFFFFu, BusWidth::Half, AccessType::Io, 0);  // SOUND4CNT_H
+    (void)bus.write(kSoundCntL, 0xFFFFu, BusWidth::Half, AccessType::Io, 0);
+    (void)bus.write(kSoundCntH, 0xFFFFu, BusWidth::Half, AccessType::Io, 0);
+    (void)bus.write(kFifoA, 0xDEADDEADu, BusWidth::Word, AccessType::Io, 0);
+    (void)bus.write(kFifoB, 0xBEEFBEEFu, BusWidth::Word, AccessType::Io, 0);
+
+    expect(bus.read(0x04000060u, BusWidth::Half, AccessType::Io, 0).value == 0x007Fu,
+           "SOUND1CNT_L reads should expose only the readable sweep bits");
+    expect(bus.read(0x04000062u, BusWidth::Half, AccessType::Io, 0).value == 0xFFC0u,
+           "SOUND1CNT_H reads should preserve the readable duty/length/envelope bits");
+    expect(bus.read(0x04000064u, BusWidth::Half, AccessType::Io, 0).value == 0x4000u,
+           "SOUND1CNT_X reads should expose only the readable frequency-control bit");
+    expect(bus.read(0x04000068u, BusWidth::Half, AccessType::Io, 0).value == 0xFFC0u,
+           "SOUND2CNT_L reads should preserve the readable duty/length/envelope bits");
+    expect(bus.read(0x0400006Cu, BusWidth::Half, AccessType::Io, 0).value == 0x4000u,
+           "SOUND2CNT_H reads should expose only the readable frequency-control bit");
+    expect(bus.read(0x04000070u, BusWidth::Half, AccessType::Io, 0).value == 0x00E0u,
+           "SOUND3CNT_L reads should preserve only the readable wave-channel control bits");
+    expect(bus.read(0x04000072u, BusWidth::Half, AccessType::Io, 0).value == 0xE000u,
+           "SOUND3CNT_H reads should preserve only the readable wave-channel volume bits");
+    expect(bus.read(0x04000074u, BusWidth::Half, AccessType::Io, 0).value == 0x4000u,
+           "SOUND3CNT_X reads should expose only the readable frequency-control bit");
+    expect(bus.read(0x04000078u, BusWidth::Half, AccessType::Io, 0).value == 0xFF00u,
+           "SOUND4CNT_L reads should preserve only the readable envelope bits");
+    expect(bus.read(0x0400007Cu, BusWidth::Half, AccessType::Io, 0).value == 0x40FFu,
+           "SOUND4CNT_H reads should preserve the readable noise-channel control bits");
+    expect(bus.read(kSoundCntL, BusWidth::Half, AccessType::Io, 0).value == 0xFF77u,
+           "SOUNDCNT_L reads should mask off the unreadable master-balance bits");
+    expect(bus.read(kSoundCntH, BusWidth::Half, AccessType::Io, 0).value == 0x770Fu,
+           "SOUNDCNT_H reads should preserve only the readable direct-sound routing bits");
+    expect(bus.read(0x04000090u, BusWidth::Half, AccessType::Io, 0).value == 0xFFFFu,
+           "Wave RAM reads should stay mapped instead of falling through to open bus");
+    expect(bus.read(kFifoA, BusWidth::Half, AccessType::Io, 0).open_bus,
+           "FIFO A low-half reads should be reported as open bus at the MMIO layer");
+    expect(bus.read(kFifoA + 2u, BusWidth::Half, AccessType::Io, 0).open_bus,
+           "FIFO A high-half reads should be reported as open bus at the MMIO layer");
+    expect(bus.read(kFifoB, BusWidth::Half, AccessType::Io, 0).open_bus,
+           "FIFO B low-half reads should be reported as open bus at the MMIO layer");
+    expect(bus.read(kFifoB + 2u, BusWidth::Half, AccessType::Io, 0).open_bus,
+           "FIFO B high-half reads should be reported as open bus at the MMIO layer");
+}
+
+void test_mgba_log_enable_and_buffer_clearing() {
+    Emulator emulator;
+    emulator.reset();
+
+    std::vector<std::string> messages;
+    emulator.bus().set_debug_output([&](const char* text) {
+        if (text != nullptr) {
+            messages.emplace_back(text);
+        }
+    });
+
+    auto& bus = emulator.bus();
+    (void)bus.write(kMgbaLogStringLo, 0x4E45u, BusWidth::Half, AccessType::Io, 0);      // "EN"
+    (void)bus.write(kMgbaLogStringLo + 2u, 0x3A44u, BusWidth::Half, AccessType::Io, 0); // "D:"
+    (void)bus.write(kMgbaLogSend, 0x0100u, BusWidth::Half, AccessType::Io, 0);
+    expect(messages.empty(), "mGBA log send should stay silent until the enable handshake completes");
+
+    (void)bus.write(kMgbaLogEnable, 0xC0DEu, BusWidth::Half, AccessType::Io, 0);
+    expect(bus.read(kMgbaLogEnable, BusWidth::Half, AccessType::Io, 0).value == 0x1DEAu,
+           "mGBA log enable register should expose the 0x1DEA acknowledgement after the handshake");
+
+    (void)bus.write(kMgbaLogStringLo, 0x3A444E45u, BusWidth::Word, AccessType::Io, 0);      // "END:"
+    (void)bus.write(kMgbaLogStringLo + 4u, 0x322F3120u, BusWidth::Word, AccessType::Io, 0); // " 1/2"
+    (void)bus.write(kMgbaLogStringLo + 8u, 0x0000u, BusWidth::Half, AccessType::Io, 0);
+    (void)bus.write(kMgbaLogSend, 0x0100u, BusWidth::Half, AccessType::Io, 0);
+
+    (void)bus.write(kMgbaLogStringLo, 0x4F47u, BusWidth::Half, AccessType::Io, 0);        // "GO"
+    (void)bus.write(kMgbaLogStringLo + 2u, 0x0000u, BusWidth::Half, AccessType::Io, 0);
+    (void)bus.write(kMgbaLogSend, 0x0100u, BusWidth::Half, AccessType::Io, 0);
+
+    expect(messages.size() == 2u, "mGBA logging should emit one callback per enabled send");
+    expect(messages[0] == "END: 1/2", "mGBA logging should emit the written message verbatim once enabled");
+    expect(messages[1] == "GO", "mGBA logging should clear stale tail bytes between consecutive sends");
+}
+
 void test_ppu_mode3_render_and_hash() {
     Ppu ppu;
     IrqController irq;
@@ -223,7 +717,7 @@ void test_ppu_mode3_render_and_hash() {
     }
     ppu.render_scanline(0, vram, palette);
 
-    const auto& framebuffer = ppu.framebuffer();
+    const auto framebuffer = ppu.framebuffer();
     const std::span<const u16> row(framebuffer.data(), kScreenWidth);
     expect(hash_words(row) == 0x9110C6E576A2850Aull, "mode 3 scanline hash should match golden output");
 
@@ -250,7 +744,7 @@ void test_ppu_mode4_render_hash() {
     }
 
     ppu.render_scanline(0, vram, palette);
-    const auto& framebuffer = ppu.framebuffer();
+    const auto framebuffer = ppu.framebuffer();
     const std::span<const u16> row(framebuffer.data(), kScreenWidth);
     expect(hash_words(row) == 0x6686428D3269F009ull, "mode 4 scanline hash should match golden output");
 }
@@ -327,6 +821,33 @@ void test_dma_vblank_trigger() {
     expect(cycles > 0, "VBlank-start DMA should run after a VBlank trigger is requested");
     expect(context.bus.ewram()[0x30] == 0x0Du && context.bus.ewram()[0x33] == 0xCAu,
            "VBlank-start DMA should copy the requested word into destination memory");
+}
+
+void test_dma_register_readback_masks() {
+    TestBusContext context;
+    context.reset();
+
+    (void)context.bus.write(kDma0Sad, 0xDEADDEADu, BusWidth::Word, AccessType::Io, 0);
+    (void)context.bus.write(kDma0Dad, 0xBEEFBEEFu, BusWidth::Word, AccessType::Io, 0);
+    (void)context.bus.write(kDma0CntL, 0x1234u, BusWidth::Half, AccessType::Io, 0);
+    (void)context.bus.write(kDma0CntH, 0xFFFFu, BusWidth::Half, AccessType::Io, 0);
+
+    expect(context.bus.read(kDma0Sad, BusWidth::Half, AccessType::Io, 0).open_bus,
+           "DMA source low-half reads should be reported as open bus");
+    expect(context.bus.read(kDma0Sad + 2u, BusWidth::Half, AccessType::Io, 0).open_bus,
+           "DMA source high-half reads should be reported as open bus");
+    expect(context.bus.read(kDma0Dad, BusWidth::Half, AccessType::Io, 0).open_bus,
+           "DMA destination low-half reads should be reported as open bus");
+    expect(context.bus.read(kDma0Dad + 2u, BusWidth::Half, AccessType::Io, 0).open_bus,
+           "DMA destination high-half reads should be reported as open bus");
+    expect(context.bus.read(kDma0CntL, BusWidth::Half, AccessType::Io, 0).value == 0u,
+           "DMA length readback should expose zero like hardware");
+    expect(context.bus.read(kDma0CntH, BusWidth::Half, AccessType::Io, 0).value == 0xF7E0u,
+           "DMA0 control readback should mask to the hardware-visible bits");
+
+    (void)context.bus.write(kDma0CntH + 36u, 0xFFFFu, BusWidth::Half, AccessType::Io, 0);
+    expect(context.bus.read(kDma0CntH + 36u, BusWidth::Half, AccessType::Io, 0).value == 0xFFE0u,
+           "DMA3 control readback should preserve the wider hardware-visible mask");
 }
 
 void test_audio_fifo_timer_cadence() {
@@ -505,15 +1026,30 @@ int main() {
         test_scheduler();
         test_irq_controller();
         test_bus_open_bus_and_alignment();
+        test_thumb_write_only_io_reads_use_prefetch_bus();
+        test_bus_rom_latch_for_out_of_bounds_reads();
         test_cpu_misaligned_arm_ldr_rotation();
         test_hle_swi_halt_without_bios();
         test_cpu_thumb_register_offset_halfword_and_signed_loads();
+        test_cpu_thumb_sp_relative_load_store();
+        test_cpu_thumb_bl_target_and_return();
+        test_cpu_thumb_irq_returns_to_next_instruction();
+        test_cpu_thumb_high_register_pc_read_uses_visible_pc();
+        test_cpu_thumb_blx_style_thunk_returns_after_bx();
+        test_cpu_arm_register_shift_pc_visibility();
+        test_cpu_arm_adc_sbc_rsc_flags();
+        test_cpu_thumb_adc_sbc_flags();
+        test_cpu_arm_long_multiply_preserves_cv();
+        test_io_register_read_masks_for_ppu();
+        test_io_register_read_masks_for_sound();
+        test_mgba_log_enable_and_buffer_clearing();
         test_ppu_mode3_render_and_hash();
         test_ppu_mode4_render_hash();
         test_timer_overflow_irq();
         test_dma_immediate_copy();
         test_dma_hblank_irq();
         test_dma_vblank_trigger();
+        test_dma_register_readback_masks();
         test_audio_fifo_timer_cadence();
         test_input_registers();
         test_keypad_irq_or_and_modes();

@@ -37,7 +37,7 @@ public:
     [[nodiscard]] Bus& bus();
     [[nodiscard]] Arm7tdmi& cpu();
     [[nodiscard]] const Ppu& ppu() const;
-    [[nodiscard]] const std::array<u16, kFramebufferPixels>& framebuffer() const;
+    [[nodiscard]] std::span<const u16> framebuffer() const;
 
 private:
     void refresh_schedule();

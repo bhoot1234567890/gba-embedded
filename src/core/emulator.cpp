@@ -70,7 +70,7 @@ void Emulator::run_frame() {
 }
 
 void Emulator::set_keys(u16 key_mask) {
-    bus_.set_keyinput(static_cast<u16>((~key_mask) & 0x03FFu));
+    bus_.set_keyinput(static_cast<u16>(static_cast<u16>(~key_mask) & 0x03FFu));
 }
 
 Bus& Emulator::bus() {
@@ -85,7 +85,7 @@ const Ppu& Emulator::ppu() const {
     return ppu_;
 }
 
-const std::array<u16, kFramebufferPixels>& Emulator::framebuffer() const {
+std::span<const u16> Emulator::framebuffer() const {
     return ppu_.framebuffer();
 }
 

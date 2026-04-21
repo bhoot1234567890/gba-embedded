@@ -3,10 +3,39 @@
 #include <algorithm>
 #include <cstring>
 
+#ifdef GBA_PLATFORM_ESP32
+#include "esp_heap_caps.h"
+#endif
+
 #include "gba/core/constants.hpp"
 #include "gba/core/irq.hpp"
 
 namespace gba {
+
+namespace {
+
+u16* alloc_framebuffer() {
+#ifdef GBA_PLATFORM_ESP32
+    auto* ptr = static_cast<u16*>(heap_caps_malloc(kFramebufferPixels * sizeof(u16), MALLOC_CAP_SPIRAM));
+    if (ptr) {
+        std::fill_n(ptr, kFramebufferPixels, u16{0x7FFF});
+        return ptr;
+    }
+    ptr = static_cast<u16*>(heap_caps_malloc(kFramebufferPixels * sizeof(u16), MALLOC_CAP_8BIT));
+    if (ptr) {
+        std::fill_n(ptr, kFramebufferPixels, u16{0x7FFF});
+        return ptr;
+    }
+    return nullptr;
+#else
+    return new u16[kFramebufferPixels]();
+#endif
+}
+
+}  // namespace
+
+Ppu::Ppu()
+    : framebuffer_(alloc_framebuffer()) {}
 
 namespace {
 

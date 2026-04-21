@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <memory>
 #include <optional>
 
 #include "gba/core/constants.hpp"
@@ -12,6 +13,8 @@ class IrqController;
 
 class Ppu {
 public:
+    Ppu();
+
     void reset();
 
     [[nodiscard]] u32 read_register(u32 address, BusWidth width) const;
@@ -28,7 +31,7 @@ public:
     [[nodiscard]] std::optional<int> consume_scanline_ready();
     bool consume_frame_ready();
 
-    [[nodiscard]] const std::array<u16, kFramebufferPixels>& framebuffer() const;
+    [[nodiscard]] std::span<const u16> framebuffer() const;
 
     [[nodiscard]] u16 dispcnt() const;
     [[nodiscard]] u16 dispstat() const;
@@ -69,7 +72,8 @@ private:
     std::array<s32, 2> bg_ref_x_{};
     std::array<s32, 2> bg_ref_y_{};
 
-    std::array<u16, kFramebufferPixels> framebuffer_{};
+    /* Heap-allocated framebuffer — use PSRAM on ESP32 when available */
+    std::unique_ptr<u16[]> framebuffer_;
     u64 next_event_cycle_ = 960;
     bool hblank_ = false;
     bool vblank_ = false;

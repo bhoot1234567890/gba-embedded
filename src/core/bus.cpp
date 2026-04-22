@@ -144,9 +144,7 @@ BusAccessResult Bus::read(u32 address, BusWidth width, AccessType access, u64 cy
     } else if ((address & 0x0F000000u) == 0x03000000u) {
         result.value = read_array(iwram_span, address - 0x03000000u, width);
     } else if ((address & 0x0F000000u) == 0x04000000u) {
-        auto io_result = read_io(address, width, access, cycle_now);
-        prefetch_advance(static_cast<int>(io_result.cycles));
-        return io_result;
+        return read_io(address, width, access, cycle_now);
     } else if ((address & 0x0F000000u) == 0x05000000u) {
         result.value = read_array(palette_span, address - 0x05000000u, width);
     } else if ((address & 0x0F000000u) == 0x06000000u) {
@@ -220,11 +218,6 @@ BusAccessResult Bus::read(u32 address, BusWidth width, AccessType access, u64 cy
         result.open_bus = true;
     }
 
-    /* Advance prefetch for non-cartridge-bus accesses (ROM bus free) */
-    if (!(address >= 0x08000000u && address < 0x10000000u)) {
-        prefetch_advance(static_cast<int>(result.cycles));
-    }
-
     record_open_bus_read(result.value, width);
     return result;
 }
@@ -245,9 +238,7 @@ BusAccessResult Bus::write(u32 address, u32 value, BusWidth width, AccessType ac
     } else if ((address & 0x0F000000u) == 0x03000000u) {
         write_array(iwram_w, address - 0x03000000u, value, width);
     } else if ((address & 0x0F000000u) == 0x04000000u) {
-        auto io_result = write_io(address, value, width, cycle_now);
-        prefetch_advance(static_cast<int>(io_result.cycles));
-        return io_result;
+        return write_io(address, value, width, cycle_now);
     } else if ((address & 0x0F000000u) == 0x05000000u) {
         if (width == BusWidth::Byte) {
             const auto aligned = align_down(address - 0x05000000u, 2u);
@@ -284,11 +275,6 @@ BusAccessResult Bus::write(u32 address, u32 value, BusWidth width, AccessType ac
     if (!has_access_flag(access, AccessType::Dma) && (address & 0x0F000000u) == 0x04000000u) {
         const auto dma_cycle = cycle_now + result.cycles;
         result.cycles += service_dma(dma_cycle);
-    }
-
-    /* Advance prefetch for non-cartridge-bus writes */
-    if (!(address >= 0x08000000u && address < 0x10000000u)) {
-        prefetch_advance(static_cast<int>(result.cycles));
     }
 
     return result;

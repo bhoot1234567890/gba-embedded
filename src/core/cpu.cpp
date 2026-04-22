@@ -125,6 +125,57 @@ struct ShiftResult {
     }
 }
 
+// Booth-encoding carry calculation for multiply long (from NanoBoyAdvance / zaydlang, calc84maniac)
+[[nodiscard]] bool multiply_carry_lo(u32 multiplicand, u32 multiplier, u32 accum = 0) {
+    multiplicand |= 1;  // low bit cannot propagate to carry
+    u32 booth = static_cast<u32>(static_cast<s32>(multiplier << 31) >> 31);
+    u32 carry = multiplicand * booth;
+    u32 sum = carry + accum;
+    int shift = 29;
+    do {
+        for (int i = 0; i < 4; i++, shift -= 2) {
+            u32 next_booth = static_cast<u32>(static_cast<s32>(multiplier << shift) >> shift);
+            u32 factor = next_booth - booth;
+            booth = next_booth;
+            u32 addend = multiplicand * factor;
+            accum ^= carry ^ addend;
+            sum += addend;
+            carry = sum - accum;
+        }
+    } while (booth != multiplier);
+    return (carry >> 31) != 0;
+}
+
+template<bool sign_extend>
+[[nodiscard]] bool multiply_carry_hi(u32 multiplicand, u32 multiplier, u32 accum_hi = 0) {
+    u32 mp, mr;
+    if constexpr (sign_extend) {
+        mp = static_cast<u32>(static_cast<s32>(multiplicand) >> 6);
+        mr = static_cast<u32>(static_cast<s32>(multiplier) >> 26);
+    } else {
+        mp = multiplicand >> 6;
+        mr = multiplier >> 26;
+    }
+    mp |= 1;  // low bit cannot propagate to carry
+    u32 carry = ~accum_hi & 0x20000000u;
+    u32 accum = accum_hi - 0x08000000u;
+    u32 booth0 = static_cast<u32>(static_cast<s32>(mr << 27) >> 27);
+    u32 booth1 = static_cast<u32>(static_cast<s32>(mr << 29) >> 29);
+    u32 booth2 = static_cast<u32>(static_cast<s32>(mr << 31) >> 31);
+    u32 factor0 = mr - booth0;
+    u32 factor1 = booth0 - booth1;
+    u32 factor2 = booth1 - booth2;
+    u32 addend = mp * factor2;
+    accum -= addend & 0x10000000u;
+    addend = mp * factor1;
+    accum -= addend & 0x40000000u;
+    u32 sum = accum + (addend & 0x20000000u);
+    accum -= carry;
+    addend = mp * factor0;
+    sum += addend & 0x40000000u;
+    return ((sum ^ accum) >> 31) != 0;
+}
+
 }  // namespace
 
 Arm7tdmi::Arm7tdmi(Bus& bus, IrqController& irq, TraceLogger* logger)
@@ -166,6 +217,7 @@ u64 IRAM_ATTR Arm7tdmi::cpu_run_until(u64 target_cycle) {
         /* Inline step() to avoid per-instruction function call overhead */
         bus_.service_timers(current_cycle_);
         current_cycle_ += bus_.service_dma(current_cycle_);
+        irq_.advance(current_cycle_);
 
         if (state_.halted || bus_.halted()) {
             state_.halted = true;
@@ -541,23 +593,33 @@ u32 IRAM_ATTR Arm7tdmi::execute_arm(u32 instruction) {
     if ((instruction & 0x0F8000F0u) == 0x00800090u) {
         const auto accumulate = test_bit(instruction, 21);
         const auto set_flags = test_bit(instruction, 20);
-        const auto unsigned_mul = !test_bit(instruction, 22);
+        const auto sign_extend_mul = test_bit(instruction, 22);
         const auto rd_hi = (instruction >> 16u) & 0xFu;
         const auto rd_lo = (instruction >> 12u) & 0xFu;
         const auto rs = (instruction >> 8u) & 0xFu;
         const auto rm = instruction & 0xFu;
 
+        const auto lhs = read_reg(rm);
+        const auto rhs = read_reg(rs);
+
         u64 product;
-        if (unsigned_mul) {
-            product = static_cast<u64>(read_reg(rm)) * static_cast<u64>(read_reg(rs));
+        if (sign_extend_mul) {
+            product = static_cast<u64>(static_cast<s64>(sign_extend<32>(lhs)))
+                                       * static_cast<s64>(sign_extend<32>(rhs));
         } else {
-            product = static_cast<u64>(static_cast<s64>(sign_extend<32>(read_reg(rm)))
-                                       * static_cast<s64>(sign_extend<32>(read_reg(rs))));
+            product = static_cast<u64>(lhs) * static_cast<u64>(rhs);
         }
 
-        u64 result = accumulate
-            ? product + ((static_cast<u64>(state_.regs[rd_hi]) << 32u) | static_cast<u64>(state_.regs[rd_lo]))
-            : product;
+        u32 accum_lo = 0;
+        u32 accum_hi = 0;
+        u64 result;
+        if (accumulate) {
+            accum_lo = state_.regs[rd_lo];
+            accum_hi = state_.regs[rd_hi];
+            result = product + ((static_cast<u64>(accum_hi) << 32u) | static_cast<u64>(accum_lo));
+        } else {
+            result = product;
+        }
 
         state_.regs[rd_lo] = static_cast<u32>(result);
         state_.regs[rd_hi] = static_cast<u32>(result >> 32u);
@@ -565,6 +627,11 @@ u32 IRAM_ATTR Arm7tdmi::execute_arm(u32 instruction) {
         if (set_flags) {
             assign_bit(state_.cpsr, 31, (result >> 63u) != 0);
             assign_bit(state_.cpsr, 30, result == 0u);
+            // Booth-encoding carry calculation (from NanoBoyAdvance / zaydlang, calc84maniac)
+            const auto carry = sign_extend_mul
+                ? multiply_carry_hi<true>(lhs, rhs, accum_hi)
+                : multiply_carry_hi<false>(lhs, rhs, accum_hi);
+            assign_bit(state_.cpsr, 29, carry);
         }
 
         current_cycle_ += 3;

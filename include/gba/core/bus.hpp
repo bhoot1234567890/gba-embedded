@@ -44,6 +44,7 @@ public:
     void clear_halt();
     void service_timers(u64 cycle_now);
     [[nodiscard]] u32 service_dma(u64 cycle_now);
+    void prefetch_advance(int cycles);
 
 private:
     [[nodiscard]] static u32 read_array(std::span<const u8> bytes, u32 address, BusWidth width);
@@ -51,6 +52,7 @@ private:
     [[nodiscard]] static u32 expand_bus_latch(u32 value, BusWidth width);
     void record_open_bus_read(u32 value, BusWidth width);
     void update_keypad_irq();
+    void update_wait_state_table();
     [[nodiscard]] u32 region_cycles(u32 address, BusWidth width, AccessType access, u64 cycle_now) const;
     [[nodiscard]] u32 prefetch_region_cycles(u32 address, BusWidth width) const;
     [[nodiscard]] BusAccessResult read_io(u32 address, BusWidth width, AccessType access, u64 cycle_now);
@@ -64,11 +66,11 @@ private:
     IrqController& irq_;
 
     /* Heap-allocated memory arrays — use PSRAM on ESP32 when available */
-    std::unique_ptr<u8[]> ewram_;
-    std::unique_ptr<u8[]> iwram_;
-    std::unique_ptr<u8[]> palette_;
-    std::unique_ptr<u8[]> vram_;
-    std::unique_ptr<u8[]> oam_;
+    std::unique_ptr<u8, void (*)(u8*)> ewram_;
+    std::unique_ptr<u8, void (*)(u8*)> iwram_;
+    std::unique_ptr<u8, void (*)(u8*)> palette_;
+    std::unique_ptr<u8, void (*)(u8*)> vram_;
+    std::unique_ptr<u8, void (*)(u8*)> oam_;
 
     /* GamePak prefetch buffer — 8 halfwords deep */
     struct PrefetchState {
@@ -84,7 +86,6 @@ private:
     } prefetch_;
 
     void prefetch_stop();
-    void prefetch_advance(int cycles);
 
     u16 keyinput_ = 0x03FF;
     u16 keycnt_ = 0;
@@ -96,9 +97,12 @@ private:
     bool halted_ = false;
     bool bios_latch_valid_ = false;
     bool rom_latch_valid_ = false;
+    AccessType last_access_ = AccessType::NonSequential;
     u32 bios_latch_ = 0;
     u32 rom_latch_ = 0;
     u32 open_bus_ = 0;
+    std::array<std::array<u8, 16>, 2> wait16_{};
+    std::array<std::array<u8, 16>, 2> wait32_{};
     DebugOutputCallback debug_callback_;
     std::array<char, 256> debug_string_{};
 };

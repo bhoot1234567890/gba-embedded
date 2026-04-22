@@ -18,13 +18,32 @@ namespace gba {
 
 namespace {
 
-/* Allocate memory — prefer PSRAM on ESP32, fall back to heap */
-u8* alloc_memory(size_t size) {
+void free_memory(u8* ptr) {
+    if (!ptr) {
+        return;
+    }
 #ifdef GBA_PLATFORM_ESP32
-    auto* ptr = static_cast<u8*>(heap_caps_malloc(size, MALLOC_CAP_SPIRAM));
+    heap_caps_free(ptr);
+#else
+    delete[] ptr;
+#endif
+}
+
+/* Allocate memory. Keep the hottest small blocks in internal SRAM on ESP32. */
+u8* alloc_memory(size_t size, bool prefer_internal) {
+#ifdef GBA_PLATFORM_ESP32
+    auto* ptr = static_cast<u8*>(heap_caps_malloc(
+        size, prefer_internal ? (MALLOC_CAP_INTERNAL | MALLOC_CAP_8BIT) : MALLOC_CAP_SPIRAM));
     if (ptr) {
         std::memset(ptr, 0, size);
         return ptr;
+    }
+    if (!prefer_internal) {
+        ptr = static_cast<u8*>(heap_caps_malloc(size, MALLOC_CAP_INTERNAL | MALLOC_CAP_8BIT));
+        if (ptr) {
+            std::memset(ptr, 0, size);
+            return ptr;
+        }
     }
     ptr = static_cast<u8*>(heap_caps_malloc(size, MALLOC_CAP_8BIT));
     if (ptr) {
@@ -73,11 +92,11 @@ u8* alloc_memory(size_t size) {
 
 Bus::Bus(Cartridge& cartridge, Ppu& ppu, Timers& timers, DmaEngine& dma, Apu& apu, IrqController& irq)
     : cartridge_(cartridge), ppu_(ppu), timers_(timers), dma_(dma), apu_(apu), irq_(irq),
-      ewram_(alloc_memory(kEwramSize)),
-      iwram_(alloc_memory(kIwramSize)),
-      palette_(alloc_memory(kPaletteSize)),
-      vram_(alloc_memory(kVramSize)),
-      oam_(alloc_memory(kOamSize)) {}
+      ewram_(alloc_memory(kEwramSize, false), free_memory),
+      iwram_(alloc_memory(kIwramSize, true), free_memory),
+      palette_(alloc_memory(kPaletteSize, true), free_memory),
+      vram_(alloc_memory(kVramSize, false), free_memory),
+      oam_(alloc_memory(kOamSize, true), free_memory) {}
 
 void Bus::reset() {
     if (ewram_) std::memset(ewram_.get(), 0, kEwramSize);
@@ -93,11 +112,13 @@ void Bus::reset() {
     halted_ = false;
     bios_latch_valid_ = false;
     rom_latch_valid_ = false;
+    last_access_ = AccessType::NonSequential;
     bios_latch_ = 0;
     rom_latch_ = 0;
     open_bus_ = 0;
     prefetch_ = {};
     debug_string_.fill('\0');
+    update_wait_state_table();
 }
 
 BusAccessResult Bus::read(u32 address, BusWidth width, AccessType access, u64 cycle_now) {
@@ -144,7 +165,9 @@ BusAccessResult Bus::read(u32 address, BusWidth width, AccessType access, u64 cy
     } else if ((address & 0x0F000000u) == 0x03000000u) {
         result.value = read_array(iwram_span, address - 0x03000000u, width);
     } else if ((address & 0x0F000000u) == 0x04000000u) {
-        return read_io(address, width, access, cycle_now);
+        auto io_result = read_io(address, width, access, cycle_now);
+        last_access_ = access;
+        return io_result;
     } else if ((address & 0x0F000000u) == 0x05000000u) {
         result.value = read_array(palette_span, address - 0x05000000u, width);
     } else if ((address & 0x0F000000u) == 0x06000000u) {
@@ -161,24 +184,61 @@ BusAccessResult Bus::read(u32 address, BusWidth width, AccessType access, u64 cy
         const auto rom = cartridge_.rom();
         const auto aligned = align_down(offset, static_cast<u32>(width));
         const auto width_bytes = static_cast<u32>(width);
+        const auto page = static_cast<std::size_t>(address >> 24u);
 
-        /* Check prefetch buffer hit for code fetches */
-        const auto entries_needed = (width == BusWidth::Word) ? 2 : 1;
-        if (is_code_fetch && prefetch_.active && prefetch_.head_address == address &&
-            prefetch_.count >= entries_needed) {
-            /* Prefetch hit — 1 internal cycle, ROM bus stays free */
+        auto sequential = has_access_flag(access, AccessType::Sequential);
+        if ((address & 0x1FFFFu) == 0u ||
+            (has_access_flag(last_access_, AccessType::Dma) && !has_access_flag(access, AccessType::Dma))) {
+            sequential = false;
+        }
+
+        const auto stop_prefetch_penalty = [&]() -> u32 {
+            if (!prefetch_.active) {
+                return 0;
+            }
+
+            const auto half_duty_plus_one = (prefetch_.duty >> 1) + 1;
+            const auto countdown = prefetch_.countdown;
+            if (countdown == 1 || (prefetch_.opcode_width == 4 && countdown == half_duty_plus_one)) {
+                return 1;
+            }
+            return 0;
+        };
+
+        if (is_code_fetch && prefetch_.active && prefetch_.count != 0 &&
+            address == prefetch_.head_address && prefetch_.opcode_width == static_cast<int>(width_bytes)) {
             result.cycles = 1;
             if (aligned + width_bytes <= rom.size()) {
                 result.value = cartridge_.read_rom(offset, width);
             } else {
                 result.value = gamepak_open_bus_value(address, width);
             }
-            prefetch_.count -= entries_needed;
-            prefetch_.head_address += entries_needed * 2u;
+            prefetch_.count--;
+            prefetch_.head_address += width_bytes;
             prefetch_advance(1);
+        } else if (is_code_fetch && prefetch_.active && prefetch_.countdown > 0 &&
+                   address == prefetch_.last_address &&
+                   prefetch_.opcode_width == static_cast<int>(width_bytes)) {
+            result.cycles = static_cast<u32>(prefetch_.countdown);
+            if (aligned + width_bytes <= rom.size()) {
+                result.value = cartridge_.read_rom(offset, width);
+            } else {
+                result.value = gamepak_open_bus_value(address, width);
+            }
+            prefetch_advance(prefetch_.countdown);
+            prefetch_.head_address = prefetch_.last_address;
+            prefetch_.count = 0;
         } else {
-            /* Prefetch miss or data fetch — full ROM access */
+            const auto penalty = stop_prefetch_penalty();
+            result.cycles = width == BusWidth::Word ? wait32_[static_cast<int>(sequential)][page]
+                                                    : wait16_[static_cast<int>(sequential)][page];
             prefetch_stop();
+
+            if (is_code_fetch && prefetch_.was_disabled) {
+                result.cycles = width == BusWidth::Word ? wait32_[0][page] : wait16_[0][page];
+                prefetch_.was_disabled = false;
+            }
+            result.cycles += penalty;
 
             if (aligned + width_bytes <= rom.size()) {
                 result.value = cartridge_.read_rom(offset, width);
@@ -196,21 +256,24 @@ BusAccessResult Bus::read(u32 address, BusWidth width, AccessType access, u64 cy
                 result.value = gamepak_open_bus_value(address, width);
             }
 
-            /* Start prefetch after ROM code fetch if enabled */
             if (is_code_fetch && test_bit(waitcnt_, 14u)) {
-                const auto next_address = address + width_bytes;
-                const auto seq_half = prefetch_region_cycles(next_address, BusWidth::Half);
                 prefetch_.active = true;
-                prefetch_.head_address = next_address;
-                prefetch_.last_address = next_address;
                 prefetch_.count = 0;
-                prefetch_.capacity = 8;
-                prefetch_.opcode_width = 2;
-                prefetch_.duty = static_cast<int>(seq_half);
-                prefetch_.countdown = static_cast<int>(seq_half);
+                prefetch_.opcode_width = static_cast<int>(width_bytes);
+                prefetch_.capacity = width == BusWidth::Word ? 4 : 8;
+                prefetch_.duty = width == BusWidth::Word ? wait32_[1][page] : wait16_[1][page];
+                prefetch_.countdown = prefetch_.duty;
+                prefetch_.last_address = address + width_bytes;
+                prefetch_.head_address = prefetch_.last_address;
             }
         }
     } else if (address >= 0x0E000000u && address < 0x10000000u) {
+        if (prefetch_.active) {
+            result.cycles += ((prefetch_.countdown == 1 ||
+                               (prefetch_.opcode_width == 4 && prefetch_.countdown == ((prefetch_.duty >> 1) + 1)))
+                                  ? 1u
+                                  : 0u);
+        }
         result.value = cartridge_.read_save(address - 0x0E000000u, width);
         prefetch_stop();
     } else {
@@ -219,6 +282,7 @@ BusAccessResult Bus::read(u32 address, BusWidth width, AccessType access, u64 cy
     }
 
     record_open_bus_read(result.value, width);
+    last_access_ = access;
     return result;
 }
 
@@ -238,7 +302,9 @@ BusAccessResult Bus::write(u32 address, u32 value, BusWidth width, AccessType ac
     } else if ((address & 0x0F000000u) == 0x03000000u) {
         write_array(iwram_w, address - 0x03000000u, value, width);
     } else if ((address & 0x0F000000u) == 0x04000000u) {
-        return write_io(address, value, width, cycle_now);
+        auto io_result = write_io(address, value, width, cycle_now);
+        last_access_ = access;
+        return io_result;
     } else if ((address & 0x0F000000u) == 0x05000000u) {
         if (width == BusWidth::Byte) {
             const auto aligned = align_down(address - 0x05000000u, 2u);
@@ -267,7 +333,32 @@ BusAccessResult Bus::write(u32 address, u32 value, BusWidth width, AccessType ac
         if (width != BusWidth::Byte) {
             write_array(oam_w, address - 0x07000000u, value, width);
         }
+    } else if (address >= 0x08000000u && address < 0x0E000000u) {
+        const auto page = static_cast<std::size_t>(address >> 24u);
+        auto sequential = has_access_flag(access, AccessType::Sequential);
+        if ((address & 0x1FFFFu) == 0u ||
+            (has_access_flag(last_access_, AccessType::Dma) && !has_access_flag(access, AccessType::Dma))) {
+            sequential = false;
+        }
+
+        result.cycles = width == BusWidth::Word ? wait32_[static_cast<int>(sequential)][page]
+                                                : wait16_[static_cast<int>(sequential)][page];
+        if (prefetch_.active) {
+            const auto half_duty_plus_one = (prefetch_.duty >> 1) + 1;
+            if (prefetch_.countdown == 1 ||
+                (prefetch_.opcode_width == 4 && prefetch_.countdown == half_duty_plus_one)) {
+                result.cycles += 1;
+            }
+        }
+        prefetch_stop();
     } else if (address >= 0x0E000000u && address < 0x10000000u) {
+        if (prefetch_.active) {
+            const auto half_duty_plus_one = (prefetch_.duty >> 1) + 1;
+            if (prefetch_.countdown == 1 ||
+                (prefetch_.opcode_width == 4 && prefetch_.countdown == half_duty_plus_one)) {
+                result.cycles += 1;
+            }
+        }
         cartridge_.write_save(address - 0x0E000000u, value, width);
         prefetch_stop();
     }
@@ -277,6 +368,7 @@ BusAccessResult Bus::write(u32 address, u32 value, BusWidth width, AccessType ac
         result.cycles += service_dma(dma_cycle);
     }
 
+    last_access_ = access;
     return result;
 }
 
@@ -345,6 +437,8 @@ void Bus::service_timers(u64 cycle_now) {
 
 void Bus::prefetch_stop() {
     prefetch_.active = false;
+    prefetch_.count = 0;
+    prefetch_.countdown = 0;
 }
 
 void Bus::prefetch_advance(int cycles) {
@@ -368,6 +462,49 @@ u32 Bus::service_dma(u64 cycle_now) {
         return 0;
     }
     return dma_.service_due(cycle_now, *this, irq_);
+}
+
+void Bus::update_wait_state_table() {
+    static constexpr std::array<u8, 4> nseq{5u, 4u, 3u, 9u};
+    static constexpr std::array<u8, 2> seq0{3u, 2u};
+    static constexpr std::array<u8, 2> seq1{5u, 2u};
+    static constexpr std::array<u8, 2> seq2{9u, 2u};
+
+    const auto sram = nseq[waitcnt_ & 0x3u];
+    const auto ws0_n = (waitcnt_ >> 2u) & 0x3u;
+    const auto ws0_s = (waitcnt_ >> 4u) & 0x1u;
+    const auto ws1_n = (waitcnt_ >> 5u) & 0x3u;
+    const auto ws1_s = (waitcnt_ >> 7u) & 0x1u;
+    const auto ws2_n = (waitcnt_ >> 8u) & 0x3u;
+    const auto ws2_s = (waitcnt_ >> 10u) & 0x1u;
+
+    for (std::size_t mirror = 0; mirror < 2; ++mirror) {
+        const auto ws0_page = 0x8u + mirror;
+        const auto ws1_page = 0xAu + mirror;
+        const auto ws2_page = 0xCu + mirror;
+        const auto sram_page = 0xEu + mirror;
+
+        wait16_[0][ws0_page] = nseq[ws0_n];
+        wait16_[0][ws1_page] = nseq[ws1_n];
+        wait16_[0][ws2_page] = nseq[ws2_n];
+
+        wait16_[1][ws0_page] = seq0[ws0_s];
+        wait16_[1][ws1_page] = seq1[ws1_s];
+        wait16_[1][ws2_page] = seq2[ws2_s];
+
+        wait32_[0][ws0_page] = static_cast<u8>(wait16_[0][ws0_page] + wait16_[1][ws0_page]);
+        wait32_[0][ws1_page] = static_cast<u8>(wait16_[0][ws1_page] + wait16_[1][ws1_page]);
+        wait32_[0][ws2_page] = static_cast<u8>(wait16_[0][ws2_page] + wait16_[1][ws2_page]);
+
+        wait32_[1][ws0_page] = static_cast<u8>(wait16_[1][ws0_page] * 2u);
+        wait32_[1][ws1_page] = static_cast<u8>(wait16_[1][ws1_page] * 2u);
+        wait32_[1][ws2_page] = static_cast<u8>(wait16_[1][ws2_page] * 2u);
+
+        wait16_[0][sram_page] = sram;
+        wait16_[1][sram_page] = sram;
+        wait32_[0][sram_page] = sram;
+        wait32_[1][sram_page] = sram;
+    }
 }
 
 void Bus::update_keypad_irq() {
@@ -656,36 +793,28 @@ u32 Bus::region_cycles(u32 address, BusWidth width, AccessType access, u64 cycle
         return base + contiguous_video_penalty();
     }
     if (address >= 0x08000000u && address < 0x0E000000u) {
-        const auto sequential = has_access_flag(access, AccessType::Sequential);
-        const auto region = (address >> 25u) & 0x3u;
-        const auto first_shift = std::array<u32, 3>{2u, 5u, 8u};
-        const auto second_bit = std::array<u32, 3>{4u, 7u, 10u};
-        const auto first_cycles = std::array<u32, 4>{5u, 4u, 3u, 9u};
-        const auto slow_second_cycles = std::array<u32, 3>{3u, 5u, 9u};
-        const auto first = first_cycles[(waitcnt_ >> first_shift[region]) & 0x3u];
-        const auto second = test_bit(waitcnt_, second_bit[region]) ? 2u : slow_second_cycles[region];
-        const auto half_cycles = sequential ? second : first;
-        return width == BusWidth::Word ? (half_cycles + second) : half_cycles;
+        auto sequential = has_access_flag(access, AccessType::Sequential);
+        if ((address & 0x1FFFFu) == 0u ||
+            (has_access_flag(last_access_, AccessType::Dma) && !has_access_flag(access, AccessType::Dma))) {
+            sequential = false;
+        }
+        const auto page = static_cast<std::size_t>(address >> 24u);
+        return width == BusWidth::Word ? wait32_[static_cast<int>(sequential)][page]
+                                       : wait16_[static_cast<int>(sequential)][page];
     }
     if (address >= 0x0E000000u && address < 0x10000000u) {
-        const auto save_cycles = std::array<u32, 4>{5u, 4u, 3u, 9u};
-        return save_cycles[waitcnt_ & 0x3u];
+        return wait16_[0][0xEu];
     }
     return 1;
 }
 
 u32 Bus::prefetch_region_cycles(u32 address, BusWidth width) const {
-    /* ROM sequential wait state calculation for prefetch duty */
-    const auto region = (address >> 25u) & 0x3u;
-    const auto second_bit = std::array<u32, 3>{4u, 7u, 10u};
-    const auto slow_second_cycles = std::array<u32, 3>{3u, 5u, 9u};
-    const auto second = test_bit(waitcnt_, second_bit[region]) ? 2u : slow_second_cycles[region];
-    return width == BusWidth::Word ? (second + second) : second;
+    const auto page = static_cast<std::size_t>(address >> 24u);
+    return width == BusWidth::Word ? wait32_[1][page] : wait16_[1][page];
 }
 
 BusAccessResult Bus::read_io(u32 address, BusWidth width, AccessType access, u64 cycle_now) {
     (void)access;
-    (void)cycle_now;
     BusAccessResult result{};
     result.cycles = 1;
     const auto io_address = width == BusWidth::Word ? align_down(address, 4u)
@@ -710,7 +839,13 @@ BusAccessResult Bus::read_io(u32 address, BusWidth width, AccessType access, u64
     } else if ((io_address >= kDma0Sad && io_address < kDma0Sad + 48u)) {
         result.value = dma_.read_register(io_address, width);
     } else if (io_address >= kTm0CntL && io_address <= kTm0CntH + 12u) {
-        result.value = timers_.read_register(io_address, width, cycle_now);
+        if (width == BusWidth::Word) {
+            service_timers(cycle_now);
+            result.value = timers_.read_word_register_split(io_address, cycle_now, cycle_now + 1u);
+        } else {
+            service_timers(cycle_now);
+            result.value = timers_.read_register(io_address, width, cycle_now);
+        }
     } else if (io_address == kKeyInput || io_address == kKeyCnt) {
         const auto half = io_address == kKeyInput ? keyinput_ : keycnt_;
         if (width == BusWidth::Byte) {
@@ -770,22 +905,27 @@ BusAccessResult Bus::write_io(u32 address, u32 value, BusWidth width, u64 cycle_
     } else if (io_address >= kDma0Sad && io_address < kDma0Sad + 48u) {
         dma_.write_register(io_address, value, width, cycle_now);
     } else if (io_address >= kTm0CntL && io_address <= kTm0CntH + 12u) {
+        service_timers(cycle_now);
         timers_.write_register(io_address, value, width, cycle_now);
     } else if (io_address == kKeyCnt) {
         keycnt_ = static_cast<u16>(value & 0xFFFFu);
         update_keypad_irq();
     } else if (io_address == kIe || io_address == kIf || io_address == kIme) {
-        irq_.write_register(io_address, value, width);
+        irq_.write_register(io_address, value, width, cycle_now);
     } else if (io_address == kSioCnt) {
         siocnt_ = static_cast<u16>(value & 0xFFFFu);
     } else if (io_address == kRcnt) {
         rcnt_ = static_cast<u16>(value & 0xFFFFu);
     } else if (io_address == kWaitCnt) {
+        const auto prefetch_was_enabled = test_bit(waitcnt_, 14u);
         waitcnt_ = static_cast<u16>(value & 0xFFFFu);
-        /* Update prefetch settings when wait states change */
+        update_wait_state_table();
         if (prefetch_.active) {
-            const auto seq_half = prefetch_region_cycles(prefetch_.head_address, BusWidth::Half);
-            prefetch_.duty = static_cast<int>(seq_half);
+            prefetch_.duty = static_cast<int>(prefetch_region_cycles(
+                prefetch_.head_address, prefetch_.opcode_width == 4 ? BusWidth::Word : BusWidth::Half));
+        }
+        if (prefetch_was_enabled && !test_bit(waitcnt_, 14u)) {
+            prefetch_.was_disabled = true;
         }
         if (!test_bit(waitcnt_, 14u)) {
             prefetch_stop();

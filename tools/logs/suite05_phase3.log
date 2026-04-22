@@ -1,0 +1,390 @@
+=== GBA Test Suite Runner ===
+ROM:  tests/assets/roms/suite.gba
+BIOS: tests/assets/roms/gba_bios.bin
+Booting...
+After 60 frames: PC=0x00000348 CPSR=0x6000005F halted=1 cycle=16769984
+[DBG] Game Boy Advance Test Suite
+===
+[DBG] BEGIN: Timer IRQ tests
+[DBG] Timer IRQ test: FFFF
+[DBG] FAIL: FFFF 0 nops
+[DBG] Got 004E != 0000: FAIL
+[DBG] FAIL: FFFF 1 nop 
+[DBG] Got 004E != 0001: FAIL
+[DBG] FAIL: FFFF 2 nops
+[DBG] Got 004E != 0002: FAIL
+[DBG] FAIL: FFFF 3 nops
+[DBG] Got 004E != 0003: FAIL
+[DBG] FAIL: FFFF 4 nops
+[DBG] Got 004E != 0051: FAIL
+[DBG] FAIL: FFFF 5 nops
+[DBG] Got 004E != 0051: FAIL
+[DBG] FAIL: FFFF 6 nops
+[DBG] Got 004E != 0051: FAIL
+[DBG] FAIL: FFFF 7 nops
+[DBG] Got 004E != 0051: FAIL
+[DBG] FAIL: FFFF 8 nops
+[DBG] Got 004E != 0051: FAIL
+[DBG] FAIL: FFFF 9 nops
+[DBG] Got 004E != 0051: FAIL
+[DBG] Timer IRQ test: FFFE
+[DBG] PASS: FFFE 0 nops
+[DBG] FAIL: FFFE 1 nop 
+[DBG] Got 004F != 0001: FAIL
+[DBG] FAIL: FFFE 2 nops
+[DBG] Got 004F != 0002: FAIL
+[DBG] FAIL: FFFE 3 nops
+[DBG] Got 004F != 0003: FAIL
+[DBG] FAIL: FFFE 4 nops
+[DBG] Got 004F != 0004: FAIL
+[DBG] FAIL: FFFE 5 nops
+[DBG] Got 004F != 0052: FAIL
+[DBG] FAIL: FFFE 6 nops
+[DBG] Got 004F != 0052: FAIL
+[DBG] FAIL: FFFE 7 nops
+[DBG] Got 004F != 0052: FAIL
+[DBG] FAIL: FFFE 8 nops
+[DBG] Got 004F != 0052: FAIL
+[DBG] FAIL: FFFE 9 nops
+[DBG] Got 004F != 0052: FAIL
+[DBG] Timer IRQ test: FFFD
+[DBG] PASS: FFFD 0 nops
+[DBG] PASS: FFFD 1 nop 
+[DBG] FAIL: FFFD 2 nops
+[DBG] Got 004F != 0001: FAIL
+[DBG] FAIL: FFFD 3 nops
+[DBG] Got 004F != 0002: FAIL
+[DBG] FAIL: FFFD 4 nops
+[DBG] Got 004F != 0003: FAIL
+[DBG] FAIL: FFFD 5 nops
+[DBG] Got 004F != 0004: FAIL
+[DBG] FAIL: FFFD 6 nops
+[DBG] Got 004F != 0052: FAIL
+[DBG] FAIL: FFFD 7 nops
+[DBG] Got 004F != 0052: FAIL
+[DBG] FAIL: FFFD 8 nops
+[DBG] Got 004F != 0052: FAIL
+[DBG] FAIL: FFFD 9 nops
+[DBG] Got 004F != 0052: FAIL
+[DBG] Timer IRQ test: FFFC
+[DBG] PASS: FFFC 0 nops
+[DBG] PASS: FFFC 1 nop 
+[DBG] PASS: FFFC 2 nops
+[DBG] FAIL: FFFC 3 nops
+[DBG] Got 004F != 0001: FAIL
+[DBG] FAIL: FFFC 4 nops
+[DBG] Got 004F != 0002: FAIL
+[DBG] FAIL: FFFC 5 nops
+[DBG] Got 004F != 0003: FAIL
+[DBG] FAIL: FFFC 6 nops
+[DBG] Got 004F != 0004: FAIL
+[DBG] FAIL: FFFC 7 nops
+[DBG] Got 004F != 0052: FAIL
+[DBG] FAIL: FFFC 8 nops
+[DBG] Got 004F != 0052: FAIL
+[DBG] FAIL: FFFC 9 nops
+[DBG] Got 004F != 0052: FAIL
+[DBG] Timer IRQ test: FFFB
+[DBG] PASS: FFFB 0 nops
+[DBG] PASS: FFFB 1 nop 
+[DBG] PASS: FFFB 2 nops
+[DBG] PASS: FFFB 3 nops
+[DBG] FAIL: FFFB 4 nops
+[DBG] Got 004F != 0001: FAIL
+[DBG] FAIL: FFFB 5 nops
+[DBG] Got 004F != 0002: FAIL
+[DBG] FAIL: FFFB 6 nops
+[DBG] Got 004F != 0003: FAIL
+[DBG] FAIL: FFFB 7 nops
+[DBG] Got 004F != 0004: FAIL
+[DBG] FAIL: FFFB 8 nops
+[DBG] Got 004F != 0052: FAIL
+[DBG] FAIL: FFFB 9 nops
+[DBG] Got 004F != 0052: FAIL
+[DBG] Timer IRQ test: FFFA
+[DBG] PASS: FFFA 0 nops
+[DBG] PASS: FFFA 1 nop 
+[DBG] PASS: FFFA 2 nops
+[DBG] PASS: FFFA 3 nops
+[DBG] PASS: FFFA 4 nops
+[DBG] FAIL: FFFA 5 nops
+[DBG] Got 004F != 0001: FAIL
+[DBG] FAIL: FFFA 6 nops
+[DBG] Got 004F != 0002: FAIL
+[DBG] FAIL: FFFA 7 nops
+[DBG] Got 004F != 0003: FAIL
+[DBG] FAIL: FFFA 8 nops
+[DBG] Got 004F != 0004: FAIL
+[DBG] FAIL: FFFA 9 nops
+[DBG] Got 004F != 0052: FAIL
+[DBG] Timer IRQ test: FFF9
+[DBG] PASS: FFF9 0 nops
+[DBG] PASS: FFF9 1 nop 
+[DBG] PASS: FFF9 2 nops
+[DBG] PASS: FFF9 3 nops
+[DBG] PASS: FFF9 4 nops
+[DBG] PASS: FFF9 5 nops
+[DBG] FAIL: FFF9 6 nops
+[DBG] Got 004F != 0001: FAIL
+[DBG] FAIL: FFF9 7 nops
+[DBG] Got 004F != 0002: FAIL
+[DBG] FAIL: FFF9 8 nops
+[DBG] Got 004F != 0003: FAIL
+[DBG] FAIL: FFF9 9 nops
+[DBG] Got 004F != 0004: FAIL
+[DBG] Timer IRQ test: FFF8
+[DBG] PASS: FFF8 0 nops
+[DBG] PASS: FFF8 1 nop 
+[DBG] PASS: FFF8 2 nops
+[DBG] PASS: FFF8 3 nops
+[DBG] PASS: FFF8 4 nops
+[DBG] PASS: FFF8 5 nops
+[DBG] PASS: FFF8 6 nops
+[DBG] FAIL: FFF8 7 nops
+[DBG] Got 004F != 0001: FAIL
+[DBG] FAIL: FFF8 8 nops
+[DBG] Got 004F != 0002: FAIL
+[DBG] FAIL: FFF8 9 nops
+[DBG] Got 004F != 0003: FAIL
+[DBG] Timer IRQ test: FFF7
+[DBG] PASS: FFF7 0 nops
+[DBG] PASS: FFF7 1 nop 
+[DBG] PASS: FFF7 2 nops
+[DBG] PASS: FFF7 3 nops
+[DBG] PASS: FFF7 4 nops
+[DBG] PASS: FFF7 5 nops
+[DBG] PASS: FFF7 6 nops
+[DBG] PASS: FFF7 7 nops
+[DBG] FAIL: FFF7 8 nops
+[DBG] Got 004F != 0001: FAIL
+[DBG] FAIL: FFF7 9 nops
+[DBG] Got 004F != 0002: FAIL
+
+--- Suite 05: Timer IRQ ---
+Frames: 94  PC=0x0802BBB4  CPSR=0x8000001F  halted=0  cycle=156094404
+[debug]
+Game Boy Advance Test Suite
+===
+BEGIN: Timer IRQ tests
+Timer IRQ test: FFFF
+FAIL: FFFF 0 nops
+Got 004E != 0000: FAIL
+FAIL: FFFF 1 nop 
+Got 004E != 0001: FAIL
+FAIL: FFFF 2 nops
+Got 004E != 0002: FAIL
+FAIL: FFFF 3 nops
+Got 004E != 0003: FAIL
+FAIL: FFFF 4 nops
+Got 004E != 0051: FAIL
+FAIL: FFFF 5 nops
+Got 004E != 0051: FAIL
+FAIL: FFFF 6 nops
+Got 004E != 0051: FAIL
+FAIL: FFFF 7 nops
+Got 004E != 0051: FAIL
+FAIL: FFFF 8 nops
+Got 004E != 0051: FAIL
+FAIL: FFFF 9 nops
+Got 004E != 0051: FAIL
+Timer IRQ test: FFFE
+PASS: FFFE 0 nops
+FAIL: FFFE 1 nop 
+Got 004F != 0001: FAIL
+FAIL: FFFE 2 nops
+Got 004F != 0002: FAIL
+FAIL: FFFE 3 nops
+Got 004F != 0003: FAIL
+FAIL: FFFE 4 nops
+Got 004F != 0004: FAIL
+FAIL: FFFE 5 nops
+Got 004F != 0052: FAIL
+FAIL: FFFE 6 nops
+Got 004F != 0052: FAIL
+FAIL: FFFE 7 nops
+Got 004F != 0052: FAIL
+FAIL: FFFE 8 nops
+Got 004F != 0052: FAIL
+FAIL: FFFE 9 nops
+Got 004F != 0052: FAIL
+Timer IRQ test: FFFD
+PASS: FFFD 0 nops
+PASS: FFFD 1 nop 
+FAIL: FFFD 2 nops
+Got 004F != 0001: FAIL
+FAIL: FFFD 3 nops
+Got 004F != 0002: FAIL
+FAIL: FFFD 4 nops
+Got 004F != 0003: FAIL
+FAIL: FFFD 5 nops
+Got 004F != 0004: FAIL
+FAIL: FFFD 6 nops
+Got 004F != 0052: FAIL
+FAIL: FFFD 7 nops
+Got 004F != 0052: FAIL
+FAIL: FFFD 8 nops
+Got 004F != 0052: FAIL
+FAIL: FFFD 9 nops
+Got 004F != 0052: FAIL
+Timer IRQ test: FFFC
+PASS: FFFC 0 nops
+PASS: FFFC 1 nop 
+PASS: FFFC 2 nops
+FAIL: FFFC 3 nops
+Got 004F != 0001: FAIL
+FAIL: FFFC 4 nops
+Got 004F != 0002: FAIL
+FAIL: FFFC 5 nops
+Got 004F != 0003: FAIL
+FAIL: FFFC 6 nops
+Got 004F != 0004: FAIL
+FAIL: FFFC 7 nops
+Got 004F != 0052: FAIL
+FAIL: FFFC 8 nops
+Got 004F != 0052: FAIL
+FAIL: FFFC 9 nops
+Got 004F != 0052: FAIL
+Timer IRQ test: FFFB
+PASS: FFFB 0 nops
+PASS: FFFB 1 nop 
+PASS: FFFB 2 nops
+PASS: FFFB 3 nops
+FAIL: FFFB 4 nops
+Got 004F != 0001: FAIL
+FAIL: FFFB 5 nops
+Got 004F != 0002: FAIL
+FAIL: FFFB 6 nops
+Got 004F != 0003: FAIL
+FAIL: FFFB 7 nops
+Got 004F != 0004: FAIL
+FAIL: FFFB 8 nops
+Got 004F != 0052: FAIL
+FAIL: FFFB 9 nops
+Got 004F != 0052: FAIL
+Timer IRQ test: FFFA
+PASS: FFFA 0 nops
+PASS: FFFA 1 nop 
+PASS: FFFA 2 nops
+PASS: FFFA 3 nops
+PASS: FFFA 4 nops
+FAIL: FFFA 5 nops
+Got 004F != 0001: FAIL
+FAIL: FFFA 6 nops
+Got 004F != 0002: FAIL
+FAIL: FFFA 7 nops
+Got 004F != 0003: FAIL
+FAIL: FFFA 8 nops
+Got 004F != 0004: FAIL
+FAIL: FFFA 9 nops
+Got 004F != 0052: FAIL
+Timer IRQ test: FFF9
+PASS: FFF9 0 nops
+PASS: FFF9 1 nop 
+PASS: FFF9 2 nops
+PASS: FFF9 3 nops
+PASS: FFF9 4 nops
+PASS: FFF9 5 nops
+FAIL: FFF9 6 nops
+Got 004F != 0001: FAIL
+FAIL: FFF9 7 nops
+Got 004F != 0002: FAIL
+FAIL: FFF9 8 nops
+Got 004F != 0003: FAIL
+FAIL: FFF9 9 nops
+Got 004F != 0004: FAIL
+Timer IRQ test: FFF8
+PASS: FFF8 0 nops
+PASS: FFF8 1 nop 
+PASS: FFF8 2 nops
+PASS: FFF8 3 nops
+PASS: FFF8 4 nops
+PASS: FFF8 5 nops
+PASS: FFF8 6 nops
+FAIL: FFF8 7 nops
+Got 004F != 0001: FAIL
+FAIL: FFF8 8 nops
+Got 004F != 0002: FAIL
+FAIL: FFF8 9 nops
+Got 004F != 0003: FAIL
+Timer IRQ test: FFF7
+PASS: FFF7 0 nops
+PASS: FFF7 1 nop 
+PASS: FFF7 2 nops
+PASS: FFF7 3 nops
+PASS: FFF7 4 nops
+PASS: FFF7 5 nops
+PASS: FFF7 6 nops
+PASS: FFF7 7 nops
+FAIL: FFF7 8 nops
+Got 004F != 0001: FAIL
+FAIL: FFF7 9 nops
+Got 004F != 0002: FAIL
+[sram]
+Game Boy Advance Test Suite
+===
+Timer IRQ test: FFFF
+Got 004E != 0000: FAIL
+Got 004E != 0001: FAIL
+Got 004E != 0002: FAIL
+Got 004E != 0003: FAIL
+Got 004E != 0051: FAIL
+Got 004E != 0051: FAIL
+Got 004E != 0051: FAIL
+Got 004E != 0051: FAIL
+Got 004E != 0051: FAIL
+Got 004E != 0051: FAIL
+Timer IRQ test: FFFE
+Got 004F != 0001: FAIL
+Got 004F != 0002: FAIL
+Got 004F != 0003: FAIL
+Got 004F != 0004: FAIL
+Got 004F != 0052: FAIL
+Got 004F != 0052: FAIL
+Got 004F != 0052: FAIL
+Got 004F != 0052: FAIL
+Got 004F != 0052: FAIL
+Timer IRQ test: FFFD
+Got 004F != 0001: FAIL
+Got 004F != 0002: FAIL
+Got 004F != 0003: FAIL
+Got 004F != 0004: FAIL
+Got 004F != 0052: FAIL
+Got 004F != 0052: FAIL
+Got 004F != 0052: FAIL
+Got 004F != 0052: FAIL
+Timer IRQ test: FFFC
+Got 004F != 0001: FAIL
+Got 004F != 0002: FAIL
+Got 004F != 0003: FAIL
+Got 004F != 0004: FAIL
+Got 004F != 0052: FAIL
+Got 004F != 0052: FAIL
+Got 004F != 0052: FAIL
+Timer IRQ test: FFFB
+Got 004F != 0001: FAIL
+Got 004F != 0002: FAIL
+Got 004F != 0003: FAIL
+Got 004F != 0004: FAIL
+Got 004F != 0052: FAIL
+Got 004F != 0052: FAIL
+Timer IRQ test: FFFA
+Got 004F != 0001: FAIL
+Got 004F != 0002: FAIL
+Got 004F != 0003: FAIL
+Got 004F != 0004: FAIL
+Got 004F != 0052: FAIL
+Timer IRQ test: FFF9
+Got 004F != 0001: FAIL
+Got 004F != 0002: FAIL
+Got 004F != 0003: FAIL
+Got 004F != 0004: FAIL
+Timer IRQ test: FFF8
+Got 004F != 0001: FAIL
+Got 004F != 0002: FAIL
+Got 004F != 0003: FAIL
+Timer IRQ test: FFF7
+Got 004F != 0001: FAIL
+Got 004F != 0002: FAIL
+
+=== Summary ===
+No END: summaries were emitted yet; use the per-suite SRAM output above.

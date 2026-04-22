@@ -1,0 +1,511 @@
+=== GBA Test Suite Runner ===
+ROM:  tests/assets/roms/suite.gba
+BIOS: tests/assets/roms/gba_bios.bin
+Booting...
+After 60 frames: PC=0x00000348 CPSR=0x6000005F halted=1 cycle=16769984
+[DBG] Game Boy Advance Test Suite
+===
+[DBG] BEGIN: Shifter tests
+[DBG] Shifter test: #0
+[DBG] PASS: #0 r0
+[DBG] PASS: #0 cpsr
+[DBG] Shifter test: #FF
+[DBG] PASS: #FF r0
+[DBG] PASS: #FF cpsr
+[DBG] Shifter test: #FF000000
+[DBG] PASS: #FF000000 r0
+[DBG] PASS: #FF000000 cpsr
+[DBG] Shifter test: #F000000F
+[DBG] PASS: #F000000F r0
+[DBG] PASS: #F000000F cpsr
+[DBG] Shifter test: r1
+[DBG] PASS: r1 r0
+[DBG] PASS: r1 cpsr
+[DBG] Shifter test: r1, lsl #0
+[DBG] PASS: r1, lsl #0 r0
+[DBG] PASS: r1, lsl #0 cpsr
+[DBG] Shifter test: r1, lsl #1
+[DBG] PASS: r1, lsl #1 r0
+[DBG] PASS: r1, lsl #1 cpsr
+[DBG] Shifter test: r1, lsl #31
+[DBG] PASS: r1, lsl #31 r0
+[DBG] PASS: r1, lsl #31 cpsr
+[DBG] Shifter test: r1, lsl r0 (0)
+[DBG] PASS: r1, lsl r0 (0) r0
+[DBG] PASS: r1, lsl r0 (0) cpsr
+[DBG] Shifter test: r1, lsl r0 (1)
+[DBG] PASS: r1, lsl r0 (1) r0
+[DBG] PASS: r1, lsl r0 (1) cpsr
+[DBG] Shifter test: r1, lsl r0 (31)
+[DBG] PASS: r1, lsl r0 (31) r0
+[DBG] PASS: r1, lsl r0 (31) cpsr
+[DBG] Shifter test: r1, lsl r0 (32)
+[DBG] PASS: r1, lsl r0 (32) r0
+[DBG] PASS: r1, lsl r0 (32) cpsr
+[DBG] Shifter test: r1, lsl r0 (33)
+[DBG] PASS: r1, lsl r0 (33) r0
+[DBG] PASS: r1, lsl r0 (33) cpsr
+[DBG] Shifter test: r1, lsl r0 (-1)
+[DBG] PASS: r1, lsl r0 (-1) r0
+[DBG] PASS: r1, lsl r0 (-1) cpsr
+[DBG] Shifter test: r1, lsr #1
+[DBG] PASS: r1, lsr #1 r0
+[DBG] PASS: r1, lsr #1 cpsr
+[DBG] Shifter test: r1, lsr #31
+[DBG] PASS: r1, lsr #31 r0
+[DBG] PASS: r1, lsr #31 cpsr
+[DBG] Shifter test: r1, lsr #32
+[DBG] PASS: r1, lsr #32 r0
+[DBG] PASS: r1, lsr #32 cpsr
+[DBG] Shifter test: r1, lsr r0 (0)
+[DBG] PASS: r1, lsr r0 (0) r0
+[DBG] PASS: r1, lsr r0 (0) cpsr
+[DBG] Shifter test: r1, lsr r0 (1)
+[DBG] PASS: r1, lsr r0 (1) r0
+[DBG] PASS: r1, lsr r0 (1) cpsr
+[DBG] Shifter test: r1, lsr r0 (31)
+[DBG] PASS: r1, lsr r0 (31) r0
+[DBG] PASS: r1, lsr r0 (31) cpsr
+[DBG] Shifter test: r1, lsr r0 (32)
+[DBG] PASS: r1, lsr r0 (32) r0
+[DBG] PASS: r1, lsr r0 (32) cpsr
+[DBG] Shifter test: r1, lsr r0 (33)
+[DBG] PASS: r1, lsr r0 (33) r0
+[DBG] PASS: r1, lsr r0 (33) cpsr
+[DBG] Shifter test: r1, lsr r0 (-1)
+[DBG] PASS: r1, lsr r0 (-1) r0
+[DBG] PASS: r1, lsr r0 (-1) cpsr
+[DBG] Shifter test: r1, asr #1
+[DBG] PASS: r1, asr #1 r0
+[DBG] PASS: r1, asr #1 cpsr
+[DBG] Shifter test: r1, asr #31
+[DBG] PASS: r1, asr #31 r0
+[DBG] PASS: r1, asr #31 cpsr
+[DBG] Shifter test: r1, asr #32
+[DBG] PASS: r1, asr #32 r0
+[DBG] PASS: r1, asr #32 cpsr
+[DBG] Shifter test: r1, asr r0 (0)
+[DBG] PASS: r1, asr r0 (0) r0
+[DBG] PASS: r1, asr r0 (0) cpsr
+[DBG] Shifter test: r1, asr r0 (1)
+[DBG] PASS: r1, asr r0 (1) r0
+[DBG] PASS: r1, asr r0 (1) cpsr
+[DBG] Shifter test: r1, asr r0 (31)
+[DBG] PASS: r1, asr r0 (31) r0
+[DBG] PASS: r1, asr r0 (31) cpsr
+[DBG] Shifter test: r1, asr r0 (32)
+[DBG] PASS: r1, asr r0 (32) r0
+[DBG] PASS: r1, asr r0 (32) cpsr
+[DBG] Shifter test: r1, asr r0 (33)
+[DBG] PASS: r1, asr r0 (33) r0
+[DBG] PASS: r1, asr r0 (33) cpsr
+[DBG] Shifter test: r1, asr r0 (-1)
+[DBG] PASS: r1, asr r0 (-1) r0
+[DBG] PASS: r1, asr r0 (-1) cpsr
+[DBG] Shifter test: r1, ror #1
+[DBG] PASS: r1, ror #1 r0
+[DBG] PASS: r1, ror #1 cpsr
+[DBG] Shifter test: r1, ror #31
+[DBG] PASS: r1, ror #31 r0
+[DBG] PASS: r1, ror #31 cpsr
+[DBG] Shifter test: r1, ror r0 (0)
+[DBG] PASS: r1, ror r0 (0) r0
+[DBG] PASS: r1, ror r0 (0) cpsr
+[DBG] Shifter test: r1, ror r0 (1)
+[DBG] PASS: r1, ror r0 (1) r0
+[DBG] PASS: r1, ror r0 (1) cpsr
+[DBG] Shifter test: r1, ror r0 (31)
+[DBG] PASS: r1, ror r0 (31) r0
+[DBG] PASS: r1, ror r0 (31) cpsr
+[DBG] Shifter test: r1, ror r0 (32)
+[DBG] PASS: r1, ror r0 (32) r0
+[DBG] PASS: r1, ror r0 (32) cpsr
+[DBG] Shifter test: r1, ror r0 (33)
+[DBG] PASS: r1, ror r0 (33) r0
+[DBG] PASS: r1, ror r0 (33) cpsr
+[DBG] Shifter test: r1, ror r0 (-1)
+[DBG] PASS: r1, ror r0 (-1) r0
+[DBG] PASS: r1, ror r0 (-1) cpsr
+[DBG] Shifter test: r1, rrx (+)
+[DBG] PASS: r1, rrx (+) r0
+[DBG] PASS: r1, rrx (+) cpsr
+[DBG] Shifter test: r1, rrx (-)
+[DBG] PASS: r1, rrx (-) r0
+[DBG] PASS: r1, rrx (-) cpsr
+[DBG] Shifter test: pc
+[DBG] PASS: pc r0
+[DBG] PASS: pc cpsr
+[DBG] Shifter test: pc, lsl #0
+[DBG] PASS: pc, lsl #0 r0
+[DBG] PASS: pc, lsl #0 cpsr
+[DBG] Shifter test: pc, lsl #31
+[DBG] PASS: pc, lsl #31 r0
+[DBG] PASS: pc, lsl #31 cpsr
+[DBG] Shifter test: pc, lsl r0 (0)
+[DBG] PASS: pc, lsl r0 (0) r0
+[DBG] PASS: pc, lsl r0 (0) cpsr
+[DBG] Shifter test: pc, lsr #31
+[DBG] PASS: pc, lsr #31 r0
+[DBG] PASS: pc, lsr #31 cpsr
+[DBG] Shifter test: pc, lsr #32
+[DBG] PASS: pc, lsr #32 r0
+[DBG] PASS: pc, lsr #32 cpsr
+[DBG] Shifter test: pc, lsr r0 (0)
+[DBG] PASS: pc, lsr r0 (0) r0
+[DBG] PASS: pc, lsr r0 (0) cpsr
+[DBG] Shifter test: pc, lsr r0 (24)
+[DBG] PASS: pc, lsr r0 (24) r0
+[DBG] PASS: pc, lsr r0 (24) cpsr
+[DBG] Shifter test: pc, asr #31
+[DBG] PASS: pc, asr #31 r0
+[DBG] PASS: pc, asr #31 cpsr
+[DBG] Shifter test: pc, asr #32
+[DBG] PASS: pc, asr #32 r0
+[DBG] PASS: pc, asr #32 cpsr
+[DBG] Shifter test: pc, asr r0 (0)
+[DBG] PASS: pc, asr r0 (0) r0
+[DBG] PASS: pc, asr r0 (0) cpsr
+[DBG] Shifter test: pc, asr r0 (24)
+[DBG] PASS: pc, asr r0 (24) r0
+[DBG] PASS: pc, asr r0 (24) cpsr
+[DBG] Shifter test: add r0, pc, r1
+[DBG] PASS: add r0, pc, r1 r0
+[DBG] PASS: add r0, pc, r1 cpsr
+[DBG] Shifter test: add r0, pc, r1, lsl #0
+[DBG] PASS: add r0, pc, r1, lsl #0 r0
+[DBG] PASS: add r0, pc, r1, lsl #0 cpsr
+[DBG] Shifter test: add r0, pc, r1, lsl #1
+[DBG] PASS: add r0, pc, r1, lsl #1 r0
+[DBG] PASS: add r0, pc, r1, lsl #1 cpsr
+[DBG] Shifter test: add r0, pc, r1, lsl r0 (0)
+[DBG] PASS: add r0, pc, r1, lsl r0 (0) r0
+[DBG] PASS: add r0, pc, r1, lsl r0 (0) cpsr
+[DBG] Shifter test: add r0, pc, r1, lsl r0 (1)
+[DBG] PASS: add r0, pc, r1, lsl r0 (1) r0
+[DBG] PASS: add r0, pc, r1, lsl r0 (1) cpsr
+[DBG] Shifter test: add r0, pc, r1, lsr #1
+[DBG] PASS: add r0, pc, r1, lsr #1 r0
+[DBG] PASS: add r0, pc, r1, lsr #1 cpsr
+[DBG] Shifter test: add r0, pc, r1, lsr #32
+[DBG] PASS: add r0, pc, r1, lsr #32 r0
+[DBG] PASS: add r0, pc, r1, lsr #32 cpsr
+[DBG] Shifter test: add r0, pc, r1, lsr r0 (0)
+[DBG] PASS: add r0, pc, r1, lsr r0 (0) r0
+[DBG] PASS: add r0, pc, r1, lsr r0 (0) cpsr
+[DBG] Shifter test: add r0, pc, r1, lsr r0 (1)
+[DBG] PASS: add r0, pc, r1, lsr r0 (1) r0
+[DBG] PASS: add r0, pc, r1, lsr r0 (1) cpsr
+[DBG] Shifter test: add r0, pc, r1, asr #1
+[DBG] PASS: add r0, pc, r1, asr #1 r0
+[DBG] PASS: add r0, pc, r1, asr #1 cpsr
+[DBG] Shifter test: add r0, pc, r1, asr #32
+[DBG] PASS: add r0, pc, r1, asr #32 r0
+[DBG] PASS: add r0, pc, r1, asr #32 cpsr
+[DBG] Shifter test: add r0, pc, r1, asr r0 (0)
+[DBG] PASS: add r0, pc, r1, asr r0 (0) r0
+[DBG] PASS: add r0, pc, r1, asr r0 (0) cpsr
+[DBG] Shifter test: add r0, pc, r1, asr r0 (1)
+[DBG] PASS: add r0, pc, r1, asr r0 (1) r0
+[DBG] PASS: add r0, pc, r1, asr r0 (1) cpsr
+[DBG] Shifter test: add r0, pc, r1, ror #1
+[DBG] PASS: add r0, pc, r1, ror #1 r0
+[DBG] PASS: add r0, pc, r1, ror #1 cpsr
+[DBG] Shifter test: add r0, pc, r1, ror r0 (0)
+[DBG] PASS: add r0, pc, r1, ror r0 (0) r0
+[DBG] PASS: add r0, pc, r1, ror r0 (0) cpsr
+[DBG] Shifter test: add r0, pc, r1, ror r0 (1)
+[DBG] PASS: add r0, pc, r1, ror r0 (1) r0
+[DBG] PASS: add r0, pc, r1, ror r0 (1) cpsr
+
+--- Suite 06: Shifter ---
+Frames: 98  PC=0x0802BAC6  CPSR=0x0000003F  halted=0  cycle=167330241
+[debug]
+Game Boy Advance Test Suite
+===
+BEGIN: Shifter tests
+Shifter test: #0
+PASS: #0 r0
+PASS: #0 cpsr
+Shifter test: #FF
+PASS: #FF r0
+PASS: #FF cpsr
+Shifter test: #FF000000
+PASS: #FF000000 r0
+PASS: #FF000000 cpsr
+Shifter test: #F000000F
+PASS: #F000000F r0
+PASS: #F000000F cpsr
+Shifter test: r1
+PASS: r1 r0
+PASS: r1 cpsr
+Shifter test: r1, lsl #0
+PASS: r1, lsl #0 r0
+PASS: r1, lsl #0 cpsr
+Shifter test: r1, lsl #1
+PASS: r1, lsl #1 r0
+PASS: r1, lsl #1 cpsr
+Shifter test: r1, lsl #31
+PASS: r1, lsl #31 r0
+PASS: r1, lsl #31 cpsr
+Shifter test: r1, lsl r0 (0)
+PASS: r1, lsl r0 (0) r0
+PASS: r1, lsl r0 (0) cpsr
+Shifter test: r1, lsl r0 (1)
+PASS: r1, lsl r0 (1) r0
+PASS: r1, lsl r0 (1) cpsr
+Shifter test: r1, lsl r0 (31)
+PASS: r1, lsl r0 (31) r0
+PASS: r1, lsl r0 (31) cpsr
+Shifter test: r1, lsl r0 (32)
+PASS: r1, lsl r0 (32) r0
+PASS: r1, lsl r0 (32) cpsr
+Shifter test: r1, lsl r0 (33)
+PASS: r1, lsl r0 (33) r0
+PASS: r1, lsl r0 (33) cpsr
+Shifter test: r1, lsl r0 (-1)
+PASS: r1, lsl r0 (-1) r0
+PASS: r1, lsl r0 (-1) cpsr
+Shifter test: r1, lsr #1
+PASS: r1, lsr #1 r0
+PASS: r1, lsr #1 cpsr
+Shifter test: r1, lsr #31
+PASS: r1, lsr #31 r0
+PASS: r1, lsr #31 cpsr
+Shifter test: r1, lsr #32
+PASS: r1, lsr #32 r0
+PASS: r1, lsr #32 cpsr
+Shifter test: r1, lsr r0 (0)
+PASS: r1, lsr r0 (0) r0
+PASS: r1, lsr r0 (0) cpsr
+Shifter test: r1, lsr r0 (1)
+PASS: r1, lsr r0 (1) r0
+PASS: r1, lsr r0 (1) cpsr
+Shifter test: r1, lsr r0 (31)
+PASS: r1, lsr r0 (31) r0
+PASS: r1, lsr r0 (31) cpsr
+Shifter test: r1, lsr r0 (32)
+PASS: r1, lsr r0 (32) r0
+PASS: r1, lsr r0 (32) cpsr
+Shifter test: r1, lsr r0 (33)
+PASS: r1, lsr r0 (33) r0
+PASS: r1, lsr r0 (33) cpsr
+Shifter test: r1, lsr r0 (-1)
+PASS: r1, lsr r0 (-1) r0
+PASS: r1, lsr r0 (-1) cpsr
+Shifter test: r1, asr #1
+PASS: r1, asr #1 r0
+PASS: r1, asr #1 cpsr
+Shifter test: r1, asr #31
+PASS: r1, asr #31 r0
+PASS: r1, asr #31 cpsr
+Shifter test: r1, asr #32
+PASS: r1, asr #32 r0
+PASS: r1, asr #32 cpsr
+Shifter test: r1, asr r0 (0)
+PASS: r1, asr r0 (0) r0
+PASS: r1, asr r0 (0) cpsr
+Shifter test: r1, asr r0 (1)
+PASS: r1, asr r0 (1) r0
+PASS: r1, asr r0 (1) cpsr
+Shifter test: r1, asr r0 (31)
+PASS: r1, asr r0 (31) r0
+PASS: r1, asr r0 (31) cpsr
+Shifter test: r1, asr r0 (32)
+PASS: r1, asr r0 (32) r0
+PASS: r1, asr r0 (32) cpsr
+Shifter test: r1, asr r0 (33)
+PASS: r1, asr r0 (33) r0
+PASS: r1, asr r0 (33) cpsr
+Shifter test: r1, asr r0 (-1)
+PASS: r1, asr r0 (-1) r0
+PASS: r1, asr r0 (-1) cpsr
+Shifter test: r1, ror #1
+PASS: r1, ror #1 r0
+PASS: r1, ror #1 cpsr
+Shifter test: r1, ror #31
+PASS: r1, ror #31 r0
+PASS: r1, ror #31 cpsr
+Shifter test: r1, ror r0 (0)
+PASS: r1, ror r0 (0) r0
+PASS: r1, ror r0 (0) cpsr
+Shifter test: r1, ror r0 (1)
+PASS: r1, ror r0 (1) r0
+PASS: r1, ror r0 (1) cpsr
+Shifter test: r1, ror r0 (31)
+PASS: r1, ror r0 (31) r0
+PASS: r1, ror r0 (31) cpsr
+Shifter test: r1, ror r0 (32)
+PASS: r1, ror r0 (32) r0
+PASS: r1, ror r0 (32) cpsr
+Shifter test: r1, ror r0 (33)
+PASS: r1, ror r0 (33) r0
+PASS: r1, ror r0 (33) cpsr
+Shifter test: r1, ror r0 (-1)
+PASS: r1, ror r0 (-1) r0
+PASS: r1, ror r0 (-1) cpsr
+Shifter test: r1, rrx (+)
+PASS: r1, rrx (+) r0
+PASS: r1, rrx (+) cpsr
+Shifter test: r1, rrx (-)
+PASS: r1, rrx (-) r0
+PASS: r1, rrx (-) cpsr
+Shifter test: pc
+PASS: pc r0
+PASS: pc cpsr
+Shifter test: pc, lsl #0
+PASS: pc, lsl #0 r0
+PASS: pc, lsl #0 cpsr
+Shifter test: pc, lsl #31
+PASS: pc, lsl #31 r0
+PASS: pc, lsl #31 cpsr
+Shifter test: pc, lsl r0 (0)
+PASS: pc, lsl r0 (0) r0
+PASS: pc, lsl r0 (0) cpsr
+Shifter test: pc, lsr #31
+PASS: pc, lsr #31 r0
+PASS: pc, lsr #31 cpsr
+Shifter test: pc, lsr #32
+PASS: pc, lsr #32 r0
+PASS: pc, lsr #32 cpsr
+Shifter test: pc, lsr r0 (0)
+PASS: pc, lsr r0 (0) r0
+PASS: pc, lsr r0 (0) cpsr
+Shifter test: pc, lsr r0 (24)
+PASS: pc, lsr r0 (24) r0
+PASS: pc, lsr r0 (24) cpsr
+Shifter test: pc, asr #31
+PASS: pc, asr #31 r0
+PASS: pc, asr #31 cpsr
+Shifter test: pc, asr #32
+PASS: pc, asr #32 r0
+PASS: pc, asr #32 cpsr
+Shifter test: pc, asr r0 (0)
+PASS: pc, asr r0 (0) r0
+PASS: pc, asr r0 (0) cpsr
+Shifter test: pc, asr r0 (24)
+PASS: pc, asr r0 (24) r0
+PASS: pc, asr r0 (24) cpsr
+Shifter test: add r0, pc, r1
+PASS: add r0, pc, r1 r0
+PASS: add r0, pc, r1 cpsr
+Shifter test: add r0, pc, r1, lsl #0
+PASS: add r0, pc, r1, lsl #0 r0
+PASS: add r0, pc, r1, lsl #0 cpsr
+Shifter test: add r0, pc, r1, lsl #1
+PASS: add r0, pc, r1, lsl #1 r0
+PASS: add r0, pc, r1, lsl #1 cpsr
+Shifter test: add r0, pc, r1, lsl r0 (0)
+PASS: add r0, pc, r1, lsl r0 (0) r0
+PASS: add r0, pc, r1, lsl r0 (0) cpsr
+Shifter test: add r0, pc, r1, lsl r0 (1)
+PASS: add r0, pc, r1, lsl r0 (1) r0
+PASS: add r0, pc, r1, lsl r0 (1) cpsr
+Shifter test: add r0, pc, r1, lsr #1
+PASS: add r0, pc, r1, lsr #1 r0
+PASS: add r0, pc, r1, lsr #1 cpsr
+Shifter test: add r0, pc, r1, lsr #32
+PASS: add r0, pc, r1, lsr #32 r0
+PASS: add r0, pc, r1, lsr #32 cpsr
+Shifter test: add r0, pc, r1, lsr r0 (0)
+PASS: add r0, pc, r1, lsr r0 (0) r0
+PASS: add r0, pc, r1, lsr r0 (0) cpsr
+Shifter test: add r0, pc, r1, lsr r0 (1)
+PASS: add r0, pc, r1, lsr r0 (1) r0
+PASS: add r0, pc, r1, lsr r0 (1) cpsr
+Shifter test: add r0, pc, r1, asr #1
+PASS: add r0, pc, r1, asr #1 r0
+PASS: add r0, pc, r1, asr #1 cpsr
+Shifter test: add r0, pc, r1, asr #32
+PASS: add r0, pc, r1, asr #32 r0
+PASS: add r0, pc, r1, asr #32 cpsr
+Shifter test: add r0, pc, r1, asr r0 (0)
+PASS: add r0, pc, r1, asr r0 (0) r0
+PASS: add r0, pc, r1, asr r0 (0) cpsr
+Shifter test: add r0, pc, r1, asr r0 (1)
+PASS: add r0, pc, r1, asr r0 (1) r0
+PASS: add r0, pc, r1, asr r0 (1) cpsr
+Shifter test: add r0, pc, r1, ror #1
+PASS: add r0, pc, r1, ror #1 r0
+PASS: add r0, pc, r1, ror #1 cpsr
+Shifter test: add r0, pc, r1, ror r0 (0)
+PASS: add r0, pc, r1, ror r0 (0) r0
+PASS: add r0, pc, r1, ror r0 (0) cpsr
+Shifter test: add r0, pc, r1, ror r0 (1)
+PASS: add r0, pc, r1, ror r0 (1) r0
+PASS: add r0, pc, r1, ror r0 (1) cpsr
+[sram]
+Game Boy Advance Test Suite
+===
+Shifter test: #0
+Shifter test: #FF
+Shifter test: #FF000000
+Shifter test: #F000000F
+Shifter test: r1
+Shifter test: r1, lsl #0
+Shifter test: r1, lsl #1
+Shifter test: r1, lsl #31
+Shifter test: r1, lsl r0 (0)
+Shifter test: r1, lsl r0 (1)
+Shifter test: r1, lsl r0 (31)
+Shifter test: r1, lsl r0 (32)
+Shifter test: r1, lsl r0 (33)
+Shifter test: r1, lsl r0 (-1)
+Shifter test: r1, lsr #1
+Shifter test: r1, lsr #31
+Shifter test: r1, lsr #32
+Shifter test: r1, lsr r0 (0)
+Shifter test: r1, lsr r0 (1)
+Shifter test: r1, lsr r0 (31)
+Shifter test: r1, lsr r0 (32)
+Shifter test: r1, lsr r0 (33)
+Shifter test: r1, lsr r0 (-1)
+Shifter test: r1, asr #1
+Shifter test: r1, asr #31
+Shifter test: r1, asr #32
+Shifter test: r1, asr r0 (0)
+Shifter test: r1, asr r0 (1)
+Shifter test: r1, asr r0 (31)
+Shifter test: r1, asr r0 (32)
+Shifter test: r1, asr r0 (33)
+Shifter test: r1, asr r0 (-1)
+Shifter test: r1, ror #1
+Shifter test: r1, ror #31
+Shifter test: r1, ror r0 (0)
+Shifter test: r1, ror r0 (1)
+Shifter test: r1, ror r0 (31)
+Shifter test: r1, ror r0 (32)
+Shifter test: r1, ror r0 (33)
+Shifter test: r1, ror r0 (-1)
+Shifter test: r1, rrx (+)
+Shifter test: r1, rrx (-)
+Shifter test: pc
+Shifter test: pc, lsl #0
+Shifter test: pc, lsl #31
+Shifter test: pc, lsl r0 (0)
+Shifter test: pc, lsr #31
+Shifter test: pc, lsr #32
+Shifter test: pc, lsr r0 (0)
+Shifter test: pc, lsr r0 (24)
+Shifter test: pc, asr #31
+Shifter test: pc, asr #32
+Shifter test: pc, asr r0 (0)
+Shifter test: pc, asr r0 (24)
+Shifter test: add r0, pc, r1
+Shifter test: add r0, pc, r1, lsl #0
+Shifter test: add r0, pc, r1, lsl #1
+Shifter test: add r0, pc, r1, lsl r0 (0)
+Shifter test: add r0, pc, r1, lsl r0 (1)
+Shifter test: add r0, pc, r1, lsr #1
+Shifter test: add r0, pc, r1, lsr #32
+Shifter test: add r0, pc, r1, lsr r0 (0)
+Shifter test: add r0, pc, r1, lsr r0 (1)
+Shifter test: add r0, pc, r1, asr #1
+Shifter test: add r0, pc, r1, asr #32
+Shifter test: add r0, pc, r1, asr r0 (0)
+Shifter test: add r0, pc, r1, asr r0 (1)
+Shifter test: add r0, pc, r1, ror #1
+Shifter test: add r0, pc, r1, ror r0 (0)
+Shifter test: add r0, pc, r1, ror r0 (1)
+
+=== Summary ===
+No END: summaries were emitted yet; use the per-suite SRAM output above.

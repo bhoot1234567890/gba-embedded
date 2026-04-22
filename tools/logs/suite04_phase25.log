@@ -1,0 +1,2979 @@
+=== GBA Test Suite Runner ===
+ROM:  tests/assets/roms/suite.gba
+BIOS: tests/assets/roms/gba_bios.bin
+Booting...
+After 60 frames: PC=0x00000348 CPSR=0x6000005F halted=1 cycle=16769984
+[DBG] Game Boy Advance Test Suite
+===
+[DBG] BEGIN: Timer count-up tests
+[DBG] Timer count-up test: 0b, 0x0001
+[DBG] PASS: 0b, 0x0001 1xs 1d 1i
+[DBG] PASS: 0b, 0x0001 16xs 1d 1i
+[DBG] PASS: 0b, 0x0001 1xv 1d 1i
+[DBG] PASS: 0b, 0x0001 16xv 1d 1i
+[DBG] PASS: 0b, 0x0001 1xs 2d 1i
+[DBG] PASS: 0b, 0x0001 16xs 2d 1i
+[DBG] PASS: 0b, 0x0001 1xv 2d 1i
+[DBG] PASS: 0b, 0x0001 16xv 2d 1i
+[DBG] PASS: 0b, 0x0001 1xs 4d 1i
+[DBG] PASS: 0b, 0x0001 16xs 4d 1i
+[DBG] PASS: 0b, 0x0001 1xv 4d 1i
+[DBG] PASS: 0b, 0x0001 16xv 4d 1i
+[DBG] PASS: 0b, 0x0001 1xs 1d 2i
+[DBG] PASS: 0b, 0x0001 16xs 1d 2i
+[DBG] PASS: 0b, 0x0001 1xv 1d 2i
+[DBG] PASS: 0b, 0x0001 16xv 1d 2i
+[DBG] PASS: 0b, 0x0001 1xs 2d 2i
+[DBG] PASS: 0b, 0x0001 16xs 2d 2i
+[DBG] PASS: 0b, 0x0001 1xv 2d 2i
+[DBG] PASS: 0b, 0x0001 16xv 2d 2i
+[DBG] PASS: 0b, 0x0001 1xs 4d 2i
+[DBG] PASS: 0b, 0x0001 16xs 4d 2i
+[DBG] PASS: 0b, 0x0001 1xv 4d 2i
+[DBG] PASS: 0b, 0x0001 16xv 4d 2i
+[DBG] PASS: 0b, 0x0001 1xs 1d 4i
+[DBG] PASS: 0b, 0x0001 16xs 1d 4i
+[DBG] PASS: 0b, 0x0001 1xv 1d 4i
+[DBG] PASS: 0b, 0x0001 16xv 1d 4i
+[DBG] PASS: 0b, 0x0001 1xs 2d 4i
+[DBG] PASS: 0b, 0x0001 16xs 2d 4i
+[DBG] PASS: 0b, 0x0001 1xv 2d 4i
+[DBG] PASS: 0b, 0x0001 16xv 2d 4i
+[DBG] PASS: 0b, 0x0001 1xs 4d 4i
+[DBG] PASS: 0b, 0x0001 16xs 4d 4i
+[DBG] PASS: 0b, 0x0001 1xv 4d 4i
+[DBG] PASS: 0b, 0x0001 16xv 4d 4i
+[DBG] Timer count-up test: 0b, 0x0005
+[DBG] FAIL: 0b, 0x0005 1xs 1d 1i
+[DBG] 1xs 1d 1i: Got 00000002 vs 00000003: FAIL
+[DBG] PASS: 0b, 0x0005 16xs 1d 1i
+[DBG] FAIL: 0b, 0x0005 1xv 1d 1i
+[DBG] 1xv 1d 1i: Got FFFE vs FFFF: FAIL
+[DBG] FAIL: 0b, 0x0005 16xv 1d 1i
+[DBG] 16xv 1d 1i: Got FFFE vs FFFD: FAIL
+[DBG] FAIL: 0b, 0x0005 1xs 2d 1i
+[DBG] 1xs 2d 1i: Got 00000002 vs 00000003: FAIL
+[DBG] PASS: 0b, 0x0005 16xs 2d 1i
+[DBG] FAIL: 0b, 0x0005 1xv 2d 1i
+[DBG] 1xv 2d 1i: Got FFFE vs FFFF: FAIL
+[DBG] FAIL: 0b, 0x0005 16xv 2d 1i
+[DBG] 16xv 2d 1i: Got FFFE vs FFFD: FAIL
+[DBG] FAIL: 0b, 0x0005 1xs 4d 1i
+[DBG] 1xs 4d 1i: Got 00000002 vs 00000003: FAIL
+[DBG] PASS: 0b, 0x0005 16xs 4d 1i
+[DBG] FAIL: 0b, 0x0005 1xv 4d 1i
+[DBG] 1xv 4d 1i: Got FFFE vs FFFF: FAIL
+[DBG] FAIL: 0b, 0x0005 16xv 4d 1i
+[DBG] 16xv 4d 1i: Got FFFE vs FFFD: FAIL
+[DBG] FAIL: 0b, 0x0005 1xs 1d 2i
+[DBG] 1xs 1d 2i: Got 00000002 vs 00000003: FAIL
+[DBG] PASS: 0b, 0x0005 16xs 1d 2i
+[DBG] FAIL: 0b, 0x0005 1xv 1d 2i
+[DBG] 1xv 1d 2i: Got FFFD vs FFFB: FAIL
+[DBG] FAIL: 0b, 0x0005 16xv 1d 2i
+[DBG] 16xv 1d 2i: Got FFFD vs FFFE: FAIL
+[DBG] FAIL: 0b, 0x0005 1xs 2d 2i
+[DBG] 1xs 2d 2i: Got 00000002 vs 00000003: FAIL
+[DBG] PASS: 0b, 0x0005 16xs 2d 2i
+[DBG] FAIL: 0b, 0x0005 1xv 2d 2i
+[DBG] 1xv 2d 2i: Got FFFD vs FFFB: FAIL
+[DBG] FAIL: 0b, 0x0005 16xv 2d 2i
+[DBG] 16xv 2d 2i: Got FFFD vs FFFE: FAIL
+[DBG] FAIL: 0b, 0x0005 1xs 4d 2i
+[DBG] 1xs 4d 2i: Got 00000002 vs 00000003: FAIL
+[DBG] PASS: 0b, 0x0005 16xs 4d 2i
+[DBG] FAIL: 0b, 0x0005 1xv 4d 2i
+[DBG] 1xv 4d 2i: Got FFFD vs FFFB: FAIL
+[DBG] FAIL: 0b, 0x0005 16xv 4d 2i
+[DBG] 16xv 4d 2i: Got FFFD vs FFFE: FAIL
+[DBG] FAIL: 0b, 0x0005 1xs 1d 4i
+[DBG] 1xs 1d 4i: Got 00000002 vs 00000003: FAIL
+[DBG] PASS: 0b, 0x0005 16xs 1d 4i
+[DBG] FAIL: 0b, 0x0005 1xv 1d 4i
+[DBG] 1xv 1d 4i: Got FFFB vs FFFD: FAIL
+[DBG] PASS: 0b, 0x0005 16xv 1d 4i
+[DBG] FAIL: 0b, 0x0005 1xs 2d 4i
+[DBG] 1xs 2d 4i: Got 00000002 vs 00000003: FAIL
+[DBG] PASS: 0b, 0x0005 16xs 2d 4i
+[DBG] FAIL: 0b, 0x0005 1xv 2d 4i
+[DBG] 1xv 2d 4i: Got FFFB vs FFFD: FAIL
+[DBG] PASS: 0b, 0x0005 16xv 2d 4i
+[DBG] FAIL: 0b, 0x0005 1xs 4d 4i
+[DBG] 1xs 4d 4i: Got 00000002 vs 00000003: FAIL
+[DBG] PASS: 0b, 0x0005 16xs 4d 4i
+[DBG] FAIL: 0b, 0x0005 1xv 4d 4i
+[DBG] 1xv 4d 4i: Got FFFB vs FFFD: FAIL
+[DBG] PASS: 0b, 0x0005 16xv 4d 4i
+[DBG] Timer count-up test: 0b, 0x000C
+[DBG] PASS: 0b, 0x000C 1xs 1d 1i
+[DBG] FAIL: 0b, 0x000C 16xs 1d 1i
+[DBG] 16xs 1d 1i: Got 00000010 vs 00000020: FAIL
+[DBG] FAIL: 0b, 0x000C 1xv 1d 1i
+[DBG] 1xv 1d 1i: Got FFFD vs FFFC: FAIL
+[DBG] FAIL: 0b, 0x000C 16xv 1d 1i
+[DBG] 16xv 1d 1i: Got FFFD vs FFFE: FAIL
+[DBG] PASS: 0b, 0x000C 1xs 2d 1i
+[DBG] FAIL: 0b, 0x000C 16xs 2d 1i
+[DBG] 16xs 2d 1i: Got 00000010 vs 00000020: FAIL
+[DBG] FAIL: 0b, 0x000C 1xv 2d 1i
+[DBG] 1xv 2d 1i: Got FFFD vs FFFC: FAIL
+[DBG] FAIL: 0b, 0x000C 16xv 2d 1i
+[DBG] 16xv 2d 1i: Got FFFD vs FFFE: FAIL
+[DBG] PASS: 0b, 0x000C 1xs 4d 1i
+[DBG] FAIL: 0b, 0x000C 16xs 4d 1i
+[DBG] 16xs 4d 1i: Got 00000010 vs 00000020: FAIL
+[DBG] FAIL: 0b, 0x000C 1xv 4d 1i
+[DBG] 1xv 4d 1i: Got FFFD vs FFFC: FAIL
+[DBG] FAIL: 0b, 0x000C 16xv 4d 1i
+[DBG] 16xv 4d 1i: Got FFFD vs FFFE: FAIL
+[DBG] PASS: 0b, 0x000C 1xs 1d 2i
+[DBG] FAIL: 0b, 0x000C 16xs 1d 2i
+[DBG] 16xs 1d 2i: Got 00000010 vs 00000020: FAIL
+[DBG] FAIL: 0b, 0x000C 1xv 1d 2i
+[DBG] 1xv 1d 2i: Got FFFC vs FFFD: FAIL
+[DBG] FAIL: 0b, 0x000C 16xv 1d 2i
+[DBG] 16xv 1d 2i: Got FFFC vs FFFF: FAIL
+[DBG] PASS: 0b, 0x000C 1xs 2d 2i
+[DBG] FAIL: 0b, 0x000C 16xs 2d 2i
+[DBG] 16xs 2d 2i: Got 00000010 vs 00000020: FAIL
+[DBG] FAIL: 0b, 0x000C 1xv 2d 2i
+[DBG] 1xv 2d 2i: Got FFFC vs FFFD: FAIL
+[DBG] FAIL: 0b, 0x000C 16xv 2d 2i
+[DBG] 16xv 2d 2i: Got FFFC vs FFFF: FAIL
+[DBG] PASS: 0b, 0x000C 1xs 4d 2i
+[DBG] FAIL: 0b, 0x000C 16xs 4d 2i
+[DBG] 16xs 4d 2i: Got 00000010 vs 00000020: FAIL
+[DBG] FAIL: 0b, 0x000C 1xv 4d 2i
+[DBG] 1xv 4d 2i: Got FFFC vs FFFD: FAIL
+[DBG] FAIL: 0b, 0x000C 16xv 4d 2i
+[DBG] 16xv 4d 2i: Got FFFC vs FFFF: FAIL
+[DBG] PASS: 0b, 0x000C 1xs 1d 4i
+[DBG] FAIL: 0b, 0x000C 16xs 1d 4i
+[DBG] 16xs 1d 4i: Got 00000010 vs 00000020: FAIL
+[DBG] FAIL: 0b, 0x000C 1xv 1d 4i
+[DBG] 1xv 1d 4i: Got FFFA vs FFFF: FAIL
+[DBG] FAIL: 0b, 0x000C 16xv 1d 4i
+[DBG] 16xv 1d 4i: Got FFFA vs FFF5: FAIL
+[DBG] PASS: 0b, 0x000C 1xs 2d 4i
+[DBG] FAIL: 0b, 0x000C 16xs 2d 4i
+[DBG] 16xs 2d 4i: Got 00000010 vs 00000020: FAIL
+[DBG] FAIL: 0b, 0x000C 1xv 2d 4i
+[DBG] 1xv 2d 4i: Got FFFA vs FFFF: FAIL
+[DBG] FAIL: 0b, 0x000C 16xv 2d 4i
+[DBG] 16xv 2d 4i: Got FFFA vs FFF5: FAIL
+[DBG] PASS: 0b, 0x000C 1xs 4d 4i
+[DBG] FAIL: 0b, 0x000C 16xs 4d 4i
+[DBG] 16xs 4d 4i: Got 00000010 vs 00000020: FAIL
+[DBG] FAIL: 0b, 0x000C 1xv 4d 4i
+[DBG] 1xv 4d 4i: Got FFFA vs FFFF: FAIL
+[DBG] FAIL: 0b, 0x000C 16xv 4d 4i
+[DBG] 16xv 4d 4i: Got FFFA vs FFF5: FAIL
+[DBG] Timer count-up test: 0b, 0x000D
+[DBG] FAIL: 0b, 0x000D 1xs 1d 1i
+[DBG] 1xs 1d 1i: Got 00000003 vs 00000004: FAIL
+[DBG] PASS: 0b, 0x000D 16xs 1d 1i
+[DBG] FAIL: 0b, 0x000D 1xv 1d 1i
+[DBG] 1xv 1d 1i: Got FFF5 vs FFF6: FAIL
+[DBG] FAIL: 0b, 0x000D 16xv 1d 1i
+[DBG] 16xv 1d 1i: Got FFF7 vs FFF5: FAIL
+[DBG] FAIL: 0b, 0x000D 1xs 2d 1i
+[DBG] 1xs 2d 1i: Got 00000003 vs 00000004: FAIL
+[DBG] PASS: 0b, 0x000D 16xs 2d 1i
+[DBG] FAIL: 0b, 0x000D 1xv 2d 1i
+[DBG] 1xv 2d 1i: Got FFF5 vs FFF6: FAIL
+[DBG] FAIL: 0b, 0x000D 16xv 2d 1i
+[DBG] 16xv 2d 1i: Got FFF7 vs FFF5: FAIL
+[DBG] FAIL: 0b, 0x000D 1xs 4d 1i
+[DBG] 1xs 4d 1i: Got 00000003 vs 00000004: FAIL
+[DBG] PASS: 0b, 0x000D 16xs 4d 1i
+[DBG] FAIL: 0b, 0x000D 1xv 4d 1i
+[DBG] 1xv 4d 1i: Got FFF5 vs FFF6: FAIL
+[DBG] FAIL: 0b, 0x000D 16xv 4d 1i
+[DBG] 16xv 4d 1i: Got FFF7 vs FFF5: FAIL
+[DBG] FAIL: 0b, 0x000D 1xs 1d 2i
+[DBG] 1xs 1d 2i: Got 00000003 vs 00000004: FAIL
+[DBG] PASS: 0b, 0x000D 16xs 1d 2i
+[DBG] FAIL: 0b, 0x000D 1xv 1d 2i
+[DBG] 1xv 1d 2i: Got FFF7 vs FFFA: FAIL
+[DBG] PASS: 0b, 0x000D 16xv 1d 2i
+[DBG] FAIL: 0b, 0x000D 1xs 2d 2i
+[DBG] 1xs 2d 2i: Got 00000003 vs 00000004: FAIL
+[DBG] PASS: 0b, 0x000D 16xs 2d 2i
+[DBG] FAIL: 0b, 0x000D 1xv 2d 2i
+[DBG] 1xv 2d 2i: Got FFF7 vs FFFA: FAIL
+[DBG] PASS: 0b, 0x000D 16xv 2d 2i
+[DBG] FAIL: 0b, 0x000D 1xs 4d 2i
+[DBG] 1xs 4d 2i: Got 00000003 vs 00000004: FAIL
+[DBG] PASS: 0b, 0x000D 16xs 4d 2i
+[DBG] FAIL: 0b, 0x000D 1xv 4d 2i
+[DBG] 1xv 4d 2i: Got FFF7 vs FFFA: FAIL
+[DBG] PASS: 0b, 0x000D 16xv 4d 2i
+[DBG] FAIL: 0b, 0x000D 1xs 1d 4i
+[DBG] 1xs 1d 4i: Got 00000003 vs 00000004: FAIL
+[DBG] PASS: 0b, 0x000D 16xs 1d 4i
+[DBG] FAIL: 0b, 0x000D 1xv 1d 4i
+[DBG] 1xv 1d 4i: Got FFFB vs FFF5: FAIL
+[DBG] FAIL: 0b, 0x000D 16xv 1d 4i
+[DBG] 16xv 1d 4i: Got FFFD vs FFF4: FAIL
+[DBG] FAIL: 0b, 0x000D 1xs 2d 4i
+[DBG] 1xs 2d 4i: Got 00000003 vs 00000004: FAIL
+[DBG] PASS: 0b, 0x000D 16xs 2d 4i
+[DBG] FAIL: 0b, 0x000D 1xv 2d 4i
+[DBG] 1xv 2d 4i: Got FFFB vs FFF5: FAIL
+[DBG] FAIL: 0b, 0x000D 16xv 2d 4i
+[DBG] 16xv 2d 4i: Got FFFD vs FFF4: FAIL
+[DBG] FAIL: 0b, 0x000D 1xs 4d 4i
+[DBG] 1xs 4d 4i: Got 00000003 vs 00000004: FAIL
+[DBG] PASS: 0b, 0x000D 16xs 4d 4i
+[DBG] FAIL: 0b, 0x000D 1xv 4d 4i
+[DBG] 1xv 4d 4i: Got FFFB vs FFF5: FAIL
+[DBG] FAIL: 0b, 0x000D 16xv 4d 4i
+[DBG] 16xv 4d 4i: Got FFFD vs FFF4: FAIL
+[DBG] Timer count-up test: 0b, 0x0010
+[DBG] PASS: 0b, 0x0010 1xs 1d 1i
+[DBG] PASS: 0b, 0x0010 16xs 1d 1i
+[DBG] FAIL: 0b, 0x0010 1xv 1d 1i
+[DBG] 1xv 1d 1i: Got FFFD vs FFFC: FAIL
+[DBG] FAIL: 0b, 0x0010 16xv 1d 1i
+[DBG] 16xv 1d 1i: Got FFFD vs FFFE: FAIL
+[DBG] PASS: 0b, 0x0010 1xs 2d 1i
+[DBG] PASS: 0b, 0x0010 16xs 2d 1i
+[DBG] FAIL: 0b, 0x0010 1xv 2d 1i
+[DBG] 1xv 2d 1i: Got FFFD vs FFFC: FAIL
+[DBG] FAIL: 0b, 0x0010 16xv 2d 1i
+[DBG] 16xv 2d 1i: Got FFFD vs FFFE: FAIL
+[DBG] PASS: 0b, 0x0010 1xs 4d 1i
+[DBG] PASS: 0b, 0x0010 16xs 4d 1i
+[DBG] FAIL: 0b, 0x0010 1xv 4d 1i
+[DBG] 1xv 4d 1i: Got FFFD vs FFFC: FAIL
+[DBG] FAIL: 0b, 0x0010 16xv 4d 1i
+[DBG] 16xv 4d 1i: Got FFFD vs FFFE: FAIL
+[DBG] PASS: 0b, 0x0010 1xs 1d 2i
+[DBG] PASS: 0b, 0x0010 16xs 1d 2i
+[DBG] FAIL: 0b, 0x0010 1xv 1d 2i
+[DBG] 1xv 1d 2i: Got FFF4 vs FFF5: FAIL
+[DBG] FAIL: 0b, 0x0010 16xv 1d 2i
+[DBG] 16xv 1d 2i: Got FFF4 vs FFF7: FAIL
+[DBG] PASS: 0b, 0x0010 1xs 2d 2i
+[DBG] PASS: 0b, 0x0010 16xs 2d 2i
+[DBG] FAIL: 0b, 0x0010 1xv 2d 2i
+[DBG] 1xv 2d 2i: Got FFF4 vs FFF5: FAIL
+[DBG] FAIL: 0b, 0x0010 16xv 2d 2i
+[DBG] 16xv 2d 2i: Got FFF4 vs FFF7: FAIL
+[DBG] PASS: 0b, 0x0010 1xs 4d 2i
+[DBG] PASS: 0b, 0x0010 16xs 4d 2i
+[DBG] FAIL: 0b, 0x0010 1xv 4d 2i
+[DBG] 1xv 4d 2i: Got FFF4 vs FFF5: FAIL
+[DBG] FAIL: 0b, 0x0010 16xv 4d 2i
+[DBG] 16xv 4d 2i: Got FFF4 vs FFF7: FAIL
+[DBG] PASS: 0b, 0x0010 1xs 1d 4i
+[DBG] PASS: 0b, 0x0010 16xs 1d 4i
+[DBG] FAIL: 0b, 0x0010 1xv 1d 4i
+[DBG] 1xv 1d 4i: Got FFF2 vs FFF7: FAIL
+[DBG] FAIL: 0b, 0x0010 16xv 1d 4i
+[DBG] 16xv 1d 4i: Got FFF2 vs FFF9: FAIL
+[DBG] PASS: 0b, 0x0010 1xs 2d 4i
+[DBG] PASS: 0b, 0x0010 16xs 2d 4i
+[DBG] FAIL: 0b, 0x0010 1xv 2d 4i
+[DBG] 1xv 2d 4i: Got FFF2 vs FFF7: FAIL
+[DBG] FAIL: 0b, 0x0010 16xv 2d 4i
+[DBG] 16xv 2d 4i: Got FFF2 vs FFF9: FAIL
+[DBG] PASS: 0b, 0x0010 1xs 4d 4i
+[DBG] PASS: 0b, 0x0010 16xs 4d 4i
+[DBG] FAIL: 0b, 0x0010 1xv 4d 4i
+[DBG] 1xv 4d 4i: Got FFF2 vs FFF7: FAIL
+[DBG] FAIL: 0b, 0x0010 16xv 4d 4i
+[DBG] 16xv 4d 4i: Got FFF2 vs FFF9: FAIL
+[DBG] Timer count-up test: 0b, 0x0014
+[DBG] PASS: 0b, 0x0014 1xs 1d 1i
+[DBG] PASS: 0b, 0x0014 16xs 1d 1i
+[DBG] FAIL: 0b, 0x0014 1xv 1d 1i
+[DBG] 1xv 1d 1i: Got FFF9 vs FFF8: FAIL
+[DBG] FAIL: 0b, 0x0014 16xv 1d 1i
+[DBG] 16xv 1d 1i: Got FFF9 vs FFF8: FAIL
+[DBG] PASS: 0b, 0x0014 1xs 2d 1i
+[DBG] PASS: 0b, 0x0014 16xs 2d 1i
+[DBG] FAIL: 0b, 0x0014 1xv 2d 1i
+[DBG] 1xv 2d 1i: Got FFF9 vs FFF8: FAIL
+[DBG] FAIL: 0b, 0x0014 16xv 2d 1i
+[DBG] 16xv 2d 1i: Got FFF9 vs FFF8: FAIL
+[DBG] PASS: 0b, 0x0014 1xs 4d 1i
+[DBG] PASS: 0b, 0x0014 16xs 4d 1i
+[DBG] FAIL: 0b, 0x0014 1xv 4d 1i
+[DBG] 1xv 4d 1i: Got FFF9 vs FFF8: FAIL
+[DBG] FAIL: 0b, 0x0014 16xv 4d 1i
+[DBG] 16xv 4d 1i: Got FFF9 vs FFF8: FAIL
+[DBG] PASS: 0b, 0x0014 1xs 1d 2i
+[DBG] PASS: 0b, 0x0014 16xs 1d 2i
+[DBG] FAIL: 0b, 0x0014 1xv 1d 2i
+[DBG] 1xv 1d 2i: Got FFF8 vs FFF9: FAIL
+[DBG] FAIL: 0b, 0x0014 16xv 1d 2i
+[DBG] 16xv 1d 2i: Got FFF8 vs FFF9: FAIL
+[DBG] PASS: 0b, 0x0014 1xs 2d 2i
+[DBG] PASS: 0b, 0x0014 16xs 2d 2i
+[DBG] FAIL: 0b, 0x0014 1xv 2d 2i
+[DBG] 1xv 2d 2i: Got FFF8 vs FFF9: FAIL
+[DBG] FAIL: 0b, 0x0014 16xv 2d 2i
+[DBG] 16xv 2d 2i: Got FFF8 vs FFF9: FAIL
+[DBG] PASS: 0b, 0x0014 1xs 4d 2i
+[DBG] PASS: 0b, 0x0014 16xs 4d 2i
+[DBG] FAIL: 0b, 0x0014 1xv 4d 2i
+[DBG] 1xv 4d 2i: Got FFF8 vs FFF9: FAIL
+[DBG] FAIL: 0b, 0x0014 16xv 4d 2i
+[DBG] 16xv 4d 2i: Got FFF8 vs FFF9: FAIL
+[DBG] PASS: 0b, 0x0014 1xs 1d 4i
+[DBG] PASS: 0b, 0x0014 16xs 1d 4i
+[DBG] FAIL: 0b, 0x0014 1xv 1d 4i
+[DBG] 1xv 1d 4i: Got FFF6 vs FFFB: FAIL
+[DBG] FAIL: 0b, 0x0014 16xv 1d 4i
+[DBG] 16xv 1d 4i: Got FFF6 vs FFFB: FAIL
+[DBG] PASS: 0b, 0x0014 1xs 2d 4i
+[DBG] PASS: 0b, 0x0014 16xs 2d 4i
+[DBG] FAIL: 0b, 0x0014 1xv 2d 4i
+[DBG] 1xv 2d 4i: Got FFF6 vs FFFB: FAIL
+[DBG] FAIL: 0b, 0x0014 16xv 2d 4i
+[DBG] 16xv 2d 4i: Got FFF6 vs FFFB: FAIL
+[DBG] PASS: 0b, 0x0014 1xs 4d 4i
+[DBG] PASS: 0b, 0x0014 16xs 4d 4i
+[DBG] FAIL: 0b, 0x0014 1xv 4d 4i
+[DBG] 1xv 4d 4i: Got FFF6 vs FFFB: FAIL
+[DBG] FAIL: 0b, 0x0014 16xv 4d 4i
+[DBG] 16xv 4d 4i: Got FFF6 vs FFFB: FAIL
+[DBG] Timer count-up test: 0b, 0x0015
+[DBG] FAIL: 0b, 0x0015 1xs 1d 1i
+[DBG] 1xs 1d 1i: Got 00000004 vs 00000005: FAIL
+[DBG] PASS: 0b, 0x0015 16xs 1d 1i
+[DBG] FAIL: 0b, 0x0015 1xv 1d 1i
+[DBG] 1xv 1d 1i: Got FFF4 vs FFF5: FAIL
+[DBG] FAIL: 0b, 0x0015 16xv 1d 1i
+[DBG] 16xv 1d 1i: Got FFF4 vs FFF3: FAIL
+[DBG] FAIL: 0b, 0x0015 1xs 2d 1i
+[DBG] 1xs 2d 1i: Got 00000004 vs 00000005: FAIL
+[DBG] PASS: 0b, 0x0015 16xs 2d 1i
+[DBG] FAIL: 0b, 0x0015 1xv 2d 1i
+[DBG] 1xv 2d 1i: Got FFF4 vs FFF5: FAIL
+[DBG] FAIL: 0b, 0x0015 16xv 2d 1i
+[DBG] 16xv 2d 1i: Got FFF4 vs FFF3: FAIL
+[DBG] FAIL: 0b, 0x0015 1xs 4d 1i
+[DBG] 1xs 4d 1i: Got 00000004 vs 00000005: FAIL
+[DBG] PASS: 0b, 0x0015 16xs 4d 1i
+[DBG] FAIL: 0b, 0x0015 1xv 4d 1i
+[DBG] 1xv 4d 1i: Got FFF4 vs FFF5: FAIL
+[DBG] FAIL: 0b, 0x0015 16xv 4d 1i
+[DBG] 16xv 4d 1i: Got FFF4 vs FFF3: FAIL
+[DBG] FAIL: 0b, 0x0015 1xs 1d 2i
+[DBG] 1xs 1d 2i: Got 00000004 vs 00000005: FAIL
+[DBG] PASS: 0b, 0x0015 16xs 1d 2i
+[DBG] FAIL: 0b, 0x0015 1xv 1d 2i
+[DBG] 1xv 1d 2i: Got FFED vs FFF0: FAIL
+[DBG] FAIL: 0b, 0x0015 16xv 1d 2i
+[DBG] 16xv 1d 2i: Got FFED vs FFEE: FAIL
+[DBG] FAIL: 0b, 0x0015 1xs 2d 2i
+[DBG] 1xs 2d 2i: Got 00000004 vs 00000005: FAIL
+[DBG] PASS: 0b, 0x0015 16xs 2d 2i
+[DBG] FAIL: 0b, 0x0015 1xv 2d 2i
+[DBG] 1xv 2d 2i: Got FFED vs FFF0: FAIL
+[DBG] FAIL: 0b, 0x0015 16xv 2d 2i
+[DBG] 16xv 2d 2i: Got FFED vs FFEE: FAIL
+[DBG] FAIL: 0b, 0x0015 1xs 4d 2i
+[DBG] 1xs 4d 2i: Got 00000004 vs 00000005: FAIL
+[DBG] PASS: 0b, 0x0015 16xs 4d 2i
+[DBG] FAIL: 0b, 0x0015 1xv 4d 2i
+[DBG] 1xv 4d 2i: Got FFED vs FFF0: FAIL
+[DBG] FAIL: 0b, 0x0015 16xv 4d 2i
+[DBG] 16xv 4d 2i: Got FFED vs FFEE: FAIL
+[DBG] FAIL: 0b, 0x0015 1xs 1d 4i
+[DBG] 1xs 1d 4i: Got 00000004 vs 00000005: FAIL
+[DBG] PASS: 0b, 0x0015 16xs 1d 4i
+[DBG] FAIL: 0b, 0x0015 1xv 1d 4i
+[DBG] 1xv 1d 4i: Got FFF4 vs FFFB: FAIL
+[DBG] FAIL: 0b, 0x0015 16xv 1d 4i
+[DBG] 16xv 1d 4i: Got FFF4 vs FFF9: FAIL
+[DBG] FAIL: 0b, 0x0015 1xs 2d 4i
+[DBG] 1xs 2d 4i: Got 00000004 vs 00000005: FAIL
+[DBG] PASS: 0b, 0x0015 16xs 2d 4i
+[DBG] FAIL: 0b, 0x0015 1xv 2d 4i
+[DBG] 1xv 2d 4i: Got FFF4 vs FFFB: FAIL
+[DBG] FAIL: 0b, 0x0015 16xv 2d 4i
+[DBG] 16xv 2d 4i: Got FFF4 vs FFF9: FAIL
+[DBG] FAIL: 0b, 0x0015 1xs 4d 4i
+[DBG] 1xs 4d 4i: Got 00000004 vs 00000005: FAIL
+[DBG] PASS: 0b, 0x0015 16xs 4d 4i
+[DBG] FAIL: 0b, 0x0015 1xv 4d 4i
+[DBG] 1xv 4d 4i: Got FFF4 vs FFFB: FAIL
+[DBG] FAIL: 0b, 0x0015 16xv 4d 4i
+[DBG] 16xv 4d 4i: Got FFF4 vs FFF9: FAIL
+[DBG] Timer count-up test: 0b, 0x0020
+[DBG] PASS: 0b, 0x0020 1xs 1d 1i
+[DBG] PASS: 0b, 0x0020 16xs 1d 1i
+[DBG] FAIL: 0b, 0x0020 1xv 1d 1i
+[DBG] 1xv 1d 1i: Got FFFD vs FFFC: FAIL
+[DBG] FAIL: 0b, 0x0020 16xv 1d 1i
+[DBG] 16xv 1d 1i: Got FFFD vs FFFC: FAIL
+[DBG] PASS: 0b, 0x0020 1xs 2d 1i
+[DBG] PASS: 0b, 0x0020 16xs 2d 1i
+[DBG] FAIL: 0b, 0x0020 1xv 2d 1i
+[DBG] 1xv 2d 1i: Got FFFD vs FFFC: FAIL
+[DBG] FAIL: 0b, 0x0020 16xv 2d 1i
+[DBG] 16xv 2d 1i: Got FFFD vs FFFC: FAIL
+[DBG] PASS: 0b, 0x0020 1xs 4d 1i
+[DBG] PASS: 0b, 0x0020 16xs 4d 1i
+[DBG] FAIL: 0b, 0x0020 1xv 4d 1i
+[DBG] 1xv 4d 1i: Got FFFD vs FFFC: FAIL
+[DBG] FAIL: 0b, 0x0020 16xv 4d 1i
+[DBG] 16xv 4d 1i: Got FFFD vs FFFC: FAIL
+[DBG] PASS: 0b, 0x0020 1xs 1d 2i
+[DBG] PASS: 0b, 0x0020 16xs 1d 2i
+[DBG] FAIL: 0b, 0x0020 1xv 1d 2i
+[DBG] 1xv 1d 2i: Got FFF4 vs FFF5: FAIL
+[DBG] FAIL: 0b, 0x0020 16xv 1d 2i
+[DBG] 16xv 1d 2i: Got FFF4 vs FFF5: FAIL
+[DBG] PASS: 0b, 0x0020 1xs 2d 2i
+[DBG] PASS: 0b, 0x0020 16xs 2d 2i
+[DBG] FAIL: 0b, 0x0020 1xv 2d 2i
+[DBG] 1xv 2d 2i: Got FFF4 vs FFF5: FAIL
+[DBG] FAIL: 0b, 0x0020 16xv 2d 2i
+[DBG] 16xv 2d 2i: Got FFF4 vs FFF5: FAIL
+[DBG] PASS: 0b, 0x0020 1xs 4d 2i
+[DBG] PASS: 0b, 0x0020 16xs 4d 2i
+[DBG] FAIL: 0b, 0x0020 1xv 4d 2i
+[DBG] 1xv 4d 2i: Got FFF4 vs FFF5: FAIL
+[DBG] FAIL: 0b, 0x0020 16xv 4d 2i
+[DBG] 16xv 4d 2i: Got FFF4 vs FFF5: FAIL
+[DBG] PASS: 0b, 0x0020 1xs 1d 4i
+[DBG] PASS: 0b, 0x0020 16xs 1d 4i
+[DBG] FAIL: 0b, 0x0020 1xv 1d 4i
+[DBG] 1xv 1d 4i: Got FFE2 vs FFE7: FAIL
+[DBG] FAIL: 0b, 0x0020 16xv 1d 4i
+[DBG] 16xv 1d 4i: Got FFE2 vs FFE7: FAIL
+[DBG] PASS: 0b, 0x0020 1xs 2d 4i
+[DBG] PASS: 0b, 0x0020 16xs 2d 4i
+[DBG] FAIL: 0b, 0x0020 1xv 2d 4i
+[DBG] 1xv 2d 4i: Got FFE2 vs FFE7: FAIL
+[DBG] FAIL: 0b, 0x0020 16xv 2d 4i
+[DBG] 16xv 2d 4i: Got FFE2 vs FFE7: FAIL
+[DBG] PASS: 0b, 0x0020 1xs 4d 4i
+[DBG] PASS: 0b, 0x0020 16xs 4d 4i
+[DBG] FAIL: 0b, 0x0020 1xv 4d 4i
+[DBG] 1xv 4d 4i: Got FFE2 vs FFE7: FAIL
+[DBG] FAIL: 0b, 0x0020 16xv 4d 4i
+[DBG] 16xv 4d 4i: Got FFE2 vs FFE7: FAIL
+[DBG] Timer count-up test: 0b, 0x0024
+[DBG] PASS: 0b, 0x0024 1xs 1d 1i
+[DBG] PASS: 0b, 0x0024 16xs 1d 1i
+[DBG] FAIL: 0b, 0x0024 1xv 1d 1i
+[DBG] 1xv 1d 1i: Got FFF1 vs FFF0: FAIL
+[DBG] FAIL: 0b, 0x0024 16xv 1d 1i
+[DBG] 16xv 1d 1i: Got FFF3 vs FFF1: FAIL
+[DBG] PASS: 0b, 0x0024 1xs 2d 1i
+[DBG] PASS: 0b, 0x0024 16xs 2d 1i
+[DBG] FAIL: 0b, 0x0024 1xv 2d 1i
+[DBG] 1xv 2d 1i: Got FFF1 vs FFF0: FAIL
+[DBG] FAIL: 0b, 0x0024 16xv 2d 1i
+[DBG] 16xv 2d 1i: Got FFF3 vs FFF1: FAIL
+[DBG] PASS: 0b, 0x0024 1xs 4d 1i
+[DBG] PASS: 0b, 0x0024 16xs 4d 1i
+[DBG] FAIL: 0b, 0x0024 1xv 4d 1i
+[DBG] 1xv 4d 1i: Got FFF1 vs FFF0: FAIL
+[DBG] FAIL: 0b, 0x0024 16xv 4d 1i
+[DBG] 16xv 4d 1i: Got FFF3 vs FFF1: FAIL
+[DBG] PASS: 0b, 0x0024 1xs 1d 2i
+[DBG] PASS: 0b, 0x0024 16xs 1d 2i
+[DBG] FAIL: 0b, 0x0024 1xv 1d 2i
+[DBG] 1xv 1d 2i: Got FFFC vs FFFD: FAIL
+[DBG] PASS: 0b, 0x0024 16xv 1d 2i
+[DBG] PASS: 0b, 0x0024 1xs 2d 2i
+[DBG] PASS: 0b, 0x0024 16xs 2d 2i
+[DBG] FAIL: 0b, 0x0024 1xv 2d 2i
+[DBG] 1xv 2d 2i: Got FFFC vs FFFD: FAIL
+[DBG] PASS: 0b, 0x0024 16xv 2d 2i
+[DBG] PASS: 0b, 0x0024 1xs 4d 2i
+[DBG] PASS: 0b, 0x0024 16xs 4d 2i
+[DBG] FAIL: 0b, 0x0024 1xv 4d 2i
+[DBG] 1xv 4d 2i: Got FFFC vs FFFD: FAIL
+[DBG] PASS: 0b, 0x0024 16xv 4d 2i
+[DBG] PASS: 0b, 0x0024 1xs 1d 4i
+[DBG] PASS: 0b, 0x0024 16xs 1d 4i
+[DBG] FAIL: 0b, 0x0024 1xv 1d 4i
+[DBG] 1xv 1d 4i: Got FFEE vs FFF3: FAIL
+[DBG] FAIL: 0b, 0x0024 16xv 1d 4i
+[DBG] 16xv 1d 4i: Got FFF0 vs FFF4: FAIL
+[DBG] PASS: 0b, 0x0024 1xs 2d 4i
+[DBG] PASS: 0b, 0x0024 16xs 2d 4i
+[DBG] FAIL: 0b, 0x0024 1xv 2d 4i
+[DBG] 1xv 2d 4i: Got FFEE vs FFF3: FAIL
+[DBG] FAIL: 0b, 0x0024 16xv 2d 4i
+[DBG] 16xv 2d 4i: Got FFF0 vs FFF4: FAIL
+[DBG] PASS: 0b, 0x0024 1xs 4d 4i
+[DBG] PASS: 0b, 0x0024 16xs 4d 4i
+[DBG] FAIL: 0b, 0x0024 1xv 4d 4i
+[DBG] 1xv 4d 4i: Got FFEE vs FFF3: FAIL
+[DBG] FAIL: 0b, 0x0024 16xv 4d 4i
+[DBG] 16xv 4d 4i: Got FFF0 vs FFF4: FAIL
+[DBG] Timer count-up test: 0b, 0x0025
+[DBG] FAIL: 0b, 0x0025 1xs 1d 1i
+[DBG] 1xs 1d 1i: Got 00000006 vs 00000007: FAIL
+[DBG] PASS: 0b, 0x0025 16xs 1d 1i
+[DBG] FAIL: 0b, 0x0025 1xv 1d 1i
+[DBG] 1xv 1d 1i: Got FFEE vs FFEF: FAIL
+[DBG] FAIL: 0b, 0x0025 16xv 1d 1i
+[DBG] 16xv 1d 1i: Got FFEF vs FFED: FAIL
+[DBG] FAIL: 0b, 0x0025 1xs 2d 1i
+[DBG] 1xs 2d 1i: Got 00000006 vs 00000007: FAIL
+[DBG] PASS: 0b, 0x0025 16xs 2d 1i
+[DBG] FAIL: 0b, 0x0025 1xv 2d 1i
+[DBG] 1xv 2d 1i: Got FFEE vs FFEF: FAIL
+[DBG] FAIL: 0b, 0x0025 16xv 2d 1i
+[DBG] 16xv 2d 1i: Got FFEF vs FFED: FAIL
+[DBG] FAIL: 0b, 0x0025 1xs 4d 1i
+[DBG] 1xs 4d 1i: Got 00000006 vs 00000007: FAIL
+[DBG] PASS: 0b, 0x0025 16xs 4d 1i
+[DBG] FAIL: 0b, 0x0025 1xv 4d 1i
+[DBG] 1xv 4d 1i: Got FFEE vs FFEF: FAIL
+[DBG] FAIL: 0b, 0x0025 16xv 4d 1i
+[DBG] 16xv 4d 1i: Got FFEF vs FFED: FAIL
+[DBG] FAIL: 0b, 0x0025 1xs 1d 2i
+[DBG] 1xs 1d 2i: Got 00000006 vs 00000007: FAIL
+[DBG] PASS: 0b, 0x0025 16xs 1d 2i
+[DBG] FAIL: 0b, 0x0025 1xv 1d 2i
+[DBG] 1xv 1d 2i: Got FFF6 vs FFF9: FAIL
+[DBG] PASS: 0b, 0x0025 16xv 1d 2i
+[DBG] FAIL: 0b, 0x0025 1xs 2d 2i
+[DBG] 1xs 2d 2i: Got 00000006 vs 00000007: FAIL
+[DBG] PASS: 0b, 0x0025 16xs 2d 2i
+[DBG] FAIL: 0b, 0x0025 1xv 2d 2i
+[DBG] 1xv 2d 2i: Got FFF6 vs FFF9: FAIL
+[DBG] PASS: 0b, 0x0025 16xv 2d 2i
+[DBG] FAIL: 0b, 0x0025 1xs 4d 2i
+[DBG] 1xs 4d 2i: Got 00000006 vs 00000007: FAIL
+[DBG] PASS: 0b, 0x0025 16xs 4d 2i
+[DBG] FAIL: 0b, 0x0025 1xv 4d 2i
+[DBG] 1xv 4d 2i: Got FFF6 vs FFF9: FAIL
+[DBG] PASS: 0b, 0x0025 16xv 4d 2i
+[DBG] FAIL: 0b, 0x0025 1xs 1d 4i
+[DBG] 1xs 1d 4i: Got 00000006 vs 00000007: FAIL
+[DBG] PASS: 0b, 0x0025 16xs 1d 4i
+[DBG] FAIL: 0b, 0x0025 1xv 1d 4i
+[DBG] 1xv 1d 4i: Got FFE1 vs FFE8: FAIL
+[DBG] FAIL: 0b, 0x0025 16xv 1d 4i
+[DBG] 16xv 1d 4i: Got FFE2 vs FFE6: FAIL
+[DBG] FAIL: 0b, 0x0025 1xs 2d 4i
+[DBG] 1xs 2d 4i: Got 00000006 vs 00000007: FAIL
+[DBG] PASS: 0b, 0x0025 16xs 2d 4i
+[DBG] FAIL: 0b, 0x0025 1xv 2d 4i
+[DBG] 1xv 2d 4i: Got FFE1 vs FFE8: FAIL
+[DBG] FAIL: 0b, 0x0025 16xv 2d 4i
+[DBG] 16xv 2d 4i: Got FFE2 vs FFE6: FAIL
+[DBG] FAIL: 0b, 0x0025 1xs 4d 4i
+[DBG] 1xs 4d 4i: Got 00000006 vs 00000007: FAIL
+[DBG] PASS: 0b, 0x0025 16xs 4d 4i
+[DBG] FAIL: 0b, 0x0025 1xv 4d 4i
+[DBG] 1xv 4d 4i: Got FFE1 vs FFE8: FAIL
+[DBG] FAIL: 0b, 0x0025 16xv 4d 4i
+[DBG] 16xv 4d 4i: Got FFE2 vs FFE6: FAIL
+[DBG] Timer count-up test: 0b, 0x0040
+[DBG] PASS: 0b, 0x0040 1xs 1d 1i
+[DBG] PASS: 0b, 0x0040 16xs 1d 1i
+[DBG] FAIL: 0b, 0x0040 1xv 1d 1i
+[DBG] 1xv 1d 1i: Got FFDD vs FFDC: FAIL
+[DBG] FAIL: 0b, 0x0040 16xv 1d 1i
+[DBG] 16xv 1d 1i: Got FFDE vs FFDC: FAIL
+[DBG] PASS: 0b, 0x0040 1xs 2d 1i
+[DBG] PASS: 0b, 0x0040 16xs 2d 1i
+[DBG] FAIL: 0b, 0x0040 1xv 2d 1i
+[DBG] 1xv 2d 1i: Got FFDD vs FFDC: FAIL
+[DBG] FAIL: 0b, 0x0040 16xv 2d 1i
+[DBG] 16xv 2d 1i: Got FFDE vs FFDC: FAIL
+[DBG] PASS: 0b, 0x0040 1xs 4d 1i
+[DBG] PASS: 0b, 0x0040 16xs 4d 1i
+[DBG] FAIL: 0b, 0x0040 1xv 4d 1i
+[DBG] 1xv 4d 1i: Got FFDD vs FFDC: FAIL
+[DBG] FAIL: 0b, 0x0040 16xv 4d 1i
+[DBG] 16xv 4d 1i: Got FFDE vs FFDC: FAIL
+[DBG] PASS: 0b, 0x0040 1xs 1d 2i
+[DBG] PASS: 0b, 0x0040 16xs 1d 2i
+[DBG] FAIL: 0b, 0x0040 1xv 1d 2i
+[DBG] 1xv 1d 2i: Got FFDD vs FFDC: FAIL
+[DBG] FAIL: 0b, 0x0040 16xv 1d 2i
+[DBG] 16xv 1d 2i: Got FFDD vs FFDC: FAIL
+[DBG] PASS: 0b, 0x0040 1xs 2d 2i
+[DBG] PASS: 0b, 0x0040 16xs 2d 2i
+[DBG] FAIL: 0b, 0x0040 1xv 2d 2i
+[DBG] 1xv 2d 2i: Got FFDD vs FFDC: FAIL
+[DBG] FAIL: 0b, 0x0040 16xv 2d 2i
+[DBG] 16xv 2d 2i: Got FFDD vs FFDC: FAIL
+[DBG] PASS: 0b, 0x0040 1xs 4d 2i
+[DBG] PASS: 0b, 0x0040 16xs 4d 2i
+[DBG] FAIL: 0b, 0x0040 1xv 4d 2i
+[DBG] 1xv 4d 2i: Got FFDD vs FFDC: FAIL
+[DBG] FAIL: 0b, 0x0040 16xv 4d 2i
+[DBG] 16xv 4d 2i: Got FFDD vs FFDC: FAIL
+[DBG] PASS: 0b, 0x0040 1xs 1d 4i
+[DBG] PASS: 0b, 0x0040 16xs 1d 4i
+[DBG] PASS: 0b, 0x0040 1xv 1d 4i
+[DBG] FAIL: 0b, 0x0040 16xv 1d 4i
+[DBG] 16xv 1d 4i: Got FFDD vs FFDE: FAIL
+[DBG] PASS: 0b, 0x0040 1xs 2d 4i
+[DBG] PASS: 0b, 0x0040 16xs 2d 4i
+[DBG] PASS: 0b, 0x0040 1xv 2d 4i
+[DBG] FAIL: 0b, 0x0040 16xv 2d 4i
+[DBG] 16xv 2d 4i: Got FFDD vs FFDE: FAIL
+[DBG] PASS: 0b, 0x0040 1xs 4d 4i
+[DBG] PASS: 0b, 0x0040 16xs 4d 4i
+[DBG] PASS: 0b, 0x0040 1xv 4d 4i
+[DBG] FAIL: 0b, 0x0040 16xv 4d 4i
+[DBG] 16xv 4d 4i: Got FFDD vs FFDE: FAIL
+[DBG] Timer count-up test: 0b, 0x0080
+[DBG] PASS: 0b, 0x0080 1xs 1d 1i
+[DBG] PASS: 0b, 0x0080 16xs 1d 1i
+[DBG] FAIL: 0b, 0x0080 1xv 1d 1i
+[DBG] 1xv 1d 1i: Got FFDD vs FFDC: FAIL
+[DBG] FAIL: 0b, 0x0080 16xv 1d 1i
+[DBG] 16xv 1d 1i: Got FFDF vs FFDD: FAIL
+[DBG] PASS: 0b, 0x0080 1xs 2d 1i
+[DBG] PASS: 0b, 0x0080 16xs 2d 1i
+[DBG] FAIL: 0b, 0x0080 1xv 2d 1i
+[DBG] 1xv 2d 1i: Got FFDD vs FFDC: FAIL
+[DBG] FAIL: 0b, 0x0080 16xv 2d 1i
+[DBG] 16xv 2d 1i: Got FFDF vs FFDD: FAIL
+[DBG] PASS: 0b, 0x0080 1xs 4d 1i
+[DBG] PASS: 0b, 0x0080 16xs 4d 1i
+[DBG] FAIL: 0b, 0x0080 1xv 4d 1i
+[DBG] 1xv 4d 1i: Got FFDD vs FFDC: FAIL
+[DBG] FAIL: 0b, 0x0080 16xv 4d 1i
+[DBG] 16xv 4d 1i: Got FFDF vs FFDD: FAIL
+[DBG] PASS: 0b, 0x0080 1xs 1d 2i
+[DBG] PASS: 0b, 0x0080 16xs 1d 2i
+[DBG] FAIL: 0b, 0x0080 1xv 1d 2i
+[DBG] 1xv 1d 2i: Got FFDD vs FFDC: FAIL
+[DBG] FAIL: 0b, 0x0080 16xv 1d 2i
+[DBG] 16xv 1d 2i: Got FFDD vs FFDC: FAIL
+[DBG] PASS: 0b, 0x0080 1xs 2d 2i
+[DBG] PASS: 0b, 0x0080 16xs 2d 2i
+[DBG] FAIL: 0b, 0x0080 1xv 2d 2i
+[DBG] 1xv 2d 2i: Got FFDD vs FFDC: FAIL
+[DBG] FAIL: 0b, 0x0080 16xv 2d 2i
+[DBG] 16xv 2d 2i: Got FFDD vs FFDC: FAIL
+[DBG] PASS: 0b, 0x0080 1xs 4d 2i
+[DBG] PASS: 0b, 0x0080 16xs 4d 2i
+[DBG] FAIL: 0b, 0x0080 1xv 4d 2i
+[DBG] 1xv 4d 2i: Got FFDD vs FFDC: FAIL
+[DBG] FAIL: 0b, 0x0080 16xv 4d 2i
+[DBG] 16xv 4d 2i: Got FFDD vs FFDC: FAIL
+[DBG] PASS: 0b, 0x0080 1xs 1d 4i
+[DBG] FAIL: 0b, 0x0080 16xs 1d 4i
+[DBG] 16xs 1d 4i: Got 00000080 vs 00000070: FAIL
+[DBG] PASS: 0b, 0x0080 1xv 1d 4i
+[DBG] FAIL: 0b, 0x0080 16xv 1d 4i
+[DBG] 16xv 1d 4i: Got FFDF vs FFDC: FAIL
+[DBG] PASS: 0b, 0x0080 1xs 2d 4i
+[DBG] FAIL: 0b, 0x0080 16xs 2d 4i
+[DBG] 16xs 2d 4i: Got 00000080 vs 00000070: FAIL
+[DBG] PASS: 0b, 0x0080 1xv 2d 4i
+[DBG] FAIL: 0b, 0x0080 16xv 2d 4i
+[DBG] 16xv 2d 4i: Got FFDF vs FFDC: FAIL
+[DBG] PASS: 0b, 0x0080 1xs 4d 4i
+[DBG] FAIL: 0b, 0x0080 16xs 4d 4i
+[DBG] 16xs 4d 4i: Got 00000080 vs 00000070: FAIL
+[DBG] PASS: 0b, 0x0080 1xv 4d 4i
+[DBG] FAIL: 0b, 0x0080 16xv 4d 4i
+[DBG] 16xv 4d 4i: Got FFDF vs FFDC: FAIL
+[DBG] Timer count-up test: 0b, 0x0800
+[DBG] PASS: 0b, 0x0800 1xs 1d 1i
+[DBG] PASS: 0b, 0x0800 16xs 1d 1i
+[DBG] FAIL: 0b, 0x0800 1xv 1d 1i
+[DBG] 1xv 1d 1i: Got F85D vs F85C: FAIL
+[DBG] FAIL: 0b, 0x0800 16xv 1d 1i
+[DBG] 16xv 1d 1i: Got F85D vs F85C: FAIL
+[DBG] PASS: 0b, 0x0800 1xs 2d 1i
+[DBG] PASS: 0b, 0x0800 16xs 2d 1i
+[DBG] FAIL: 0b, 0x0800 1xv 2d 1i
+[DBG] 1xv 2d 1i: Got F85D vs F85C: FAIL
+[DBG] FAIL: 0b, 0x0800 16xv 2d 1i
+[DBG] 16xv 2d 1i: Got F85D vs F85C: FAIL
+[DBG] PASS: 0b, 0x0800 1xs 4d 1i
+[DBG] PASS: 0b, 0x0800 16xs 4d 1i
+[DBG] FAIL: 0b, 0x0800 1xv 4d 1i
+[DBG] 1xv 4d 1i: Got F85D vs F85C: FAIL
+[DBG] FAIL: 0b, 0x0800 16xv 4d 1i
+[DBG] 16xv 4d 1i: Got F85D vs F85C: FAIL
+[DBG] PASS: 0b, 0x0800 1xs 1d 2i
+[DBG] PASS: 0b, 0x0800 16xs 1d 2i
+[DBG] FAIL: 0b, 0x0800 1xv 1d 2i
+[DBG] 1xv 1d 2i: Got F85D vs F85C: FAIL
+[DBG] FAIL: 0b, 0x0800 16xv 1d 2i
+[DBG] 16xv 1d 2i: Got F85D vs F85C: FAIL
+[DBG] PASS: 0b, 0x0800 1xs 2d 2i
+[DBG] PASS: 0b, 0x0800 16xs 2d 2i
+[DBG] FAIL: 0b, 0x0800 1xv 2d 2i
+[DBG] 1xv 2d 2i: Got F85D vs F85C: FAIL
+[DBG] FAIL: 0b, 0x0800 16xv 2d 2i
+[DBG] 16xv 2d 2i: Got F85D vs F85C: FAIL
+[DBG] PASS: 0b, 0x0800 1xs 4d 2i
+[DBG] PASS: 0b, 0x0800 16xs 4d 2i
+[DBG] FAIL: 0b, 0x0800 1xv 4d 2i
+[DBG] 1xv 4d 2i: Got F85D vs F85C: FAIL
+[DBG] FAIL: 0b, 0x0800 16xv 4d 2i
+[DBG] 16xv 4d 2i: Got F85D vs F85C: FAIL
+[DBG] PASS: 0b, 0x0800 1xs 1d 4i
+[DBG] FAIL: 0b, 0x0800 16xs 1d 4i
+[DBG] 16xs 1d 4i: Got 00001560 vs 00001550: FAIL
+[DBG] PASS: 0b, 0x0800 1xv 1d 4i
+[DBG] FAIL: 0b, 0x0800 16xv 1d 4i
+[DBG] 16xv 1d 4i: Got F85D vs F85C: FAIL
+[DBG] PASS: 0b, 0x0800 1xs 2d 4i
+[DBG] FAIL: 0b, 0x0800 16xs 2d 4i
+[DBG] 16xs 2d 4i: Got 00001560 vs 00001550: FAIL
+[DBG] PASS: 0b, 0x0800 1xv 2d 4i
+[DBG] FAIL: 0b, 0x0800 16xv 2d 4i
+[DBG] 16xv 2d 4i: Got F85D vs F85C: FAIL
+[DBG] PASS: 0b, 0x0800 1xs 4d 4i
+[DBG] FAIL: 0b, 0x0800 16xs 4d 4i
+[DBG] 16xs 4d 4i: Got 00001560 vs 00001550: FAIL
+[DBG] PASS: 0b, 0x0800 1xv 4d 4i
+[DBG] FAIL: 0b, 0x0800 16xv 4d 4i
+[DBG] 16xv 4d 4i: Got F85D vs F85C: FAIL
+[DBG] Timer count-up test: 0b, 0x8000
+[DBG] PASS: 0b, 0x8000 1xs 1d 1i
+[DBG] PASS: 0b, 0x8000 16xs 1d 1i
+[DBG] FAIL: 0b, 0x8000 1xv 1d 1i
+[DBG] 1xv 1d 1i: Got 805D vs 805C: FAIL
+[DBG] FAIL: 0b, 0x8000 16xv 1d 1i
+[DBG] 16xv 1d 1i: Got 805D vs 805E: FAIL
+[DBG] PASS: 0b, 0x8000 1xs 2d 1i
+[DBG] PASS: 0b, 0x8000 16xs 2d 1i
+[DBG] FAIL: 0b, 0x8000 1xv 2d 1i
+[DBG] 1xv 2d 1i: Got 805D vs 805C: FAIL
+[DBG] FAIL: 0b, 0x8000 16xv 2d 1i
+[DBG] 16xv 2d 1i: Got 805D vs 805E: FAIL
+[DBG] PASS: 0b, 0x8000 1xs 4d 1i
+[DBG] PASS: 0b, 0x8000 16xs 4d 1i
+[DBG] FAIL: 0b, 0x8000 1xv 4d 1i
+[DBG] 1xv 4d 1i: Got 805D vs 805C: FAIL
+[DBG] FAIL: 0b, 0x8000 16xv 4d 1i
+[DBG] 16xv 4d 1i: Got 805D vs 805E: FAIL
+[DBG] PASS: 0b, 0x8000 1xs 1d 2i
+[DBG] PASS: 0b, 0x8000 16xs 1d 2i
+[DBG] FAIL: 0b, 0x8000 1xv 1d 2i
+[DBG] 1xv 1d 2i: Got 805D vs 805C: FAIL
+[DBG] FAIL: 0b, 0x8000 16xv 1d 2i
+[DBG] 16xv 1d 2i: Got 805D vs 805C: FAIL
+[DBG] PASS: 0b, 0x8000 1xs 2d 2i
+[DBG] PASS: 0b, 0x8000 16xs 2d 2i
+[DBG] FAIL: 0b, 0x8000 1xv 2d 2i
+[DBG] 1xv 2d 2i: Got 805D vs 805C: FAIL
+[DBG] FAIL: 0b, 0x8000 16xv 2d 2i
+[DBG] 16xv 2d 2i: Got 805D vs 805C: FAIL
+[DBG] PASS: 0b, 0x8000 1xs 4d 2i
+[DBG] PASS: 0b, 0x8000 16xs 4d 2i
+[DBG] FAIL: 0b, 0x8000 1xv 4d 2i
+[DBG] 1xv 4d 2i: Got 805D vs 805C: FAIL
+[DBG] FAIL: 0b, 0x8000 16xv 4d 2i
+[DBG] 16xv 4d 2i: Got 805D vs 805C: FAIL
+[DBG] PASS: 0b, 0x8000 1xs 1d 4i
+[DBG] PASS: 0b, 0x8000 16xs 1d 4i
+[DBG] PASS: 0b, 0x8000 1xv 1d 4i
+[DBG] FAIL: 0b, 0x8000 16xv 1d 4i
+[DBG] 16xv 1d 4i: Got 805D vs 805C: FAIL
+[DBG] PASS: 0b, 0x8000 1xs 2d 4i
+[DBG] PASS: 0b, 0x8000 16xs 2d 4i
+[DBG] PASS: 0b, 0x8000 1xv 2d 4i
+[DBG] FAIL: 0b, 0x8000 16xv 2d 4i
+[DBG] 16xv 2d 4i: Got 805D vs 805C: FAIL
+[DBG] PASS: 0b, 0x8000 1xs 4d 4i
+[DBG] PASS: 0b, 0x8000 16xs 4d 4i
+[DBG] PASS: 0b, 0x8000 1xv 4d 4i
+[DBG] FAIL: 0b, 0x8000 16xv 4d 4i
+[DBG] 16xv 4d 4i: Got 805D vs 805C: FAIL
+[DBG] Timer count-up test: 6b, 0x0010
+[DBG] PASS: 6b, 0x0010 1xs 1d 1i
+[DBG] PASS: 6b, 0x0010 16xs 1d 1i
+[DBG] PASS: 6b, 0x0010 1xv 1d 1i
+[DBG] PASS: 6b, 0x0010 16xv 1d 1i
+[DBG] PASS: 6b, 0x0010 1xs 2d 1i
+[DBG] PASS: 6b, 0x0010 16xs 2d 1i
+[DBG] PASS: 6b, 0x0010 1xv 2d 1i
+[DBG] PASS: 6b, 0x0010 16xv 2d 1i
+[DBG] PASS: 6b, 0x0010 1xs 4d 1i
+[DBG] PASS: 6b, 0x0010 16xs 4d 1i
+[DBG] PASS: 6b, 0x0010 1xv 4d 1i
+[DBG] PASS: 6b, 0x0010 16xv 4d 1i
+[DBG] PASS: 6b, 0x0010 1xs 1d 2i
+[DBG] FAIL: 6b, 0x0010 16xs 1d 2i
+[DBG] 16xs 1d 2i: Got 00000530 vs 00000520: FAIL
+[DBG] PASS: 6b, 0x0010 1xv 1d 2i
+[DBG] PASS: 6b, 0x0010 16xv 1d 2i
+[DBG] FAIL: 6b, 0x0010 1xs 2d 2i
+[DBG] 1xs 2d 2i: Got 000000EC vs 000000EB: FAIL
+[DBG] PASS: 6b, 0x0010 16xs 2d 2i
+[DBG] PASS: 6b, 0x0010 1xv 2d 2i
+[DBG] PASS: 6b, 0x0010 16xv 2d 2i
+[DBG] FAIL: 6b, 0x0010 1xs 4d 2i
+[DBG] 1xs 4d 2i: Got 000000F3 vs 000000F2: FAIL
+[DBG] PASS: 6b, 0x0010 16xs 4d 2i
+[DBG] PASS: 6b, 0x0010 1xv 4d 2i
+[DBG] PASS: 6b, 0x0010 16xv 4d 2i
+[DBG] FAIL: 6b, 0x0010 1xs 1d 4i
+[DBG] 1xs 1d 4i: Got 000001CF vs 000001CE: FAIL
+[DBG] PASS: 6b, 0x0010 16xs 1d 4i
+[DBG] PASS: 6b, 0x0010 1xv 1d 4i
+[DBG] PASS: 6b, 0x0010 16xv 1d 4i
+[DBG] FAIL: 6b, 0x0010 1xs 2d 4i
+[DBG] 1xs 2d 4i: Got 000001CE vs 000001CD: FAIL
+[DBG] PASS: 6b, 0x0010 16xs 2d 4i
+[DBG] PASS: 6b, 0x0010 1xv 2d 4i
+[DBG] PASS: 6b, 0x0010 16xv 2d 4i
+[DBG] FAIL: 6b, 0x0010 1xs 4d 4i
+[DBG] 1xs 4d 4i: Got 000001D5 vs 000001D4: FAIL
+[DBG] PASS: 6b, 0x0010 16xs 4d 4i
+[DBG] PASS: 6b, 0x0010 1xv 4d 4i
+[DBG] PASS: 6b, 0x0010 16xv 4d 4i
+[DBG] Timer count-up test: 6b, 0x0011
+[DBG] PASS: 6b, 0x0011 1xs 1d 1i
+[DBG] PASS: 6b, 0x0011 16xs 1d 1i
+[DBG] PASS: 6b, 0x0011 1xv 1d 1i
+[DBG] PASS: 6b, 0x0011 16xv 1d 1i
+[DBG] PASS: 6b, 0x0011 1xs 2d 1i
+[DBG] PASS: 6b, 0x0011 16xs 2d 1i
+[DBG] PASS: 6b, 0x0011 1xv 2d 1i
+[DBG] PASS: 6b, 0x0011 16xv 2d 1i
+[DBG] PASS: 6b, 0x0011 1xs 4d 1i
+[DBG] PASS: 6b, 0x0011 16xs 4d 1i
+[DBG] PASS: 6b, 0x0011 1xv 4d 1i
+[DBG] PASS: 6b, 0x0011 16xv 4d 1i
+[DBG] PASS: 6b, 0x0011 1xs 1d 2i
+[DBG] PASS: 6b, 0x0011 16xs 1d 2i
+[DBG] PASS: 6b, 0x0011 1xv 1d 2i
+[DBG] PASS: 6b, 0x0011 16xv 1d 2i
+[DBG] FAIL: 6b, 0x0011 1xs 2d 2i
+[DBG] 1xs 2d 2i: Got 000000FC vs 000000FB: FAIL
+[DBG] PASS: 6b, 0x0011 16xs 2d 2i
+[DBG] PASS: 6b, 0x0011 1xv 2d 2i
+[DBG] PASS: 6b, 0x0011 16xv 2d 2i
+[DBG] FAIL: 6b, 0x0011 1xs 4d 2i
+[DBG] 1xs 4d 2i: Got 00000103 vs 00000102: FAIL
+[DBG] PASS: 6b, 0x0011 16xs 4d 2i
+[DBG] PASS: 6b, 0x0011 1xv 4d 2i
+[DBG] PASS: 6b, 0x0011 16xv 4d 2i
+[DBG] FAIL: 6b, 0x0011 1xs 1d 4i
+[DBG] 1xs 1d 4i: Got 000001EF vs 000001EE: FAIL
+[DBG] PASS: 6b, 0x0011 16xs 1d 4i
+[DBG] PASS: 6b, 0x0011 1xv 1d 4i
+[DBG] PASS: 6b, 0x0011 16xv 1d 4i
+[DBG] FAIL: 6b, 0x0011 1xs 2d 4i
+[DBG] 1xs 2d 4i: Got 000001EE vs 000001ED: FAIL
+[DBG] PASS: 6b, 0x0011 16xs 2d 4i
+[DBG] PASS: 6b, 0x0011 1xv 2d 4i
+[DBG] PASS: 6b, 0x0011 16xv 2d 4i
+[DBG] FAIL: 6b, 0x0011 1xs 4d 4i
+[DBG] 1xs 4d 4i: Got 000001F5 vs 000001F4: FAIL
+[DBG] FAIL: 6b, 0x0011 16xs 4d 4i
+[DBG] 16xs 4d 4i: Got 00000AF0 vs 00000AE0: FAIL
+[DBG] PASS: 6b, 0x0011 1xv 4d 4i
+[DBG] PASS: 6b, 0x0011 16xv 4d 4i
+[DBG] Timer count-up test: 6b, 0x0012
+[DBG] PASS: 6b, 0x0012 1xs 1d 1i
+[DBG] PASS: 6b, 0x0012 16xs 1d 1i
+[DBG] PASS: 6b, 0x0012 1xv 1d 1i
+[DBG] PASS: 6b, 0x0012 16xv 1d 1i
+[DBG] PASS: 6b, 0x0012 1xs 2d 1i
+[DBG] PASS: 6b, 0x0012 16xs 2d 1i
+[DBG] PASS: 6b, 0x0012 1xv 2d 1i
+[DBG] PASS: 6b, 0x0012 16xv 2d 1i
+[DBG] PASS: 6b, 0x0012 1xs 4d 1i
+[DBG] PASS: 6b, 0x0012 16xs 4d 1i
+[DBG] PASS: 6b, 0x0012 1xv 4d 1i
+[DBG] PASS: 6b, 0x0012 16xv 4d 1i
+[DBG] PASS: 6b, 0x0012 1xs 1d 2i
+[DBG] PASS: 6b, 0x0012 16xs 1d 2i
+[DBG] PASS: 6b, 0x0012 1xv 1d 2i
+[DBG] PASS: 6b, 0x0012 16xv 1d 2i
+[DBG] FAIL: 6b, 0x0012 1xs 2d 2i
+[DBG] 1xs 2d 2i: Got 0000010C vs 0000010B: FAIL
+[DBG] PASS: 6b, 0x0012 16xs 2d 2i
+[DBG] PASS: 6b, 0x0012 1xv 2d 2i
+[DBG] PASS: 6b, 0x0012 16xv 2d 2i
+[DBG] FAIL: 6b, 0x0012 1xs 4d 2i
+[DBG] 1xs 4d 2i: Got 00000113 vs 00000112: FAIL
+[DBG] PASS: 6b, 0x0012 16xs 4d 2i
+[DBG] PASS: 6b, 0x0012 1xv 4d 2i
+[DBG] PASS: 6b, 0x0012 16xv 4d 2i
+[DBG] FAIL: 6b, 0x0012 1xs 1d 4i
+[DBG] 1xs 1d 4i: Got 0000020F vs 0000020E: FAIL
+[DBG] FAIL: 6b, 0x0012 16xs 1d 4i
+[DBG] 16xs 1d 4i: Got 00000B80 vs 00000B70: FAIL
+[DBG] PASS: 6b, 0x0012 1xv 1d 4i
+[DBG] PASS: 6b, 0x0012 16xv 1d 4i
+[DBG] FAIL: 6b, 0x0012 1xs 2d 4i
+[DBG] 1xs 2d 4i: Got 0000020E vs 0000020D: FAIL
+[DBG] PASS: 6b, 0x0012 16xs 2d 4i
+[DBG] PASS: 6b, 0x0012 1xv 2d 4i
+[DBG] PASS: 6b, 0x0012 16xv 2d 4i
+[DBG] FAIL: 6b, 0x0012 1xs 4d 4i
+[DBG] 1xs 4d 4i: Got 00000215 vs 00000214: FAIL
+[DBG] FAIL: 6b, 0x0012 16xs 4d 4i
+[DBG] 16xs 4d 4i: Got 00000BA0 vs 00000B90: FAIL
+[DBG] PASS: 6b, 0x0012 1xv 4d 4i
+[DBG] PASS: 6b, 0x0012 16xv 4d 4i
+[DBG] Timer count-up test: 6b, 0x0013
+[DBG] PASS: 6b, 0x0013 1xs 1d 1i
+[DBG] PASS: 6b, 0x0013 16xs 1d 1i
+[DBG] PASS: 6b, 0x0013 1xv 1d 1i
+[DBG] PASS: 6b, 0x0013 16xv 1d 1i
+[DBG] PASS: 6b, 0x0013 1xs 2d 1i
+[DBG] PASS: 6b, 0x0013 16xs 2d 1i
+[DBG] PASS: 6b, 0x0013 1xv 2d 1i
+[DBG] PASS: 6b, 0x0013 16xv 2d 1i
+[DBG] PASS: 6b, 0x0013 1xs 4d 1i
+[DBG] PASS: 6b, 0x0013 16xs 4d 1i
+[DBG] PASS: 6b, 0x0013 1xv 4d 1i
+[DBG] PASS: 6b, 0x0013 16xv 4d 1i
+[DBG] PASS: 6b, 0x0013 1xs 1d 2i
+[DBG] PASS: 6b, 0x0013 16xs 1d 2i
+[DBG] PASS: 6b, 0x0013 1xv 1d 2i
+[DBG] PASS: 6b, 0x0013 16xv 1d 2i
+[DBG] FAIL: 6b, 0x0013 1xs 2d 2i
+[DBG] 1xs 2d 2i: Got 0000011C vs 0000011B: FAIL
+[DBG] PASS: 6b, 0x0013 16xs 2d 2i
+[DBG] PASS: 6b, 0x0013 1xv 2d 2i
+[DBG] PASS: 6b, 0x0013 16xv 2d 2i
+[DBG] FAIL: 6b, 0x0013 1xs 4d 2i
+[DBG] 1xs 4d 2i: Got 00000123 vs 00000122: FAIL
+[DBG] PASS: 6b, 0x0013 16xs 4d 2i
+[DBG] PASS: 6b, 0x0013 1xv 4d 2i
+[DBG] PASS: 6b, 0x0013 16xv 4d 2i
+[DBG] FAIL: 6b, 0x0013 1xs 1d 4i
+[DBG] 1xs 1d 4i: Got 0000022F vs 0000022E: FAIL
+[DBG] FAIL: 6b, 0x0013 16xs 1d 4i
+[DBG] 16xs 1d 4i: Got 00000C30 vs 00000C20: FAIL
+[DBG] PASS: 6b, 0x0013 1xv 1d 4i
+[DBG] PASS: 6b, 0x0013 16xv 1d 4i
+[DBG] FAIL: 6b, 0x0013 1xs 2d 4i
+[DBG] 1xs 2d 4i: Got 0000022E vs 0000022D: FAIL
+[DBG] PASS: 6b, 0x0013 16xs 2d 4i
+[DBG] PASS: 6b, 0x0013 1xv 2d 4i
+[DBG] PASS: 6b, 0x0013 16xv 2d 4i
+[DBG] FAIL: 6b, 0x0013 1xs 4d 4i
+[DBG] 1xs 4d 4i: Got 00000235 vs 00000234: FAIL
+[DBG] FAIL: 6b, 0x0013 16xs 4d 4i
+[DBG] 16xs 4d 4i: Got 00000C50 vs 00000C40: FAIL
+[DBG] PASS: 6b, 0x0013 1xv 4d 4i
+[DBG] PASS: 6b, 0x0013 16xv 4d 4i
+[DBG] Timer count-up test: 8b, 0x0010
+[DBG] PASS: 8b, 0x0010 1xs 1d 1i
+[DBG] PASS: 8b, 0x0010 16xs 1d 1i
+[DBG] PASS: 8b, 0x0010 1xv 1d 1i
+[DBG] PASS: 8b, 0x0010 16xv 1d 1i
+[DBG] PASS: 8b, 0x0010 1xs 2d 1i
+[DBG] PASS: 8b, 0x0010 16xs 2d 1i
+[DBG] PASS: 8b, 0x0010 1xv 2d 1i
+[DBG] PASS: 8b, 0x0010 16xv 2d 1i
+[DBG] PASS: 8b, 0x0010 1xs 4d 1i
+[DBG] PASS: 8b, 0x0010 16xs 4d 1i
+[DBG] PASS: 8b, 0x0010 1xv 4d 1i
+[DBG] PASS: 8b, 0x0010 16xv 4d 1i
+[DBG] PASS: 8b, 0x0010 1xs 1d 2i
+[DBG] PASS: 8b, 0x0010 16xs 1d 2i
+[DBG] PASS: 8b, 0x0010 1xv 1d 2i
+[DBG] PASS: 8b, 0x0010 16xv 1d 2i
+[DBG] FAIL: 8b, 0x0010 1xs 2d 2i
+[DBG] 1xs 2d 2i: Got 000003DC vs 000003DB: FAIL
+[DBG] PASS: 8b, 0x0010 16xs 2d 2i
+[DBG] PASS: 8b, 0x0010 1xv 2d 2i
+[DBG] PASS: 8b, 0x0010 16xv 2d 2i
+[DBG] FAIL: 8b, 0x0010 1xs 4d 2i
+[DBG] 1xs 4d 2i: Got 000003DB vs 000003DA: FAIL
+[DBG] PASS: 8b, 0x0010 16xs 4d 2i
+[DBG] PASS: 8b, 0x0010 1xv 4d 2i
+[DBG] PASS: 8b, 0x0010 16xv 4d 2i
+[DBG] FAIL: 8b, 0x0010 1xs 1d 4i
+[DBG] 1xs 1d 4i: Got 000007BF vs 000007BE: FAIL
+[DBG] PASS: 8b, 0x0010 16xs 1d 4i
+[DBG] PASS: 8b, 0x0010 1xv 1d 4i
+[DBG] PASS: 8b, 0x0010 16xv 1d 4i
+[DBG] FAIL: 8b, 0x0010 1xs 2d 4i
+[DBG] 1xs 2d 4i: Got 000007BE vs 000007BD: FAIL
+[DBG] FAIL: 8b, 0x0010 16xs 2d 4i
+[DBG] 16xs 2d 4i: Got 00002B20 vs 00002B10: FAIL
+[DBG] PASS: 8b, 0x0010 1xv 2d 4i
+[DBG] PASS: 8b, 0x0010 16xv 2d 4i
+[DBG] FAIL: 8b, 0x0010 1xs 4d 4i
+[DBG] 1xs 4d 4i: Got 000007BD vs 000007BC: FAIL
+[DBG] PASS: 8b, 0x0010 16xs 4d 4i
+[DBG] PASS: 8b, 0x0010 1xv 4d 4i
+[DBG] PASS: 8b, 0x0010 16xv 4d 4i
+[DBG] Timer count-up test: 8b, 0x0011
+[DBG] PASS: 8b, 0x0011 1xs 1d 1i
+[DBG] PASS: 8b, 0x0011 16xs 1d 1i
+[DBG] PASS: 8b, 0x0011 1xv 1d 1i
+[DBG] PASS: 8b, 0x0011 16xv 1d 1i
+[DBG] PASS: 8b, 0x0011 1xs 2d 1i
+[DBG] PASS: 8b, 0x0011 16xs 2d 1i
+[DBG] PASS: 8b, 0x0011 1xv 2d 1i
+[DBG] PASS: 8b, 0x0011 16xv 2d 1i
+[DBG] PASS: 8b, 0x0011 1xs 4d 1i
+[DBG] PASS: 8b, 0x0011 16xs 4d 1i
+[DBG] PASS: 8b, 0x0011 1xv 4d 1i
+[DBG] PASS: 8b, 0x0011 16xv 4d 1i
+[DBG] PASS: 8b, 0x0011 1xs 1d 2i
+[DBG] PASS: 8b, 0x0011 16xs 1d 2i
+[DBG] PASS: 8b, 0x0011 1xv 1d 2i
+[DBG] PASS: 8b, 0x0011 16xv 1d 2i
+[DBG] FAIL: 8b, 0x0011 1xs 2d 2i
+[DBG] 1xs 2d 2i: Got 0000041C vs 0000041B: FAIL
+[DBG] PASS: 8b, 0x0011 16xs 2d 2i
+[DBG] PASS: 8b, 0x0011 1xv 2d 2i
+[DBG] PASS: 8b, 0x0011 16xv 2d 2i
+[DBG] FAIL: 8b, 0x0011 1xs 4d 2i
+[DBG] 1xs 4d 2i: Got 0000041B vs 0000041A: FAIL
+[DBG] PASS: 8b, 0x0011 16xs 4d 2i
+[DBG] PASS: 8b, 0x0011 1xv 4d 2i
+[DBG] PASS: 8b, 0x0011 16xv 4d 2i
+[DBG] FAIL: 8b, 0x0011 1xs 1d 4i
+[DBG] 1xs 1d 4i: Got 0000083F vs 0000083E: FAIL
+[DBG] PASS: 8b, 0x0011 16xs 1d 4i
+[DBG] PASS: 8b, 0x0011 1xv 1d 4i
+[DBG] PASS: 8b, 0x0011 16xv 1d 4i
+[DBG] FAIL: 8b, 0x0011 1xs 2d 4i
+[DBG] 1xs 2d 4i: Got 0000083E vs 0000083D: FAIL
+[DBG] PASS: 8b, 0x0011 16xs 2d 4i
+[DBG] PASS: 8b, 0x0011 1xv 2d 4i
+[DBG] PASS: 8b, 0x0011 16xv 2d 4i
+[DBG] FAIL: 8b, 0x0011 1xs 4d 4i
+[DBG] 1xs 4d 4i: Got 0000083D vs 0000083C: FAIL
+[DBG] PASS: 8b, 0x0011 16xs 4d 4i
+[DBG] PASS: 8b, 0x0011 1xv 4d 4i
+[DBG] PASS: 8b, 0x0011 16xv 4d 4i
+[DBG] Timer count-up test: 8b, 0x0012
+[DBG] PASS: 8b, 0x0012 1xs 1d 1i
+[DBG] PASS: 8b, 0x0012 16xs 1d 1i
+[DBG] PASS: 8b, 0x0012 1xv 1d 1i
+[DBG] PASS: 8b, 0x0012 16xv 1d 1i
+[DBG] PASS: 8b, 0x0012 1xs 2d 1i
+[DBG] PASS: 8b, 0x0012 16xs 2d 1i
+[DBG] PASS: 8b, 0x0012 1xv 2d 1i
+[DBG] PASS: 8b, 0x0012 16xv 2d 1i
+[DBG] PASS: 8b, 0x0012 1xs 4d 1i
+[DBG] PASS: 8b, 0x0012 16xs 4d 1i
+[DBG] PASS: 8b, 0x0012 1xv 4d 1i
+[DBG] PASS: 8b, 0x0012 16xv 4d 1i
+[DBG] PASS: 8b, 0x0012 1xs 1d 2i
+[DBG] PASS: 8b, 0x0012 16xs 1d 2i
+[DBG] PASS: 8b, 0x0012 1xv 1d 2i
+[DBG] PASS: 8b, 0x0012 16xv 1d 2i
+[DBG] FAIL: 8b, 0x0012 1xs 2d 2i
+[DBG] 1xs 2d 2i: Got 0000045C vs 0000045B: FAIL
+[DBG] PASS: 8b, 0x0012 16xs 2d 2i
+[DBG] PASS: 8b, 0x0012 1xv 2d 2i
+[DBG] PASS: 8b, 0x0012 16xv 2d 2i
+[DBG] FAIL: 8b, 0x0012 1xs 4d 2i
+[DBG] 1xs 4d 2i: Got 0000045B vs 0000045A: FAIL
+[DBG] PASS: 8b, 0x0012 16xs 4d 2i
+[DBG] PASS: 8b, 0x0012 1xv 4d 2i
+[DBG] PASS: 8b, 0x0012 16xv 4d 2i
+[DBG] FAIL: 8b, 0x0012 1xs 1d 4i
+[DBG] 1xs 1d 4i: Got 000008BF vs 000008BE: FAIL
+[DBG] PASS: 8b, 0x0012 16xs 1d 4i
+[DBG] PASS: 8b, 0x0012 1xv 1d 4i
+[DBG] PASS: 8b, 0x0012 16xv 1d 4i
+[DBG] FAIL: 8b, 0x0012 1xs 2d 4i
+[DBG] 1xs 2d 4i: Got 000008BE vs 000008BD: FAIL
+[DBG] FAIL: 8b, 0x0012 16xs 2d 4i
+[DBG] 16xs 2d 4i: Got 000030B0 vs 000030A0: FAIL
+[DBG] PASS: 8b, 0x0012 1xv 2d 4i
+[DBG] PASS: 8b, 0x0012 16xv 2d 4i
+[DBG] FAIL: 8b, 0x0012 1xs 4d 4i
+[DBG] 1xs 4d 4i: Got 000008BD vs 000008BC: FAIL
+[DBG] PASS: 8b, 0x0012 16xs 4d 4i
+[DBG] PASS: 8b, 0x0012 1xv 4d 4i
+[DBG] PASS: 8b, 0x0012 16xv 4d 4i
+[DBG] Timer count-up test: 8b, 0x0013
+[DBG] PASS: 8b, 0x0013 1xs 1d 1i
+[DBG] PASS: 8b, 0x0013 16xs 1d 1i
+[DBG] PASS: 8b, 0x0013 1xv 1d 1i
+[DBG] PASS: 8b, 0x0013 16xv 1d 1i
+[DBG] PASS: 8b, 0x0013 1xs 2d 1i
+[DBG] PASS: 8b, 0x0013 16xs 2d 1i
+[DBG] PASS: 8b, 0x0013 1xv 2d 1i
+[DBG] PASS: 8b, 0x0013 16xv 2d 1i
+[DBG] PASS: 8b, 0x0013 1xs 4d 1i
+[DBG] PASS: 8b, 0x0013 16xs 4d 1i
+[DBG] PASS: 8b, 0x0013 1xv 4d 1i
+[DBG] PASS: 8b, 0x0013 16xv 4d 1i
+[DBG] PASS: 8b, 0x0013 1xs 1d 2i
+[DBG] PASS: 8b, 0x0013 16xs 1d 2i
+[DBG] PASS: 8b, 0x0013 1xv 1d 2i
+[DBG] PASS: 8b, 0x0013 16xv 1d 2i
+[DBG] FAIL: 8b, 0x0013 1xs 2d 2i
+[DBG] 1xs 2d 2i: Got 0000049C vs 0000049B: FAIL
+[DBG] PASS: 8b, 0x0013 16xs 2d 2i
+[DBG] PASS: 8b, 0x0013 1xv 2d 2i
+[DBG] PASS: 8b, 0x0013 16xv 2d 2i
+[DBG] FAIL: 8b, 0x0013 1xs 4d 2i
+[DBG] 1xs 4d 2i: Got 0000049B vs 0000049A: FAIL
+[DBG] PASS: 8b, 0x0013 16xs 4d 2i
+[DBG] PASS: 8b, 0x0013 1xv 4d 2i
+[DBG] PASS: 8b, 0x0013 16xv 4d 2i
+[DBG] FAIL: 8b, 0x0013 1xs 1d 4i
+[DBG] 1xs 1d 4i: Got 0000093F vs 0000093E: FAIL
+[DBG] FAIL: 8b, 0x0013 16xs 1d 4i
+[DBG] 16xs 1d 4i: Got 00003380 vs 00003370: FAIL
+[DBG] PASS: 8b, 0x0013 1xv 1d 4i
+[DBG] PASS: 8b, 0x0013 16xv 1d 4i
+[DBG] FAIL: 8b, 0x0013 1xs 2d 4i
+[DBG] 1xs 2d 4i: Got 0000093E vs 0000093D: FAIL
+[DBG] PASS: 8b, 0x0013 16xs 2d 4i
+[DBG] PASS: 8b, 0x0013 1xv 2d 4i
+[DBG] PASS: 8b, 0x0013 16xv 2d 4i
+[DBG] FAIL: 8b, 0x0013 1xs 4d 4i
+[DBG] 1xs 4d 4i: Got 0000093D vs 0000093C: FAIL
+[DBG] PASS: 8b, 0x0013 16xs 4d 4i
+[DBG] PASS: 8b, 0x0013 1xv 4d 4i
+[DBG] PASS: 8b, 0x0013 16xv 4d 4i
+[DBG] Timer count-up test: 10b, 0x0010
+[DBG] PASS: 10b, 0x0010 1xs 1d 1i
+[DBG] PASS: 10b, 0x0010 16xs 1d 1i
+[DBG] PASS: 10b, 0x0010 1xv 1d 1i
+[DBG] PASS: 10b, 0x0010 16xv 1d 1i
+[DBG] PASS: 10b, 0x0010 1xs 2d 1i
+[DBG] PASS: 10b, 0x0010 16xs 2d 1i
+[DBG] PASS: 10b, 0x0010 1xv 2d 1i
+[DBG] PASS: 10b, 0x0010 16xv 2d 1i
+[DBG] PASS: 10b, 0x0010 1xs 4d 1i
+[DBG] PASS: 10b, 0x0010 16xs 4d 1i
+[DBG] PASS: 10b, 0x0010 1xv 4d 1i
+[DBG] PASS: 10b, 0x0010 16xv 4d 1i
+[DBG] PASS: 10b, 0x0010 1xs 1d 2i
+[DBG] PASS: 10b, 0x0010 16xs 1d 2i
+[DBG] PASS: 10b, 0x0010 1xv 1d 2i
+[DBG] PASS: 10b, 0x0010 16xv 1d 2i
+[DBG] FAIL: 10b, 0x0010 1xs 2d 2i
+[DBG] 1xs 2d 2i: Got 00000FDC vs 00000FDB: FAIL
+[DBG] PASS: 10b, 0x0010 16xs 2d 2i
+[DBG] PASS: 10b, 0x0010 1xv 2d 2i
+[DBG] PASS: 10b, 0x0010 16xv 2d 2i
+[DBG] FAIL: 10b, 0x0010 1xs 4d 2i
+[DBG] 1xs 4d 2i: Got 00000FDB vs 00000FDA: FAIL
+[DBG] PASS: 10b, 0x0010 16xs 4d 2i
+[DBG] PASS: 10b, 0x0010 1xv 4d 2i
+[DBG] PASS: 10b, 0x0010 16xv 4d 2i
+[DBG] FAIL: 10b, 0x0010 1xs 1d 4i
+[DBG] 1xs 1d 4i: Got 00001FBF vs 00001FBE: FAIL
+[DBG] PASS: 10b, 0x0010 16xs 1d 4i
+[DBG] PASS: 10b, 0x0010 1xv 1d 4i
+[DBG] PASS: 10b, 0x0010 16xv 1d 4i
+[DBG] FAIL: 10b, 0x0010 1xs 2d 4i
+[DBG] 1xs 2d 4i: Got 00001FBE vs 00001FBD: FAIL
+[DBG] FAIL: 10b, 0x0010 16xs 2d 4i
+[DBG] 16xs 2d 4i: Got 0000B0B0 vs 0000B0A0: FAIL
+[DBG] PASS: 10b, 0x0010 1xv 2d 4i
+[DBG] PASS: 10b, 0x0010 16xv 2d 4i
+[DBG] FAIL: 10b, 0x0010 1xs 4d 4i
+[DBG] 1xs 4d 4i: Got 00001FBD vs 00001FBC: FAIL
+[DBG] PASS: 10b, 0x0010 16xs 4d 4i
+[DBG] PASS: 10b, 0x0010 1xv 4d 4i
+[DBG] PASS: 10b, 0x0010 16xv 4d 4i
+[DBG] Timer count-up test: 10b, 0x0011
+[DBG] PASS: 10b, 0x0011 1xs 1d 1i
+[DBG] PASS: 10b, 0x0011 16xs 1d 1i
+[DBG] PASS: 10b, 0x0011 1xv 1d 1i
+[DBG] PASS: 10b, 0x0011 16xv 1d 1i
+[DBG] PASS: 10b, 0x0011 1xs 2d 1i
+[DBG] PASS: 10b, 0x0011 16xs 2d 1i
+[DBG] PASS: 10b, 0x0011 1xv 2d 1i
+[DBG] PASS: 10b, 0x0011 16xv 2d 1i
+[DBG] PASS: 10b, 0x0011 1xs 4d 1i
+[DBG] PASS: 10b, 0x0011 16xs 4d 1i
+[DBG] PASS: 10b, 0x0011 1xv 4d 1i
+[DBG] PASS: 10b, 0x0011 16xv 4d 1i
+[DBG] PASS: 10b, 0x0011 1xs 1d 2i
+[DBG] PASS: 10b, 0x0011 16xs 1d 2i
+[DBG] PASS: 10b, 0x0011 1xv 1d 2i
+[DBG] PASS: 10b, 0x0011 16xv 1d 2i
+[DBG] FAIL: 10b, 0x0011 1xs 2d 2i
+[DBG] 1xs 2d 2i: Got 000010DC vs 000010DB: FAIL
+[DBG] PASS: 10b, 0x0011 16xs 2d 2i
+[DBG] PASS: 10b, 0x0011 1xv 2d 2i
+[DBG] PASS: 10b, 0x0011 16xv 2d 2i
+[DBG] FAIL: 10b, 0x0011 1xs 4d 2i
+[DBG] 1xs 4d 2i: Got 000010DB vs 000010DA: FAIL
+[DBG] PASS: 10b, 0x0011 16xs 4d 2i
+[DBG] PASS: 10b, 0x0011 1xv 4d 2i
+[DBG] PASS: 10b, 0x0011 16xv 4d 2i
+[DBG] FAIL: 10b, 0x0011 1xs 1d 4i
+[DBG] 1xs 1d 4i: Got 000021BF vs 000021BE: FAIL
+[DBG] PASS: 10b, 0x0011 16xs 1d 4i
+[DBG] PASS: 10b, 0x0011 1xv 1d 4i
+[DBG] PASS: 10b, 0x0011 16xv 1d 4i
+[DBG] FAIL: 10b, 0x0011 1xs 2d 4i
+[DBG] 1xs 2d 4i: Got 000021BE vs 000021BD: FAIL
+[DBG] PASS: 10b, 0x0011 16xs 2d 4i
+[DBG] PASS: 10b, 0x0011 1xv 2d 4i
+[DBG] PASS: 10b, 0x0011 16xv 2d 4i
+[DBG] FAIL: 10b, 0x0011 1xs 4d 4i
+[DBG] 1xs 4d 4i: Got 000021BD vs 000021BC: FAIL
+[DBG] PASS: 10b, 0x0011 16xs 4d 4i
+[DBG] PASS: 10b, 0x0011 1xv 4d 4i
+[DBG] PASS: 10b, 0x0011 16xv 4d 4i
+[DBG] Timer count-up test: 10b, 0x0012
+[DBG] PASS: 10b, 0x0012 1xs 1d 1i
+[DBG] FAIL: 10b, 0x0012 16xs 1d 1i
+[DBG] 16xs 1d 1i: Got 000031B0 vs 000031A0: FAIL
+[DBG] PASS: 10b, 0x0012 1xv 1d 1i
+[DBG] PASS: 10b, 0x0012 16xv 1d 1i
+[DBG] PASS: 10b, 0x0012 1xs 2d 1i
+[DBG] PASS: 10b, 0x0012 16xs 2d 1i
+[DBG] PASS: 10b, 0x0012 1xv 2d 1i
+[DBG] PASS: 10b, 0x0012 16xv 2d 1i
+[DBG] PASS: 10b, 0x0012 1xs 4d 1i
+[DBG] PASS: 10b, 0x0012 16xs 4d 1i
+[DBG] PASS: 10b, 0x0012 1xv 4d 1i
+[DBG] PASS: 10b, 0x0012 16xv 4d 1i
+[DBG] PASS: 10b, 0x0012 1xs 1d 2i
+[DBG] PASS: 10b, 0x0012 16xs 1d 2i
+[DBG] PASS: 10b, 0x0012 1xv 1d 2i
+[DBG] PASS: 10b, 0x0012 16xv 1d 2i
+[DBG] FAIL: 10b, 0x0012 1xs 2d 2i
+[DBG] 1xs 2d 2i: Got 000011DC vs 000011DB: FAIL
+[DBG] FAIL: 10b, 0x0012 16xs 2d 2i
+[DBG] 16xs 2d 2i: Got 00006370 vs 00006360: FAIL
+[DBG] PASS: 10b, 0x0012 1xv 2d 2i
+[DBG] PASS: 10b, 0x0012 16xv 2d 2i
+[DBG] FAIL: 10b, 0x0012 1xs 4d 2i
+[DBG] 1xs 4d 2i: Got 000011DB vs 000011DA: FAIL
+[DBG] PASS: 10b, 0x0012 16xs 4d 2i
+[DBG] PASS: 10b, 0x0012 1xv 4d 2i
+[DBG] PASS: 10b, 0x0012 16xv 4d 2i
+[DBG] FAIL: 10b, 0x0012 1xs 1d 4i
+[DBG] 1xs 1d 4i: Got 000023BF vs 000023BE: FAIL
+[DBG] PASS: 10b, 0x0012 16xs 1d 4i
+[DBG] PASS: 10b, 0x0012 1xv 1d 4i
+[DBG] PASS: 10b, 0x0012 16xv 1d 4i
+[DBG] FAIL: 10b, 0x0012 1xs 2d 4i
+[DBG] 1xs 2d 4i: Got 000023BE vs 000023BD: FAIL
+[DBG] PASS: 10b, 0x0012 16xs 2d 4i
+[DBG] PASS: 10b, 0x0012 1xv 2d 4i
+[DBG] PASS: 10b, 0x0012 16xv 2d 4i
+[DBG] FAIL: 10b, 0x0012 1xs 4d 4i
+[DBG] 1xs 4d 4i: Got 000023BD vs 000023BC: FAIL
+[DBG] FAIL: 10b, 0x0012 16xs 4d 4i
+[DBG] 16xs 4d 4i: Got 0000C6F0 vs 0000C6E0: FAIL
+[DBG] PASS: 10b, 0x0012 1xv 4d 4i
+[DBG] PASS: 10b, 0x0012 16xv 4d 4i
+[DBG] Timer count-up test: 10b, 0x0013
+[DBG] PASS: 10b, 0x0013 1xs 1d 1i
+[DBG] PASS: 10b, 0x0013 16xs 1d 1i
+[DBG] PASS: 10b, 0x0013 1xv 1d 1i
+[DBG] PASS: 10b, 0x0013 16xv 1d 1i
+[DBG] PASS: 10b, 0x0013 1xs 2d 1i
+[DBG] PASS: 10b, 0x0013 16xs 2d 1i
+[DBG] PASS: 10b, 0x0013 1xv 2d 1i
+[DBG] PASS: 10b, 0x0013 16xv 2d 1i
+[DBG] PASS: 10b, 0x0013 1xs 4d 1i
+[DBG] PASS: 10b, 0x0013 16xs 4d 1i
+[DBG] PASS: 10b, 0x0013 1xv 4d 1i
+[DBG] PASS: 10b, 0x0013 16xv 4d 1i
+[DBG] PASS: 10b, 0x0013 1xs 1d 2i
+[DBG] PASS: 10b, 0x0013 16xs 1d 2i
+[DBG] PASS: 10b, 0x0013 1xv 1d 2i
+[DBG] PASS: 10b, 0x0013 16xv 1d 2i
+[DBG] FAIL: 10b, 0x0013 1xs 2d 2i
+[DBG] 1xs 2d 2i: Got 000012DC vs 000012DB: FAIL
+[DBG] FAIL: 10b, 0x0013 16xs 2d 2i
+[DBG] 16xs 2d 2i: Got 00006900 vs 000068F0: FAIL
+[DBG] PASS: 10b, 0x0013 1xv 2d 2i
+[DBG] PASS: 10b, 0x0013 16xv 2d 2i
+[DBG] FAIL: 10b, 0x0013 1xs 4d 2i
+[DBG] 1xs 4d 2i: Got 000012DB vs 000012DA: FAIL
+[DBG] PASS: 10b, 0x0013 16xs 4d 2i
+[DBG] PASS: 10b, 0x0013 1xv 4d 2i
+[DBG] PASS: 10b, 0x0013 16xv 4d 2i
+[DBG] FAIL: 10b, 0x0013 1xs 1d 4i
+[DBG] 1xs 1d 4i: Got 000025BF vs 000025BE: FAIL
+[DBG] PASS: 10b, 0x0013 16xs 1d 4i
+[DBG] PASS: 10b, 0x0013 1xv 1d 4i
+[DBG] PASS: 10b, 0x0013 16xv 1d 4i
+[DBG] FAIL: 10b, 0x0013 1xs 2d 4i
+[DBG] 1xs 2d 4i: Got 000025BE vs 000025BD: FAIL
+[DBG] PASS: 10b, 0x0013 16xs 2d 4i
+[DBG] PASS: 10b, 0x0013 1xv 2d 4i
+[DBG] PASS: 10b, 0x0013 16xv 2d 4i
+[DBG] FAIL: 10b, 0x0013 1xs 4d 4i
+[DBG] 1xs 4d 4i: Got 000025BD vs 000025BC: FAIL
+[DBG] FAIL: 10b, 0x0013 16xs 4d 4i
+[DBG] 16xs 4d 4i: Got 0000D210 vs 0000D200: FAIL
+[DBG] PASS: 10b, 0x0013 1xv 4d 4i
+[DBG] PASS: 10b, 0x0013 16xv 4d 4i
+
+--- Suite 04: Timer count-up ---
+Frames: 214  PC=0x0802BAE0  CPSR=0x2000003F  halted=0  cycle=179689666
+[debug]
+Game Boy Advance Test Suite
+===
+BEGIN: Timer count-up tests
+Timer count-up test: 0b, 0x0001
+PASS: 0b, 0x0001 1xs 1d 1i
+PASS: 0b, 0x0001 16xs 1d 1i
+PASS: 0b, 0x0001 1xv 1d 1i
+PASS: 0b, 0x0001 16xv 1d 1i
+PASS: 0b, 0x0001 1xs 2d 1i
+PASS: 0b, 0x0001 16xs 2d 1i
+PASS: 0b, 0x0001 1xv 2d 1i
+PASS: 0b, 0x0001 16xv 2d 1i
+PASS: 0b, 0x0001 1xs 4d 1i
+PASS: 0b, 0x0001 16xs 4d 1i
+PASS: 0b, 0x0001 1xv 4d 1i
+PASS: 0b, 0x0001 16xv 4d 1i
+PASS: 0b, 0x0001 1xs 1d 2i
+PASS: 0b, 0x0001 16xs 1d 2i
+PASS: 0b, 0x0001 1xv 1d 2i
+PASS: 0b, 0x0001 16xv 1d 2i
+PASS: 0b, 0x0001 1xs 2d 2i
+PASS: 0b, 0x0001 16xs 2d 2i
+PASS: 0b, 0x0001 1xv 2d 2i
+PASS: 0b, 0x0001 16xv 2d 2i
+PASS: 0b, 0x0001 1xs 4d 2i
+PASS: 0b, 0x0001 16xs 4d 2i
+PASS: 0b, 0x0001 1xv 4d 2i
+PASS: 0b, 0x0001 16xv 4d 2i
+PASS: 0b, 0x0001 1xs 1d 4i
+PASS: 0b, 0x0001 16xs 1d 4i
+PASS: 0b, 0x0001 1xv 1d 4i
+PASS: 0b, 0x0001 16xv 1d 4i
+PASS: 0b, 0x0001 1xs 2d 4i
+PASS: 0b, 0x0001 16xs 2d 4i
+PASS: 0b, 0x0001 1xv 2d 4i
+PASS: 0b, 0x0001 16xv 2d 4i
+PASS: 0b, 0x0001 1xs 4d 4i
+PASS: 0b, 0x0001 16xs 4d 4i
+PASS: 0b, 0x0001 1xv 4d 4i
+PASS: 0b, 0x0001 16xv 4d 4i
+Timer count-up test: 0b, 0x0005
+FAIL: 0b, 0x0005 1xs 1d 1i
+1xs 1d 1i: Got 00000002 vs 00000003: FAIL
+PASS: 0b, 0x0005 16xs 1d 1i
+FAIL: 0b, 0x0005 1xv 1d 1i
+1xv 1d 1i: Got FFFE vs FFFF: FAIL
+FAIL: 0b, 0x0005 16xv 1d 1i
+16xv 1d 1i: Got FFFE vs FFFD: FAIL
+FAIL: 0b, 0x0005 1xs 2d 1i
+1xs 2d 1i: Got 00000002 vs 00000003: FAIL
+PASS: 0b, 0x0005 16xs 2d 1i
+FAIL: 0b, 0x0005 1xv 2d 1i
+1xv 2d 1i: Got FFFE vs FFFF: FAIL
+FAIL: 0b, 0x0005 16xv 2d 1i
+16xv 2d 1i: Got FFFE vs FFFD: FAIL
+FAIL: 0b, 0x0005 1xs 4d 1i
+1xs 4d 1i: Got 00000002 vs 00000003: FAIL
+PASS: 0b, 0x0005 16xs 4d 1i
+FAIL: 0b, 0x0005 1xv 4d 1i
+1xv 4d 1i: Got FFFE vs FFFF: FAIL
+FAIL: 0b, 0x0005 16xv 4d 1i
+16xv 4d 1i: Got FFFE vs FFFD: FAIL
+FAIL: 0b, 0x0005 1xs 1d 2i
+1xs 1d 2i: Got 00000002 vs 00000003: FAIL
+PASS: 0b, 0x0005 16xs 1d 2i
+FAIL: 0b, 0x0005 1xv 1d 2i
+1xv 1d 2i: Got FFFD vs FFFB: FAIL
+FAIL: 0b, 0x0005 16xv 1d 2i
+16xv 1d 2i: Got FFFD vs FFFE: FAIL
+FAIL: 0b, 0x0005 1xs 2d 2i
+1xs 2d 2i: Got 00000002 vs 00000003: FAIL
+PASS: 0b, 0x0005 16xs 2d 2i
+FAIL: 0b, 0x0005 1xv 2d 2i
+1xv 2d 2i: Got FFFD vs FFFB: FAIL
+FAIL: 0b, 0x0005 16xv 2d 2i
+16xv 2d 2i: Got FFFD vs FFFE: FAIL
+FAIL: 0b, 0x0005 1xs 4d 2i
+1xs 4d 2i: Got 00000002 vs 00000003: FAIL
+PASS: 0b, 0x0005 16xs 4d 2i
+FAIL: 0b, 0x0005 1xv 4d 2i
+1xv 4d 2i: Got FFFD vs FFFB: FAIL
+FAIL: 0b, 0x0005 16xv 4d 2i
+16xv 4d 2i: Got FFFD vs FFFE: FAIL
+FAIL: 0b, 0x0005 1xs 1d 4i
+1xs 1d 4i: Got 00000002 vs 00000003: FAIL
+PASS: 0b, 0x0005 16xs 1d 4i
+FAIL: 0b, 0x0005 1xv 1d 4i
+1xv 1d 4i: Got FFFB vs FFFD: FAIL
+PASS: 0b, 0x0005 16xv 1d 4i
+FAIL: 0b, 0x0005 1xs 2d 4i
+1xs 2d 4i: Got 00000002 vs 00000003: FAIL
+PASS: 0b, 0x0005 16xs 2d 4i
+FAIL: 0b, 0x0005 1xv 2d 4i
+1xv 2d 4i: Got FFFB vs FFFD: FAIL
+PASS: 0b, 0x0005 16xv 2d 4i
+FAIL: 0b, 0x0005 1xs 4d 4i
+1xs 4d 4i: Got 00000002 vs 00000003: FAIL
+PASS: 0b, 0x0005 16xs 4d 4i
+FAIL: 0b, 0x0005 1xv 4d 4i
+1xv 4d 4i: Got FFFB vs FFFD: FAIL
+PASS: 0b, 0x0005 16xv 4d 4i
+Timer count-up test: 0b, 0x000C
+PASS: 0b, 0x000C 1xs 1d 1i
+FAIL: 0b, 0x000C 16xs 1d 1i
+16xs 1d 1i: Got 00000010 vs 00000020: FAIL
+FAIL: 0b, 0x000C 1xv 1d 1i
+1xv 1d 1i: Got FFFD vs FFFC: FAIL
+FAIL: 0b, 0x000C 16xv 1d 1i
+16xv 1d 1i: Got FFFD vs FFFE: FAIL
+PASS: 0b, 0x000C 1xs 2d 1i
+FAIL: 0b, 0x000C 16xs 2d 1i
+16xs 2d 1i: Got 00000010 vs 00000020: FAIL
+FAIL: 0b, 0x000C 1xv 2d 1i
+1xv 2d 1i: Got FFFD vs FFFC: FAIL
+FAIL: 0b, 0x000C 16xv 2d 1i
+16xv 2d 1i: Got FFFD vs FFFE: FAIL
+PASS: 0b, 0x000C 1xs 4d 1i
+FAIL: 0b, 0x000C 16xs 4d 1i
+16xs 4d 1i: Got 00000010 vs 00000020: FAIL
+FAIL: 0b, 0x000C 1xv 4d 1i
+1xv 4d 1i: Got FFFD vs FFFC: FAIL
+FAIL: 0b, 0x000C 16xv 4d 1i
+16xv 4d 1i: Got FFFD vs FFFE: FAIL
+PASS: 0b, 0x000C 1xs 1d 2i
+FAIL: 0b, 0x000C 16xs 1d 2i
+16xs 1d 2i: Got 00000010 vs 00000020: FAIL
+FAIL: 0b, 0x000C 1xv 1d 2i
+1xv 1d 2i: Got FFFC vs FFFD: FAIL
+FAIL: 0b, 0x000C 16xv 1d 2i
+16xv 1d 2i: Got FFFC vs FFFF: FAIL
+PASS: 0b, 0x000C 1xs 2d 2i
+FAIL: 0b, 0x000C 16xs 2d 2i
+16xs 2d 2i: Got 00000010 vs 00000020: FAIL
+FAIL: 0b, 0x000C 1xv 2d 2i
+1xv 2d 2i: Got FFFC vs FFFD: FAIL
+FAIL: 0b, 0x000C 16xv 2d 2i
+16xv 2d 2i: Got FFFC vs FFFF: FAIL
+PASS: 0b, 0x000C 1xs 4d 2i
+FAIL: 0b, 0x000C 16xs 4d 2i
+16xs 4d 2i: Got 00000010 vs 00000020: FAIL
+FAIL: 0b, 0x000C 1xv 4d 2i
+1xv 4d 2i: Got FFFC vs FFFD: FAIL
+FAIL: 0b, 0x000C 16xv 4d 2i
+16xv 4d 2i: Got FFFC vs FFFF: FAIL
+PASS: 0b, 0x000C 1xs 1d 4i
+FAIL: 0b, 0x000C 16xs 1d 4i
+16xs 1d 4i: Got 00000010 vs 00000020: FAIL
+FAIL: 0b, 0x000C 1xv 1d 4i
+1xv 1d 4i: Got FFFA vs FFFF: FAIL
+FAIL: 0b, 0x000C 16xv 1d 4i
+16xv 1d 4i: Got FFFA vs FFF5: FAIL
+PASS: 0b, 0x000C 1xs 2d 4i
+FAIL: 0b, 0x000C 16xs 2d 4i
+16xs 2d 4i: Got 00000010 vs 00000020: FAIL
+FAIL: 0b, 0x000C 1xv 2d 4i
+1xv 2d 4i: Got FFFA vs FFFF: FAIL
+FAIL: 0b, 0x000C 16xv 2d 4i
+16xv 2d 4i: Got FFFA vs FFF5: FAIL
+PASS: 0b, 0x000C 1xs 4d 4i
+FAIL: 0b, 0x000C 16xs 4d 4i
+16xs 4d 4i: Got 00000010 vs 00000020: FAIL
+FAIL: 0b, 0x000C 1xv 4d 4i
+1xv 4d 4i: Got FFFA vs FFFF: FAIL
+FAIL: 0b, 0x000C 16xv 4d 4i
+16xv 4d 4i: Got FFFA vs FFF5: FAIL
+Timer count-up test: 0b, 0x000D
+FAIL: 0b, 0x000D 1xs 1d 1i
+1xs 1d 1i: Got 00000003 vs 00000004: FAIL
+PASS: 0b, 0x000D 16xs 1d 1i
+FAIL: 0b, 0x000D 1xv 1d 1i
+1xv 1d 1i: Got FFF5 vs FFF6: FAIL
+FAIL: 0b, 0x000D 16xv 1d 1i
+16xv 1d 1i: Got FFF7 vs FFF5: FAIL
+FAIL: 0b, 0x000D 1xs 2d 1i
+1xs 2d 1i: Got 00000003 vs 00000004: FAIL
+PASS: 0b, 0x000D 16xs 2d 1i
+FAIL: 0b, 0x000D 1xv 2d 1i
+1xv 2d 1i: Got FFF5 vs FFF6: FAIL
+FAIL: 0b, 0x000D 16xv 2d 1i
+16xv 2d 1i: Got FFF7 vs FFF5: FAIL
+FAIL: 0b, 0x000D 1xs 4d 1i
+1xs 4d 1i: Got 00000003 vs 00000004: FAIL
+PASS: 0b, 0x000D 16xs 4d 1i
+FAIL: 0b, 0x000D 1xv 4d 1i
+1xv 4d 1i: Got FFF5 vs FFF6: FAIL
+FAIL: 0b, 0x000D 16xv 4d 1i
+16xv 4d 1i: Got FFF7 vs FFF5: FAIL
+FAIL: 0b, 0x000D 1xs 1d 2i
+1xs 1d 2i: Got 00000003 vs 00000004: FAIL
+PASS: 0b, 0x000D 16xs 1d 2i
+FAIL: 0b, 0x000D 1xv 1d 2i
+1xv 1d 2i: Got FFF7 vs FFFA: FAIL
+PASS: 0b, 0x000D 16xv 1d 2i
+FAIL: 0b, 0x000D 1xs 2d 2i
+1xs 2d 2i: Got 00000003 vs 00000004: FAIL
+PASS: 0b, 0x000D 16xs 2d 2i
+FAIL: 0b, 0x000D 1xv 2d 2i
+1xv 2d 2i: Got FFF7 vs FFFA: FAIL
+PASS: 0b, 0x000D 16xv 2d 2i
+FAIL: 0b, 0x000D 1xs 4d 2i
+1xs 4d 2i: Got 00000003 vs 00000004: FAIL
+PASS: 0b, 0x000D 16xs 4d 2i
+FAIL: 0b, 0x000D 1xv 4d 2i
+1xv 4d 2i: Got FFF7 vs FFFA: FAIL
+PASS: 0b, 0x000D 16xv 4d 2i
+FAIL: 0b, 0x000D 1xs 1d 4i
+1xs 1d 4i: Got 00000003 vs 00000004: FAIL
+PASS: 0b, 0x000D 16xs 1d 4i
+FAIL: 0b, 0x000D 1xv 1d 4i
+1xv 1d 4i: Got FFFB vs FFF5: FAIL
+FAIL: 0b, 0x000D 16xv 1d 4i
+16xv 1d 4i: Got FFFD vs FFF4: FAIL
+FAIL: 0b, 0x000D 1xs 2d 4i
+1xs 2d 4i: Got 00000003 vs 00000004: FAIL
+PASS: 0b, 0x000D 16xs 2d 4i
+FAIL: 0b, 0x000D 1xv 2d 4i
+1xv 2d 4i: Got FFFB vs FFF5: FAIL
+FAIL: 0b, 0x000D 16xv 2d 4i
+16xv 2d 4i: Got FFFD vs FFF4: FAIL
+FAIL: 0b, 0x000D 1xs 4d 4i
+1xs 4d 4i: Got 00000003 vs 00000004: FAIL
+PASS: 0b, 0x000D 16xs 4d 4i
+FAIL: 0b, 0x000D 1xv 4d 4i
+1xv 4d 4i: Got FFFB vs FFF5: FAIL
+FAIL: 0b, 0x000D 16xv 4d 4i
+16xv 4d 4i: Got FFFD vs FFF4: FAIL
+Timer count-up test: 0b, 0x0010
+PASS: 0b, 0x0010 1xs 1d 1i
+PASS: 0b, 0x0010 16xs 1d 1i
+FAIL: 0b, 0x0010 1xv 1d 1i
+1xv 1d 1i: Got FFFD vs FFFC: FAIL
+FAIL: 0b, 0x0010 16xv 1d 1i
+16xv 1d 1i: Got FFFD vs FFFE: FAIL
+PASS: 0b, 0x0010 1xs 2d 1i
+PASS: 0b, 0x0010 16xs 2d 1i
+FAIL: 0b, 0x0010 1xv 2d 1i
+1xv 2d 1i: Got FFFD vs FFFC: FAIL
+FAIL: 0b, 0x0010 16xv 2d 1i
+16xv 2d 1i: Got FFFD vs FFFE: FAIL
+PASS: 0b, 0x0010 1xs 4d 1i
+PASS: 0b, 0x0010 16xs 4d 1i
+FAIL: 0b, 0x0010 1xv 4d 1i
+1xv 4d 1i: Got FFFD vs FFFC: FAIL
+FAIL: 0b, 0x0010 16xv 4d 1i
+16xv 4d 1i: Got FFFD vs FFFE: FAIL
+PASS: 0b, 0x0010 1xs 1d 2i
+PASS: 0b, 0x0010 16xs 1d 2i
+FAIL: 0b, 0x0010 1xv 1d 2i
+1xv 1d 2i: Got FFF4 vs FFF5: FAIL
+FAIL: 0b, 0x0010 16xv 1d 2i
+16xv 1d 2i: Got FFF4 vs FFF7: FAIL
+PASS: 0b, 0x0010 1xs 2d 2i
+PASS: 0b, 0x0010 16xs 2d 2i
+FAIL: 0b, 0x0010 1xv 2d 2i
+1xv 2d 2i: Got FFF4 vs FFF5: FAIL
+FAIL: 0b, 0x0010 16xv 2d 2i
+16xv 2d 2i: Got FFF4 vs FFF7: FAIL
+PASS: 0b, 0x0010 1xs 4d 2i
+PASS: 0b, 0x0010 16xs 4d 2i
+FAIL: 0b, 0x0010 1xv 4d 2i
+1xv 4d 2i: Got FFF4 vs FFF5: FAIL
+FAIL: 0b, 0x0010 16xv 4d 2i
+16xv 4d 2i: Got FFF4 vs FFF7: FAIL
+PASS: 0b, 0x0010 1xs 1d 4i
+PASS: 0b, 0x0010 16xs 1d 4i
+FAIL: 0b, 0x0010 1xv 1d 4i
+1xv 1d 4i: Got FFF2 vs FFF7: FAIL
+FAIL: 0b, 0x0010 16xv 1d 4i
+16xv 1d 4i: Got FFF2 vs FFF9: FAIL
+PASS: 0b, 0x0010 1xs 2d 4i
+PASS: 0b, 0x0010 16xs 2d 4i
+FAIL: 0b, 0x0010 1xv 2d 4i
+1xv 2d 4i: Got FFF2 vs FFF7: FAIL
+FAIL: 0b, 0x0010 16xv 2d 4i
+16xv 2d 4i: Got FFF2 vs FFF9: FAIL
+PASS: 0b, 0x0010 1xs 4d 4i
+PASS: 0b, 0x0010 16xs 4d 4i
+FAIL: 0b, 0x0010 1xv 4d 4i
+1xv 4d 4i: Got FFF2 vs FFF7: FAIL
+FAIL: 0b, 0x0010 16xv 4d 4i
+16xv 4d 4i: Got FFF2 vs FFF9: FAIL
+Timer count-up test: 0b, 0x0014
+PASS: 0b, 0x0014 1xs 1d 1i
+PASS: 0b, 0x0014 16xs 1d 1i
+FAIL: 0b, 0x0014 1xv 1d 1i
+1xv 1d 1i: Got FFF9 vs FFF8: FAIL
+FAIL: 0b, 0x0014 16xv 1d 1i
+16xv 1d 1i: Got FFF9 vs FFF8: FAIL
+PASS: 0b, 0x0014 1xs 2d 1i
+PASS: 0b, 0x0014 16xs 2d 1i
+FAIL: 0b, 0x0014 1xv 2d 1i
+1xv 2d 1i: Got FFF9 vs FFF8: FAIL
+FAIL: 0b, 0x0014 16xv 2d 1i
+16xv 2d 1i: Got FFF9 vs FFF8: FAIL
+PASS: 0b, 0x0014 1xs 4d 1i
+PASS: 0b, 0x0014 16xs 4d 1i
+FAIL: 0b, 0x0014 1xv 4d 1i
+1xv 4d 1i: Got FFF9 vs FFF8: FAIL
+FAIL: 0b, 0x0014 16xv 4d 1i
+16xv 4d 1i: Got FFF9 vs FFF8: FAIL
+PASS: 0b, 0x0014 1xs 1d 2i
+PASS: 0b, 0x0014 16xs 1d 2i
+FAIL: 0b, 0x0014 1xv 1d 2i
+1xv 1d 2i: Got FFF8 vs FFF9: FAIL
+FAIL: 0b, 0x0014 16xv 1d 2i
+16xv 1d 2i: Got FFF8 vs FFF9: FAIL
+PASS: 0b, 0x0014 1xs 2d 2i
+PASS: 0b, 0x0014 16xs 2d 2i
+FAIL: 0b, 0x0014 1xv 2d 2i
+1xv 2d 2i: Got FFF8 vs FFF9: FAIL
+FAIL: 0b, 0x0014 16xv 2d 2i
+16xv 2d 2i: Got FFF8 vs FFF9: FAIL
+PASS: 0b, 0x0014 1xs 4d 2i
+PASS: 0b, 0x0014 16xs 4d 2i
+FAIL: 0b, 0x0014 1xv 4d 2i
+1xv 4d 2i: Got FFF8 vs FFF9: FAIL
+FAIL: 0b, 0x0014 16xv 4d 2i
+16xv 4d 2i: Got FFF8 vs FFF9: FAIL
+PASS: 0b, 0x0014 1xs 1d 4i
+PASS: 0b, 0x0014 16xs 1d 4i
+FAIL: 0b, 0x0014 1xv 1d 4i
+1xv 1d 4i: Got FFF6 vs FFFB: FAIL
+FAIL: 0b, 0x0014 16xv 1d 4i
+16xv 1d 4i: Got FFF6 vs FFFB: FAIL
+PASS: 0b, 0x0014 1xs 2d 4i
+PASS: 0b, 0x0014 16xs 2d 4i
+FAIL: 0b, 0x0014 1xv 2d 4i
+1xv 2d 4i: Got FFF6 vs FFFB: FAIL
+FAIL: 0b, 0x0014 16xv 2d 4i
+16xv 2d 4i: Got FFF6 vs FFFB: FAIL
+PASS: 0b, 0x0014 1xs 4d 4i
+PASS: 0b, 0x0014 16xs 4d 4i
+FAIL: 0b, 0x0014 1xv 4d 4i
+1xv 4d 4i: Got FFF6 vs FFFB: FAIL
+FAIL: 0b, 0x0014 16xv 4d 4i
+16xv 4d 4i: Got FFF6 vs FFFB: FAIL
+Timer count-up test: 0b, 0x0015
+FAIL: 0b, 0x0015 1xs 1d 1i
+1xs 1d 1i: Got 00000004 vs 00000005: FAIL
+PASS: 0b, 0x0015 16xs 1d 1i
+FAIL: 0b, 0x0015 1xv 1d 1i
+1xv 1d 1i: Got FFF4 vs FFF5: FAIL
+FAIL: 0b, 0x0015 16xv 1d 1i
+16xv 1d 1i: Got FFF4 vs FFF3: FAIL
+FAIL: 0b, 0x0015 1xs 2d 1i
+1xs 2d 1i: Got 00000004 vs 00000005: FAIL
+PASS: 0b, 0x0015 16xs 2d 1i
+FAIL: 0b, 0x0015 1xv 2d 1i
+1xv 2d 1i: Got FFF4 vs FFF5: FAIL
+FAIL: 0b, 0x0015 16xv 2d 1i
+16xv 2d 1i: Got FFF4 vs FFF3: FAIL
+FAIL: 0b, 0x0015 1xs 4d 1i
+1xs 4d 1i: Got 00000004 vs 00000005: FAIL
+PASS: 0b, 0x0015 16xs 4d 1i
+FAIL: 0b, 0x0015 1xv 4d 1i
+1xv 4d 1i: Got FFF4 vs FFF5: FAIL
+FAIL: 0b, 0x0015 16xv 4d 1i
+16xv 4d 1i: Got FFF4 vs FFF3: FAIL
+FAIL: 0b, 0x0015 1xs 1d 2i
+1xs 1d 2i: Got 00000004 vs 00000005: FAIL
+PASS: 0b, 0x0015 16xs 1d 2i
+FAIL: 0b, 0x0015 1xv 1d 2i
+1xv 1d 2i: Got FFED vs FFF0: FAIL
+FAIL: 0b, 0x0015 16xv 1d 2i
+16xv 1d 2i: Got FFED vs FFEE: FAIL
+FAIL: 0b, 0x0015 1xs 2d 2i
+1xs 2d 2i: Got 00000004 vs 00000005: FAIL
+PASS: 0b, 0x0015 16xs 2d 2i
+FAIL: 0b, 0x0015 1xv 2d 2i
+1xv 2d 2i: Got FFED vs FFF0: FAIL
+FAIL: 0b, 0x0015 16xv 2d 2i
+16xv 2d 2i: Got FFED vs FFEE: FAIL
+FAIL: 0b, 0x0015 1xs 4d 2i
+1xs 4d 2i: Got 00000004 vs 00000005: FAIL
+PASS: 0b, 0x0015 16xs 4d 2i
+FAIL: 0b, 0x0015 1xv 4d 2i
+1xv 4d 2i: Got FFED vs FFF0: FAIL
+FAIL: 0b, 0x0015 16xv 4d 2i
+16xv 4d 2i: Got FFED vs FFEE: FAIL
+FAIL: 0b, 0x0015 1xs 1d 4i
+1xs 1d 4i: Got 00000004 vs 00000005: FAIL
+PASS: 0b, 0x0015 16xs 1d 4i
+FAIL: 0b, 0x0015 1xv 1d 4i
+1xv 1d 4i: Got FFF4 vs FFFB: FAIL
+FAIL: 0b, 0x0015 16xv 1d 4i
+16xv 1d 4i: Got FFF4 vs FFF9: FAIL
+FAIL: 0b, 0x0015 1xs 2d 4i
+1xs 2d 4i: Got 00000004 vs 00000005: FAIL
+PASS: 0b, 0x0015 16xs 2d 4i
+FAIL: 0b, 0x0015 1xv 2d 4i
+1xv 2d 4i: Got FFF4 vs FFFB: FAIL
+FAIL: 0b, 0x0015 16xv 2d 4i
+16xv 2d 4i: Got FFF4 vs FFF9: FAIL
+FAIL: 0b, 0x0015 1xs 4d 4i
+1xs 4d 4i: Got 00000004 vs 00000005: FAIL
+PASS: 0b, 0x0015 16xs 4d 4i
+FAIL: 0b, 0x0015 1xv 4d 4i
+1xv 4d 4i: Got FFF4 vs FFFB: FAIL
+FAIL: 0b, 0x0015 16xv 4d 4i
+16xv 4d 4i: Got FFF4 vs FFF9: FAIL
+Timer count-up test: 0b, 0x0020
+PASS: 0b, 0x0020 1xs 1d 1i
+PASS: 0b, 0x0020 16xs 1d 1i
+FAIL: 0b, 0x0020 1xv 1d 1i
+1xv 1d 1i: Got FFFD vs FFFC: FAIL
+FAIL: 0b, 0x0020 16xv 1d 1i
+16xv 1d 1i: Got FFFD vs FFFC: FAIL
+PASS: 0b, 0x0020 1xs 2d 1i
+PASS: 0b, 0x0020 16xs 2d 1i
+FAIL: 0b, 0x0020 1xv 2d 1i
+1xv 2d 1i: Got FFFD vs FFFC: FAIL
+FAIL: 0b, 0x0020 16xv 2d 1i
+16xv 2d 1i: Got FFFD vs FFFC: FAIL
+PASS: 0b, 0x0020 1xs 4d 1i
+PASS: 0b, 0x0020 16xs 4d 1i
+FAIL: 0b, 0x0020 1xv 4d 1i
+1xv 4d 1i: Got FFFD vs FFFC: FAIL
+FAIL: 0b, 0x0020 16xv 4d 1i
+16xv 4d 1i: Got FFFD vs FFFC: FAIL
+PASS: 0b, 0x0020 1xs 1d 2i
+PASS: 0b, 0x0020 16xs 1d 2i
+FAIL: 0b, 0x0020 1xv 1d 2i
+1xv 1d 2i: Got FFF4 vs FFF5: FAIL
+FAIL: 0b, 0x0020 16xv 1d 2i
+16xv 1d 2i: Got FFF4 vs FFF5: FAIL
+PASS: 0b, 0x0020 1xs 2d 2i
+PASS: 0b, 0x0020 16xs 2d 2i
+FAIL: 0b, 0x0020 1xv 2d 2i
+1xv 2d 2i: Got FFF4 vs FFF5: FAIL
+FAIL: 0b, 0x0020 16xv 2d 2i
+16xv 2d 2i: Got FFF4 vs FFF5: FAIL
+PASS: 0b, 0x0020 1xs 4d 2i
+PASS: 0b, 0x0020 16xs 4d 2i
+FAIL: 0b, 0x0020 1xv 4d 2i
+1xv 4d 2i: Got FFF4 vs FFF5: FAIL
+FAIL: 0b, 0x0020 16xv 4d 2i
+16xv 4d 2i: Got FFF4 vs FFF5: FAIL
+PASS: 0b, 0x0020 1xs 1d 4i
+PASS: 0b, 0x0020 16xs 1d 4i
+FAIL: 0b, 0x0020 1xv 1d 4i
+1xv 1d 4i: Got FFE2 vs FFE7: FAIL
+FAIL: 0b, 0x0020 16xv 1d 4i
+16xv 1d 4i: Got FFE2 vs FFE7: FAIL
+PASS: 0b, 0x0020 1xs 2d 4i
+PASS: 0b, 0x0020 16xs 2d 4i
+FAIL: 0b, 0x0020 1xv 2d 4i
+1xv 2d 4i: Got FFE2 vs FFE7: FAIL
+FAIL: 0b, 0x0020 16xv 2d 4i
+16xv 2d 4i: Got FFE2 vs FFE7: FAIL
+PASS: 0b, 0x0020 1xs 4d 4i
+PASS: 0b, 0x0020 16xs 4d 4i
+FAIL: 0b, 0x0020 1xv 4d 4i
+1xv 4d 4i: Got FFE2 vs FFE7: FAIL
+FAIL: 0b, 0x0020 16xv 4d 4i
+16xv 4d 4i: Got FFE2 vs FFE7: FAIL
+Timer count-up test: 0b, 0x0024
+PASS: 0b, 0x0024 1xs 1d 1i
+PASS: 0b, 0x0024 16xs 1d 1i
+FAIL: 0b, 0x0024 1xv 1d 1i
+1xv 1d 1i: Got FFF1 vs FFF0: FAIL
+FAIL: 0b, 0x0024 16xv 1d 1i
+16xv 1d 1i: Got FFF3 vs FFF1: FAIL
+PASS: 0b, 0x0024 1xs 2d 1i
+PASS: 0b, 0x0024 16xs 2d 1i
+FAIL: 0b, 0x0024 1xv 2d 1i
+1xv 2d 1i: Got FFF1 vs FFF0: FAIL
+FAIL: 0b, 0x0024 16xv 2d 1i
+16xv 2d 1i: Got FFF3 vs FFF1: FAIL
+PASS: 0b, 0x0024 1xs 4d 1i
+PASS: 0b, 0x0024 16xs 4d 1i
+FAIL: 0b, 0x0024 1xv 4d 1i
+1xv 4d 1i: Got FFF1 vs FFF0: FAIL
+FAIL: 0b, 0x0024 16xv 4d 1i
+16xv 4d 1i: Got FFF3 vs FFF1: FAIL
+PASS: 0b, 0x0024 1xs 1d 2i
+PASS: 0b, 0x0024 16xs 1d 2i
+FAIL: 0b, 0x0024 1xv 1d 2i
+1xv 1d 2i: Got FFFC vs FFFD: FAIL
+PASS: 0b, 0x0024 16xv 1d 2i
+PASS: 0b, 0x0024 1xs 2d 2i
+PASS: 0b, 0x0024 16xs 2d 2i
+FAIL: 0b, 0x0024 1xv 2d 2i
+1xv 2d 2i: Got FFFC vs FFFD: FAIL
+PASS: 0b, 0x0024 16xv 2d 2i
+PASS: 0b, 0x0024 1xs 4d 2i
+PASS: 0b, 0x0024 16xs 4d 2i
+FAIL: 0b, 0x0024 1xv 4d 2i
+1xv 4d 2i: Got FFFC vs FFFD: FAIL
+PASS: 0b, 0x0024 16xv 4d 2i
+PASS: 0b, 0x0024 1xs 1d 4i
+PASS: 0b, 0x0024 16xs 1d 4i
+FAIL: 0b, 0x0024 1xv 1d 4i
+1xv 1d 4i: Got FFEE vs FFF3: FAIL
+FAIL: 0b, 0x0024 16xv 1d 4i
+16xv 1d 4i: Got FFF0 vs FFF4: FAIL
+PASS: 0b, 0x0024 1xs 2d 4i
+PASS: 0b, 0x0024 16xs 2d 4i
+FAIL: 0b, 0x0024 1xv 2d 4i
+1xv 2d 4i: Got FFEE vs FFF3: FAIL
+FAIL: 0b, 0x0024 16xv 2d 4i
+16xv 2d 4i: Got FFF0 vs FFF4: FAIL
+PASS: 0b, 0x0024 1xs 4d 4i
+PASS: 0b, 0x0024 16xs 4d 4i
+FAIL: 0b, 0x0024 1xv 4d 4i
+1xv 4d 4i: Got FFEE vs FFF3: FAIL
+FAIL: 0b, 0x0024 16xv 4d 4i
+16xv 4d 4i: Got FFF0 vs FFF4: FAIL
+Timer count-up test: 0b, 0x0025
+FAIL: 0b, 0x0025 1xs 1d 1i
+1xs 1d 1i: Got 00000006 vs 00000007: FAIL
+PASS: 0b, 0x0025 16xs 1d 1i
+FAIL: 0b, 0x0025 1xv 1d 1i
+1xv 1d 1i: Got FFEE vs FFEF: FAIL
+FAIL: 0b, 0x0025 16xv 1d 1i
+16xv 1d 1i: Got FFEF vs FFED: FAIL
+FAIL: 0b, 0x0025 1xs 2d 1i
+1xs 2d 1i: Got 00000006 vs 00000007: FAIL
+PASS: 0b, 0x0025 16xs 2d 1i
+FAIL: 0b, 0x0025 1xv 2d 1i
+1xv 2d 1i: Got FFEE vs FFEF: FAIL
+FAIL: 0b, 0x0025 16xv 2d 1i
+16xv 2d 1i: Got FFEF vs FFED: FAIL
+FAIL: 0b, 0x0025 1xs 4d 1i
+1xs 4d 1i: Got 00000006 vs 00000007: FAIL
+PASS: 0b, 0x0025 16xs 4d 1i
+FAIL: 0b, 0x0025 1xv 4d 1i
+1xv 4d 1i: Got FFEE vs FFEF: FAIL
+FAIL: 0b, 0x0025 16xv 4d 1i
+16xv 4d 1i: Got FFEF vs FFED: FAIL
+FAIL: 0b, 0x0025 1xs 1d 2i
+1xs 1d 2i: Got 00000006 vs 00000007: FAIL
+PASS: 0b, 0x0025 16xs 1d 2i
+FAIL: 0b, 0x0025 1xv 1d 2i
+1xv 1d 2i: Got FFF6 vs FFF9: FAIL
+PASS: 0b, 0x0025 16xv 1d 2i
+FAIL: 0b, 0x0025 1xs 2d 2i
+1xs 2d 2i: Got 00000006 vs 00000007: FAIL
+PASS: 0b, 0x0025 16xs 2d 2i
+FAIL: 0b, 0x0025 1xv 2d 2i
+1xv 2d 2i: Got FFF6 vs FFF9: FAIL
+PASS: 0b, 0x0025 16xv 2d 2i
+FAIL: 0b, 0x0025 1xs 4d 2i
+1xs 4d 2i: Got 00000006 vs 00000007: FAIL
+PASS: 0b, 0x0025 16xs 4d 2i
+FAIL: 0b, 0x0025 1xv 4d 2i
+1xv 4d 2i: Got FFF6 vs FFF9: FAIL
+PASS: 0b, 0x0025 16xv 4d 2i
+FAIL: 0b, 0x0025 1xs 1d 4i
+1xs 1d 4i: Got 00000006 vs 00000007: FAIL
+PASS: 0b, 0x0025 16xs 1d 4i
+FAIL: 0b, 0x0025 1xv 1d 4i
+1xv 1d 4i: Got FFE1 vs FFE8: FAIL
+FAIL: 0b, 0x0025 16xv 1d 4i
+16xv 1d 4i: Got FFE2 vs FFE6: FAIL
+FAIL: 0b, 0x0025 1xs 2d 4i
+1xs 2d 4i: Got 00000006 vs 00000007: FAIL
+PASS: 0b, 0x0025 16xs 2d 4i
+FAIL: 0b, 0x0025 1xv 2d 4i
+1xv 2d 4i: Got FFE1 vs FFE8: FAIL
+FAIL: 0b, 0x0025 16xv 2d 4i
+16xv 2d 4i: Got FFE2 vs FFE6: FAIL
+FAIL: 0b, 0x0025 1xs 4d 4i
+1xs 4d 4i: Got 00000006 vs 00000007: FAIL
+PASS: 0b, 0x0025 16xs 4d 4i
+FAIL: 0b, 0x0025 1xv 4d 4i
+1xv 4d 4i: Got FFE1 vs FFE8: FAIL
+FAIL: 0b, 0x0025 16xv 4d 4i
+16xv 4d 4i: Got FFE2 vs FFE6: FAIL
+Timer count-up test: 0b, 0x0040
+PASS: 0b, 0x0040 1xs 1d 1i
+PASS: 0b, 0x0040 16xs 1d 1i
+FAIL: 0b, 0x0040 1xv 1d 1i
+1xv 1d 1i: Got FFDD vs FFDC: FAIL
+FAIL: 0b, 0x0040 16xv 1d 1i
+16xv 1d 1i: Got FFDE vs FFDC: FAIL
+PASS: 0b, 0x0040 1xs 2d 1i
+PASS: 0b, 0x0040 16xs 2d 1i
+FAIL: 0b, 0x0040 1xv 2d 1i
+1xv 2d 1i: Got FFDD vs FFDC: FAIL
+FAIL: 0b, 0x0040 16xv 2d 1i
+16xv 2d 1i: Got FFDE vs FFDC: FAIL
+PASS: 0b, 0x0040 1xs 4d 1i
+PASS: 0b, 0x0040 16xs 4d 1i
+FAIL: 0b, 0x0040 1xv 4d 1i
+1xv 4d 1i: Got FFDD vs FFDC: FAIL
+FAIL: 0b, 0x0040 16xv 4d 1i
+16xv 4d 1i: Got FFDE vs FFDC: FAIL
+PASS: 0b, 0x0040 1xs 1d 2i
+PASS: 0b, 0x0040 16xs 1d 2i
+FAIL: 0b, 0x0040 1xv 1d 2i
+1xv 1d 2i: Got FFDD vs FFDC: FAIL
+FAIL: 0b, 0x0040 16xv 1d 2i
+16xv 1d 2i: Got FFDD vs FFDC: FAIL
+PASS: 0b, 0x0040 1xs 2d 2i
+PASS: 0b, 0x0040 16xs 2d 2i
+FAIL: 0b, 0x0040 1xv 2d 2i
+1xv 2d 2i: Got FFDD vs FFDC: FAIL
+FAIL: 0b, 0x0040 16xv 2d 2i
+16xv 2d 2i: Got FFDD vs FFDC: FAIL
+PASS: 0b, 0x0040 1xs 4d 2i
+PASS: 0b, 0x0040 16xs 4d 2i
+FAIL: 0b, 0x0040 1xv 4d 2i
+1xv 4d 2i: Got FFDD vs FFDC: FAIL
+FAIL: 0b, 0x0040 16xv 4d 2i
+16xv 4d 2i: Got FFDD vs FFDC: FAIL
+PASS: 0b, 0x0040 1xs 1d 4i
+PASS: 0b, 0x0040 16xs 1d 4i
+PASS: 0b, 0x0040 1xv 1d 4i
+FAIL: 0b, 0x0040 16xv 1d 4i
+16xv 1d 4i: Got FFDD vs FFDE: FAIL
+PASS: 0b, 0x0040 1xs 2d 4i
+PASS: 0b, 0x0040 16xs 2d 4i
+PASS: 0b, 0x0040 1xv 2d 4i
+FAIL: 0b, 0x0040 16xv 2d 4i
+16xv 2d 4i: Got FFDD vs FFDE: FAIL
+PASS: 0b, 0x0040 1xs 4d 4i
+PASS: 0b, 0x0040 16xs 4d 4i
+PASS: 0b, 0x0040 1xv 4d 4i
+FAIL: 0b, 0x0040 16xv 4d 4i
+16xv 4d 4i: Got FFDD vs FFDE: FAIL
+Timer count-up test: 0b, 0x0080
+PASS: 0b, 0x0080 1xs 1d 1i
+PASS: 0b, 0x0080 16xs 1d 1i
+FAIL: 0b, 0x0080 1xv 1d 1i
+1xv 1d 1i: Got FFDD vs FFDC: FAIL
+FAIL: 0b, 0x0080 16xv 1d 1i
+16xv 1d 1i: Got FFDF vs FFDD: FAIL
+PASS: 0b, 0x0080 1xs 2d 1i
+PASS: 0b, 0x0080 16xs 2d 1i
+FAIL: 0b, 0x0080 1xv 2d 1i
+1xv 2d 1i: Got FFDD vs FFDC: FAIL
+FAIL: 0b, 0x0080 16xv 2d 1i
+16xv 2d 1i: Got FFDF vs FFDD: FAIL
+PASS: 0b, 0x0080 1xs 4d 1i
+PASS: 0b, 0x0080 16xs 4d 1i
+FAIL: 0b, 0x0080 1xv 4d 1i
+1xv 4d 1i: Got FFDD vs FFDC: FAIL
+FAIL: 0b, 0x0080 16xv 4d 1i
+16xv 4d 1i: Got FFDF vs FFDD: FAIL
+PASS: 0b, 0x0080 1xs 1d 2i
+PASS: 0b, 0x0080 16xs 1d 2i
+FAIL: 0b, 0x0080 1xv 1d 2i
+1xv 1d 2i: Got FFDD vs FFDC: FAIL
+FAIL: 0b, 0x0080 16xv 1d 2i
+16xv 1d 2i: Got FFDD vs FFDC: FAIL
+PASS: 0b, 0x0080 1xs 2d 2i
+PASS: 0b, 0x0080 16xs 2d 2i
+FAIL: 0b, 0x0080 1xv 2d 2i
+1xv 2d 2i: Got FFDD vs FFDC: FAIL
+FAIL: 0b, 0x0080 16xv 2d 2i
+16xv 2d 2i: Got FFDD vs FFDC: FAIL
+PASS: 0b, 0x0080 1xs 4d 2i
+PASS: 0b, 0x0080 16xs 4d 2i
+FAIL: 0b, 0x0080 1xv 4d 2i
+1xv 4d 2i: Got FFDD vs FFDC: FAIL
+FAIL: 0b, 0x0080 16xv 4d 2i
+16xv 4d 2i: Got FFDD vs FFDC: FAIL
+PASS: 0b, 0x0080 1xs 1d 4i
+FAIL: 0b, 0x0080 16xs 1d 4i
+16xs 1d 4i: Got 00000080 vs 00000070: FAIL
+PASS: 0b, 0x0080 1xv 1d 4i
+FAIL: 0b, 0x0080 16xv 1d 4i
+16xv 1d 4i: Got FFDF vs FFDC: FAIL
+PASS: 0b, 0x0080 1xs 2d 4i
+FAIL: 0b, 0x0080 16xs 2d 4i
+16xs 2d 4i: Got 00000080 vs 00000070: FAIL
+PASS: 0b, 0x0080 1xv 2d 4i
+FAIL: 0b, 0x0080 16xv 2d 4i
+16xv 2d 4i: Got FFDF vs FFDC: FAIL
+PASS: 0b, 0x0080 1xs 4d 4i
+FAIL: 0b, 0x0080 16xs 4d 4i
+16xs 4d 4i: Got 00000080 vs 00000070: FAIL
+PASS: 0b, 0x0080 1xv 4d 4i
+FAIL: 0b, 0x0080 16xv 4d 4i
+16xv 4d 4i: Got FFDF vs FFDC: FAIL
+Timer count-up test: 0b, 0x0800
+PASS: 0b, 0x0800 1xs 1d 1i
+PASS: 0b, 0x0800 16xs 1d 1i
+FAIL: 0b, 0x0800 1xv 1d 1i
+1xv 1d 1i: Got F85D vs F85C: FAIL
+FAIL: 0b, 0x0800 16xv 1d 1i
+16xv 1d 1i: Got F85D vs F85C: FAIL
+PASS: 0b, 0x0800 1xs 2d 1i
+PASS: 0b, 0x0800 16xs 2d 1i
+FAIL: 0b, 0x0800 1xv 2d 1i
+1xv 2d 1i: Got F85D vs F85C: FAIL
+FAIL: 0b, 0x0800 16xv 2d 1i
+16xv 2d 1i: Got F85D vs F85C: FAIL
+PASS: 0b, 0x0800 1xs 4d 1i
+PASS: 0b, 0x0800 16xs 4d 1i
+FAIL: 0b, 0x0800 1xv 4d 1i
+1xv 4d 1i: Got F85D vs F85C: FAIL
+FAIL: 0b, 0x0800 16xv 4d 1i
+16xv 4d 1i: Got F85D vs F85C: FAIL
+PASS: 0b, 0x0800 1xs 1d 2i
+PASS: 0b, 0x0800 16xs 1d 2i
+FAIL: 0b, 0x0800 1xv 1d 2i
+1xv 1d 2i: Got F85D vs F85C: FAIL
+FAIL: 0b, 0x0800 16xv 1d 2i
+16xv 1d 2i: Got F85D vs F85C: FAIL
+PASS: 0b, 0x0800 1xs 2d 2i
+PASS: 0b, 0x0800 16xs 2d 2i
+FAIL: 0b, 0x0800 1xv 2d 2i
+1xv 2d 2i: Got F85D vs F85C: FAIL
+FAIL: 0b, 0x0800 16xv 2d 2i
+16xv 2d 2i: Got F85D vs F85C: FAIL
+PASS: 0b, 0x0800 1xs 4d 2i
+PASS: 0b, 0x0800 16xs 4d 2i
+FAIL: 0b, 0x0800 1xv 4d 2i
+1xv 4d 2i: Got F85D vs F85C: FAIL
+FAIL: 0b, 0x0800 16xv 4d 2i
+16xv 4d 2i: Got F85D vs F85C: FAIL
+PASS: 0b, 0x0800 1xs 1d 4i
+FAIL: 0b, 0x0800 16xs 1d 4i
+16xs 1d 4i: Got 00001560 vs 00001550: FAIL
+PASS: 0b, 0x0800 1xv 1d 4i
+FAIL: 0b, 0x0800 16xv 1d 4i
+16xv 1d 4i: Got F85D vs F85C: FAIL
+PASS: 0b, 0x0800 1xs 2d 4i
+FAIL: 0b, 0x0800 16xs 2d 4i
+16xs 2d 4i: Got 00001560 vs 00001550: FAIL
+PASS: 0b, 0x0800 1xv 2d 4i
+FAIL: 0b, 0x0800 16xv 2d 4i
+16xv 2d 4i: Got F85D vs F85C: FAIL
+PASS: 0b, 0x0800 1xs 4d 4i
+FAIL: 0b, 0x0800 16xs 4d 4i
+16xs 4d 4i: Got 00001560 vs 00001550: FAIL
+PASS: 0b, 0x0800 1xv 4d 4i
+FAIL: 0b, 0x0800 16xv 4d 4i
+16xv 4d 4i: Got F85D vs F85C: FAIL
+Timer count-up test: 0b, 0x8000
+PASS: 0b, 0x8000 1xs 1d 1i
+PASS: 0b, 0x8000 16xs 1d 1i
+FAIL: 0b, 0x8000 1xv 1d 1i
+1xv 1d 1i: Got 805D vs 805C: FAIL
+FAIL: 0b, 0x8000 16xv 1d 1i
+16xv 1d 1i: Got 805D vs 805E: FAIL
+PASS: 0b, 0x8000 1xs 2d 1i
+PASS: 0b, 0x8000 16xs 2d 1i
+FAIL: 0b, 0x8000 1xv 2d 1i
+1xv 2d 1i: Got 805D vs 805C: FAIL
+FAIL: 0b, 0x8000 16xv 2d 1i
+16xv 2d 1i: Got 805D vs 805E: FAIL
+PASS: 0b, 0x8000 1xs 4d 1i
+PASS: 0b, 0x8000 16xs 4d 1i
+FAIL: 0b, 0x8000 1xv 4d 1i
+1xv 4d 1i: Got 805D vs 805C: FAIL
+FAIL: 0b, 0x8000 16xv 4d 1i
+16xv 4d 1i: Got 805D vs 805E: FAIL
+PASS: 0b, 0x8000 1xs 1d 2i
+PASS: 0b, 0x8000 16xs 1d 2i
+FAIL: 0b, 0x8000 1xv 1d 2i
+1xv 1d 2i: Got 805D vs 805C: FAIL
+FAIL: 0b, 0x8000 16xv 1d 2i
+16xv 1d 2i: Got 805D vs 805C: FAIL
+PASS: 0b, 0x8000 1xs 2d 2i
+PASS: 0b, 0x8000 16xs 2d 2i
+FAIL: 0b, 0x8000 1xv 2d 2i
+1xv 2d 2i: Got 805D vs 805C: FAIL
+FAIL: 0b, 0x8000 16xv 2d 2i
+16xv 2d 2i: Got 805D vs 805C: FAIL
+PASS: 0b, 0x8000 1xs 4d 2i
+PASS: 0b, 0x8000 16xs 4d 2i
+FAIL: 0b, 0x8000 1xv 4d 2i
+1xv 4d 2i: Got 805D vs 805C: FAIL
+FAIL: 0b, 0x8000 16xv 4d 2i
+16xv 4d 2i: Got 805D vs 805C: FAIL
+PASS: 0b, 0x8000 1xs 1d 4i
+PASS: 0b, 0x8000 16xs 1d 4i
+PASS: 0b, 0x8000 1xv 1d 4i
+FAIL: 0b, 0x8000 16xv 1d 4i
+16xv 1d 4i: Got 805D vs 805C: FAIL
+PASS: 0b, 0x8000 1xs 2d 4i
+PASS: 0b, 0x8000 16xs 2d 4i
+PASS: 0b, 0x8000 1xv 2d 4i
+FAIL: 0b, 0x8000 16xv 2d 4i
+16xv 2d 4i: Got 805D vs 805C: FAIL
+PASS: 0b, 0x8000 1xs 4d 4i
+PASS: 0b, 0x8000 16xs 4d 4i
+PASS: 0b, 0x8000 1xv 4d 4i
+FAIL: 0b, 0x8000 16xv 4d 4i
+16xv 4d 4i: Got 805D vs 805C: FAIL
+Timer count-up test: 6b, 0x0010
+PASS: 6b, 0x0010 1xs 1d 1i
+PASS: 6b, 0x0010 16xs 1d 1i
+PASS: 6b, 0x0010 1xv 1d 1i
+PASS: 6b, 0x0010 16xv 1d 1i
+PASS: 6b, 0x0010 1xs 2d 1i
+PASS: 6b, 0x0010 16xs 2d 1i
+PASS: 6b, 0x0010 1xv 2d 1i
+PASS: 6b, 0x0010 16xv 2d 1i
+PASS: 6b, 0x0010 1xs 4d 1i
+PASS: 6b, 0x0010 16xs 4d 1i
+PASS: 6b, 0x0010 1xv 4d 1i
+PASS: 6b, 0x0010 16xv 4d 1i
+PASS: 6b, 0x0010 1xs 1d 2i
+FAIL: 6b, 0x0010 16xs 1d 2i
+16xs 1d 2i: Got 00000530 vs 00000520: FAIL
+PASS: 6b, 0x0010 1xv 1d 2i
+PASS: 6b, 0x0010 16xv 1d 2i
+FAIL: 6b, 0x0010 1xs 2d 2i
+1xs 2d 2i: Got 000000EC vs 000000EB: FAIL
+PASS: 6b, 0x0010 16xs 2d 2i
+PASS: 6b, 0x0010 1xv 2d 2i
+PASS: 6b, 0x0010 16xv 2d 2i
+FAIL: 6b, 0x0010 1xs 4d 2i
+1xs 4d 2i: Got 000000F3 vs 000000F2: FAIL
+PASS: 6b, 0x0010 16xs 4d 2i
+PASS: 6b, 0x0010 1xv 4d 2i
+PASS: 6b, 0x0010 16xv 4d 2i
+FAIL: 6b, 0x0010 1xs 1d 4i
+1xs 1d 4i: Got 000001CF vs 000001CE: FAIL
+PASS: 6b, 0x0010 16xs 1d 4i
+PASS: 6b, 0x0010 1xv 1d 4i
+PASS: 6b, 0x0010 16xv 1d 4i
+FAIL: 6b, 0x0010 1xs 2d 4i
+1xs 2d 4i: Got 000001CE vs 000001CD: FAIL
+PASS: 6b, 0x0010 16xs 2d 4i
+PASS: 6b, 0x0010 1xv 2d 4i
+PASS: 6b, 0x0010 16xv 2d 4i
+FAIL: 6b, 0x0010 1xs 4d 4i
+1xs 4d 4i: Got 000001D5 vs 000001D4: FAIL
+PASS: 6b, 0x0010 16xs 4d 4i
+PASS: 6b, 0x0010 1xv 4d 4i
+PASS: 6b, 0x0010 16xv 4d 4i
+Timer count-up test: 6b, 0x0011
+PASS: 6b, 0x0011 1xs 1d 1i
+PASS: 6b, 0x0011 16xs 1d 1i
+PASS: 6b, 0x0011 1xv 1d 1i
+PASS: 6b, 0x0011 16xv 1d 1i
+PASS: 6b, 0x0011 1xs 2d 1i
+PASS: 6b, 0x0011 16xs 2d 1i
+PASS: 6b, 0x0011 1xv 2d 1i
+PASS: 6b, 0x0011 16xv 2d 1i
+PASS: 6b, 0x0011 1xs 4d 1i
+PASS: 6b, 0x0011 16xs 4d 1i
+PASS: 6b, 0x0011 1xv 4d 1i
+PASS: 6b, 0x0011 16xv 4d 1i
+PASS: 6b, 0x0011 1xs 1d 2i
+PASS: 6b, 0x0011 16xs 1d 2i
+PASS: 6b, 0x0011 1xv 1d 2i
+PASS: 6b, 0x0011 16xv 1d 2i
+FAIL: 6b, 0x0011 1xs 2d 2i
+1xs 2d 2i: Got 000000FC vs 000000FB: FAIL
+PASS: 6b, 0x0011 16xs 2d 2i
+PASS: 6b, 0x0011 1xv 2d 2i
+PASS: 6b, 0x0011 16xv 2d 2i
+FAIL: 6b, 0x0011 1xs 4d 2i
+1xs 4d 2i: Got 00000103 vs 00000102: FAIL
+PASS: 6b, 0x0011 16xs 4d 2i
+PASS: 6b, 0x0011 1xv 4d 2i
+PASS: 6b, 0x0011 16xv 4d 2i
+FAIL: 6b, 0x0011 1xs 1d 4i
+1xs 1d 4i: Got 000001EF vs 000001EE: FAIL
+PASS: 6b, 0x0011 16xs 1d 4i
+PASS: 6b, 0x0011 1xv 1d 4i
+PASS: 6b, 0x0011 16xv 1d 4i
+FAIL: 6b, 0x0011 1xs 2d 4i
+1xs 2d 4i: Got 000001EE vs 000001ED: FAIL
+PASS: 6b, 0x0011 16xs 2d 4i
+PASS: 6b, 0x0011 1xv 2d 4i
+PASS: 6b, 0x0011 16xv 2d 4i
+FAIL: 6b, 0x0011 1xs 4d 4i
+1xs 4d 4i: Got 000001F5 vs 000001F4: FAIL
+FAIL: 6b, 0x0011 16xs 4d 4i
+16xs 4d 4i: Got 00000AF0 vs 00000AE0: FAIL
+PASS: 6b, 0x0011 1xv 4d 4i
+PASS: 6b, 0x0011 16xv 4d 4i
+Timer count-up test: 6b, 0x0012
+PASS: 6b, 0x0012 1xs 1d 1i
+PASS: 6b, 0x0012 16xs 1d 1i
+PASS: 6b, 0x0012 1xv 1d 1i
+PASS: 6b, 0x0012 16xv 1d 1i
+PASS: 6b, 0x0012 1xs 2d 1i
+PASS: 6b, 0x0012 16xs 2d 1i
+PASS: 6b, 0x0012 1xv 2d 1i
+PASS: 6b, 0x0012 16xv 2d 1i
+PASS: 6b, 0x0012 1xs 4d 1i
+PASS: 6b, 0x0012 16xs 4d 1i
+PASS: 6b, 0x0012 1xv 4d 1i
+PASS: 6b, 0x0012 16xv 4d 1i
+PASS: 6b, 0x0012 1xs 1d 2i
+PASS: 6b, 0x0012 16xs 1d 2i
+PASS: 6b, 0x0012 1xv 1d 2i
+PASS: 6b, 0x0012 16xv 1d 2i
+FAIL: 6b, 0x0012 1xs 2d 2i
+1xs 2d 2i: Got 0000010C vs 0000010B: FAIL
+PASS: 6b, 0x0012 16xs 2d 2i
+PASS: 6b, 0x0012 1xv 2d 2i
+PASS: 6b, 0x0012 16xv 2d 2i
+FAIL: 6b, 0x0012 1xs 4d 2i
+1xs 4d 2i: Got 00000113 vs 00000112: FAIL
+PASS: 6b, 0x0012 16xs 4d 2i
+PASS: 6b, 0x0012 1xv 4d 2i
+PASS: 6b, 0x0012 16xv 4d 2i
+FAIL: 6b, 0x0012 1xs 1d 4i
+1xs 1d 4i: Got 0000020F vs 0000020E: FAIL
+FAIL: 6b, 0x0012 16xs 1d 4i
+16xs 1d 4i: Got 00000B80 vs 00000B70: FAIL
+PASS: 6b, 0x0012 1xv 1d 4i
+PASS: 6b, 0x0012 16xv 1d 4i
+FAIL: 6b, 0x0012 1xs 2d 4i
+1xs 2d 4i: Got 0000020E vs 0000020D: FAIL
+PASS: 6b, 0x0012 16xs 2d 4i
+PASS: 6b, 0x0012 1xv 2d 4i
+PASS: 6b, 0x0012 16xv 2d 4i
+FAIL: 6b, 0x0012 1xs 4d 4i
+1xs 4d 4i: Got 00000215 vs 00000214: FAIL
+FAIL: 6b, 0x0012 16xs 4d 4i
+16xs 4d 4i: Got 00000BA0 vs 00000B90: FAIL
+PASS: 6b, 0x0012 1xv 4d 4i
+PASS: 6b, 0x0012 16xv 4d 4i
+Timer count-up test: 6b, 0x0013
+PASS: 6b, 0x0013 1xs 1d 1i
+PASS: 6b, 0x0013 16xs 1d 1i
+PASS: 6b, 0x0013 1xv 1d 1i
+PASS: 6b, 0x0013 16xv 1d 1i
+PASS: 6b, 0x0013 1xs 2d 1i
+PASS: 6b, 0x0013 16xs 2d 1i
+PASS: 6b, 0x0013 1xv 2d 1i
+PASS: 6b, 0x0013 16xv 2d 1i
+PASS: 6b, 0x0013 1xs 4d 1i
+PASS: 6b, 0x0013 16xs 4d 1i
+PASS: 6b, 0x0013 1xv 4d 1i
+PASS: 6b, 0x0013 16xv 4d 1i
+PASS: 6b, 0x0013 1xs 1d 2i
+PASS: 6b, 0x0013 16xs 1d 2i
+PASS: 6b, 0x0013 1xv 1d 2i
+PASS: 6b, 0x0013 16xv 1d 2i
+FAIL: 6b, 0x0013 1xs 2d 2i
+1xs 2d 2i: Got 0000011C vs 0000011B: FAIL
+PASS: 6b, 0x0013 16xs 2d 2i
+PASS: 6b, 0x0013 1xv 2d 2i
+PASS: 6b, 0x0013 16xv 2d 2i
+FAIL: 6b, 0x0013 1xs 4d 2i
+1xs 4d 2i: Got 00000123 vs 00000122: FAIL
+PASS: 6b, 0x0013 16xs 4d 2i
+PASS: 6b, 0x0013 1xv 4d 2i
+PASS: 6b, 0x0013 16xv 4d 2i
+FAIL: 6b, 0x0013 1xs 1d 4i
+1xs 1d 4i: Got 0000022F vs 0000022E: FAIL
+FAIL: 6b, 0x0013 16xs 1d 4i
+16xs 1d 4i: Got 00000C30 vs 00000C20: FAIL
+PASS: 6b, 0x0013 1xv 1d 4i
+PASS: 6b, 0x0013 16xv 1d 4i
+FAIL: 6b, 0x0013 1xs 2d 4i
+1xs 2d 4i: Got 0000022E vs 0000022D: FAIL
+PASS: 6b, 0x0013 16xs 2d 4i
+PASS: 6b, 0x0013 1xv 2d 4i
+PASS: 6b, 0x0013 16xv 2d 4i
+FAIL: 6b, 0x0013 1xs 4d 4i
+1xs 4d 4i: Got 00000235 vs 00000234: FAIL
+FAIL: 6b, 0x0013 16xs 4d 4i
+16xs 4d 4i: Got 00000C50 vs 00000C40: FAIL
+PASS: 6b, 0x0013 1xv 4d 4i
+PASS: 6b, 0x0013 16xv 4d 4i
+Timer count-up test: 8b, 0x0010
+PASS: 8b, 0x0010 1xs 1d 1i
+PASS: 8b, 0x0010 16xs 1d 1i
+PASS: 8b, 0x0010 1xv 1d 1i
+PASS: 8b, 0x0010 16xv 1d 1i
+PASS: 8b, 0x0010 1xs 2d 1i
+PASS: 8b, 0x0010 16xs 2d 1i
+PASS: 8b, 0x0010 1xv 2d 1i
+PASS: 8b, 0x0010 16xv 2d 1i
+PASS: 8b, 0x0010 1xs 4d 1i
+PASS: 8b, 0x0010 16xs 4d 1i
+PASS: 8b, 0x0010 1xv 4d 1i
+PASS: 8b, 0x0010 16xv 4d 1i
+PASS: 8b, 0x0010 1xs 1d 2i
+PASS: 8b, 0x0010 16xs 1d 2i
+PASS: 8b, 0x0010 1xv 1d 2i
+PASS: 8b, 0x0010 16xv 1d 2i
+FAIL: 8b, 0x0010 1xs 2d 2i
+1xs 2d 2i: Got 000003DC vs 000003DB: FAIL
+PASS: 8b, 0x0010 16xs 2d 2i
+PASS: 8b, 0x0010 1xv 2d 2i
+PASS: 8b, 0x0010 16xv 2d 2i
+FAIL: 8b, 0x0010 1xs 4d 2i
+1xs 4d 2i: Got 000003DB vs 000003DA: FAIL
+PASS: 8b, 0x0010 16xs 4d 2i
+PASS: 8b, 0x0010 1xv 4d 2i
+PASS: 8b, 0x0010 16xv 4d 2i
+FAIL: 8b, 0x0010 1xs 1d 4i
+1xs 1d 4i: Got 000007BF vs 000007BE: FAIL
+PASS: 8b, 0x0010 16xs 1d 4i
+PASS: 8b, 0x0010 1xv 1d 4i
+PASS: 8b, 0x0010 16xv 1d 4i
+FAIL: 8b, 0x0010 1xs 2d 4i
+1xs 2d 4i: Got 000007BE vs 000007BD: FAIL
+FAIL: 8b, 0x0010 16xs 2d 4i
+16xs 2d 4i: Got 00002B20 vs 00002B10: FAIL
+PASS: 8b, 0x0010 1xv 2d 4i
+PASS: 8b, 0x0010 16xv 2d 4i
+FAIL: 8b, 0x0010 1xs 4d 4i
+1xs 4d 4i: Got 000007BD vs 000007BC: FAIL
+PASS: 8b, 0x0010 16xs 4d 4i
+PASS: 8b, 0x0010 1xv 4d 4i
+PASS: 8b, 0x0010 16xv 4d 4i
+Timer count-up test: 8b, 0x0011
+PASS: 8b, 0x0011 1xs 1d 1i
+PASS: 8b, 0x0011 16xs 1d 1i
+PASS: 8b, 0x0011 1xv 1d 1i
+PASS: 8b, 0x0011 16xv 1d 1i
+PASS: 8b, 0x0011 1xs 2d 1i
+PASS: 8b, 0x0011 16xs 2d 1i
+PASS: 8b, 0x0011 1xv 2d 1i
+PASS: 8b, 0x0011 16xv 2d 1i
+PASS: 8b, 0x0011 1xs 4d 1i
+PASS: 8b, 0x0011 16xs 4d 1i
+PASS: 8b, 0x0011 1xv 4d 1i
+PASS: 8b, 0x0011 16xv 4d 1i
+PASS: 8b, 0x0011 1xs 1d 2i
+PASS: 8b, 0x0011 16xs 1d 2i
+PASS: 8b, 0x0011 1xv 1d 2i
+PASS: 8b, 0x0011 16xv 1d 2i
+FAIL: 8b, 0x0011 1xs 2d 2i
+1xs 2d 2i: Got 0000041C vs 0000041B: FAIL
+PASS: 8b, 0x0011 16xs 2d 2i
+PASS: 8b, 0x0011 1xv 2d 2i
+PASS: 8b, 0x0011 16xv 2d 2i
+FAIL: 8b, 0x0011 1xs 4d 2i
+1xs 4d 2i: Got 0000041B vs 0000041A: FAIL
+PASS: 8b, 0x0011 16xs 4d 2i
+PASS: 8b, 0x0011 1xv 4d 2i
+PASS: 8b, 0x0011 16xv 4d 2i
+FAIL: 8b, 0x0011 1xs 1d 4i
+1xs 1d 4i: Got 0000083F vs 0000083E: FAIL
+PASS: 8b, 0x0011 16xs 1d 4i
+PASS: 8b, 0x0011 1xv 1d 4i
+PASS: 8b, 0x0011 16xv 1d 4i
+FAIL: 8b, 0x0011 1xs 2d 4i
+1xs 2d 4i: Got 0000083E vs 0000083D: FAIL
+PASS: 8b, 0x0011 16xs 2d 4i
+PASS: 8b, 0x0011 1xv 2d 4i
+PASS: 8b, 0x0011 16xv 2d 4i
+FAIL: 8b, 0x0011 1xs 4d 4i
+1xs 4d 4i: Got 0000083D vs 0000083C: FAIL
+PASS: 8b, 0x0011 16xs 4d 4i
+PASS: 8b, 0x0011 1xv 4d 4i
+PASS: 8b, 0x0011 16xv 4d 4i
+Timer count-up test: 8b, 0x0012
+PASS: 8b, 0x0012 1xs 1d 1i
+PASS: 8b, 0x0012 16xs 1d 1i
+PASS: 8b, 0x0012 1xv 1d 1i
+PASS: 8b, 0x0012 16xv 1d 1i
+PASS: 8b, 0x0012 1xs 2d 1i
+PASS: 8b, 0x0012 16xs 2d 1i
+PASS: 8b, 0x0012 1xv 2d 1i
+PASS: 8b, 0x0012 16xv 2d 1i
+PASS: 8b, 0x0012 1xs 4d 1i
+PASS: 8b, 0x0012 16xs 4d 1i
+PASS: 8b, 0x0012 1xv 4d 1i
+PASS: 8b, 0x0012 16xv 4d 1i
+PASS: 8b, 0x0012 1xs 1d 2i
+PASS: 8b, 0x0012 16xs 1d 2i
+PASS: 8b, 0x0012 1xv 1d 2i
+PASS: 8b, 0x0012 16xv 1d 2i
+FAIL: 8b, 0x0012 1xs 2d 2i
+1xs 2d 2i: Got 0000045C vs 0000045B: FAIL
+PASS: 8b, 0x0012 16xs 2d 2i
+PASS: 8b, 0x0012 1xv 2d 2i
+PASS: 8b, 0x0012 16xv 2d 2i
+FAIL: 8b, 0x0012 1xs 4d 2i
+1xs 4d 2i: Got 0000045B vs 0000045A: FAIL
+PASS: 8b, 0x0012 16xs 4d 2i
+PASS: 8b, 0x0012 1xv 4d 2i
+PASS: 8b, 0x0012 16xv 4d 2i
+FAIL: 8b, 0x0012 1xs 1d 4i
+1xs 1d 4i: Got 000008BF vs 000008BE: FAIL
+PASS: 8b, 0x0012 16xs 1d 4i
+PASS: 8b, 0x0012 1xv 1d 4i
+PASS: 8b, 0x0012 16xv 1d 4i
+FAIL: 8b, 0x0012 1xs 2d 4i
+1xs 2d 4i: Got 000008BE vs 000008BD: FAIL
+FAIL: 8b, 0x0012 16xs 2d 4i
+16xs 2d 4i: Got 000030B0 vs 000030A0: FAIL
+PASS: 8b, 0x0012 1xv 2d 4i
+PASS: 8b, 0x0012 16xv 2d 4i
+FAIL: 8b, 0x0012 1xs 4d 4i
+1xs 4d 4i: Got 000008BD vs 000008BC: FAIL
+PASS: 8b, 0x0012 16xs 4d 4i
+PASS: 8b, 0x0012 1xv 4d 4i
+PASS: 8b, 0x0012 16xv 4d 4i
+Timer count-up test: 8b, 0x0013
+PASS: 8b, 0x0013 1xs 1d 1i
+PASS: 8b, 0x0013 16xs 1d 1i
+PASS: 8b, 0x0013 1xv 1d 1i
+PASS: 8b, 0x0013 16xv 1d 1i
+PASS: 8b, 0x0013 1xs 2d 1i
+PASS: 8b, 0x0013 16xs 2d 1i
+PASS: 8b, 0x0013 1xv 2d 1i
+PASS: 8b, 0x0013 16xv 2d 1i
+PASS: 8b, 0x0013 1xs 4d 1i
+PASS: 8b, 0x0013 16xs 4d 1i
+PASS: 8b, 0x0013 1xv 4d 1i
+PASS: 8b, 0x0013 16xv 4d 1i
+PASS: 8b, 0x0013 1xs 1d 2i
+PASS: 8b, 0x0013 16xs 1d 2i
+PASS: 8b, 0x0013 1xv 1d 2i
+PASS: 8b, 0x0013 16xv 1d 2i
+FAIL: 8b, 0x0013 1xs 2d 2i
+1xs 2d 2i: Got 0000049C vs 0000049B: FAIL
+PASS: 8b, 0x0013 16xs 2d 2i
+PASS: 8b, 0x0013 1xv 2d 2i
+PASS: 8b, 0x0013 16xv 2d 2i
+FAIL: 8b, 0x0013 1xs 4d 2i
+1xs 4d 2i: Got 0000049B vs 0000049A: FAIL
+PASS: 8b, 0x0013 16xs 4d 2i
+PASS: 8b, 0x0013 1xv 4d 2i
+PASS: 8b, 0x0013 16xv 4d 2i
+FAIL: 8b, 0x0013 1xs 1d 4i
+1xs 1d 4i: Got 0000093F vs 0000093E: FAIL
+FAIL: 8b, 0x0013 16xs 1d 4i
+16xs 1d 4i: Got 00003380 vs 00003370: FAIL
+PASS: 8b, 0x0013 1xv 1d 4i
+PASS: 8b, 0x0013 16xv 1d 4i
+FAIL: 8b, 0x0013 1xs 2d 4i
+1xs 2d 4i: Got 0000093E vs 0000093D: FAIL
+PASS: 8b, 0x0013 16xs 2d 4i
+PASS: 8b, 0x0013 1xv 2d 4i
+PASS: 8b, 0x0013 16xv 2d 4i
+FAIL: 8b, 0x0013 1xs 4d 4i
+1xs 4d 4i: Got 0000093D vs 0000093C: FAIL
+PASS: 8b, 0x0013 16xs 4d 4i
+PASS: 8b, 0x0013 1xv 4d 4i
+PASS: 8b, 0x0013 16xv 4d 4i
+Timer count-up test: 10b, 0x0010
+PASS: 10b, 0x0010 1xs 1d 1i
+PASS: 10b, 0x0010 16xs 1d 1i
+PASS: 10b, 0x0010 1xv 1d 1i
+PASS: 10b, 0x0010 16xv 1d 1i
+PASS: 10b, 0x0010 1xs 2d 1i
+PASS: 10b, 0x0010 16xs 2d 1i
+PASS: 10b, 0x0010 1xv 2d 1i
+PASS: 10b, 0x0010 16xv 2d 1i
+PASS: 10b, 0x0010 1xs 4d 1i
+PASS: 10b, 0x0010 16xs 4d 1i
+PASS: 10b, 0x0010 1xv 4d 1i
+PASS: 10b, 0x0010 16xv 4d 1i
+PASS: 10b, 0x0010 1xs 1d 2i
+PASS: 10b, 0x0010 16xs 1d 2i
+PASS: 10b, 0x0010 1xv 1d 2i
+PASS: 10b, 0x0010 16xv 1d 2i
+FAIL: 10b, 0x0010 1xs 2d 2i
+1xs 2d 2i: Got 00000FDC vs 00000FDB: FAIL
+PASS: 10b, 0x0010 16xs 2d 2i
+PASS: 10b, 0x0010 1xv 2d 2i
+PASS: 10b, 0x0010 16xv 2d 2i
+FAIL: 10b, 0x0010 1xs 4d 2i
+1xs 4d 2i: Got 00000FDB vs 00000FDA: FAIL
+PASS: 10b, 0x0010 16xs 4d 2i
+PASS: 10b, 0x0010 1xv 4d 2i
+PASS: 10b, 0x0010 16xv 4d 2i
+FAIL: 10b, 0x0010 1xs 1d 4i
+1xs 1d 4i: Got 00001FBF vs 00001FBE: FAIL
+PASS: 10b, 0x0010 16xs 1d 4i
+PASS: 10b, 0x0010 1xv 1d 4i
+PASS: 10b, 0x0010 16xv 1d 4i
+FAIL: 10b, 0x0010 1xs 2d 4i
+1xs 2d 4i: Got 00001FBE vs 00001FBD: FAIL
+FAIL: 10b, 0x0010 16xs 2d 4i
+16xs 2d 4i: Got 0000B0B0 vs 0000B0A0: FAIL
+PASS: 10b, 0x0010 1xv 2d 4i
+PASS: 10b, 0x0010 16xv 2d 4i
+FAIL: 10b, 0x0010 1xs 4d 4i
+1xs 4d 4i: Got 00001FBD vs 00001FBC: FAIL
+PASS: 10b, 0x0010 16xs 4d 4i
+PASS: 10b, 0x0010 1xv 4d 4i
+PASS: 10b, 0x0010 16xv 4d 4i
+Timer count-up test: 10b, 0x0011
+PASS: 10b, 0x0011 1xs 1d 1i
+PASS: 10b, 0x0011 16xs 1d 1i
+PASS: 10b, 0x0011 1xv 1d 1i
+PASS: 10b, 0x0011 16xv 1d 1i
+PASS: 10b, 0x0011 1xs 2d 1i
+PASS: 10b, 0x0011 16xs 2d 1i
+PASS: 10b, 0x0011 1xv 2d 1i
+PASS: 10b, 0x0011 16xv 2d 1i
+PASS: 10b, 0x0011 1xs 4d 1i
+PASS: 10b, 0x0011 16xs 4d 1i
+PASS: 10b, 0x0011 1xv 4d 1i
+PASS: 10b, 0x0011 16xv 4d 1i
+PASS: 10b, 0x0011 1xs 1d 2i
+PASS: 10b, 0x0011 16xs 1d 2i
+PASS: 10b, 0x0011 1xv 1d 2i
+PASS: 10b, 0x0011 16xv 1d 2i
+FAIL: 10b, 0x0011 1xs 2d 2i
+1xs 2d 2i: Got 000010DC vs 000010DB: FAIL
+PASS: 10b, 0x0011 16xs 2d 2i
+PASS: 10b, 0x0011 1xv 2d 2i
+PASS: 10b, 0x0011 16xv 2d 2i
+FAIL: 10b, 0x0011 1xs 4d 2i
+1xs 4d 2i: Got 000010DB vs 000010DA: FAIL
+PASS: 10b, 0x0011 16xs 4d 2i
+PASS: 10b, 0x0011 1xv 4d 2i
+PASS: 10b, 0x0011 16xv 4d 2i
+FAIL: 10b, 0x0011 1xs 1d 4i
+1xs 1d 4i: Got 000021BF vs 000021BE: FAIL
+PASS: 10b, 0x0011 16xs 1d 4i
+PASS: 10b, 0x0011 1xv 1d 4i
+PASS: 10b, 0x0011 16xv 1d 4i
+FAIL: 10b, 0x0011 1xs 2d 4i
+1xs 2d 4i: Got 000021BE vs 000021BD: FAIL
+PASS: 10b, 0x0011 16xs 2d 4i
+PASS: 10b, 0x0011 1xv 2d 4i
+PASS: 10b, 0x0011 16xv 2d 4i
+FAIL: 10b, 0x0011 1xs 4d 4i
+1xs 4d 4i: Got 000021BD vs 000021BC: FAIL
+PASS: 10b, 0x0011 16xs 4d 4i
+PASS: 10b, 0x0011 1xv 4d 4i
+PASS: 10b, 0x0011 16xv 4d 4i
+Timer count-up test: 10b, 0x0012
+PASS: 10b, 0x0012 1xs 1d 1i
+FAIL: 10b, 0x0012 16xs 1d 1i
+16xs 1d 1i: Got 000031B0 vs 000031A0: FAIL
+PASS: 10b, 0x0012 1xv 1d 1i
+PASS: 10b, 0x0012 16xv 1d 1i
+PASS: 10b, 0x0012 1xs 2d 1i
+PASS: 10b, 0x0012 16xs 2d 1i
+PASS: 10b, 0x0012 1xv 2d 1i
+PASS: 10b, 0x0012 16xv 2d 1i
+PASS: 10b, 0x0012 1xs 4d 1i
+PASS: 10b, 0x0012 16xs 4d 1i
+PASS: 10b, 0x0012 1xv 4d 1i
+PASS: 10b, 0x0012 16xv 4d 1i
+PASS: 10b, 0x0012 1xs 1d 2i
+PASS: 10b, 0x0012 16xs 1d 2i
+PASS: 10b, 0x0012 1xv 1d 2i
+PASS: 10b, 0x0012 16xv 1d 2i
+FAIL: 10b, 0x0012 1xs 2d 2i
+1xs 2d 2i: Got 000011DC vs 000011DB: FAIL
+FAIL: 10b, 0x0012 16xs 2d 2i
+16xs 2d 2i: Got 00006370 vs 00006360: FAIL
+PASS: 10b, 0x0012 1xv 2d 2i
+PASS: 10b, 0x0012 16xv 2d 2i
+FAIL: 10b, 0x0012 1xs 4d 2i
+1xs 4d 2i: Got 000011DB vs 000011DA: FAIL
+PASS: 10b, 0x0012 16xs 4d 2i
+PASS: 10b, 0x0012 1xv 4d 2i
+PASS: 10b, 0x0012 16xv 4d 2i
+FAIL: 10b, 0x0012 1xs 1d 4i
+1xs 1d 4i: Got 000023BF vs 000023BE: FAIL
+PASS: 10b, 0x0012 16xs 1d 4i
+PASS: 10b, 0x0012 1xv 1d 4i
+PASS: 10b, 0x0012 16xv 1d 4i
+FAIL: 10b, 0x0012 1xs 2d 4i
+1xs 2d 4i: Got 000023BE vs 000023BD: FAIL
+PASS: 10b, 0x0012 16xs 2d 4i
+PASS: 10b, 0x0012 1xv 2d 4i
+PASS: 10b, 0x0012 16xv 2d 4i
+FAIL: 10b, 0x0012 1xs 4d 4i
+1xs 4d 4i: Got 000023BD vs 000023BC: FAIL
+FAIL: 10b, 0x0012 16xs 4d 4i
+16xs 4d 4i: Got 0000C6F0 vs 0000C6E0: FAIL
+PASS: 10b, 0x0012 1xv 4d 4i
+PASS: 10b, 0x0012 16xv 4d 4i
+Timer count-up test: 10b, 0x0013
+PASS: 10b, 0x0013 1xs 1d 1i
+PASS: 10b, 0x0013 16xs 1d 1i
+PASS: 10b, 0x0013 1xv 1d 1i
+PASS: 10b, 0x0013 16xv 1d 1i
+PASS: 10b, 0x0013 1xs 2d 1i
+PASS: 10b, 0x0013 16xs 2d 1i
+PASS: 10b, 0x0013 1xv 2d 1i
+PASS: 10b, 0x0013 16xv 2d 1i
+PASS: 10b, 0x0013 1xs 4d 1i
+PASS: 10b, 0x0013 16xs 4d 1i
+PASS: 10b, 0x0013 1xv 4d 1i
+PASS: 10b, 0x0013 16xv 4d 1i
+PASS: 10b, 0x0013 1xs 1d 2i
+PASS: 10b, 0x0013 16xs 1d 2i
+PASS: 10b, 0x0013 1xv 1d 2i
+PASS: 10b, 0x0013 16xv 1d 2i
+FAIL: 10b, 0x0013 1xs 2d 2i
+1xs 2d 2i: Got 000012DC vs 000012DB: FAIL
+FAIL: 10b, 0x0013 16xs 2d 2i
+16xs 2d 2i: Got 00006900 vs 000068F0: FAIL
+PASS: 10b, 0x0013 1xv 2d 2i
+PASS: 10b, 0x0013 16xv 2d 2i
+FAIL: 10b, 0x0013 1xs 4d 2i
+1xs 4d 2i: Got 000012DB vs 000012DA: FAIL
+PASS: 10b, 0x0013 16xs 4d 2i
+PASS: 10b, 0x0013 1xv 4d 2i
+PASS: 10b, 0x0013 16xv 4d 2i
+FAIL: 10b, 0x0013 1xs 1d 4i
+1xs 1d 4i: Got 000025BF vs 000025BE: FAIL
+PASS: 10b, 0x0013 16xs 1d 4i
+PASS: 10b, 0x0013 1xv 1d 4i
+PASS: 10b, 0x0013 16xv 1d 4i
+FAIL: 10b, 0x0013 1xs 2d 4i
+1xs 2d 4i: Got 000025BE vs 000025BD: FAIL
+PASS: 10b, 0x0013 16xs 2d 4i
+PASS: 10b, 0x0013 1xv 2d 4i
+PASS: 10b, 0x0013 16xv 2d 4i
+FAIL: 10b, 0x0013 1xs 4d 4i
+1xs 4d 4i: Got 000025BD vs 000025BC: FAIL
+FAIL: 10b, 0x0013 16xs 4d 4i
+16xs 4d 4i: Got 0000D210 vs 0000D200: FAIL
+PASS: 10b, 0x0013 1xv 4d 4i
+PASS: 10b, 0x0013 16xv 4d 4i
+[sram]
+Game Boy Advance Test Suite
+===
+Timer count-up test: 0b, 0x0001
+Timer count-up test: 0b, 0x0005
+1xs 1d 1i: Got 00000002 vs 00000003: FAIL
+1xv 1d 1i: Got FFFE vs FFFF: FAIL
+16xv 1d 1i: Got FFFE vs FFFD: FAIL
+1xs 2d 1i: Got 00000002 vs 00000003: FAIL
+1xv 2d 1i: Got FFFE vs FFFF: FAIL
+16xv 2d 1i: Got FFFE vs FFFD: FAIL
+1xs 4d 1i: Got 00000002 vs 00000003: FAIL
+1xv 4d 1i: Got FFFE vs FFFF: FAIL
+16xv 4d 1i: Got FFFE vs FFFD: FAIL
+1xs 1d 2i: Got 00000002 vs 00000003: FAIL
+1xv 1d 2i: Got FFFD vs FFFB: FAIL
+16xv 1d 2i: Got FFFD vs FFFE: FAIL
+1xs 2d 2i: Got 00000002 vs 00000003: FAIL
+1xv 2d 2i: Got FFFD vs FFFB: FAIL
+16xv 2d 2i: Got FFFD vs FFFE: FAIL
+1xs 4d 2i: Got 00000002 vs 00000003: FAIL
+1xv 4d 2i: Got FFFD vs FFFB: FAIL
+16xv 4d 2i: Got FFFD vs FFFE: FAIL
+1xs 1d 4i: Got 00000002 vs 00000003: FAIL
+1xv 1d 4i: Got FFFB vs FFFD: FAIL
+1xs 2d 4i: Got 00000002 vs 00000003: FAIL
+1xv 2d 4i: Got FFFB vs FFFD: FAIL
+1xs 4d 4i: Got 00000002 vs 00000003: FAIL
+1xv 4d 4i: Got FFFB vs FFFD: FAIL
+Timer count-up test: 0b, 0x000C
+16xs 1d 1i: Got 00000010 vs 00000020: FAIL
+1xv 1d 1i: Got FFFD vs FFFC: FAIL
+16xv 1d 1i: Got FFFD vs FFFE: FAIL
+16xs 2d 1i: Got 00000010 vs 00000020: FAIL
+1xv 2d 1i: Got FFFD vs FFFC: FAIL
+16xv 2d 1i: Got FFFD vs FFFE: FAIL
+16xs 4d 1i: Got 00000010 vs 00000020: FAIL
+1xv 4d 1i: Got FFFD vs FFFC: FAIL
+16xv 4d 1i: Got FFFD vs FFFE: FAIL
+16xs 1d 2i: Got 00000010 vs 00000020: FAIL
+1xv 1d 2i: Got FFFC vs FFFD: FAIL
+16xv 1d 2i: Got FFFC vs FFFF: FAIL
+16xs 2d 2i: Got 00000010 vs 00000020: FAIL
+1xv 2d 2i: Got FFFC vs FFFD: FAIL
+16xv 2d 2i: Got FFFC vs FFFF: FAIL
+16xs 4d 2i: Got 00000010 vs 00000020: FAIL
+1xv 4d 2i: Got FFFC vs FFFD: FAIL
+16xv 4d 2i: Got FFFC vs FFFF: FAIL
+16xs 1d 4i: Got 00000010 vs 00000020: FAIL
+1xv 1d 4i: Got FFFA vs FFFF: FAIL
+16xv 1d 4i: Got FFFA vs FFF5: FAIL
+16xs 2d 4i: Got 00000010 vs 00000020: FAIL
+1xv 2d 4i: Got FFFA vs FFFF: FAIL
+16xv 2d 4i: Got FFFA vs FFF5: FAIL
+16xs 4d 4i: Got 00000010 vs 00000020: FAIL
+1xv 4d 4i: Got FFFA vs FFFF: FAIL
+16xv 4d 4i: Got FFFA vs FFF5: FAIL
+Timer count-up test: 0b, 0x000D
+1xs 1d 1i: Got 00000003 vs 00000004: FAIL
+1xv 1d 1i: Got FFF5 vs FFF6: FAIL
+16xv 1d 1i: Got FFF7 vs FFF5: FAIL
+1xs 2d 1i: Got 00000003 vs 00000004: FAIL
+1xv 2d 1i: Got FFF5 vs FFF6: FAIL
+16xv 2d 1i: Got FFF7 vs FFF5: FAIL
+1xs 4d 1i: Got 00000003 vs 00000004: FAIL
+1xv 4d 1i: Got FFF5 vs FFF6: FAIL
+16xv 4d 1i: Got FFF7 vs FFF5: FAIL
+1xs 1d 2i: Got 00000003 vs 00000004: FAIL
+1xv 1d 2i: Got FFF7 vs FFFA: FAIL
+1xs 2d 2i: Got 00000003 vs 00000004: FAIL
+1xv 2d 2i: Got FFF7 vs FFFA: FAIL
+1xs 4d 2i: Got 00000003 vs 00000004: FAIL
+1xv 4d 2i: Got FFF7 vs FFFA: FAIL
+1xs 1d 4i: Got 00000003 vs 00000004: FAIL
+1xv 1d 4i: Got FFFB vs FFF5: FAIL
+16xv 1d 4i: Got FFFD vs FFF4: FAIL
+1xs 2d 4i: Got 00000003 vs 00000004: FAIL
+1xv 2d 4i: Got FFFB vs FFF5: FAIL
+16xv 2d 4i: Got FFFD vs FFF4: FAIL
+1xs 4d 4i: Got 00000003 vs 00000004: FAIL
+1xv 4d 4i: Got FFFB vs FFF5: FAIL
+16xv 4d 4i: Got FFFD vs FFF4: FAIL
+Timer count-up test: 0b, 0x0010
+1xv 1d 1i: Got FFFD vs FFFC: FAIL
+16xv 1d 1i: Got FFFD vs FFFE: FAIL
+1xv 2d 1i: Got FFFD vs FFFC: FAIL
+16xv 2d 1i: Got FFFD vs FFFE: FAIL
+1xv 4d 1i: Got FFFD vs FFFC: FAIL
+16xv 4d 1i: Got FFFD vs FFFE: FAIL
+1xv 1d 2i: Got FFF4 vs FFF5: FAIL
+16xv 1d 2i: Got FFF4 vs FFF7: FAIL
+1xv 2d 2i: Got FFF4 vs FFF5: FAIL
+16xv 2d 2i: Got FFF4 vs FFF7: FAIL
+1xv 4d 2i: Got FFF4 vs FFF5: FAIL
+16xv 4d 2i: Got FFF4 vs FFF7: FAIL
+1xv 1d 4i: Got FFF2 vs FFF7: FAIL
+16xv 1d 4i: Got FFF2 vs FFF9: FAIL
+1xv 2d 4i: Got FFF2 vs FFF7: FAIL
+16xv 2d 4i: Got FFF2 vs FFF9: FAIL
+1xv 4d 4i: Got FFF2 vs FFF7: FAIL
+16xv 4d 4i: Got FFF2 vs FFF9: FAIL
+Timer count-up test: 0b, 0x0014
+1xv 1d 1i: Got FFF9 vs FFF8: FAIL
+16xv 1d 1i: Got FFF9 vs FFF8: FAIL
+1xv 2d 1i: Got FFF9 vs FFF8: FAIL
+16xv 2d 1i: Got FFF9 vs FFF8: FAIL
+1xv 4d 1i: Got FFF9 vs FFF8: FAIL
+16xv 4d 1i: Got FFF9 vs FFF8: FAIL
+1xv 1d 2i: Got FFF8 vs FFF9: FAIL
+16xv 1d 2i: Got FFF8 vs FFF9: FAIL
+1xv 2d 2i: Got FFF8 vs FFF9: FAIL
+16xv 2d 2i: Got FFF8 vs FFF9: FAIL
+1xv 4d 2i: Got FFF8 vs FFF9: FAIL
+16xv 4d 2i: Got FFF8 vs FFF9: FAIL
+1xv 1d 4i: Got FFF6 vs FFFB: FAIL
+16xv 1d 4i: Got FFF6 vs FFFB: FAIL
+1xv 2d 4i: Got FFF6 vs FFFB: FAIL
+16xv 2d 4i: Got FFF6 vs FFFB: FAIL
+1xv 4d 4i: Got FFF6 vs FFFB: FAIL
+16xv 4d 4i: Got FFF6 vs FFFB: FAIL
+Timer count-up test: 0b, 0x0015
+1xs 1d 1i: Got 00000004 vs 00000005: FAIL
+1xv 1d 1i: Got FFF4 vs FFF5: FAIL
+16xv 1d 1i: Got FFF4 vs FFF3: FAIL
+1xs 2d 1i: Got 00000004 vs 00000005: FAIL
+1xv 2d 1i: Got FFF4 vs FFF5: FAIL
+16xv 2d 1i: Got FFF4 vs FFF3: FAIL
+1xs 4d 1i: Got 00000004 vs 00000005: FAIL
+1xv 4d 1i: Got FFF4 vs FFF5: FAIL
+16xv 4d 1i: Got FFF4 vs FFF3: FAIL
+1xs 1d 2i: Got 00000004 vs 00000005: FAIL
+1xv 1d 2i: Got FFED vs FFF0: FAIL
+16xv 1d 2i: Got FFED vs FFEE: FAIL
+1xs 2d 2i: Got 00000004 vs 00000005: FAIL
+1xv 2d 2i: Got FFED vs FFF0: FAIL
+16xv 2d 2i: Got FFED vs FFEE: FAIL
+1xs 4d 2i: Got 00000004 vs 00000005: FAIL
+1xv 4d 2i: Got FFED vs FFF0: FAIL
+16xv 4d 2i: Got FFED vs FFEE: FAIL
+1xs 1d 4i: Got 00000004 vs 00000005: FAIL
+1xv 1d 4i: Got FFF4 vs FFFB: FAIL
+16xv 1d 4i: Got FFF4 vs FFF9: FAIL
+1xs 2d 4i: Got 00000004 vs 00000005: FAIL
+1xv 2d 4i: Got FFF4 vs FFFB: FAIL
+16xv 2d 4i: Got FFF4 vs FFF9: FAIL
+1xs 4d 4i: Got 00000004 vs 00000005: FAIL
+1xv 4d 4i: Got FFF4 vs FFFB: FAIL
+16xv 4d 4i: Got FFF4 vs FFF9: FAIL
+Timer count-up test: 0b, 0x0020
+1xv 1d 1i: Got FFFD vs FFFC: FAIL
+16xv 1d 1i: Got FFFD vs FFFC: FAIL
+1xv 2d 1i: Got FFFD vs FFFC: FAIL
+16xv 2d 1i: Got FFFD vs FFFC: FAIL
+1xv 4d 1i: Got FFFD vs FFFC: FAIL
+16xv 4d 1i: Got FFFD vs FFFC: FAIL
+1xv 1d 2i: Got FFF4 vs FFF5: FAIL
+16xv 1d 2i: Got FFF4 vs FFF5: FAIL
+1xv 2d 2i: Got FFF4 vs FFF5: FAIL
+16xv 2d 2i: Got FFF4 vs FFF5: FAIL
+1xv 4d 2i: Got FFF4 vs FFF5: FAIL
+16xv 4d 2i: Got FFF4 vs FFF5: FAIL
+1xv 1d 4i: Got FFE2 vs FFE7: FAIL
+16xv 1d 4i: Got FFE2 vs FFE7: FAIL
+1xv 2d 4i: Got FFE2 vs FFE7: FAIL
+16xv 2d 4i: Got FFE2 vs FFE7: FAIL
+1xv 4d 4i: Got FFE2 vs FFE7: FAIL
+16xv 4d 4i: Got FFE2 vs FFE7: FAIL
+Timer count-up test: 0b, 0x0024
+1xv 1d 1i: Got FFF1 vs FFF0: FAIL
+16xv 1d 1i: Got FFF3 vs FFF1: FAIL
+1xv 2d 1i: Got FFF1 vs FFF0: FAIL
+16xv 2d 1i: Got FFF3 vs FFF1: FAIL
+1xv 4d 1i: Got FFF1 vs FFF0: FAIL
+16xv 4d 1i: Got FFF3 vs FFF1: FAIL
+1xv 1d 2i: Got FFFC vs FFFD: FAIL
+1xv 2d 2i: Got FFFC vs FFFD: FAIL
+1xv 4d 2i: Got FFFC vs FFFD: FAIL
+1xv 1d 4i: Got FFEE vs FFF3: FAIL
+16xv 1d 4i: Got FFF0 vs FFF4: FAIL
+1xv 2d 4i: Got FFEE vs FFF3: FAIL
+16xv 2d 4i: Got FFF0 vs FFF4: FAIL
+1xv 4d 4i: Got FFEE vs FFF3: FAIL
+16xv 4d 4i: Got FFF0 vs FFF4: FAIL
+Timer count-up test: 0b, 0x0025
+1xs 1d 1i: Got 00000006 vs 00000007: FAIL
+1xv 1d 1i: Got FFEE vs FFEF: FAIL
+16xv 1d 1i: Got FFEF vs FFED: FAIL
+1xs 2d 1i: Got 00000006 vs 00000007: FAIL
+1xv 2d 1i: Got FFEE vs FFEF: FAIL
+16xv 2d 1i: Got FFEF vs FFED: FAIL
+1xs 4d 1i: Got 00000006 vs 00000007: FAIL
+1xv 4d 1i: Got FFEE vs FFEF: FAIL
+16xv 4d 1i: Got FFEF vs FFED: FAIL
+1xs 1d 2i: Got 00000006 vs 00000007: FAIL
+1xv 1d 2i: Got FFF6 vs FFF9: FAIL
+1xs 2d 2i: Got 00000006 vs 00000007: FAIL
+1xv 2d 2i: Got FFF6 vs FFF9: FAIL
+1xs 4d 2i: Got 00000006 vs 00000007: FAIL
+1xv 4d 2i: Got FFF6 vs FFF9: FAIL
+1xs 1d 4i: Got 00000006 vs 00000007: FAIL
+1xv 1d 4i: Got FFE1 vs FFE8: FAIL
+16xv 1d 4i: Got FFE2 vs FFE6: FAIL
+1xs 2d 4i: Got 00000006 vs 00000007: FAIL
+1xv 2d 4i: Got FFE1 vs FFE8: FAIL
+16xv 2d 4i: Got FFE2 vs FFE6: FAIL
+1xs 4d 4i: Got 00000006 vs 00000007: FAIL
+1xv 4d 4i: Got FFE1 vs FFE8: FAIL
+16xv 4d 4i: Got FFE2 vs FFE6: FAIL
+Timer count-up test: 0b, 0x0040
+1xv 1d 1i: Got FFDD vs FFDC: FAIL
+16xv 1d 1i: Got FFDE vs FFDC: FAIL
+1xv 2d 1i: Got FFDD vs FFDC: FAIL
+16xv 2d 1i: Got FFDE vs FFDC: FAIL
+1xv 4d 1i: Got FFDD vs FFDC: FAIL
+16xv 4d 1i: Got FFDE vs FFDC: FAIL
+1xv 1d 2i: Got FFDD vs FFDC: FAIL
+16xv 1d 2i: Got FFDD vs FFDC: FAIL
+1xv 2d 2i: Got FFDD vs FFDC: FAIL
+16xv 2d 2i: Got FFDD vs FFDC: FAIL
+1xv 4d 2i: Got FFDD vs FFDC: FAIL
+16xv 4d 2i: Got FFDD vs FFDC: FAIL
+16xv 1d 4i: Got FFDD vs FFDE: FAIL
+16xv 2d 4i: Got FFDD vs FFDE: FAIL
+16xv 4d 4i: Got FFDD vs FFDE: FAIL
+Timer count-up test: 0b, 0x0080
+1xv 1d 1i: Got FFDD vs FFDC: FAIL
+16xv 1d 1i: Got FFDF vs FFDD: FAIL
+1xv 2d 1i: Got FFDD vs FFDC: FAIL
+16xv 2d 1i: Got FFDF vs FFDD: FAIL
+1xv 4d 1i: Got FFDD vs FFDC: FAIL
+16xv 4d 1i: Got FFDF vs FFDD: FAIL
+1xv 1d 2i: Got FFDD vs FFDC: FAIL
+16xv 1d 2i: Got FFDD vs FFDC: FAIL
+1xv 2d 2i: Got FFDD vs FFDC: FAIL
+16xv 2d 2i: Got FFDD vs FFDC: FAIL
+1xv 4d 2i: Got FFDD vs FFDC: FAIL
+16xv 4d 2i: Got FFDD vs FFDC: FAIL
+16xs 1d 4i: Got 00000080 vs 00000070: FAIL
+16xv 1d 4i: Got FFDF vs FFDC: FAIL
+16xs 2d 4i: Got 00000080 vs 00000070: FAIL
+16xv 2d 4i: Got FFDF vs FFDC: FAIL
+16xs 4d 4i: Got 00000080 vs 00000070: FAIL
+16xv 4d 4i: Got FFDF vs FFDC: FAIL
+Timer count-up test: 0b, 0x0800
+1xv 1d 1i: Got F85D vs F85C: FAIL
+16xv 1d 1i: Got F85D vs F85C: FAIL
+1xv 2d 1i: Got F85D vs F85C: FAIL
+16xv 2d 1i: Got F85D vs F85C: FAIL
+1xv 4d 1i: Got F85D vs F85C: FAIL
+16xv 4d 1i: Got F85D vs F85C: FAIL
+1xv 1d 2i: Got F85D vs F85C: FAIL
+16xv 1d 2i: Got F85D vs F85C: FAIL
+1xv 2d 2i: Got F85D vs F85C: FAIL
+16xv 2d 2i: Got F85D vs F85C: FAIL
+1xv 4d 2i: Got F85D vs F85C: FAIL
+16xv 4d 2i: Got F85D vs F85C: FAIL
+16xs 1d 4i: Got 00001560 vs 00001550: FAIL
+16xv 1d 4i: Got F85D vs F85C: FAIL
+16xs 2d 4i: Got 00001560 vs 00001550: FAIL
+16xv 2d 4i: Got F85D vs F85C: FAIL
+16xs 4d 4i: Got 00001560 vs 00001550: FAIL
+16xv 4d 4i: Got F85D vs F85C: FAIL
+Timer count-up test: 0b, 0x8000
+1xv 1d 1i: Got 805D vs 805C: FAIL
+16xv 1d 1i: Got 805D vs 805E: FAIL
+1xv 2d 1i: Got 805D vs 805C: FAIL
+16xv 2d 1i: Got 805D vs 805E: FAIL
+1xv 4d 1i: Got 805D vs 805C: FAIL
+16xv 4d 1i: Got 805D vs 805E: FAIL
+1xv 1d 2i: Got 805D vs 805C: FAIL
+16xv 1d 2i: Got 805D vs 805C: FAIL
+1xv 2d 2i: Got 805D vs 805C: FAIL
+16xv 2d 2i: Got 805D vs 805C: FAIL
+1xv 4d 2i: Got 805D vs 805C: FAIL
+16xv 4d 2i: Got 805D vs 805C: FAIL
+16xv 1d 4i: Got 805D vs 805C: FAIL
+16xv 2d 4i: Got 805D vs 805C: FAIL
+16xv 4d 4i: Got 805D vs 805C: FAIL
+Timer count-up test: 6b, 0x0010
+16xs 1d 2i: Got 00000530 vs 00000520: FAIL
+1xs 2d 2i: Got 000000EC vs 000000EB: FAIL
+1xs 4d 2i: Got 000000F3 vs 000000F2: FAIL
+1xs 1d 4i: Got 000001CF vs 000001CE: FAIL
+1xs 2d 4i: Got 000001CE vs 000001CD: FAIL
+1xs 4d 4i: Got 000001D5 vs 000001D4: FAIL
+Timer count-up test: 6b, 0x0011
+1xs 2d 2i: Got 000000FC vs 000000FB: FAIL
+1xs 4d 2i: Got 00000103 vs 00000102: FAIL
+1xs 1d 4i: Got 000001EF vs 000001EE: FAIL
+1xs 2d 4i: Got 000001EE vs 000001ED: FAIL
+1xs 4d 4i: Got 000001F5 vs 000001F4: FAIL
+16xs 4d 4i: Got 00000AF0 vs 00000AE0: FAIL
+Timer count-up test: 6b, 0x0012
+1xs 2d 2i: Got 0000010C vs 0000010B: FAIL
+1xs 4d 2i: Got 00000113 vs 00000112: FAIL
+1xs 1d 4i: Got 0000020F vs 0000020E: FAIL
+16xs 1d 4i: Got 00000B80 vs 00000B70: FAIL
+1xs 2d 4i: Got 0000020E vs 0000020D: FAIL
+1xs 4d 4i: Got 00000215 vs 00000214: FAIL
+16xs 4d 4i: Got 00000BA0 vs 00000B90: FAIL
+Timer count-up test: 6b, 0x0013
+1xs 2d 2i: Got 0000011C vs 0000011B: FAIL
+1xs 4d 2i: Got 00000123 vs 00000122: FAIL
+1xs 1d 4i: Got 0000022F vs 0000022E: FAIL
+16xs 1d 4i: Got 00000C30 vs 00000C20: FAIL
+1xs 2d 4i: Got 0000022E vs 0000022D: FAIL
+1xs 4d 4i: Got 00000235 vs 00000234: FAIL
+16xs 4d 4i: Got 00000C50 vs 00000C40: FAIL
+Timer count-up test: 8b, 0x0010
+1xs 2d 2i: Got 000003DC vs 000003DB: FAIL
+1xs 4d 2i: Got 000003DB vs 000003DA: FAIL
+1xs 1d 4i: Got 000007BF vs 000007BE: FAIL
+1xs 2d 4i: Got 000007BE vs 000007BD: FAIL
+16xs 2d 4i: Got 00002B20 vs 00002B10: FAIL
+1xs 4d 4i: Got 000007BD vs 000007BC: FAIL
+Timer count-up test: 8b, 0x0011
+1xs 2d 2i: Got 0000041C vs 0000041B: FAIL
+1xs 4d 2i: Got 0000041B vs 0000041A: FAIL
+1xs 1d 4i: Got 0000083F vs 0000083E: FAIL
+1xs 2d 4i: Got 0000083E vs 0000083D: FAIL
+1xs 4d 4i: Got 0000083D vs 0000083C: FAIL
+Timer count-up test: 8b, 0x0012
+1xs 2d 2i: Got 0000045C vs 0000045B: FAIL
+1xs 4d 2i: Got 0000045B vs 0000045A: FAIL
+1xs 1d 4i: Got 000008BF vs 000008BE: FAIL
+1xs 2d 4i: Got 000008BE vs 000008BD: FAIL
+16xs 2d 4i: Got 000030B0 vs 000030A0: FAIL
+1xs 4d 4i: Got 000008BD vs 000008BC: FAIL
+Timer count-up test: 8b, 0x0013
+1xs 2d 2i: Got 0000049C vs 0000049B: FAIL
+1xs 4d 2i: Got 0000049B vs 0000049A: FAIL
+1xs 1d 4i: Got 0000093F vs 0000093E: FAIL
+16xs 1d 4i: Got 00003380 vs 00003370: FAIL
+1xs 2d 4i: Got 0000093E vs 0000093D: FAIL
+1xs 4d 4i: Got 0000093D vs 0000093C: FAIL
+Timer count-up test: 10b, 0x0010
+1xs 2d 2i: Got 00000FDC vs 00000FDB: FAIL
+1xs 4d 2i: Got 00000FDB vs 00000FDA: FAIL
+1xs 1d 4i: Got 00001FBF vs 00001FBE: FAIL
+1xs 2d 4i: Got 00001FBE vs 00001FBD: FAIL
+16xs 2d 4i: Got 0000B0B0 vs 0000B0A0: FAIL
+1xs 4d 4i: Got 00001FBD vs 00001FBC: FAIL
+Timer count-up test: 10b, 0x0011
+1xs 2d 2i: Got 000010DC vs 000010DB: FAIL
+1xs 4d 2i: Got 000010DB vs 000010DA: FAIL
+1xs 1d 4i: Got 000021BF vs 000021BE: FAIL
+1xs 2d 4i: Got 000021BE vs 000021BD: FAIL
+1xs 4d 4i: Got 000021BD vs 000021BC: FAIL
+Timer count-up test: 10b, 0x0012
+16xs 1d 1i: Got 000031B0 vs 000031A0: FAIL
+1xs 2d 2i: Got 000011DC vs 000011DB: FAIL
+16xs 2d 2i: Got 00006370 vs 00006360: FAIL
+1xs 4d 2i: Got 000011DB vs 000011DA: FAIL
+1xs 1d 4i: Got 000023BF vs 000023BE: FAIL
+1xs 2d 4i: Got 000023BE vs 000023BD: FAIL
+1xs 4d 4i: Got 000023BD vs 000023BC: FAIL
+16xs 4d 4i: Got 0000C6F0 vs 0000C6E0: FAIL
+Timer count-up test: 10b, 0x0013
+1xs 2d 2i: Got 000012DC vs 000012DB: FAIL
+16xs 2d 2i: Got 00006900 vs 000068F0: FAIL
+1xs 4d 2i: Got 000012DB vs 000012DA: FAIL
+1xs 1d 4i: Got 000025BF vs 000025BE: FAIL
+1xs 2d 4i: Got 000025BE vs 000025BD: FAIL
+1xs 4d 4i: Got 000025BD vs 000025BC: FAIL
+16xs 4d 4i: Got 0000D210 vs 0000D200: FAIL
+
+=== Summary ===
+No END: summaries were emitted yet; use the per-suite SRAM output above.

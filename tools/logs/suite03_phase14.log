@@ -1,0 +1,297 @@
+=== GBA Test Suite Runner ===
+ROM:  tests/assets/roms/suite.gba
+BIOS: tests/assets/roms/gba_bios.bin
+Booting...
+After 60 frames: PC=0x00000348 CPSR=0x6000005F halted=1 cycle=16769984
+[DBG] Game Boy Advance Test Suite
+===
+[DBG] BEGIN: Timing tests
+[DBG] Timing test: Calibration
+[DBG] FAIL: Calibration ARM/ROM ...
+[DBG] ARM/ROM ...: Got     5 vs     7: FAIL
+[DBG] FAIL: Calibration ARM/ROM P..
+[DBG] ARM/ROM P..: Got     5 vs     4: FAIL
+[DBG] FAIL: Calibration ARM/ROM .N.
+[DBG] ARM/ROM .N.: Got     5 vs     6: FAIL
+[DBG] FAIL: Calibration ARM/ROM PN.
+[DBG] ARM/ROM PN.: Got     5 vs     4: FAIL
+[DBG] FAIL: Calibration ARM/ROM ..S
+[DBG] ARM/ROM ..S: Got     3 vs     6: FAIL
+[DBG] FAIL: Calibration ARM/ROM P.S
+[DBG] ARM/ROM P.S: Got     3 vs     2: FAIL
+[DBG] FAIL: Calibration ARM/ROM .NS
+[DBG] ARM/ROM .NS: Got     3 vs     5: FAIL
+[DBG] FAIL: Calibration ARM/ROM PNS
+[DBG] ARM/ROM PNS: Got     3 vs     2: FAIL
+[DBG] PASS: Calibration ARM/WRAM
+[DBG] PASS: Calibration ARM/IWRAM
+[DBG] FAIL: Calibration Thumb/ROM ...
+[DBG] Thumb/ROM ...: Got     3 vs     4: FAIL
+[DBG] FAIL: Calibration Thumb/ROM P..
+[DBG] Thumb/ROM P..: Got     3 vs     1: FAIL
+[DBG] PASS: Calibration Thumb/ROM .N.
+[DBG] FAIL: Calibration Thumb/ROM PN.
+[DBG] Thumb/ROM PN.: Got     3 vs     1: FAIL
+[DBG] FAIL: Calibration Thumb/ROM ..S
+[DBG] Thumb/ROM ..S: Got     2 vs     4: FAIL
+[DBG] FAIL: Calibration Thumb/ROM P.S
+[DBG] Thumb/ROM P.S: Got     2 vs     0: FAIL
+[DBG] FAIL: Calibration Thumb/ROM .NS
+[DBG] Thumb/ROM .NS: Got     2 vs     3: FAIL
+[DBG] FAIL: Calibration Thumb/ROM PNS
+[DBG] Thumb/ROM PNS: Got     2 vs     0: FAIL
+[DBG] FAIL: Calibration Thumb/WRAM
+[DBG] Thumb/WRAM: Got     3 vs     2: FAIL
+[DBG] FAIL: Calibration Thumb/IWRAM
+[DBG] Thumb/IWRAM: Got     1 vs     0: FAIL
+[DBG] Timing test: nop
+[DBG] PASS: nop ARM/ROM ...
+[DBG] PASS: nop ARM/ROM P..
+[DBG] PASS: nop ARM/ROM .N.
+[DBG] PASS: nop ARM/ROM PN.
+[DBG] PASS: nop ARM/ROM ..S
+[DBG] PASS: nop ARM/ROM P.S
+[DBG] PASS: nop ARM/ROM .NS
+[DBG] PASS: nop ARM/ROM PNS
+[DBG] PASS: nop ARM/WRAM
+[DBG] PASS: nop ARM/IWRAM
+[DBG] PASS: nop Thumb/ROM ...
+[DBG] PASS: nop Thumb/ROM P..
+[DBG] PASS: nop Thumb/ROM .N.
+[DBG] PASS: nop Thumb/ROM PN.
+[DBG] PASS: nop Thumb/ROM ..S
+[DBG] PASS: nop Thumb/ROM P.S
+[DBG] PASS: nop Thumb/ROM .NS
+[DBG] PASS: nop Thumb/ROM PNS
+[DBG] PASS: nop Thumb/WRAM
+[DBG] PASS: nop Thumb/IWRAM
+[DBG] Timing test: nop / nop
+[DBG] PASS: nop / nop ARM/ROM ...
+[DBG] PASS: nop / nop ARM/ROM P..
+[DBG] PASS: nop / nop ARM/ROM .N.
+[DBG] PASS: nop / nop ARM/ROM PN.
+[DBG] PASS: nop / nop ARM/ROM ..S
+[DBG] PASS: nop / nop ARM/ROM P.S
+[DBG] PASS: nop / nop ARM/ROM .NS
+[DBG] PASS: nop / nop ARM/ROM PNS
+[DBG] PASS: nop / nop ARM/WRAM
+[DBG] PASS: nop / nop ARM/IWRAM
+[DBG] PASS: nop / nop Thumb/ROM ...
+[DBG] PASS: nop / nop Thumb/ROM P..
+[DBG] PASS: nop / nop Thumb/ROM .N.
+[DBG] PASS: nop / nop Thumb/ROM PN.
+[DBG] PASS: nop / nop Thumb/ROM ..S
+[DBG] PASS: nop / nop Thumb/ROM P.S
+[DBG] PASS: nop / nop Thumb/ROM .NS
+[DBG] PASS: nop / nop Thumb/ROM PNS
+[DBG] PASS: nop / nop Thumb/WRAM
+[DBG] PASS: nop / nop Thumb/IWRAM
+[DBG] Timing test: ldrh r2, [sp]
+[DBG] FAIL: ldrh r2, [sp] ARM/ROM ...
+[DBG] ARM/ROM ...: Got     8 vs    10: FAIL
+[DBG] FAIL: ldrh r2, [sp] ARM/ROM P..
+[DBG] ARM/ROM P..: Got     8 vs     6: FAIL
+[DBG] FAIL: ldrh r2, [sp] ARM/ROM .N.
+[DBG] ARM/ROM .N.: Got     8 vs     9: FAIL
+[DBG] FAIL: ldrh r2, [sp] ARM/ROM PN.
+[DBG] ARM/ROM PN.: Got     8 vs     6: FAIL
+[DBG] FAIL: ldrh r2, [sp] ARM/ROM ..S
+[DBG] ARM/ROM ..S: Got     6 vs     9: FAIL
+[DBG] FAIL: ldrh r2, [sp] ARM/ROM P.S
+[DBG] ARM/ROM P.S: Got     6 vs     4: FAIL
+[DBG] FAIL: ldrh r2, [sp] ARM/ROM .NS
+[DBG] ARM/ROM .NS: Got     6 vs     8: FAIL
+[DBG] FAIL: ldrh r2, [sp] ARM/ROM PNS
+[DBG] ARM/ROM PNS: Got     6 vs     4: FAIL
+[DBG] PASS: ldrh r2, [sp] ARM/WRAM
+[DBG] PASS: ldrh r2, [sp] ARM/IWRAM
+[DBG] FAIL: ldrh r2, [sp] Thumb/ROM ...
+[DBG] Thumb/ROM ...: Got     5 vs     7: FAIL
+[DBG] FAIL: ldrh r2, [sp] Thumb/ROM P..
+[DBG] Thumb/ROM P..: Got     5 vs     3: FAIL
+[DBG] FAIL: ldrh r2, [sp] Thumb/ROM .N.
+[DBG] Thumb/ROM .N.: Got     5 vs     6: FAIL
+[DBG] FAIL: ldrh r2, [sp] Thumb/ROM PN.
+[DBG] Thumb/ROM PN.: Got     5 vs     3: FAIL
+[DBG] FAIL: ldrh r2, [sp] Thumb/ROM ..S
+[DBG] Thumb/ROM ..S: Got     4 vs     7: FAIL
+[DBG] FAIL: ldrh r2, [sp] Thumb/ROM P.S
+[DBG] Thumb/ROM P.S: Got     4 vs     3: FAIL
+[DBG] FAIL: ldrh r2, [sp] Thumb/ROM .NS
+[DBG] Thumb/ROM .NS: Got     4 vs     6: FAIL
+[DBG] FAIL: ldrh r2, [sp] Thumb/ROM PNS
+[DBG] Thumb/ROM PNS: Got     4 vs     3: FAIL
+[DBG] PASS: ldrh r2, [sp] Thumb/WRAM
+[DBG] PASS: ldrh r2, [sp] Thumb/IWRAM
+[DBG] Timing test: ldrh r2, [sp] / nop
+[DBG] FAIL: ldrh r2, [sp] / nop ARM/ROM ...
+
+--- Suite 03: Timing ---
+Frames: 96  PC=0x0802BABE  CPSR=0x2000003F  halted=0  cycle=136431682
+[debug]
+Game Boy Advance Test Suite
+===
+BEGIN: Timing tests
+Timing test: Calibration
+FAIL: Calibration ARM/ROM ...
+ARM/ROM ...: Got     5 vs     7: FAIL
+FAIL: Calibration ARM/ROM P..
+ARM/ROM P..: Got     5 vs     4: FAIL
+FAIL: Calibration ARM/ROM .N.
+ARM/ROM .N.: Got     5 vs     6: FAIL
+FAIL: Calibration ARM/ROM PN.
+ARM/ROM PN.: Got     5 vs     4: FAIL
+FAIL: Calibration ARM/ROM ..S
+ARM/ROM ..S: Got     3 vs     6: FAIL
+FAIL: Calibration ARM/ROM P.S
+ARM/ROM P.S: Got     3 vs     2: FAIL
+FAIL: Calibration ARM/ROM .NS
+ARM/ROM .NS: Got     3 vs     5: FAIL
+FAIL: Calibration ARM/ROM PNS
+ARM/ROM PNS: Got     3 vs     2: FAIL
+PASS: Calibration ARM/WRAM
+PASS: Calibration ARM/IWRAM
+FAIL: Calibration Thumb/ROM ...
+Thumb/ROM ...: Got     3 vs     4: FAIL
+FAIL: Calibration Thumb/ROM P..
+Thumb/ROM P..: Got     3 vs     1: FAIL
+PASS: Calibration Thumb/ROM .N.
+FAIL: Calibration Thumb/ROM PN.
+Thumb/ROM PN.: Got     3 vs     1: FAIL
+FAIL: Calibration Thumb/ROM ..S
+Thumb/ROM ..S: Got     2 vs     4: FAIL
+FAIL: Calibration Thumb/ROM P.S
+Thumb/ROM P.S: Got     2 vs     0: FAIL
+FAIL: Calibration Thumb/ROM .NS
+Thumb/ROM .NS: Got     2 vs     3: FAIL
+FAIL: Calibration Thumb/ROM PNS
+Thumb/ROM PNS: Got     2 vs     0: FAIL
+FAIL: Calibration Thumb/WRAM
+Thumb/WRAM: Got     3 vs     2: FAIL
+FAIL: Calibration Thumb/IWRAM
+Thumb/IWRAM: Got     1 vs     0: FAIL
+Timing test: nop
+PASS: nop ARM/ROM ...
+PASS: nop ARM/ROM P..
+PASS: nop ARM/ROM .N.
+PASS: nop ARM/ROM PN.
+PASS: nop ARM/ROM ..S
+PASS: nop ARM/ROM P.S
+PASS: nop ARM/ROM .NS
+PASS: nop ARM/ROM PNS
+PASS: nop ARM/WRAM
+PASS: nop ARM/IWRAM
+PASS: nop Thumb/ROM ...
+PASS: nop Thumb/ROM P..
+PASS: nop Thumb/ROM .N.
+PASS: nop Thumb/ROM PN.
+PASS: nop Thumb/ROM ..S
+PASS: nop Thumb/ROM P.S
+PASS: nop Thumb/ROM .NS
+PASS: nop Thumb/ROM PNS
+PASS: nop Thumb/WRAM
+PASS: nop Thumb/IWRAM
+Timing test: nop / nop
+PASS: nop / nop ARM/ROM ...
+PASS: nop / nop ARM/ROM P..
+PASS: nop / nop ARM/ROM .N.
+PASS: nop / nop ARM/ROM PN.
+PASS: nop / nop ARM/ROM ..S
+PASS: nop / nop ARM/ROM P.S
+PASS: nop / nop ARM/ROM .NS
+PASS: nop / nop ARM/ROM PNS
+PASS: nop / nop ARM/WRAM
+PASS: nop / nop ARM/IWRAM
+PASS: nop / nop Thumb/ROM ...
+PASS: nop / nop Thumb/ROM P..
+PASS: nop / nop Thumb/ROM .N.
+PASS: nop / nop Thumb/ROM PN.
+PASS: nop / nop Thumb/ROM ..S
+PASS: nop / nop Thumb/ROM P.S
+PASS: nop / nop Thumb/ROM .NS
+PASS: nop / nop Thumb/ROM PNS
+PASS: nop / nop Thumb/WRAM
+PASS: nop / nop Thumb/IWRAM
+Timing test: ldrh r2, [sp]
+FAIL: ldrh r2, [sp] ARM/ROM ...
+ARM/ROM ...: Got     8 vs    10: FAIL
+FAIL: ldrh r2, [sp] ARM/ROM P..
+ARM/ROM P..: Got     8 vs     6: FAIL
+FAIL: ldrh r2, [sp] ARM/ROM .N.
+ARM/ROM .N.: Got     8 vs     9: FAIL
+FAIL: ldrh r2, [sp] ARM/ROM PN.
+ARM/ROM PN.: Got     8 vs     6: FAIL
+FAIL: ldrh r2, [sp] ARM/ROM ..S
+ARM/ROM ..S: Got     6 vs     9: FAIL
+FAIL: ldrh r2, [sp] ARM/ROM P.S
+ARM/ROM P.S: Got     6 vs     4: FAIL
+FAIL: ldrh r2, [sp] ARM/ROM .NS
+ARM/ROM .NS: Got     6 vs     8: FAIL
+FAIL: ldrh r2, [sp] ARM/ROM PNS
+ARM/ROM PNS: Got     6 vs     4: FAIL
+PASS: ldrh r2, [sp] ARM/WRAM
+PASS: ldrh r2, [sp] ARM/IWRAM
+FAIL: ldrh r2, [sp] Thumb/ROM ...
+Thumb/ROM ...: Got     5 vs     7: FAIL
+FAIL: ldrh r2, [sp] Thumb/ROM P..
+Thumb/ROM P..: Got     5 vs     3: FAIL
+FAIL: ldrh r2, [sp] Thumb/ROM .N.
+Thumb/ROM .N.: Got     5 vs     6: FAIL
+FAIL: ldrh r2, [sp] Thumb/ROM PN.
+Thumb/ROM PN.: Got     5 vs     3: FAIL
+FAIL: ldrh r2, [sp] Thumb/ROM ..S
+Thumb/ROM ..S: Got     4 vs     7: FAIL
+FAIL: ldrh r2, [sp] Thumb/ROM P.S
+Thumb/ROM P.S: Got     4 vs     3: FAIL
+FAIL: ldrh r2, [sp] Thumb/ROM .NS
+Thumb/ROM .NS: Got     4 vs     6: FAIL
+FAIL: ldrh r2, [sp] Thumb/ROM PNS
+Thumb/ROM PNS: Got     4 vs     3: FAIL
+PASS: ldrh r2, [sp] Thumb/WRAM
+PASS: ldrh r2, [sp] Thumb/IWRAM
+Timing test: ldrh r2, [sp] / nop
+FAIL: ldrh r2, [sp] / nop ARM/ROM ...
+[sram]
+Game Boy Advance Test Suite
+===
+Timing test: Calibration
+ARM/ROM ...: Got     5 vs     7: FAIL
+ARM/ROM P..: Got     5 vs     4: FAIL
+ARM/ROM .N.: Got     5 vs     6: FAIL
+ARM/ROM PN.: Got     5 vs     4: FAIL
+ARM/ROM ..S: Got     3 vs     6: FAIL
+ARM/ROM P.S: Got     3 vs     2: FAIL
+ARM/ROM .NS: Got     3 vs     5: FAIL
+ARM/ROM PNS: Got     3 vs     2: FAIL
+Thumb/ROM ...: Got     3 vs     4: FAIL
+Thumb/ROM P..: Got     3 vs     1: FAIL
+Thumb/ROM PN.: Got     3 vs     1: FAIL
+Thumb/ROM ..S: Got     2 vs     4: FAIL
+Thumb/ROM P.S: Got     2 vs     0: FAIL
+Thumb/ROM .NS: Got     2 vs     3: FAIL
+Thumb/ROM PNS: Got     2 vs     0: FAIL
+Thumb/WRAM: Got     3 vs     2: FAIL
+Thumb/IWRAM: Got     1 vs     0: FAIL
+Timing test: nop
+Timing test: nop / nop
+Timing test: ldrh r2, [sp]
+ARM/ROM ...: Got     8 vs    10: FAIL
+ARM/ROM P..: Got     8 vs     6: FAIL
+ARM/ROM .N.: Got     8 vs     9: FAIL
+ARM/ROM PN.: Got     8 vs     6: FAIL
+ARM/ROM ..S: Got     6 vs     9: FAIL
+ARM/ROM P.S: Got     6 vs     4: FAIL
+ARM/ROM .NS: Got     6 vs     8: FAIL
+ARM/ROM PNS: Got     6 vs     4: FAIL
+Thumb/ROM ...: Got     5 vs     7: FAIL
+Thumb/ROM P..: Got     5 vs     3: FAIL
+Thumb/ROM .N.: Got     5 vs     6: FAIL
+Thumb/ROM PN.: Got     5 vs     3: FAIL
+Thumb/ROM ..S: Got     4 vs     7: FAIL
+Thumb/ROM P.S: Got     4 vs     3: FAIL
+Thumb/ROM .NS: Got     4 vs     6: FAIL
+Thumb/ROM PNS: Got     4 vs     3: FAIL
+Timing test: ldrh r2, [sp] / nop
+
+=== Summary ===
+No END: summaries were emitted yet; use the per-suite SRAM output above.

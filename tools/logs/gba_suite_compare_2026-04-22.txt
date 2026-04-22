@@ -1,0 +1,93 @@
+Run: tools/logs/gba_embedded_suite_2026-04-22.log
+  ROM: tests/assets/roms/suite.gba
+  BIOS: tests/assets/roms/gba_bios.bin
+  Boot: frames=60 pc=0x00000348 cpsr=0x6000005F halted=1 cycle=16769984
+  Suites parsed: 14
+  Overall: 0/14 passed
+  Suite 01 Memory: 1552/1552 passed via mgba (frames=210, pc=0x0802B9D4, halted=0, cycle=148229317)
+  Suite 02 I/O read: 130/130 passed via mgba (frames=1800, pc=0x03007914, halted=0, cycle=604966208)
+  Suite 03 Timing: 49/81 passed via mgba (frames=96, pc=0x0802BAC2, halted=0, cycle=136431682)
+    Examples: sram:ARM/ROM P.. | sram:ARM/ROM .N.
+  Suite 04 Timer count-up: unknown (frames=1800, pc=0x03000734, halted=0, cycle=625190721)
+  Suite 05 Timer IRQ: 10/90 passed via mgba (frames=96, pc=0x0802BAAA, halted=0, cycle=156656192)
+    Examples: mgba:FFFF 0 nops | mgba:FFFF 1 nop
+  Suite 06 Shifter: 140/140 passed via mgba (frames=97, pc=0x0802BAC2, halted=0, cycle=167049346)
+  Suite 07 Carry: 93/93 passed via mgba (frames=91, pc=0x0802BAC4, halted=0, cycle=175476225)
+  Suite 08 Multiply long: 72/72 passed via mgba (frames=91, pc=0x0802BABE, halted=0, cycle=185588480)
+  Suite 09 BIOS math: 615/615 passed via mgba (frames=126, pc=0x0802BB80, halted=0, cycle=205532100)
+  Suite 10 DMA: 1220/1256 passed via mgba (frames=247, pc=0x0802BBB4, halted=0, cycle=249632779)
+    Examples: sram:3 | sram:3
+  Suite 11 SIO register R/W: 53/90 passed via mgba (frames=92, pc=0x0802BAB8, halted=0, cycle=216206144)
+    Examples: sram:M: SIOCNT | sram:M: SIOMLT_SEND
+  Suite 12 SIO timing: 0/4 passed via mgba_end (frames=91, pc=0x00000348, halted=1, cycle=226037504)
+    Examples: mgba:Normal8/256k | mgba:Normal8/2M
+  Suite 13 Misc. edge case: 0/10 passed via mgba_end (frames=91, pc=0x00000348, halted=1, cycle=236149760)
+    Examples: sram:Break | sram:Read
+  Suite 14 Video: unknown (frames=1800, pc=0x00000348, halted=1, cycle=726313280)
+
+Run: tools/logs/nanoboyadvance_suite_2026-04-22.log
+  ROM: /Users/chaitanyamalhotra/development/gba embedded/tests/assets/roms/suite.gba
+  BIOS: /Users/chaitanyamalhotra/development/gba embedded/tests/assets/roms/gba_bios.bin
+  Suites parsed: 14
+  Summary: Done.
+  Suite 01 Memory: 1552/1552 passed via mgba_end (frames=236)
+  Suite 02 I/O read: 130/130 passed via mgba_end (frames=1800)
+  Suite 03 Timing: 2020/2020 passed via mgba_end (frames=286)
+  Suite 04 Timer count-up: 936/936 passed via mgba_end (frames=180)
+  Suite 05 Timer IRQ: 90/90 passed via mgba_end (frames=91)
+  Suite 06 Shifter: 140/140 passed via mgba_end (frames=100)
+  Suite 07 Carry: 93/93 passed via mgba_end (frames=94)
+  Suite 08 Multiply long: 72/72 passed via mgba_end (frames=93)
+  Suite 09 BIOS math: 615/615 passed via mgba_end (frames=136)
+  Suite 10 DMA: 1256/1256 passed via mgba_end (frames=267)
+  Suite 11 SIO register R/W: 18/90 passed via mgba_end (frames=99)
+    Examples: sram:M: SIOMULTI0 | sram:M: SIOMULTI1
+  Suite 12 SIO timing: 0/8 passed via mgba_end (frames=91)
+    Examples: sram:Multi/9.6k | sram:Multi/38.4k
+  Suite 13 Misc. edge case: 2/10 passed via mgba_end (frames=91)
+    Examples: sram:Break | sram:Read
+  Suite 14 Video: unknown (frames=1800)
+
+Comparison:
+  Suite 01
+    gba_embedded_suite_2026-04-22: Memory -> 1552/1552 passed, 0 failed (mgba); frames=210 pc=0x0802B9D4 halted=0
+    nanoboyadvance_suite_2026-04-22: Memory -> 1552/1552 passed, 0 failed (mgba_end); frames=236
+  Suite 02
+    gba_embedded_suite_2026-04-22: I/O read -> 130/130 passed, 0 failed (mgba); frames=1800 pc=0x03007914 halted=0
+    nanoboyadvance_suite_2026-04-22: I/O read -> 130/130 passed, 0 failed (mgba_end); frames=1800
+  Suite 03
+    gba_embedded_suite_2026-04-22: Timing -> 49/81 passed, 32 failed (mgba); frames=96 pc=0x0802BAC2 halted=0
+    nanoboyadvance_suite_2026-04-22: Timing -> 2020/2020 passed, 0 failed (mgba_end); frames=286
+  Suite 04
+    gba_embedded_suite_2026-04-22: Timer count-up -> unknown; frames=1800 pc=0x03000734 halted=0
+    nanoboyadvance_suite_2026-04-22: Timer count-up -> 936/936 passed, 0 failed (mgba_end); frames=180
+  Suite 05
+    gba_embedded_suite_2026-04-22: Timer IRQ -> 10/90 passed, 80 failed (mgba); frames=96 pc=0x0802BAAA halted=0
+    nanoboyadvance_suite_2026-04-22: Timer IRQ -> 90/90 passed, 0 failed (mgba_end); frames=91
+  Suite 06
+    gba_embedded_suite_2026-04-22: Shifter -> 140/140 passed, 0 failed (mgba); frames=97 pc=0x0802BAC2 halted=0
+    nanoboyadvance_suite_2026-04-22: Shifter -> 140/140 passed, 0 failed (mgba_end); frames=100
+  Suite 07
+    gba_embedded_suite_2026-04-22: Carry -> 93/93 passed, 0 failed (mgba); frames=91 pc=0x0802BAC4 halted=0
+    nanoboyadvance_suite_2026-04-22: Carry -> 93/93 passed, 0 failed (mgba_end); frames=94
+  Suite 08
+    gba_embedded_suite_2026-04-22: Multiply long -> 72/72 passed, 0 failed (mgba); frames=91 pc=0x0802BABE halted=0
+    nanoboyadvance_suite_2026-04-22: Multiply long -> 72/72 passed, 0 failed (mgba_end); frames=93
+  Suite 09
+    gba_embedded_suite_2026-04-22: BIOS math -> 615/615 passed, 0 failed (mgba); frames=126 pc=0x0802BB80 halted=0
+    nanoboyadvance_suite_2026-04-22: BIOS math -> 615/615 passed, 0 failed (mgba_end); frames=136
+  Suite 10
+    gba_embedded_suite_2026-04-22: DMA -> 1220/1256 passed, 36 failed (mgba); frames=247 pc=0x0802BBB4 halted=0
+    nanoboyadvance_suite_2026-04-22: DMA -> 1256/1256 passed, 0 failed (mgba_end); frames=267
+  Suite 11
+    gba_embedded_suite_2026-04-22: SIO register R/W -> 53/90 passed, 37 failed (mgba); frames=92 pc=0x0802BAB8 halted=0
+    nanoboyadvance_suite_2026-04-22: SIO register R/W -> 18/90 passed, 72 failed (mgba_end); frames=99
+  Suite 12
+    gba_embedded_suite_2026-04-22: SIO timing -> 0/4 passed, 4 failed (mgba_end); frames=91 pc=0x00000348 halted=1
+    nanoboyadvance_suite_2026-04-22: SIO timing -> 0/8 passed, 8 failed (mgba_end); frames=91
+  Suite 13
+    gba_embedded_suite_2026-04-22: Misc. edge case -> 0/10 passed, 10 failed (mgba_end); frames=91 pc=0x00000348 halted=1
+    nanoboyadvance_suite_2026-04-22: Misc. edge case -> 2/10 passed, 8 failed (mgba_end); frames=91
+  Suite 14
+    gba_embedded_suite_2026-04-22: Video -> unknown; frames=1800 pc=0x00000348 halted=1
+    nanoboyadvance_suite_2026-04-22: Video -> unknown; frames=1800

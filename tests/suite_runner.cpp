@@ -275,6 +275,15 @@ static bool has_meaningful_suite_output(const std::string& text) {
            text.find("END:") != std::string::npos || text.size() > 32u;
 }
 
+static bool has_end_in_debug_output() {
+    for (const auto& line : g_test_output) {
+        if (line.compare(0, 4, "END:") == 0) {
+            return true;
+        }
+    }
+    return false;
+}
+
 static void navigate_to_suite_menu(Emulator& emulator) {
     run_frames(emulator, kBootFrames);
     press_key(emulator, kKeyA);
@@ -302,15 +311,22 @@ static SuiteResult run_suite(const RunnerConfig& config, int suite_index, const 
     std::string best_sram_text;
     int stable_frames = 0;
     int frames_run = 0;
+    std::size_t last_debug_count = 0;
     while (frames_run < kSuiteMaxFrames) {
         run_frames(emulator, kSuitePollFrames);
         frames_run += kSuitePollFrames;
 
         const auto sram_text = read_sram_text(emulator);
+        const bool debug_changed = g_test_output.size() != last_debug_count;
+        last_debug_count = g_test_output.size();
         if (sram_text != best_sram_text) {
             best_sram_text = sram_text;
             stable_frames = 0;
-        } else if (has_meaningful_suite_output(best_sram_text)) {
+        } else if (debug_changed) {
+            stable_frames = 0;
+        } else if (has_end_in_debug_output() || best_sram_text.find("END:") != std::string::npos) {
+            break;
+        } else if (has_meaningful_suite_output(best_sram_text) || !g_test_output.empty()) {
             stable_frames += kSuitePollFrames;
             if (stable_frames >= kSuiteSettleFrames) {
                 break;

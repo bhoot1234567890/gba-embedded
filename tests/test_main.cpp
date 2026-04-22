@@ -95,11 +95,11 @@ void test_scheduler() {
 void test_irq_controller() {
     IrqController irq;
     irq.reset();
-    irq.write_register(kIe, IrqVBlank, BusWidth::Half);
-    irq.write_register(kIme, 1, BusWidth::Half);
+    irq.write_register(kIe, IrqVBlank, BusWidth::Half, 0);
+    irq.write_register(kIme, 1, BusWidth::Half, 0);
     irq.request(IrqVBlank);
     expect(irq.line_asserted(), "irq line should assert when IME and IE allow a pending interrupt");
-    irq.write_register(kIf, IrqVBlank, BusWidth::Half);
+    irq.write_register(kIf, IrqVBlank, BusWidth::Half, 0);
     expect(!irq.line_asserted(), "writing IF should acknowledge the interrupt");
 }
 

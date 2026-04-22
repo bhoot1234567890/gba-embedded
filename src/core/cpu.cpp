@@ -213,6 +213,7 @@ void Arm7tdmi::set_current_cycle(u64 cycle) {
 }
 
 u64 IRAM_ATTR Arm7tdmi::cpu_run_until(u64 target_cycle) {
+    u64 last_fetch_cycle = current_cycle_;
     while (current_cycle_ < target_cycle) {
         /* Inline step() to avoid per-instruction function call overhead */
         bus_.service_timers(current_cycle_);
@@ -238,11 +239,19 @@ u64 IRAM_ATTR Arm7tdmi::cpu_run_until(u64 target_cycle) {
             continue;
         }
 
+        /* Advance prefetch during internal/data cycles since last fetch */
+        const auto since_fetch = static_cast<int>(current_cycle_ - last_fetch_cycle);
+        if (since_fetch > 0) {
+            bus_.prefetch_advance(since_fetch);
+        }
+
         if (thumb_state()) {
             const auto instruction = fetch_thumb();
+            last_fetch_cycle = current_cycle_;
             execute_thumb(instruction);
         } else {
             const auto instruction = fetch_arm();
+            last_fetch_cycle = current_cycle_;
             execute_arm(instruction);
         }
     }

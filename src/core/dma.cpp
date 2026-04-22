@@ -143,8 +143,12 @@ void DmaEngine::write_register(u32 address, u32 value, BusWidth width, u64 cycle
                 latch_transfer_state(channel);
                 if (start_timing(dma) == DmaStartTiming::Immediate) {
                     dma.pending = true;
-                    next_event_cycle_ = std::min(next_event_cycle_, cycle_now);
+                    dma.activation_cycle = cycle_now + 2u;
+                    next_event_cycle_ = std::min(next_event_cycle_, dma.activation_cycle);
                 }
+            } else {
+                dma.pending = false;
+                dma.activation_cycle = std::numeric_limits<u64>::max();
             }
             break;
         }
@@ -182,7 +186,8 @@ void DmaEngine::request_fifo_a(u64 cycle_now) {
             latch_transfer_state(1);
         }
         channel.pending = true;
-        next_event_cycle_ = std::min(next_event_cycle_, cycle_now);
+        channel.activation_cycle = cycle_now + 2u;
+        next_event_cycle_ = std::min(next_event_cycle_, channel.activation_cycle);
     }
 }
 
@@ -193,7 +198,8 @@ void DmaEngine::request_fifo_b(u64 cycle_now) {
             latch_transfer_state(2);
         }
         channel.pending = true;
-        next_event_cycle_ = std::min(next_event_cycle_, cycle_now);
+        channel.activation_cycle = cycle_now + 2u;
+        next_event_cycle_ = std::min(next_event_cycle_, channel.activation_cycle);
     }
 }
 
@@ -217,11 +223,17 @@ u32 DmaEngine::service_due(u64 cycle_now, Bus& bus, IrqController& irq) {
 
     u32 cycles_consumed = 0;
     next_event_cycle_ = std::numeric_limits<u64>::max();
+    bool serviced_any = false;
 
     for (std::size_t index = 0; index < channels_.size(); ++index) {
         auto& channel = channels_[index];
-        if (!channel.pending || !enabled(channel)) {
+        if (!channel.pending || !enabled(channel) || channel.activation_cycle > cycle_now) {
             continue;
+        }
+
+        if (!serviced_any) {
+            cycles_consumed += 1;
+            serviced_any = true;
         }
 
         const auto fifo_mode = (index == 1u || index == 2u) &&
@@ -290,6 +302,7 @@ u32 DmaEngine::service_due(u64 cycle_now, Bus& bus, IrqController& irq) {
         channel.current_destination = destination;
         channel.current_count = units;
         channel.pending = false;
+        channel.activation_cycle = std::numeric_limits<u64>::max();
 
         const auto repeat = test_bit(channel.control, 9);
         if (repeat && start_timing(channel) != DmaStartTiming::Immediate) {
@@ -309,6 +322,16 @@ u32 DmaEngine::service_due(u64 cycle_now, Bus& bus, IrqController& irq) {
 
         if (test_bit(channel.control, 14)) {
             irq.request(dma_irq_mask(static_cast<int>(index)));
+        }
+    }
+
+    if (serviced_any) {
+        cycles_consumed += 1;
+    }
+
+    for (const auto& channel : channels_) {
+        if (channel.pending && enabled(channel)) {
+            next_event_cycle_ = std::min(next_event_cycle_, channel.activation_cycle);
         }
     }
 
@@ -346,7 +369,8 @@ void DmaEngine::mark_pending_if_enabled(DmaStartTiming timing, u64 cycle_now) {
                 latch_transfer_state(index);
             }
             channel.pending = true;
-            next_event_cycle_ = std::min(next_event_cycle_, cycle_now);
+            channel.activation_cycle = cycle_now + 2u;
+            next_event_cycle_ = std::min(next_event_cycle_, channel.activation_cycle);
         }
     }
 }
@@ -355,6 +379,7 @@ void DmaEngine::finish_channel(int index) {
     auto& channel = channels_[static_cast<std::size_t>(index)];
     channel.control = static_cast<u16>(channel.control & ~0x8000u);
     channel.current_count = 0;
+    channel.activation_cycle = std::numeric_limits<u64>::max();
 }
 
 void DmaEngine::latch_transfer_state(std::size_t index) {

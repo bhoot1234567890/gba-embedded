@@ -23,6 +23,7 @@ struct DmaChannel {
     u16 word_count = 0;
     u16 control = 0;
     bool pending = false;
+    u64 activation_cycle = std::numeric_limits<u64>::max();
     u32 current_source = 0;
     u32 current_destination = 0;
     u32 current_count = 0;

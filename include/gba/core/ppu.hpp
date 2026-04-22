@@ -79,7 +79,7 @@ private:
     std::array<s32, 2> bg_ref_y_{};
 
     /* Heap-allocated framebuffer — use PSRAM on ESP32 when available */
-    std::unique_ptr<u16[]> framebuffer_;
+    std::unique_ptr<u16, void (*)(u16*)> framebuffer_;
     u64 next_event_cycle_ = 960;
     bool hblank_ = false;
     bool vblank_ = false;

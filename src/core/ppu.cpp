@@ -14,6 +14,17 @@ namespace gba {
 
 namespace {
 
+void free_framebuffer(u16* ptr) {
+    if (!ptr) {
+        return;
+    }
+#ifdef GBA_PLATFORM_ESP32
+    heap_caps_free(ptr);
+#else
+    delete[] ptr;
+#endif
+}
+
 u16* alloc_framebuffer() {
 #ifdef GBA_PLATFORM_ESP32
     auto* ptr = static_cast<u16*>(heap_caps_malloc(kFramebufferPixels * sizeof(u16), MALLOC_CAP_SPIRAM));
@@ -35,7 +46,7 @@ u16* alloc_framebuffer() {
 }  // namespace
 
 Ppu::Ppu()
-    : framebuffer_(alloc_framebuffer()) {}
+    : framebuffer_(alloc_framebuffer(), free_framebuffer) {}
 
 namespace {
 

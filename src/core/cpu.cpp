@@ -1,5 +1,6 @@
 #include "gba/core/cpu.hpp"
 
+#include <cstdio>
 #include <limits>
 
 #ifndef GBA_PLATFORM_ESP32
@@ -19,6 +20,10 @@
 namespace gba {
 
 namespace {
+
+#ifndef GBA_TRACE_TIMERS
+#define GBA_TRACE_TIMERS 0
+#endif
 
 constexpr u32 kFlagI = 1u << 7;
 constexpr u32 kFlagF = 1u << 6;
@@ -530,10 +535,16 @@ u32 IRAM_ATTR Arm7tdmi::execute_arm(u32 instruction) {
         }
         return access;
     };
+    const auto break_fetch_burst = [&]() {
+        if (!test_bit(bus_.waitcnt(), 14u)) {
+            state_.next_fetch_access = AccessType::CodeFetch;
+        }
+    };
     const auto arm_open_bus_word = [&]() -> u32 { return bus_.peek_word(pc_visible()); };
     const auto read8 = [&](u32 address) -> u32 {
         const auto result = bus_.read(address, BusWidth::Byte, data_access(), current_cycle_);
         current_cycle_ += result.cycles;
+        break_fetch_burst();
         if (result.open_bus) {
             return (arm_open_bus_word() >> ((address & 3u) * 8u)) & 0xFFu;
         }
@@ -542,6 +553,7 @@ u32 IRAM_ATTR Arm7tdmi::execute_arm(u32 instruction) {
     const auto read16 = [&](u32 address) -> u32 {
         const auto result = bus_.read(address, BusWidth::Half, data_access(), current_cycle_);
         current_cycle_ += result.cycles;
+        break_fetch_burst();
         const auto value =
             result.open_bus ? ((arm_open_bus_word() >> ((address & 2u) * 8u)) & 0xFFFFu)
                             : (result.value & 0xFFFFu);
@@ -553,22 +565,26 @@ u32 IRAM_ATTR Arm7tdmi::execute_arm(u32 instruction) {
     const auto read32 = [&](u32 address) -> u32 {
         const auto result = bus_.read(address, BusWidth::Word, data_access(), current_cycle_);
         current_cycle_ += result.cycles;
+        break_fetch_burst();
         const auto value = result.open_bus ? arm_open_bus_word() : result.value;
         return rotate_right(value, (address & 3u) * 8u);
     };
     const auto write8 = [&](u32 address, u32 value) {
         const auto result = bus_.write(address, value, BusWidth::Byte, AccessType::NonSequential, current_cycle_);
         current_cycle_ += result.cycles;
+        break_fetch_burst();
         current_cycle_ += bus_.service_dma(current_cycle_);
     };
     const auto write16 = [&](u32 address, u32 value) {
         const auto result = bus_.write(address, value, BusWidth::Half, AccessType::NonSequential, current_cycle_);
         current_cycle_ += result.cycles;
+        break_fetch_burst();
         current_cycle_ += bus_.service_dma(current_cycle_);
     };
     const auto write32 = [&](u32 address, u32 value) {
         const auto result = bus_.write(address, value, BusWidth::Word, AccessType::NonSequential, current_cycle_);
         current_cycle_ += result.cycles;
+        break_fetch_burst();
         current_cycle_ += bus_.service_dma(current_cycle_);
     };
 
@@ -830,6 +846,7 @@ u32 IRAM_ATTR Arm7tdmi::execute_arm(u32 instruction) {
             if (load) {
                 const auto result = bus_.read(address, BusWidth::Word, access, current_cycle_);
                 current_cycle_ += result.cycles;
+                break_fetch_burst();
                 const auto value = result.value;
                 if (reg == 15u) {
                     if (s_bit && privileged_mode(mode())) {
@@ -856,6 +873,7 @@ u32 IRAM_ATTR Arm7tdmi::execute_arm(u32 instruction) {
                 }
                 const auto result = bus_.write(address, val, BusWidth::Word, access, current_cycle_);
                 current_cycle_ += result.cycles;
+                break_fetch_burst();
             }
             access = AccessType::Sequential;
             address += 4u;
@@ -1018,6 +1036,7 @@ u32 IRAM_ATTR Arm7tdmi::execute_arm(u32 instruction) {
                     }
                     state_.cpsr = new_cpsr;
                     branch_to(result, test_bit(state_.cpsr, 5));
+                    current_cycle_ += 1;
                 } else {
                     write_pc(result);
                 }
@@ -1058,17 +1077,24 @@ u32 IRAM_ATTR Arm7tdmi::execute_thumb(u16 instruction) {
         }
         return access;
     };
+    const auto break_fetch_burst = [&]() {
+        if (!test_bit(bus_.waitcnt(), 14u)) {
+            state_.next_fetch_access = AccessType::CodeFetch;
+        }
+    };
     const auto thumb_open_bus_word = [&]() -> u32 { return bus_.peek_word(pc_visible()); };
 
     const auto read32 = [&](u32 address) -> u32 {
         const auto result = bus_.read(address, BusWidth::Word, data_access(), current_cycle_);
         current_cycle_ += result.cycles;
+        break_fetch_burst();
         const auto value = result.open_bus ? thumb_open_bus_word() : result.value;
         return rotate_right(value, (address & 3u) * 8u);
     };
     const auto read16 = [&](u32 address) -> u32 {
         const auto result = bus_.read(address, BusWidth::Half, data_access(), current_cycle_);
         current_cycle_ += result.cycles;
+        break_fetch_burst();
         const auto value =
             result.open_bus ? ((thumb_open_bus_word() >> ((address & 2u) * 8u)) & 0xFFFFu)
                             : (result.value & 0xFFFFu);
@@ -1080,6 +1106,7 @@ u32 IRAM_ATTR Arm7tdmi::execute_thumb(u16 instruction) {
     const auto read8 = [&](u32 address) -> u32 {
         const auto result = bus_.read(address, BusWidth::Byte, data_access(), current_cycle_);
         current_cycle_ += result.cycles;
+        break_fetch_burst();
         if (result.open_bus) {
             return (thumb_open_bus_word() >> ((address & 3u) * 8u)) & 0xFFu;
         }
@@ -1088,16 +1115,19 @@ u32 IRAM_ATTR Arm7tdmi::execute_thumb(u16 instruction) {
     const auto write32 = [&](u32 address, u32 value) {
         const auto result = bus_.write(address, value, BusWidth::Word, AccessType::NonSequential, current_cycle_);
         current_cycle_ += result.cycles;
+        break_fetch_burst();
         current_cycle_ += bus_.service_dma(current_cycle_);
     };
     const auto write16 = [&](u32 address, u32 value) {
         const auto result = bus_.write(address, value, BusWidth::Half, AccessType::NonSequential, current_cycle_);
         current_cycle_ += result.cycles;
+        break_fetch_burst();
         current_cycle_ += bus_.service_dma(current_cycle_);
     };
     const auto write8 = [&](u32 address, u32 value) {
         const auto result = bus_.write(address, value, BusWidth::Byte, AccessType::NonSequential, current_cycle_);
         current_cycle_ += result.cycles;
+        break_fetch_burst();
         current_cycle_ += bus_.service_dma(current_cycle_);
     };
     const auto reg = [&](u32 index) -> u32& { return state_.regs[index]; };
@@ -1447,6 +1477,7 @@ u32 IRAM_ATTR Arm7tdmi::execute_thumb(u16 instruction) {
                 if (test_bit(instruction, r)) {
                     const auto result = bus_.write(write_address, reg(r), BusWidth::Word, access, current_cycle_);
                     current_cycle_ += result.cycles;
+                    break_fetch_burst();
                     access = AccessType::Sequential;
                     write_address += 4u;
                 }
@@ -1454,6 +1485,7 @@ u32 IRAM_ATTR Arm7tdmi::execute_thumb(u16 instruction) {
             if (include_pc_lr) {
                 const auto result = bus_.write(write_address, reg(14), BusWidth::Word, access, current_cycle_);
                 current_cycle_ += result.cycles;
+                break_fetch_burst();
             }
             reg(13) = address;
         } else {
@@ -1462,6 +1494,7 @@ u32 IRAM_ATTR Arm7tdmi::execute_thumb(u16 instruction) {
                 if (test_bit(instruction, r)) {
                     const auto result = bus_.read(read_address, BusWidth::Word, access, current_cycle_);
                     current_cycle_ += result.cycles;
+                    break_fetch_burst();
                     reg(r) = result.value;
                     access = AccessType::Sequential;
                     read_address += 4u;
@@ -1470,6 +1503,7 @@ u32 IRAM_ATTR Arm7tdmi::execute_thumb(u16 instruction) {
             if (include_pc_lr) {
                 const auto result = bus_.read(read_address, BusWidth::Word, access, current_cycle_);
                 current_cycle_ += result.cycles;
+                break_fetch_burst();
                 branch_to(result.value, true);
                 read_address += 4u;
             }
@@ -1493,10 +1527,12 @@ u32 IRAM_ATTR Arm7tdmi::execute_thumb(u16 instruction) {
             if (load) {
                 const auto result = bus_.read(address, BusWidth::Word, access, current_cycle_);
                 current_cycle_ += result.cycles;
+                break_fetch_burst();
                 reg(r) = result.value;
             } else {
                 const auto result = bus_.write(address, reg(r), BusWidth::Word, access, current_cycle_);
                 current_cycle_ += result.cycles;
+                break_fetch_burst();
             }
             address += 4u;
             access = AccessType::Sequential;
@@ -1669,7 +1705,12 @@ void Arm7tdmi::switch_mode(CpuMode new_mode) {
 
 void Arm7tdmi::enter_exception(ExceptionType type, CpuMode target_mode, u32 vector, bool mask_irq, bool mask_fiq,
                                u32 return_address) {
-    (void)type;
+#if GBA_TRACE_TIMERS
+    if (type == ExceptionType::Irq) {
+        std::fprintf(stderr, "CPU enter IRQ cyc=%llu pc=%08X cpsr=%08X return=%08X\n",
+                     static_cast<unsigned long long>(current_cycle_), state_.regs[15], state_.cpsr, return_address);
+    }
+#endif
     const auto old_cpsr = state_.cpsr;
     switch_mode(target_mode);
     spsr_for_mode(state_, target_mode) = old_cpsr;

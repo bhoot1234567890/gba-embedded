@@ -34,6 +34,8 @@ public:
     void write_register(u32 address, u32 value, BusWidth width);
 
     void request(u16 mask);
+    void raise_delayed(u16 mask, u64 cycle_when);
+    void advance(u64 cycle_now);
     void acknowledge(u16 mask);
 
 private:
@@ -43,6 +45,12 @@ private:
     u16 if_ = 0;
     u16 ime_ = 0;
     bool line_asserted_ = false;
+
+    /* IRQ delay pipeline — timer IRQs take ~3 cycles to reach the CPU */
+    struct {
+        u16 mask = 0;
+        u64 fire_cycle = 0;
+    } delayed_;
 };
 
 }  // namespace gba

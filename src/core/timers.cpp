@@ -209,7 +209,7 @@ void Timers::overflow(int index, IrqController& irq, Apu& apu, u64 cycle_now) {
     channel.last_update_cycle = cycle_now;
 
     if (timer_irq_enabled(channel)) {
-        irq.request(timer_irq_mask(index));
+        irq.raise_delayed(timer_irq_mask(index), cycle_now);
     }
 
     apu.on_timer_overflow(index);

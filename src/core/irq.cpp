@@ -9,6 +9,7 @@ void IrqController::reset() {
     if_ = 0;
     ime_ = 0;
     line_asserted_ = false;
+    delayed_ = {};
 }
 
 u16 IrqController::ie() const {
@@ -88,6 +89,20 @@ void IrqController::write_register(u32 address, u32 value, BusWidth width) {
 void IrqController::request(u16 mask) {
     if_ = static_cast<u16>(if_ | mask);
     recompute_line();
+}
+
+void IrqController::raise_delayed(u16 mask, u64 cycle_when) {
+    delayed_.mask |= mask;
+    const auto fire_cycle = cycle_when + 3;
+    delayed_.fire_cycle = (delayed_.mask == mask) ? fire_cycle : std::min(delayed_.fire_cycle, fire_cycle);
+}
+
+void IrqController::advance(u64 cycle_now) {
+    if (delayed_.mask != 0 && cycle_now >= delayed_.fire_cycle) {
+        if_ = static_cast<u16>(if_ | delayed_.mask);
+        delayed_ = {};
+        recompute_line();
+    }
 }
 
 void IrqController::acknowledge(u16 mask) {

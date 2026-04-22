@@ -52,6 +52,7 @@ private:
     void record_open_bus_read(u32 value, BusWidth width);
     void update_keypad_irq();
     [[nodiscard]] u32 region_cycles(u32 address, BusWidth width, AccessType access, u64 cycle_now) const;
+    [[nodiscard]] u32 prefetch_region_cycles(u32 address, BusWidth width) const;
     [[nodiscard]] BusAccessResult read_io(u32 address, BusWidth width, AccessType access, u64 cycle_now);
     [[nodiscard]] BusAccessResult write_io(u32 address, u32 value, BusWidth width, u64 cycle_now);
 
@@ -68,6 +69,22 @@ private:
     std::unique_ptr<u8[]> palette_;
     std::unique_ptr<u8[]> vram_;
     std::unique_ptr<u8[]> oam_;
+
+    /* GamePak prefetch buffer — 8 halfwords deep */
+    struct PrefetchState {
+        bool active = false;
+        u32 head_address = 0;
+        u32 last_address = 0;
+        int count = 0;
+        int countdown = 0;
+        int duty = 0;
+        int capacity = 0;
+        int opcode_width = 2;
+        bool was_disabled = false;
+    } prefetch_;
+
+    void prefetch_stop();
+    void prefetch_advance(int cycles);
 
     u16 keyinput_ = 0x03FF;
     u16 keycnt_ = 0;

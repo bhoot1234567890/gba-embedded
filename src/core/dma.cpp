@@ -39,11 +39,11 @@ namespace {
 [[nodiscard]] u32 apply_src_mode(u32 address, u32 transfer_bytes, u32 mode) {
     switch (mode) {
     case 0:
-    case 3:
         return address + transfer_bytes;
     case 1:
         return address - transfer_bytes;
     case 2:
+    case 3:
     default:
         return address;
     }
@@ -253,14 +253,25 @@ u32 DmaEngine::service_due(u64 cycle_now, Bus& bus, IrqController& irq) {
                 did_access_rom = true;
             }
 
-            const auto read_result = bus.read(source, width, src_access, transfer_cycle);
-            cycles_consumed += read_result.cycles;
-            const auto read_value = source < 0x02000000u ? channel.bus_latch : read_result.value;
+            u32 read_value;
+            u32 read_cycles = 0;
             if (source >= 0x02000000u) {
+                const auto read_result = bus.read(source, width, src_access, transfer_cycle);
+                read_cycles = read_result.cycles;
                 channel.bus_latch = unit_bytes == 2u
                     ? (read_result.value << 16u) | (read_result.value & 0xFFFFu)
                     : read_result.value;
+                read_value = read_result.value;
+            } else {
+                // Low memory (BIOS/SRAM): use bus latch, selected by destination bit 1 for halfword
+                if (unit_bytes == 2u) {
+                    read_value = (destination & 2u) ? (channel.bus_latch >> 16) : channel.bus_latch;
+                } else {
+                    read_value = channel.bus_latch;
+                }
+                read_cycles = 1;  // bus.Step(1) in NBA
             }
+            cycles_consumed += read_cycles;
 
             auto dst_access = AccessType::Dma;
             if (destination >= 0x08000000u && !did_access_rom) {
@@ -268,7 +279,7 @@ u32 DmaEngine::service_due(u64 cycle_now, Bus& bus, IrqController& irq) {
                 did_access_rom = true;
             }
 
-            const auto write_result = bus.write(destination, read_value, width, dst_access, transfer_cycle + read_result.cycles);
+            const auto write_result = bus.write(destination, read_value, width, dst_access, transfer_cycle + read_cycles);
             cycles_consumed += write_result.cycles;
 
             source = apply_src_mode(source, unit_bytes, src_mode);

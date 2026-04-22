@@ -96,6 +96,7 @@ void Bus::reset() {
     bios_latch_ = 0;
     rom_latch_ = 0;
     open_bus_ = 0;
+    prefetch_ = {};
     debug_string_.fill('\0');
 }
 
@@ -143,7 +144,9 @@ BusAccessResult Bus::read(u32 address, BusWidth width, AccessType access, u64 cy
     } else if ((address & 0x0F000000u) == 0x03000000u) {
         result.value = read_array(iwram_span, address - 0x03000000u, width);
     } else if ((address & 0x0F000000u) == 0x04000000u) {
-        return read_io(address, width, access, cycle_now);
+        auto io_result = read_io(address, width, access, cycle_now);
+        prefetch_advance(static_cast<int>(io_result.cycles));
+        return io_result;
     } else if ((address & 0x0F000000u) == 0x05000000u) {
         result.value = read_array(palette_span, address - 0x05000000u, width);
     } else if ((address & 0x0F000000u) == 0x06000000u) {
@@ -155,30 +158,71 @@ BusAccessResult Bus::read(u32 address, BusWidth width, AccessType access, u64 cy
     } else if ((address & 0x0F000000u) == 0x07000000u) {
         result.value = read_array(oam_span, address - 0x07000000u, width);
     } else if (address >= 0x08000000u && address < 0x0E000000u) {
+        const auto is_code_fetch = has_access_flag(access, AccessType::CodeFetch);
         const auto offset = address - 0x08000000u;
         const auto rom = cartridge_.rom();
         const auto aligned = align_down(offset, static_cast<u32>(width));
         const auto width_bytes = static_cast<u32>(width);
-        if (aligned + width_bytes <= rom.size()) {
-            result.value = cartridge_.read_rom(offset, width);
-            if (!has_access_flag(access, AccessType::CodeFetch)) {
-                const auto word_base = align_down(aligned, 4u);
-                if (word_base + 4u <= rom.size()) {
-                    rom_latch_ = cartridge_.read_rom(word_base, BusWidth::Word);
-                    rom_latch_valid_ = true;
-                } else {
-                    rom_latch_ = expand_bus_latch(result.value, width);
-                    rom_latch_valid_ = true;
-                }
+
+        /* Check prefetch buffer hit for code fetches */
+        const auto entries_needed = (width == BusWidth::Word) ? 2 : 1;
+        if (is_code_fetch && prefetch_.active && prefetch_.head_address == address &&
+            prefetch_.count >= entries_needed) {
+            /* Prefetch hit — 1 internal cycle, ROM bus stays free */
+            result.cycles = 1;
+            if (aligned + width_bytes <= rom.size()) {
+                result.value = cartridge_.read_rom(offset, width);
+            } else {
+                result.value = gamepak_open_bus_value(address, width);
             }
+            prefetch_.count -= entries_needed;
+            prefetch_.head_address += entries_needed * 2u;
+            prefetch_advance(1);
         } else {
-            result.value = gamepak_open_bus_value(address, width);
+            /* Prefetch miss or data fetch — full ROM access */
+            prefetch_stop();
+
+            if (aligned + width_bytes <= rom.size()) {
+                result.value = cartridge_.read_rom(offset, width);
+                if (!is_code_fetch) {
+                    const auto word_base = align_down(aligned, 4u);
+                    if (word_base + 4u <= rom.size()) {
+                        rom_latch_ = cartridge_.read_rom(word_base, BusWidth::Word);
+                        rom_latch_valid_ = true;
+                    } else {
+                        rom_latch_ = expand_bus_latch(result.value, width);
+                        rom_latch_valid_ = true;
+                    }
+                }
+            } else {
+                result.value = gamepak_open_bus_value(address, width);
+            }
+
+            /* Start prefetch after ROM code fetch if enabled */
+            if (is_code_fetch && test_bit(waitcnt_, 14u)) {
+                const auto next_address = address + width_bytes;
+                const auto seq_half = prefetch_region_cycles(next_address, BusWidth::Half);
+                prefetch_.active = true;
+                prefetch_.head_address = next_address;
+                prefetch_.last_address = next_address;
+                prefetch_.count = 0;
+                prefetch_.capacity = 8;
+                prefetch_.opcode_width = 2;
+                prefetch_.duty = static_cast<int>(seq_half);
+                prefetch_.countdown = static_cast<int>(seq_half);
+            }
         }
     } else if (address >= 0x0E000000u && address < 0x10000000u) {
         result.value = cartridge_.read_save(address - 0x0E000000u, width);
+        prefetch_stop();
     } else {
         result.value = open_bus_;
         result.open_bus = true;
+    }
+
+    /* Advance prefetch for non-cartridge-bus accesses (ROM bus free) */
+    if (!(address >= 0x08000000u && address < 0x10000000u)) {
+        prefetch_advance(static_cast<int>(result.cycles));
     }
 
     record_open_bus_read(result.value, width);
@@ -201,7 +245,9 @@ BusAccessResult Bus::write(u32 address, u32 value, BusWidth width, AccessType ac
     } else if ((address & 0x0F000000u) == 0x03000000u) {
         write_array(iwram_w, address - 0x03000000u, value, width);
     } else if ((address & 0x0F000000u) == 0x04000000u) {
-        return write_io(address, value, width, cycle_now);
+        auto io_result = write_io(address, value, width, cycle_now);
+        prefetch_advance(static_cast<int>(io_result.cycles));
+        return io_result;
     } else if ((address & 0x0F000000u) == 0x05000000u) {
         if (width == BusWidth::Byte) {
             const auto aligned = align_down(address - 0x05000000u, 2u);
@@ -232,11 +278,17 @@ BusAccessResult Bus::write(u32 address, u32 value, BusWidth width, AccessType ac
         }
     } else if (address >= 0x0E000000u && address < 0x10000000u) {
         cartridge_.write_save(address - 0x0E000000u, value, width);
+        prefetch_stop();
     }
 
     if (!has_access_flag(access, AccessType::Dma) && (address & 0x0F000000u) == 0x04000000u) {
         const auto dma_cycle = cycle_now + result.cycles;
         result.cycles += service_dma(dma_cycle);
+    }
+
+    /* Advance prefetch for non-cartridge-bus writes */
+    if (!(address >= 0x08000000u && address < 0x10000000u)) {
+        prefetch_advance(static_cast<int>(result.cycles));
     }
 
     return result;
@@ -302,6 +354,26 @@ void Bus::service_timers(u64 cycle_now) {
     }
     if (apu_.take_fifo_request_b()) {
         dma_.request_fifo_b(cycle_now);
+    }
+}
+
+void Bus::prefetch_stop() {
+    prefetch_.active = false;
+}
+
+void Bus::prefetch_advance(int cycles) {
+    if (!prefetch_.active) {
+        return;
+    }
+    prefetch_.countdown -= cycles;
+    while (prefetch_.countdown <= 0) {
+        prefetch_.count++;
+        if (prefetch_.count < prefetch_.capacity) {
+            prefetch_.last_address += static_cast<u32>(prefetch_.opcode_width);
+            prefetch_.countdown += prefetch_.duty;
+        } else {
+            break;
+        }
     }
 }
 
@@ -616,6 +688,15 @@ u32 Bus::region_cycles(u32 address, BusWidth width, AccessType access, u64 cycle
     return 1;
 }
 
+u32 Bus::prefetch_region_cycles(u32 address, BusWidth width) const {
+    /* ROM sequential wait state calculation for prefetch duty */
+    const auto region = (address >> 25u) & 0x3u;
+    const auto second_bit = std::array<u32, 3>{4u, 7u, 10u};
+    const auto slow_second_cycles = std::array<u32, 3>{3u, 5u, 9u};
+    const auto second = test_bit(waitcnt_, second_bit[region]) ? 2u : slow_second_cycles[region];
+    return width == BusWidth::Word ? (second + second) : second;
+}
+
 BusAccessResult Bus::read_io(u32 address, BusWidth width, AccessType access, u64 cycle_now) {
     (void)access;
     (void)cycle_now;
@@ -715,6 +796,14 @@ BusAccessResult Bus::write_io(u32 address, u32 value, BusWidth width, u64 cycle_
         rcnt_ = static_cast<u16>(value & 0xFFFFu);
     } else if (io_address == kWaitCnt) {
         waitcnt_ = static_cast<u16>(value & 0xFFFFu);
+        /* Update prefetch settings when wait states change */
+        if (prefetch_.active) {
+            const auto seq_half = prefetch_region_cycles(prefetch_.head_address, BusWidth::Half);
+            prefetch_.duty = static_cast<int>(seq_half);
+        }
+        if (!test_bit(waitcnt_, 14u)) {
+            prefetch_stop();
+        }
     } else if (io_address == kPostFlg) {
         postflg_ = static_cast<u8>(value & 0x01u);
     } else if (io_address == kHaltCnt) {

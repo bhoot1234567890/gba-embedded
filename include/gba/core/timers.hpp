@@ -6,8 +6,22 @@
 
 namespace gba {
 
+#ifndef GBA_TRACE_TIMERS
+#define GBA_TRACE_TIMERS 0
+#endif
+
 class Apu;
 class IrqController;
+
+#if GBA_TRACE_TIMERS
+struct TimerTraceContext {
+    bool valid = false;
+    u32 info_address = 0;
+    int subtest_id = -1;
+    int test_id = -1;
+    int suite_id = -1;
+};
+#endif
 
 struct TimerChannel {
     u16 reload = 0;
@@ -33,12 +47,17 @@ public:
 
     [[nodiscard]] u32 read_register(u32 address, BusWidth width, u64 cycle_now);
     [[nodiscard]] u32 read_word_register_split(u32 address, u64 lo_cycle, u64 hi_cycle);
-    void write_register(u32 address, u32 value, BusWidth width, u64 cycle_now);
+    void write_register(u32 address, u32 value, BusWidth width, u64 cycle_now,
+                        IrqController& irq, Apu& apu);
 
     void advance_to(u64 cycle_now, IrqController& irq, Apu& apu);
     [[nodiscard]] u64 next_event_cycle() const;
 
     [[nodiscard]] const std::array<TimerChannel, 4>& channels() const;
+
+#if GBA_TRACE_TIMERS
+    void set_trace_context(u32 info_address, int suite_id, int test_id, int subtest_id);
+#endif
 
 private:
     [[nodiscard]] static u32 timer_period_cycles(const TimerChannel& channel);
@@ -47,6 +66,9 @@ private:
     void overflow(int index, IrqController& irq, Apu& apu, u64 cycle_now);
 
     std::array<TimerChannel, 4> channels_{};
+#if GBA_TRACE_TIMERS
+    TimerTraceContext trace_context_{};
+#endif
 };
 
 }  // namespace gba

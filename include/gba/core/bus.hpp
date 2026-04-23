@@ -10,6 +10,10 @@
 
 namespace gba {
 
+#ifndef GBA_TRACE_TIMERS
+#define GBA_TRACE_TIMERS 0
+#endif
+
 using DebugOutputCallback = std::function<void(const char*)>;
 
 class Apu;
@@ -57,6 +61,9 @@ private:
     [[nodiscard]] u32 prefetch_region_cycles(u32 address, BusWidth width) const;
     [[nodiscard]] BusAccessResult read_io(u32 address, BusWidth width, AccessType access, u64 cycle_now);
     [[nodiscard]] BusAccessResult write_io(u32 address, u32 value, BusWidth width, u64 cycle_now);
+#if GBA_TRACE_TIMERS
+    void update_timer_trace_context();
+#endif
 
     Cartridge& cartridge_;
     Ppu& ppu_;
@@ -103,6 +110,9 @@ private:
     u32 open_bus_ = 0;
     std::array<std::array<u8, 16>, 2> wait16_{};
     std::array<std::array<u8, 16>, 2> wait32_{};
+#if GBA_TRACE_TIMERS
+    u32 trace_active_info_offset_ = kIwramSize;
+#endif
     DebugOutputCallback debug_callback_;
     std::array<char, 256> debug_string_{};
 };

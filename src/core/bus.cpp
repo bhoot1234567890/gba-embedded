@@ -18,6 +18,10 @@ namespace gba {
 
 namespace {
 
+#ifndef GBA_TRACE_TIMERS
+#define GBA_TRACE_TIMERS 0
+#endif
+
 void free_memory(u8* ptr) {
     if (!ptr) {
         return;
@@ -88,6 +92,44 @@ u8* alloc_memory(size_t size, bool prefer_internal) {
     return 0xFFFFFFFFu;
 }
 
+#if GBA_TRACE_TIMERS
+struct ActiveTestInfoSnapshot {
+    bool valid = false;
+    u32 address = 0;
+    int subtest_id = -1;
+    int test_id = -1;
+    int suite_id = -1;
+};
+
+[[nodiscard]] bool find_active_test_info_offset(std::span<const u8> iwram, u32& offset_out) {
+    for (u32 offset = 0; offset + 8u <= iwram.size(); ++offset) {
+        if (iwram[offset] == 'I' && iwram[offset + 1u] == 'n' && iwram[offset + 2u] == 'f' &&
+            iwram[offset + 3u] == 'o') {
+            offset_out = offset;
+            return true;
+        }
+    }
+    return false;
+}
+
+[[nodiscard]] ActiveTestInfoSnapshot read_active_test_info(std::span<const u8> iwram, u32 offset) {
+    if (offset + 8u > iwram.size()) {
+        return {};
+    }
+
+    const auto subtest_raw = static_cast<u16>(iwram[offset + 4u]) | (static_cast<u16>(iwram[offset + 5u]) << 8u);
+    const auto test_raw = static_cast<u8>(iwram[offset + 6u]);
+    const auto suite_raw = static_cast<u8>(iwram[offset + 7u]);
+    return {
+        true,
+        0x03000000u + offset,
+        static_cast<int>(static_cast<s16>(subtest_raw)),
+        static_cast<int>(static_cast<s8>(test_raw)),
+        static_cast<int>(static_cast<s8>(suite_raw)),
+    };
+}
+#endif
+
 }  // namespace
 
 Bus::Bus(Cartridge& cartridge, Ppu& ppu, Timers& timers, DmaEngine& dma, Apu& apu, IrqController& irq)
@@ -117,9 +159,36 @@ void Bus::reset() {
     rom_latch_ = 0;
     open_bus_ = 0;
     prefetch_ = {};
+#if GBA_TRACE_TIMERS
+    trace_active_info_offset_ = kIwramSize;
+#endif
     debug_string_.fill('\0');
     update_wait_state_table();
 }
+
+#if GBA_TRACE_TIMERS
+void Bus::update_timer_trace_context() {
+    const auto iwram_bytes = std::span<const u8>{iwram_.get(), kIwramSize};
+
+    if (trace_active_info_offset_ >= kIwramSize) {
+        u32 offset = 0;
+        if (!find_active_test_info_offset(iwram_bytes, offset)) {
+            timers_.set_trace_context(0, -1, -1, -1);
+            return;
+        }
+        trace_active_info_offset_ = offset;
+    }
+
+    const auto snapshot = read_active_test_info(iwram_bytes, trace_active_info_offset_);
+    if (!snapshot.valid) {
+        timers_.set_trace_context(0, -1, -1, -1);
+        trace_active_info_offset_ = kIwramSize;
+        return;
+    }
+
+    timers_.set_trace_context(snapshot.address, snapshot.suite_id, snapshot.test_id, snapshot.subtest_id);
+}
+#endif
 
 BusAccessResult Bus::read(u32 address, BusWidth width, AccessType access, u64 cycle_now) {
     BusAccessResult result{};
@@ -301,6 +370,20 @@ BusAccessResult Bus::write(u32 address, u32 value, BusWidth width, AccessType ac
         write_array(ewram_w, address - 0x02000000u, value, width);
     } else if ((address & 0x0F000000u) == 0x03000000u) {
         write_array(iwram_w, address - 0x03000000u, value, width);
+#if GBA_TRACE_TIMERS
+        if (trace_active_info_offset_ < kIwramSize) {
+            const auto info_field = 0x03000000u + trace_active_info_offset_ + 4u;
+            const auto write_end = address + static_cast<u32>(width);
+            if (address < info_field + 4u && write_end > info_field) {
+                const auto snapshot = read_active_test_info(std::span<const u8>{iwram_.get(), kIwramSize},
+                                                            trace_active_info_offset_);
+                std::fprintf(stderr,
+                             "INFO write addr=%08X width=%u value=%08X -> suite=%d test=%d sub=%d info=%08X\n",
+                             address, static_cast<unsigned>(width), value, snapshot.suite_id, snapshot.test_id,
+                             snapshot.subtest_id, snapshot.address);
+            }
+        }
+#endif
     } else if ((address & 0x0F000000u) == 0x04000000u) {
         auto io_result = write_io(address, value, width, cycle_now);
         last_access_ = access;
@@ -841,9 +924,15 @@ BusAccessResult Bus::read_io(u32 address, BusWidth width, AccessType access, u64
     } else if (io_address >= kTm0CntL && io_address <= kTm0CntH + 12u) {
         if (width == BusWidth::Word) {
             service_timers(cycle_now);
+#if GBA_TRACE_TIMERS
+            update_timer_trace_context();
+#endif
             result.value = timers_.read_word_register_split(io_address, cycle_now, cycle_now + 1u);
         } else {
             service_timers(cycle_now);
+#if GBA_TRACE_TIMERS
+            update_timer_trace_context();
+#endif
             result.value = timers_.read_register(io_address, width, cycle_now);
         }
     } else if (io_address == kKeyInput || io_address == kKeyCnt) {
@@ -906,7 +995,10 @@ BusAccessResult Bus::write_io(u32 address, u32 value, BusWidth width, u64 cycle_
         dma_.write_register(io_address, value, width, cycle_now);
     } else if (io_address >= kTm0CntL && io_address <= kTm0CntH + 12u) {
         service_timers(cycle_now);
-        timers_.write_register(io_address, value, width, cycle_now);
+#if GBA_TRACE_TIMERS
+        update_timer_trace_context();
+#endif
+        timers_.write_register(io_address, value, width, cycle_now, irq_, apu_);
     } else if (io_address == kKeyCnt) {
         keycnt_ = static_cast<u16>(value & 0xFFFFu);
         update_keypad_irq();

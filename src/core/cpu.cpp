@@ -1,5 +1,6 @@
 #include "gba/core/cpu.hpp"
 
+#include <cmath>
 #include <cstdio>
 #include <limits>
 
@@ -128,27 +129,6 @@ struct ShiftResult {
     default:
         return shift_ror(value, amount, carry_in, immediate);
     }
-}
-
-// Booth-encoding carry calculation for multiply long (from NanoBoyAdvance / zaydlang, calc84maniac)
-[[nodiscard]] bool multiply_carry_lo(u32 multiplicand, u32 multiplier, u32 accum = 0) {
-    multiplicand |= 1;  // low bit cannot propagate to carry
-    u32 booth = static_cast<u32>(static_cast<s32>(multiplier << 31) >> 31);
-    u32 carry = multiplicand * booth;
-    u32 sum = carry + accum;
-    int shift = 29;
-    do {
-        for (int i = 0; i < 4; i++, shift -= 2) {
-            u32 next_booth = static_cast<u32>(static_cast<s32>(multiplier << shift) >> shift);
-            u32 factor = next_booth - booth;
-            booth = next_booth;
-            u32 addend = multiplicand * factor;
-            accum ^= carry ^ addend;
-            sum += addend;
-            carry = sum - accum;
-        }
-    } while (booth != multiplier);
-    return (carry >> 31) != 0;
 }
 
 template<bool sign_extend>
@@ -401,6 +381,31 @@ bool Arm7tdmi::handle_hle_swi(u32 comment) {
     }
 
     switch (comment) {
+    case 0x00u: {
+        // SoftReset - jump to 0x02000000 (EWRAM clear/init stub)
+        // For HLE, just do nothing meaningful - games call this during init
+        current_cycle_ += 50;
+        return true;
+    }
+    case 0x01u: {
+        // RegisterRamReset - clear specified subsystems
+        // r0 bitmask: bit0=palette, bit1=VRAM, bit2=OAM, bits3-5=audio, bit6=SIO, bit7=timers
+        // We just acknowledge and do nothing since our reset already clears state
+        current_cycle_ += 50;
+        return true;
+    }
+    case 0x03u: {
+        // Stop - same as halt basically for our purposes
+        auto halt_result = bus_.write(kHaltCnt, 0, BusWidth::Byte, AccessType::Io, current_cycle_);
+        current_cycle_ += halt_result.cycles;
+        return true;
+    }
+    case 0x04u: {
+        // IntrWait - wait for interrupt
+        auto halt_result = bus_.write(kHaltCnt, 0, BusWidth::Byte, AccessType::Io, current_cycle_);
+        current_cycle_ += halt_result.cycles;
+        return true;
+    }
     case 0x02u: {
         const auto halt_result = bus_.write(kHaltCnt, 0, BusWidth::Byte, AccessType::Io, current_cycle_);
         current_cycle_ += halt_result.cycles;
@@ -510,6 +515,59 @@ bool Arm7tdmi::handle_hle_swi(u32 comment) {
             if (!fill) src += 4;
             dst += 4;
         }
+        return true;
+    }
+    case 0x06u: {
+        // BIOS Div: r0 / r1 -> r0 (quotient), r1 (remainder), r3 (abs quotient)
+        const auto num = static_cast<s32>(state_.regs[0]);
+        const auto den = static_cast<s32>(state_.regs[1]);
+        if (den == 0) {
+            state_.regs[0] = (num < 0) ? 0x80000000u : 0x7FFFFFFFu;
+            state_.regs[1] = static_cast<u32>(num);
+            state_.regs[3] = state_.regs[0];
+        } else {
+            state_.regs[0] = static_cast<u32>(num / den);
+            state_.regs[1] = static_cast<u32>(num % den);
+            state_.regs[3] = static_cast<u32>((num < 0) ? -num : num) / static_cast<u32>((den < 0) ? -den : den);
+        }
+        current_cycle_ += 23;
+        return true;
+    }
+    case 0x07u: {
+        // BIOS DivArm: r0 / r1 with r0 being the denominator (swapped)
+        const auto den = static_cast<s32>(state_.regs[0]);
+        const auto num = static_cast<s32>(state_.regs[1]);
+        if (den == 0) {
+            state_.regs[0] = (num < 0) ? 0x80000000u : 0x7FFFFFFFu;
+            state_.regs[1] = static_cast<u32>(num);
+            state_.regs[3] = state_.regs[0];
+        } else {
+            state_.regs[0] = static_cast<u32>(num / den);
+            state_.regs[1] = static_cast<u32>(num % den);
+            state_.regs[3] = static_cast<u32>(state_.regs[0]);
+        }
+        current_cycle_ += 23;
+        return true;
+    }
+    case 0x08u: {
+        // BIOS Sqrt: sqrt(r0) -> r0
+        state_.regs[0] = static_cast<u32>(std::sqrt(static_cast<double>(state_.regs[0])));
+        current_cycle_ += 13;
+        return true;
+    }
+    case 0x09u: {
+        // BIOS ArcTan: atan(r0) -> r0 (result in 0.015873.. units)
+        const auto x = static_cast<s16>(state_.regs[0]);
+        state_.regs[0] = static_cast<u32>(std::atan2(static_cast<double>(x), 16384.0) * 65536.0 / (3.14159265 * 2.0));
+        current_cycle_ += 30;
+        return true;
+    }
+    case 0x0Au: {
+        // BIOS ArcTan2: atan2(r1, r0) -> r0
+        const auto y = static_cast<s16>(state_.regs[1]);
+        const auto x = static_cast<s16>(state_.regs[0]);
+        state_.regs[0] = static_cast<u32>(std::atan2(static_cast<double>(y), static_cast<double>(x)) * 65536.0 / (3.14159265 * 2.0));
+        current_cycle_ += 38;
         return true;
     }
     default:
@@ -629,8 +687,9 @@ u32 IRAM_ATTR Arm7tdmi::execute_arm(u32 instruction) {
 
         u64 product;
         if (sign_extend_mul) {
-            product = static_cast<u64>(static_cast<s64>(sign_extend<32>(lhs)))
-                                       * static_cast<s64>(sign_extend<32>(rhs));
+            const auto signed_product =
+                static_cast<s64>(sign_extend<32>(lhs)) * static_cast<s64>(sign_extend<32>(rhs));
+            product = static_cast<u64>(signed_product);
         } else {
             product = static_cast<u64>(lhs) * static_cast<u64>(rhs);
         }
@@ -883,7 +942,11 @@ u32 IRAM_ATTR Arm7tdmi::execute_arm(u32 instruction) {
             const auto delta = 4u * count;
             state_.regs[rn] = up ? base + delta : base - delta;
         }
-        ++current_cycle_;
+        if (load) {
+            current_cycle_ += test_bit(register_list, 15u) ? 3u : 2u;
+        } else {
+            ++current_cycle_;
+        }
         return 0;
     }
 
@@ -1036,9 +1099,11 @@ u32 IRAM_ATTR Arm7tdmi::execute_arm(u32 instruction) {
                     }
                     state_.cpsr = new_cpsr;
                     branch_to(result, test_bit(state_.cpsr, 5));
-                    current_cycle_ += 1;
                 } else {
                     write_pc(result);
+                    if (!set_flags) {
+                        ++current_cycle_;
+                    }
                 }
             } else {
                 state_.regs[rd] = result;
@@ -1394,7 +1459,9 @@ u32 IRAM_ATTR Arm7tdmi::execute_thumb(u16 instruction) {
         default:
             break;
        }
-       ++current_cycle_;
+       if (op >= 3) {
+           ++current_cycle_;
+       }
        return 0;
     }
 
@@ -1407,12 +1474,12 @@ u32 IRAM_ATTR Arm7tdmi::execute_thumb(u16 instruction) {
         const auto address = reg(rn) + (byte ? offset : offset * 4u);
         if (load) {
             reg(rd) = byte ? read8(address) : read32(address);
+            ++current_cycle_;
         } else if (byte) {
             write8(address, reg(rd));
         } else {
             write32(address, reg(rd));
         }
-        ++current_cycle_;
         return 0;
     }
 
@@ -1424,10 +1491,10 @@ u32 IRAM_ATTR Arm7tdmi::execute_thumb(u16 instruction) {
         const auto address = reg(rn) + offset;
         if (load) {
             reg(rd) = read16(address);
+            ++current_cycle_;
         } else {
             write16(address, reg(rd));
         }
-        ++current_cycle_;
         return 0;
     }
 
@@ -1438,10 +1505,10 @@ u32 IRAM_ATTR Arm7tdmi::execute_thumb(u16 instruction) {
         const auto address = reg(13) + offset;
         if (load) {
             reg(rd) = read32(address);
+            ++current_cycle_;
         } else {
             write32(address, reg(rd));
         }
-        ++current_cycle_;
         return 0;
     }
 
@@ -1450,7 +1517,6 @@ u32 IRAM_ATTR Arm7tdmi::execute_thumb(u16 instruction) {
         const auto rd = (instruction >> 8u) & 0x7u;
         const auto offset = (instruction & 0xFFu) * 4u;
         reg(rd) = (sp ? reg(13) : thumb_pc()) + offset;
-        ++current_cycle_;
         return 0;
     }
 
@@ -1458,7 +1524,6 @@ u32 IRAM_ATTR Arm7tdmi::execute_thumb(u16 instruction) {
         const auto subtract = test_bit(instruction, 7);
         const auto offset = (instruction & 0x7Fu) * 4u;
         reg(13) = subtract ? reg(13) - offset : reg(13) + offset;
-        ++current_cycle_;
         return 0;
     }
 
@@ -1509,7 +1574,9 @@ u32 IRAM_ATTR Arm7tdmi::execute_thumb(u16 instruction) {
             }
             reg(13) = read_address;
         }
-        ++current_cycle_;
+        if (load) {
+            ++current_cycle_;
+        }
         return 0;
     }
 
@@ -1538,7 +1605,9 @@ u32 IRAM_ATTR Arm7tdmi::execute_thumb(u16 instruction) {
             access = AccessType::Sequential;
         }
         reg(rn) = address;
-        ++current_cycle_;
+        if (load) {
+            ++current_cycle_;
+        }
         return 0;
     }
 
@@ -1705,6 +1774,9 @@ void Arm7tdmi::switch_mode(CpuMode new_mode) {
 
 void Arm7tdmi::enter_exception(ExceptionType type, CpuMode target_mode, u32 vector, bool mask_irq, bool mask_fiq,
                                u32 return_address) {
+#if !GBA_TRACE_TIMERS
+    (void)type;
+#endif
 #if GBA_TRACE_TIMERS
     if (type == ExceptionType::Irq) {
         std::fprintf(stderr, "CPU enter IRQ cyc=%llu pc=%08X cpsr=%08X return=%08X\n",

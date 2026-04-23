@@ -94,6 +94,12 @@ private:
     u64 last_fetch_cycle_ = 0;
     bool last_fetch_gamepak_ = false;
     bool hle_swi_enabled_ = false;
+
+public:
+    static constexpr u32 kPcTraceSize = 32;
+    std::array<u32, kPcTraceSize> pc_trace_{};
+    u32 pc_trace_pos_ = 0;
+    bool pc_trace_enabled_ = false;
 };
 
 }  // namespace gba

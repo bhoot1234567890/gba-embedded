@@ -279,8 +279,6 @@ void Arm7tdmi::reset() {
 
     hle_swi_enabled_ = true;
     if (bus_.has_bios()) {
-        // The bundled stub BIOS keeps SWI vector 0x08 as an infinite loop.
-        // When a real BIOS is present, defer SWI behavior to BIOS code.
         const auto swi_vector = bus_.read(0x00000008u, BusWidth::Word, AccessType::CodeFetch, 0).value;
         hle_swi_enabled_ = swi_vector == 0xEAFFFFFEu;
     }
@@ -317,6 +315,11 @@ u64 IRAM_ATTR Arm7tdmi::cpu_run_until(u64 target_cycle) {
             if (halt_wake_pending) {
                 state_.halted = false;
                 bus_.clear_halt();
+                if (pc_trace_enabled_) {
+                    pc_trace_[pc_trace_pos_ % kPcTraceSize] = 0xFFFF0001u;
+                    pc_trace_[++pc_trace_pos_ % kPcTraceSize] = state_.regs[15];
+                    ++pc_trace_pos_;
+                }
             } else {
                 ++current_cycle_;
                 continue;

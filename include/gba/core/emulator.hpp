@@ -36,8 +36,11 @@ public:
 
     [[nodiscard]] Bus& bus();
     [[nodiscard]] Arm7tdmi& cpu();
+    [[nodiscard]] const IrqController& irq() const;
     [[nodiscard]] const Ppu& ppu() const;
     [[nodiscard]] std::span<const u16> framebuffer() const;
+
+    void step_scheduler_event();
 
 private:
     void refresh_schedule();

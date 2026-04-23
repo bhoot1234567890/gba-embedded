@@ -10,6 +10,7 @@
 
 #include "gba/core/constants.hpp"
 #include "gba/core/emulator.hpp"
+#include "gba/core/bus.hpp"
 
 namespace {
 
@@ -217,7 +218,7 @@ int main(int argc, char** argv) {
         return EXIT_FAILURE;
     }
 
-    emulator.set_save_type(SaveType::Sram);
+    emulator.set_save_type(SaveType::Flash128K);
     emulator.reset();
     std::filesystem::create_directories(options.output_dir);
 
@@ -233,6 +234,7 @@ int main(int argc, char** argv) {
 
     for (u32 frame = 1; frame <= options.frames; ++frame) {
         emulator.run_frame();
+
         if (frame % capture_every != 0 && frame != options.frames) {
             continue;
         }
@@ -243,13 +245,16 @@ int main(int argc, char** argv) {
 
         const auto& cpu = emulator.cpu();
         const auto& state = cpu.state();
+        const auto& irq = emulator.irq();
         std::printf(
-            "frame=%u file=%s pc=0x%08X cpsr=0x%08X halted=%d cycle=%llu\n",
+            "frame=%u file=%s pc=0x%08X cpsr=0x%08X halted=%d IE=0x%04X IF=0x%04X cycle=%llu\n",
             frame,
             output_path.c_str(),
             state.regs[15],
             state.cpsr,
             state.halted ? 1 : 0,
+            irq.ie(),
+            irq.iflags(),
             static_cast<unsigned long long>(cpu.current_cycle())
         );
     }

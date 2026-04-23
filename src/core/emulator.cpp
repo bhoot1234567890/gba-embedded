@@ -81,12 +81,27 @@ Arm7tdmi& Emulator::cpu() {
     return cpu_;
 }
 
+const IrqController& Emulator::irq() const {
+    return irq_;
+}
+
 const Ppu& Emulator::ppu() const {
     return ppu_;
 }
 
 std::span<const u16> Emulator::framebuffer() const {
     return ppu_.framebuffer();
+}
+
+void Emulator::step_scheduler_event() {
+    refresh_schedule();
+    auto next_cycle = scheduler_.next_event();
+    if (next_cycle == std::numeric_limits<u64>::max()) {
+        next_cycle = cpu_.current_cycle() + 1;
+    }
+    cpu_.cpu_run_until(next_cycle);
+    scheduler_.set_current_cycle(cpu_.current_cycle());
+    service_due_hardware();
 }
 
 void Emulator::refresh_schedule() {

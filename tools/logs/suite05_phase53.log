@@ -11,23 +11,34 @@ After 60 frames: PC=0x00000348 CPSR=0x6000005F halted=1 cycle=16769984
 [DBG] PASS: FFFF 1 nop 
 [DBG] PASS: FFFF 2 nops
 [DBG] PASS: FFFF 3 nops
-[DBG] PASS: FFFF 4 nops
-[DBG] PASS: FFFF 5 nops
-[DBG] PASS: FFFF 6 nops
-[DBG] PASS: FFFF 7 nops
-[DBG] PASS: FFFF 8 nops
-[DBG] PASS: FFFF 9 nops
+[DBG] FAIL: FFFF 4 nops
+[DBG] Got 0053 != 0051: FAIL
+[DBG] FAIL: FFFF 5 nops
+[DBG] Got 0053 != 0051: FAIL
+[DBG] FAIL: FFFF 6 nops
+[DBG] Got 0053 != 0051: FAIL
+[DBG] FAIL: FFFF 7 nops
+[DBG] Got 0053 != 0051: FAIL
+[DBG] FAIL: FFFF 8 nops
+[DBG] Got 0053 != 0051: FAIL
+[DBG] FAIL: FFFF 9 nops
+[DBG] Got 0053 != 0051: FAIL
 [DBG] Timer IRQ test: FFFE
 [DBG] PASS: FFFE 0 nops
 [DBG] PASS: FFFE 1 nop 
 [DBG] PASS: FFFE 2 nops
 [DBG] PASS: FFFE 3 nops
 [DBG] PASS: FFFE 4 nops
-[DBG] PASS: FFFE 5 nops
-[DBG] PASS: FFFE 6 nops
-[DBG] PASS: FFFE 7 nops
-[DBG] PASS: FFFE 8 nops
-[DBG] PASS: FFFE 9 nops
+[DBG] FAIL: FFFE 5 nops
+[DBG] Got 0054 != 0052: FAIL
+[DBG] FAIL: FFFE 6 nops
+[DBG] Got 0054 != 0052: FAIL
+[DBG] FAIL: FFFE 7 nops
+[DBG] Got 0054 != 0052: FAIL
+[DBG] FAIL: FFFE 8 nops
+[DBG] Got 0054 != 0052: FAIL
+[DBG] FAIL: FFFE 9 nops
+[DBG] Got 0054 != 0052: FAIL
 [DBG] Timer IRQ test: FFFD
 [DBG] PASS: FFFD 0 nops
 [DBG] PASS: FFFD 1 nop 
@@ -35,10 +46,14 @@ After 60 frames: PC=0x00000348 CPSR=0x6000005F halted=1 cycle=16769984
 [DBG] PASS: FFFD 3 nops
 [DBG] PASS: FFFD 4 nops
 [DBG] PASS: FFFD 5 nops
-[DBG] PASS: FFFD 6 nops
-[DBG] PASS: FFFD 7 nops
-[DBG] PASS: FFFD 8 nops
-[DBG] PASS: FFFD 9 nops
+[DBG] FAIL: FFFD 6 nops
+[DBG] Got 0054 != 0052: FAIL
+[DBG] FAIL: FFFD 7 nops
+[DBG] Got 0054 != 0052: FAIL
+[DBG] FAIL: FFFD 8 nops
+[DBG] Got 0054 != 0052: FAIL
+[DBG] FAIL: FFFD 9 nops
+[DBG] Got 0054 != 0052: FAIL
 [DBG] Timer IRQ test: FFFC
 [DBG] PASS: FFFC 0 nops
 [DBG] PASS: FFFC 1 nop 
@@ -47,9 +62,12 @@ After 60 frames: PC=0x00000348 CPSR=0x6000005F halted=1 cycle=16769984
 [DBG] PASS: FFFC 4 nops
 [DBG] PASS: FFFC 5 nops
 [DBG] PASS: FFFC 6 nops
-[DBG] PASS: FFFC 7 nops
-[DBG] PASS: FFFC 8 nops
-[DBG] PASS: FFFC 9 nops
+[DBG] FAIL: FFFC 7 nops
+[DBG] Got 0054 != 0052: FAIL
+[DBG] FAIL: FFFC 8 nops
+[DBG] Got 0054 != 0052: FAIL
+[DBG] FAIL: FFFC 9 nops
+[DBG] Got 0054 != 0052: FAIL
 [DBG] Timer IRQ test: FFFB
 [DBG] PASS: FFFB 0 nops
 [DBG] PASS: FFFB 1 nop 
@@ -59,8 +77,10 @@ After 60 frames: PC=0x00000348 CPSR=0x6000005F halted=1 cycle=16769984
 [DBG] PASS: FFFB 5 nops
 [DBG] PASS: FFFB 6 nops
 [DBG] PASS: FFFB 7 nops
-[DBG] PASS: FFFB 8 nops
-[DBG] PASS: FFFB 9 nops
+[DBG] FAIL: FFFB 8 nops
+[DBG] Got 0054 != 0052: FAIL
+[DBG] FAIL: FFFB 9 nops
+[DBG] Got 0054 != 0052: FAIL
 [DBG] Timer IRQ test: FFFA
 [DBG] PASS: FFFA 0 nops
 [DBG] PASS: FFFA 1 nop 
@@ -71,7 +91,8 @@ After 60 frames: PC=0x00000348 CPSR=0x6000005F halted=1 cycle=16769984
 [DBG] PASS: FFFA 6 nops
 [DBG] PASS: FFFA 7 nops
 [DBG] PASS: FFFA 8 nops
-[DBG] PASS: FFFA 9 nops
+[DBG] FAIL: FFFA 9 nops
+[DBG] Got 0054 != 0052: FAIL
 [DBG] Timer IRQ test: FFF9
 [DBG] PASS: FFF9 0 nops
 [DBG] PASS: FFF9 1 nop 
@@ -107,7 +128,7 @@ After 60 frames: PC=0x00000348 CPSR=0x6000005F halted=1 cycle=16769984
 [DBG] PASS: FFF7 9 nops
 
 --- Suite 05: Timer IRQ ---
-Frames: 91  PC=0x0802BB7C  CPSR=0x8000001F  halted=0  cycle=155251714
+Frames: 92  PC=0x0802BAC2  CPSR=0x8000003F  halted=0  cycle=155532610
 [debug]
 Game Boy Advance Test Suite
 ===
@@ -117,23 +138,34 @@ PASS: FFFF 0 nops
 PASS: FFFF 1 nop 
 PASS: FFFF 2 nops
 PASS: FFFF 3 nops
-PASS: FFFF 4 nops
-PASS: FFFF 5 nops
-PASS: FFFF 6 nops
-PASS: FFFF 7 nops
-PASS: FFFF 8 nops
-PASS: FFFF 9 nops
+FAIL: FFFF 4 nops
+Got 0053 != 0051: FAIL
+FAIL: FFFF 5 nops
+Got 0053 != 0051: FAIL
+FAIL: FFFF 6 nops
+Got 0053 != 0051: FAIL
+FAIL: FFFF 7 nops
+Got 0053 != 0051: FAIL
+FAIL: FFFF 8 nops
+Got 0053 != 0051: FAIL
+FAIL: FFFF 9 nops
+Got 0053 != 0051: FAIL
 Timer IRQ test: FFFE
 PASS: FFFE 0 nops
 PASS: FFFE 1 nop 
 PASS: FFFE 2 nops
 PASS: FFFE 3 nops
 PASS: FFFE 4 nops
-PASS: FFFE 5 nops
-PASS: FFFE 6 nops
-PASS: FFFE 7 nops
-PASS: FFFE 8 nops
-PASS: FFFE 9 nops
+FAIL: FFFE 5 nops
+Got 0054 != 0052: FAIL
+FAIL: FFFE 6 nops
+Got 0054 != 0052: FAIL
+FAIL: FFFE 7 nops
+Got 0054 != 0052: FAIL
+FAIL: FFFE 8 nops
+Got 0054 != 0052: FAIL
+FAIL: FFFE 9 nops
+Got 0054 != 0052: FAIL
 Timer IRQ test: FFFD
 PASS: FFFD 0 nops
 PASS: FFFD 1 nop 
@@ -141,10 +173,14 @@ PASS: FFFD 2 nops
 PASS: FFFD 3 nops
 PASS: FFFD 4 nops
 PASS: FFFD 5 nops
-PASS: FFFD 6 nops
-PASS: FFFD 7 nops
-PASS: FFFD 8 nops
-PASS: FFFD 9 nops
+FAIL: FFFD 6 nops
+Got 0054 != 0052: FAIL
+FAIL: FFFD 7 nops
+Got 0054 != 0052: FAIL
+FAIL: FFFD 8 nops
+Got 0054 != 0052: FAIL
+FAIL: FFFD 9 nops
+Got 0054 != 0052: FAIL
 Timer IRQ test: FFFC
 PASS: FFFC 0 nops
 PASS: FFFC 1 nop 
@@ -153,9 +189,12 @@ PASS: FFFC 3 nops
 PASS: FFFC 4 nops
 PASS: FFFC 5 nops
 PASS: FFFC 6 nops
-PASS: FFFC 7 nops
-PASS: FFFC 8 nops
-PASS: FFFC 9 nops
+FAIL: FFFC 7 nops
+Got 0054 != 0052: FAIL
+FAIL: FFFC 8 nops
+Got 0054 != 0052: FAIL
+FAIL: FFFC 9 nops
+Got 0054 != 0052: FAIL
 Timer IRQ test: FFFB
 PASS: FFFB 0 nops
 PASS: FFFB 1 nop 
@@ -165,8 +204,10 @@ PASS: FFFB 4 nops
 PASS: FFFB 5 nops
 PASS: FFFB 6 nops
 PASS: FFFB 7 nops
-PASS: FFFB 8 nops
-PASS: FFFB 9 nops
+FAIL: FFFB 8 nops
+Got 0054 != 0052: FAIL
+FAIL: FFFB 9 nops
+Got 0054 != 0052: FAIL
 Timer IRQ test: FFFA
 PASS: FFFA 0 nops
 PASS: FFFA 1 nop 
@@ -177,7 +218,8 @@ PASS: FFFA 5 nops
 PASS: FFFA 6 nops
 PASS: FFFA 7 nops
 PASS: FFFA 8 nops
-PASS: FFFA 9 nops
+FAIL: FFFA 9 nops
+Got 0054 != 0052: FAIL
 Timer IRQ test: FFF9
 PASS: FFF9 0 nops
 PASS: FFF9 1 nop 
@@ -215,11 +257,32 @@ PASS: FFF7 9 nops
 Game Boy Advance Test Suite
 ===
 Timer IRQ test: FFFF
+Got 0053 != 0051: FAIL
+Got 0053 != 0051: FAIL
+Got 0053 != 0051: FAIL
+Got 0053 != 0051: FAIL
+Got 0053 != 0051: FAIL
+Got 0053 != 0051: FAIL
 Timer IRQ test: FFFE
+Got 0054 != 0052: FAIL
+Got 0054 != 0052: FAIL
+Got 0054 != 0052: FAIL
+Got 0054 != 0052: FAIL
+Got 0054 != 0052: FAIL
 Timer IRQ test: FFFD
+Got 0054 != 0052: FAIL
+Got 0054 != 0052: FAIL
+Got 0054 != 0052: FAIL
+Got 0054 != 0052: FAIL
 Timer IRQ test: FFFC
+Got 0054 != 0052: FAIL
+Got 0054 != 0052: FAIL
+Got 0054 != 0052: FAIL
 Timer IRQ test: FFFB
+Got 0054 != 0052: FAIL
+Got 0054 != 0052: FAIL
 Timer IRQ test: FFFA
+Got 0054 != 0052: FAIL
 Timer IRQ test: FFF9
 Timer IRQ test: FFF8
 Timer IRQ test: FFF7

@@ -107,7 +107,7 @@ After 60 frames: PC=0x00000348 CPSR=0x6000005F halted=1 cycle=16769984
 [DBG] PASS: FFF7 9 nops
 
 --- Suite 05: Timer IRQ ---
-Frames: 91  PC=0x0802BB7C  CPSR=0x8000001F  halted=0  cycle=155251714
+Frames: 91  PC=0x0802BAC2  CPSR=0x2000003F  halted=0  cycle=155251713
 [debug]
 Game Boy Advance Test Suite
 ===

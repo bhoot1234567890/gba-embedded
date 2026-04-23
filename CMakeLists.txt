@@ -67,6 +67,20 @@ if(GBA_BUILD_TOOLS)
     )
 
     target_link_libraries(gba_suite_runner PRIVATE gba_core)
+
+    add_executable(
+        gba_alyosha_runner
+        tools/run_alyosha_tests.cpp
+    )
+
+    target_link_libraries(gba_alyosha_runner PRIVATE gba_core)
+
+    add_executable(
+        gba_frame_runner
+        tools/frame_runner.cpp
+    )
+
+    target_link_libraries(gba_frame_runner PRIVATE gba_core)
 endif()
 
 if(GBA_WARNINGS_AS_ERRORS)

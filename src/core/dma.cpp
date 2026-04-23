@@ -143,7 +143,7 @@ void DmaEngine::write_register(u32 address, u32 value, BusWidth width, u64 cycle
                 latch_transfer_state(channel);
                 if (start_timing(dma) == DmaStartTiming::Immediate) {
                     dma.pending = true;
-                    dma.activation_cycle = cycle_now + 2u;
+                    dma.activation_cycle = cycle_now + 3u;
                     next_event_cycle_ = std::min(next_event_cycle_, dma.activation_cycle);
                 }
             } else {
@@ -286,8 +286,10 @@ u32 DmaEngine::service_due(u64 cycle_now, Bus& bus, IrqController& irq) {
             cycles_consumed += read_cycles;
 
             auto dst_access = AccessType::Dma;
-            if (destination >= 0x08000000u && !did_access_rom) {
-                dst_access = AccessType::Dma;
+            if (destination >= 0x08000000u) {
+                if (did_access_rom) {
+                    dst_access |= AccessType::Sequential;
+                }
                 did_access_rom = true;
             }
 

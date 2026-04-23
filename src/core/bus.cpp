@@ -1,6 +1,7 @@
 #include "gba/core/bus.hpp"
 
 #include <algorithm>
+#include <cstdio>
 #include <cstring>
 
 #ifdef GBA_PLATFORM_ESP32
@@ -275,6 +276,18 @@ BusAccessResult Bus::read(u32 address, BusWidth width, AccessType access, u64 cy
             }
             return 0;
         };
+        const auto data_prefetch_penalty = [&]() -> u32 {
+            if (is_code_fetch || !prefetch_.active) {
+                return 0;
+            }
+            if (has_access_flag(access, AccessType::Dma)) {
+                return prefetch_.duty == prefetch_.opcode_width ? 1u : 0u;
+            }
+            const auto penalty = static_cast<u32>(wait16_[0][page] - wait16_[1][page]);
+            const auto stop_penalty =
+                width == BusWidth::Word && address < prefetch_.head_address ? stop_prefetch_penalty() : 0u;
+            return penalty + stop_penalty;
+        };
 
         if (is_code_fetch && prefetch_.active && prefetch_.count != 0 &&
             address == prefetch_.head_address && prefetch_.opcode_width == static_cast<int>(width_bytes)) {
@@ -300,7 +313,7 @@ BusAccessResult Bus::read(u32 address, BusWidth width, AccessType access, u64 cy
             prefetch_.head_address = prefetch_.last_address;
             prefetch_.count = 0;
         } else {
-            const auto penalty = stop_prefetch_penalty();
+            const auto penalty = is_code_fetch ? stop_prefetch_penalty() : data_prefetch_penalty();
             result.cycles = width == BusWidth::Word ? wait32_[seq_index][page] : wait16_[seq_index][page];
             prefetch_stop();
 
@@ -338,6 +351,7 @@ BusAccessResult Bus::read(u32 address, BusWidth width, AccessType access, u64 cy
             }
         }
     } else if (address >= 0x0E000000u && address < 0x10000000u) {
+        result.breaks_fetch_burst = true;
         if (prefetch_.active) {
             result.cycles += ((prefetch_.countdown == 1 ||
                                (prefetch_.opcode_width == 4 && prefetch_.countdown == ((prefetch_.duty >> 1) + 1)))
@@ -418,6 +432,7 @@ BusAccessResult Bus::write(u32 address, u32 value, BusWidth width, AccessType ac
             write_array(oam_w, address - 0x07000000u, value, width);
         }
     } else if (address >= 0x08000000u && address < 0x0E000000u) {
+        result.breaks_fetch_burst = true;
         const auto page = static_cast<std::size_t>(address >> 24u);
         auto sequential = has_access_flag(access, AccessType::Sequential);
         if ((address & 0x1FFFFu) == 0u ||
@@ -428,14 +443,19 @@ BusAccessResult Bus::write(u32 address, u32 value, BusWidth width, AccessType ac
 
         result.cycles = width == BusWidth::Word ? wait32_[seq_index][page] : wait16_[seq_index][page];
         if (prefetch_.active) {
-            const auto half_duty_plus_one = (prefetch_.duty >> 1) + 1;
-            if (prefetch_.countdown == 1 ||
-                (prefetch_.opcode_width == 4 && prefetch_.countdown == half_duty_plus_one)) {
-                result.cycles += 1;
+            if (has_access_flag(access, AccessType::Dma)) {
+                result.cycles += prefetch_.duty > prefetch_.opcode_width ? 1u : 0u;
+            } else {
+                const auto half_duty_plus_one = (prefetch_.duty >> 1) + 1;
+                if (prefetch_.countdown == 1 ||
+                    (prefetch_.opcode_width == 4 && prefetch_.countdown == half_duty_plus_one)) {
+                    result.cycles += 1;
+                }
             }
         }
         prefetch_stop();
     } else if (address >= 0x0E000000u && address < 0x10000000u) {
+        result.breaks_fetch_burst = true;
         if (prefetch_.active) {
             const auto half_duty_plus_one = (prefetch_.duty >> 1) + 1;
             if (prefetch_.countdown == 1 ||
@@ -542,7 +562,7 @@ void Bus::prefetch_advance(int cycles) {
 }
 
 u32 Bus::service_dma(u64 cycle_now) {
-    if (!dma_.has_pending_transfer() || dma_.next_event_cycle() > cycle_now) {
+    if (dma_.next_event_cycle() > cycle_now || !dma_.has_pending_transfer()) {
         return 0;
     }
     return dma_.service_due(cycle_now, *this, irq_);
@@ -871,10 +891,12 @@ u32 Bus::region_cycles(u32 address, BusWidth width, AccessType access, u64 cycle
     if ((address & 0x0F000000u) == 0x04000000u) {
         return 1;
     }
-    if ((address & 0x0F000000u) == 0x05000000u || (address & 0x0F000000u) == 0x06000000u ||
-        (address & 0x0F000000u) == 0x07000000u) {
+    if ((address & 0x0F000000u) == 0x05000000u || (address & 0x0F000000u) == 0x06000000u) {
         const auto base = width == BusWidth::Word ? 2u : 1u;
         return base + contiguous_video_penalty();
+    }
+    if ((address & 0x0F000000u) == 0x07000000u) {
+        return 1u + contiguous_video_penalty();
     }
     if (address >= 0x08000000u && address < 0x0E000000u) {
         auto sequential = has_access_flag(access, AccessType::Sequential);

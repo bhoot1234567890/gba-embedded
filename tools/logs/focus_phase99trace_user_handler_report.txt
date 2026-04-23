@@ -1,0 +1,54 @@
+$ cmake --build /Users/chaitanyamalhotra/development/gba embedded/build-trace -j4
+build_exit_code=0
+
+=== Suite 04 ===
+command: /Users/chaitanyamalhotra/development/gba embedded/build-trace/gba_suite_runner --suite 3
+log: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite04_phase99trace_user_handler.log
+parsed_json: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite04_phase99trace_user_handler.parsed.json
+exit_code: 0
+fail_lines: 280
+Run: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite04_phase99trace_user_handler.log
+  ROM: tests/assets/roms/suite.gba
+  BIOS: tests/assets/roms/gba_bios.bin
+  Boot: frames=60 pc=0x00000348 cpsr=0x6000005F halted=1 cycle=16769984
+  Suites parsed: 1
+  Overall: 878/934 passed
+  Suite 04 Timer count-up: 878/934 passed via mgba (frames=180, pc=0x0802BAC2, halted=0, cycle=170139203)
+    Examples: sram:1xs 2d 1i | sram:16xs 4d 2i | sram:1xs 1d 4i
+tail:
+  Timer count-up test: 10b, 0x0011
+  1xs 2d 1i: Got 0000086A vs 0000086B: FAIL
+  16xs 1d 2i: Got 00005DD0 vs 00005DE0: FAIL
+  1xs 1d 4i: Got 000021BD vs 000021BE: FAIL
+  16xs 2d 4i: Got 0000BBC0 vs 0000BBD0: FAIL
+  1xs 4d 4i: Got 000021BB vs 000021BC: FAIL
+  Timer count-up test: 10b, 0x0012
+  1xs 2d 1i: Got 000008EA vs 000008EB: FAIL
+  16xs 1d 2i: Got 00006360 vs 00006370: FAIL
+  1xs 1d 4i: Got 000023BD vs 000023BE: FAIL
+  16xs 2d 4i: Got 0000C6E0 vs 0000C6F0: FAIL
+  1xs 4d 4i: Got 000023BB vs 000023BC: FAIL
+  Timer count-up test: 10b, 0x0013
+  1xs 2d 1i: Got 0000096A vs 0000096B: FAIL
+  16xs 1d 2i: Got 000068F0 vs 00006900: FAIL
+  1xs 1d 4i: Got 000025BD vs 000025BE: FAIL
+  1xs 4d 4i: Got 000025BB vs 000025BC: FAIL
+  
+  === Summary ===
+  No END: summaries were emitted yet; use the per-suite SRAM output above.
+fail buckets by preface:
+  1xs 2d 1i: 24
+  1xs 1d 4i: 24
+  1xs 4d 4i: 24
+  16xs 1d 2i: 12
+  16xs 4d 1i: 6
+  16xs 4d 2i: 4
+  16xs 1d 1i: 4
+  16xs 4d 4i: 4
+  16xs 2d 4i: 4
+  16xs 2d 1i: 2
+  16xs 1d 4i: 2
+  16xs 2d 2i: 2
+fail deltas:
+  1xs delta -1: 72
+  16xs delta -16: 40

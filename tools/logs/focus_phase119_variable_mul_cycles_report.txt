@@ -1,0 +1,98 @@
+$ cmake --build /Users/chaitanyamalhotra/development/gba embedded/build -j4
+build_exit_code=0
+
+=== Suite 03 ===
+command: /Users/chaitanyamalhotra/development/gba embedded/build/gba_suite_runner --suite 2
+log: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite03_phase119_variable_mul_cycles.log
+parsed_json: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite03_phase119_variable_mul_cycles.parsed.json
+exit_code: 0
+fail_lines: 2217
+Run: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite03_phase119_variable_mul_cycles.log
+  ROM: tests/assets/roms/suite.gba
+  BIOS: tests/assets/roms/gba_bios.bin
+  Boot: frames=60 pc=0x00000348 cpsr=0x6000005F halted=1 cycle=16769984
+  Suites parsed: 1
+  Overall: 1017/1461 passed
+  Suite 03 Timing: 1017/1461 passed via mgba (frames=292, pc=0x08024778, halted=0, cycle=191487297)
+    Examples: sram:ARM/ROM PNS | sram:ARM/ROM ... | sram:ARM/ROM .N. | sram:ARM/ROM ..S | sram:ARM/ROM .NS | mgba:stmia sp, {r2, r3} x2 ARM/ROM PNS | mgba:mul #0x00000000, #0xFF ARM/ROM ... | mgba:mul #0x00000000, #0xFF ARM/ROM .N. | mgba:mul #0x00000000, #0xFF ARM/ROM ..S | mgba:mul #0x00000000, #0xFF ARM/ROM .NS
+tail:
+  ARM/ROM ..S: Got     9 vs    11: FAIL
+  ARM/ROM P.S: Got     6 vs     5: FAIL
+  ARM/ROM .NS: Got     9 vs    10: FAIL
+  ARM/ROM PNS: Got     6 vs     5: FAIL
+  ARM/WRAM: Got    11 vs    10: FAIL
+  ARM/IWRAM: Got     6 vs     5: FAIL
+  Timing test: umlal #0x00345678, #0xFF
+  ARM/ROM ...: Got    12 vs    13: FAIL
+  ARM/ROM P..: Got     7 vs     6: FAIL
+  ARM/ROM PN.: Got     7 vs     6: FAIL
+  ARM/ROM ..S: Got    10 vs    12: FAIL
+  ARM/ROM P.S: Got     7 vs     6: FAIL
+  ARM/ROM .NS: Got    10 vs    11: FAIL
+  ARM/ROM PNS: Got     7 vs     6: FAIL
+  ARM/WRAM: Got    12 vs    11: FAIL
+  ARM/IWRAM: Got     7 vs     6: FAIL
+  Timing test: umlal #0x12345678, #0xFF
+  ARM/ROM ...: Got    13 vs    14: FAIL
+  ARM/ROM P..: Got     8 vs     7: FAIL
+  ARM/ROM PN.: Got     8 vs     7: FAIL
+  ARM/ROM ..S: Got    11 vs    13: FAIL
+  ARM/ROM P.S: Got     8 vs     7: FAIL
+  ARM/ROM .NS: Got    11 vs    12: FAIL
+  ARM/ROM PNS: Got     8 vs     7: FAIL
+  ARM/WRAM: Got    13 vs    12: FAIL
+  ARM/IWRAM: Got     8 vs     7: FAIL
+  Timing test: umlal #0xFF000000, #0xFF
+  ARM/ROM ...: Got    13 vs    14: FAIL
+  ARM/ROM P..: Got     8 vs     7: FAIL
+  ARM/ROM PN.: Got     8 vs     7: FAIL
+  ARM/ROM ..S: Got    11 vs    13: FAIL
+  ARM/ROM P.S: Got     8 vs     7: FAIL
+  ARM/ROM .NS: Got    11 vs    12: FAIL
+  ARM/ROM PNS: Got     8 vs     7: FAIL
+  ARM/WRAM: Got    13 vs    12: FAIL
+  ARM/IWRAM: Got     8 vs     7: FAIL
+  Timing test: umlal #0xFFFF0000, #0xFF
+  ARM/ROM ...: Got    13 vs    14: FAIL
+  ARM/ROM P..: Got     8 vs     7: FAIL
+  ARM/ROM PN.: Got     8 vs     7: FAIL
+  ARM/ROM ..S: Got    11 vs    13: FAIL
+  ARM/ROM P.S: Got     8 vs     7: FAIL
+  ARM/ROM .NS: Got    11 vs    12: FAIL
+  ARM/ROM PNS: Got     8 vs     7: FAIL
+  ARM/WRAM: Got    13 vs    12: FAIL
+  ARM/IWRAM: Got     8 vs     7: FAIL
+  Timing test: umlal #0xFFFFFF00, #0xFF
+  ARM/ROM ...: Got    13 vs    14: FAIL
+  ARM/ROM P..: Got     8 vs     7: FAIL
+  ARM/ROM PN.: Got     8 vs     7: FAIL
+  ARM/ROM ..S: Got    11 vs    13: FAIL
+  ARM/ROM P.S: Got     8 vs     7: FAIL
+  ARM/ROM .NS: Got    11 vs    12: FAIL
+  ARM/ROM PNS: Got     8 vs     7: FAIL
+  ARM/WRAM: Got    13 vs    12: FAIL
+  ARM/IWRAM: Got     8 vs     7: FAIL
+  Timing test: umlal #0xFFFFFFFF, #0xFF
+  ARM/ROM ...: Got    13 vs    14: FAIL
+  ARM/ROM P..: Got     8 vs     7: FAIL
+  ARM/ROM PN.: Got     8 vs     7: FAIL
+  ARM/ROM ..S: Got    11 vs    13: FAIL
+  ARM/ROM P.S: Got     8 vs     7: FAIL
+  ARM/ROM .NS: Got    11 vs    12: FAIL
+  ARM/ROM PNS: Got     8 vs     7: FAIL
+  ARM/WRAM: Got    13 vs    12: FAIL
+  ARM/IWRAM: Got     8 vs     7: FAIL
+  Timing test: umlal #0xFFFFFFFF, #0x00
+  ARM/ROM ...: Got    13 vs    14: FAIL
+  ARM/ROM P..: Got     8 vs     7: FAIL
+  ARM/ROM PN.: Got     8 vs     7: FAIL
+  ARM/ROM ..S: Got    11 vs    13: FAIL
+  ARM/ROM P.S: Got     8 vs     7: FAIL
+  ARM/ROM .NS: Got    11 vs    12: FAIL
+  ARM/ROM PNS: Got     8 vs     7: FAIL
+  ARM/WRAM: Got    13 vs    12: FAIL
+  ARM/IWRAM: Got     8 vs     7: FAIL
+  Timing test: b pc
+  
+  === Summary ===
+  No END: summaries were emitted yet; use the per-suite SRAM output above.

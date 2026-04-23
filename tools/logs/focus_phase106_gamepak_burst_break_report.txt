@@ -1,0 +1,48 @@
+$ cmake --build /Users/chaitanyamalhotra/development/gba embedded/build -j4
+build_exit_code=0
+
+=== Suite 03 ===
+command: /Users/chaitanyamalhotra/development/gba embedded/build/gba_suite_runner --suite 2
+log: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite03_phase106_gamepak_burst_break.log
+parsed_json: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite03_phase106_gamepak_burst_break.parsed.json
+exit_code: 0
+fail_lines: 92
+Run: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite03_phase106_gamepak_burst_break.log
+  ROM: tests/assets/roms/suite.gba
+  BIOS: tests/assets/roms/gba_bios.bin
+  Boot: frames=60 pc=0x00000348 cpsr=0x6000005F halted=1 cycle=16769984
+  Suites parsed: 1
+  Overall: 542/561 passed
+  Suite 03 Timing: 542/561 passed via mgba (frames=144, pc=0x0802BC64, halted=0, cycle=149914691)
+    Examples: sram:Thumb/ROM P.S | sram:Thumb/ROM P.S | sram:ARM/ROM PNS | sram:ARM/ROM PNS | sram:ARM/ROM ... | mgba:ldrh r2, [sp] Thumb/ROM P.S | mgba:ldr r2, [sp] Thumb/ROM P.S | mgba:str r3, [sp] x2 ARM/ROM PNS
+tail:
+  Timing test: nop / strh r3, [sp] / nop
+  Timing test: ldr r2, [sp] x2
+  Timing test: ldr r2, [#0x08000000] / ldr r2, [sp]
+  Timing test: ldr r2, [sp] / ldr r2, [#0x08000000]
+  Timing test: ldr r2, [#0x08000000] x2
+  Timing test: str r3, [sp] x2
+  ARM/ROM PNS: Got     9 vs     8: FAIL
+  Timing test: ldr r2, [sp] / str r2, [sp]
+  Timing test: str r3, [sp] / ldr r3, [sp]
+  ARM/ROM PNS: Got     9 vs     8: FAIL
+  Timing test: ldmia sp, {r2}
+  ARM/ROM ...: Got    11 vs    10: FAIL
+  ARM/ROM .N.: Got    10 vs     9: FAIL
+  ARM/ROM ..S: Got    10 vs     9: FAIL
+  ARM/ROM .NS: Got     9 vs     8: FAIL
+  ARM/WRAM: Got     9 vs     8: FAIL
+  ARM/IWRAM: Got     4 vs     3: FAIL
+  Timing test: ldmia sp, {r2, r3}
+  ARM/ROM ...: Got    12 vs    11: FAIL
+  ARM/ROM .N.: Got    11 vs    10: FAIL
+  ARM/ROM ..S: Got    11 vs    10: FAIL
+  ARM/ROM P.S: Got     5 vs     4: FAIL
+  ARM/ROM .NS: Got    10 vs     9: FAIL
+  ARM/ROM PNS: Got     5 vs     4: FAIL
+  ARM/WRAM: Got    10 vs     9: FAIL
+  ARM/IWRAM: Got     5 vs     4: FAIL
+  Timing test: ldmia sp, {r2-r7}
+  
+  === Summary ===
+  No END: summaries were emitted yet; use the per-suite SRAM output above.

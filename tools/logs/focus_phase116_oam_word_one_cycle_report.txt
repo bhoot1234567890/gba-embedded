@@ -1,0 +1,78 @@
+$ cmake --build /Users/chaitanyamalhotra/development/gba embedded/build -j4
+build_exit_code=0
+
+=== Suite 03 ===
+command: /Users/chaitanyamalhotra/development/gba embedded/build/gba_suite_runner --suite 2
+log: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite03_phase116_oam_word_one_cycle.log
+parsed_json: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite03_phase116_oam_word_one_cycle.parsed.json
+exit_code: 0
+fail_lines: 7
+Run: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite03_phase116_oam_word_one_cycle.log
+  ROM: tests/assets/roms/suite.gba
+  BIOS: tests/assets/roms/gba_bios.bin
+  Boot: frames=60 pc=0x00000348 cpsr=0x6000005F halted=1 cycle=16769984
+  Suites parsed: 1
+  Overall: 664/666 passed
+  Suite 03 Timing: 664/666 passed via mgba (frames=152, pc=0x0802BB80, halted=0, cycle=152161856)
+    Examples: sram:ARM/ROM PNS | mgba:stmia sp, {r2, r3} x2 ARM/ROM PNS | mgba:ldmia [#0x07FFFFFC]!, {r3-r7} ARM/ROM P.S
+tail:
+  PASS: stmia sp, {r2-r7} x2 ARM/ROM ..S
+  PASS: stmia sp, {r2-r7} x2 ARM/ROM P.S
+  PASS: stmia sp, {r2-r7} x2 ARM/ROM .NS
+  PASS: stmia sp, {r2-r7} x2 ARM/ROM PNS
+  PASS: stmia sp, {r2-r7} x2 ARM/WRAM
+  PASS: stmia sp, {r2-r7} x2 ARM/IWRAM
+  Timing test: ldmia [#0x07FFFFFC]!, {r3-r7}
+  PASS: ldmia [#0x07FFFFFC]!, {r3-r7} ARM/ROM ...
+  PASS: ldmia [#0x07FFFFFC]!, {r3-r7} ARM/ROM P..
+  PASS: ldmia [#0x07FFFFFC]!, {r3-r7} ARM/ROM .N.
+  PASS: ldmia [#0x07FFFFFC]!, {r3-r7} ARM/ROM PN.
+  PASS: ldmia [#0x07FFFFFC]!, {r3-r7} ARM/ROM ..S
+  FAIL: ldmia [#0x07FFFFFC]!, {r3-r7} ARM/ROM P.S
+  [sram]
+  Game Boy Advance Test Suite
+  ===
+  Timing test: Calibration
+  Timing test: nop
+  Timing test: nop / nop
+  Timing test: ldrh r2, [sp]
+  Timing test: ldrh r2, [sp] / nop
+  Timing test: nop / ldrh r2, [sp]
+  Timing test: nop / ldrh r2, [sp] / nop
+  Timing test: ldrh r2, [#0x08000000]
+  Timing test: ldrh r2, [#0x08000000] / nop
+  Timing test: nop / ldrh r2, [#0x08000000]
+  Timing test: ldr r2, [sp]
+  Timing test: ldr r2, [sp] / nop
+  Timing test: nop / ldr r2, [sp]
+  Timing test: ldr r2, [#0x08000000]
+  Timing test: ldr r2, [#0x08000000] / nop
+  Timing test: nop / ldr r2, [#0x08000000]
+  Timing test: strh r3, [sp]
+  Timing test: strh r3, [sp] / nop
+  Timing test: nop / strh r3, [sp]
+  Timing test: nop / strh r3, [sp] / nop
+  Timing test: ldr r2, [sp] x2
+  Timing test: ldr r2, [#0x08000000] / ldr r2, [sp]
+  Timing test: ldr r2, [sp] / ldr r2, [#0x08000000]
+  Timing test: ldr r2, [#0x08000000] x2
+  Timing test: str r3, [sp] x2
+  Timing test: ldr r2, [sp] / str r2, [sp]
+  Timing test: str r3, [sp] / ldr r3, [sp]
+  Timing test: ldmia sp, {r2}
+  Timing test: ldmia sp, {r2, r3}
+  Timing test: ldmia sp, {r2-r7}
+  Timing test: ldmia sp, {r2} x2
+  Timing test: ldmia sp, {r2, r3} x2
+  Timing test: ldmia sp, {r2-r7} x2
+  Timing test: stmia sp, {r2}
+  Timing test: stmia sp, {r2, r3}
+  Timing test: stmia sp, {r2-r7}
+  Timing test: stmia sp, {r2} x2
+  Timing test: stmia sp, {r2, r3} x2
+  ARM/ROM PNS: Got    10 vs     8: FAIL
+  Timing test: stmia sp, {r2-r7} x2
+  Timing test: ldmia [#0x07FFFFFC]!, {r3-r7}
+  
+  === Summary ===
+  No END: summaries were emitted yet; use the per-suite SRAM output above.

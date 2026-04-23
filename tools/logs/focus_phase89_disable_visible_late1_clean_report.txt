@@ -1,0 +1,100 @@
+$ cmake --build /Users/chaitanyamalhotra/development/gba embedded/build -j4
+build_exit_code=0
+
+=== Suite 04 ===
+command: /Users/chaitanyamalhotra/development/gba embedded/build/gba_suite_runner --suite 3
+log: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite04_phase89_disable_visible_late1_clean.log
+parsed_json: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite04_phase89_disable_visible_late1_clean.parsed.json
+exit_code: 0
+fail_lines: 1295
+Run: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite04_phase89_disable_visible_late1_clean.log
+  ROM: tests/assets/roms/suite.gba
+  BIOS: tests/assets/roms/gba_bios.bin
+  Boot: frames=60 pc=0x00000348 cpsr=0x6000005F halted=1 cycle=16769984
+  Suites parsed: 1
+  Overall: 677/936 passed
+  Suite 04 Timer count-up: 677/936 passed via mgba (frames=202, pc=0x0802BB84, halted=0, cycle=176318916)
+    Examples: sram:1xv 1d 1i | sram:16xv 1d 1i | sram:1xv 2d 1i
+tail:
+  16xs 2d 4i: Got 00002B20 vs 00002B10: FAIL
+  Timer count-up test: 8b, 0x0011
+  1xs 2d 1i: Got 0000020A vs 0000020B: FAIL
+  Timer count-up test: 8b, 0x0012
+  1xs 2d 1i: Got 0000022A vs 0000022B: FAIL
+  16xs 2d 4i: Got 000030B0 vs 000030A0: FAIL
+  Timer count-up test: 8b, 0x0013
+  1xs 2d 1i: Got 0000024A vs 0000024B: FAIL
+  Timer count-up test: 10b, 0x0010
+  1xs 2d 1i: Got 000007EA vs 000007EB: FAIL
+  16xs 2d 4i: Got 0000B0B0 vs 0000B0A0: FAIL
+  Timer count-up test: 10b, 0x0011
+  1xs 2d 1i: Got 0000086A vs 0000086B: FAIL
+  Timer count-up test: 10b, 0x0012
+  1xs 2d 1i: Got 000008EA vs 000008EB: FAIL
+  Timer count-up test: 10b, 0x0013
+  1xs 2d 1i: Got 0000096A vs 0000096B: FAIL
+  
+  === Summary ===
+  No END: summaries were emitted yet; use the per-suite SRAM output above.
+fail buckets by preface:
+  1xv 1d 1i: 26
+  16xv 1d 1i: 26
+  1xv 2d 1i: 26
+  16xv 2d 1i: 26
+  1xv 4d 1i: 26
+  16xv 4d 1i: 26
+  1xv 1d 2i: 26
+  16xv 1d 2i: 26
+  1xv 2d 2i: 26
+  16xv 2d 2i: 26
+  1xv 4d 2i: 26
+  16xv 4d 2i: 26
+fail deltas:
+  16xv delta -1: 114
+  1xv delta -1: 102
+  16xv delta -2: 54
+  1xv delta -2: 48
+  1xv delta -4: 42
+  16xv delta -4: 36
+  1xv delta -3: 24
+  1xs delta -1: 24
+  16xs delta +16: 20
+  16xv delta +1: 12
+  1xv delta +3: 6
+  1xv delta +1: 6
+
+=== Suite 05 ===
+command: /Users/chaitanyamalhotra/development/gba embedded/build/gba_suite_runner --suite 4
+log: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite05_phase89_disable_visible_late1_clean.log
+parsed_json: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite05_phase89_disable_visible_late1_clean.parsed.json
+exit_code: 0
+fail_lines: 105
+Run: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite05_phase89_disable_visible_late1_clean.log
+  ROM: tests/assets/roms/suite.gba
+  BIOS: tests/assets/roms/gba_bios.bin
+  Boot: frames=60 pc=0x00000348 cpsr=0x6000005F halted=1 cycle=16769984
+  Suites parsed: 1
+  Overall: 69/90 passed
+  Suite 05 Timer IRQ: 69/90 passed via mgba (frames=92, pc=0x0802BA20, halted=0, cycle=155532608)
+    Examples: mgba:FFFF 4 nops | mgba:FFFF 5 nops | mgba:FFFF 6 nops
+tail:
+  Timer IRQ test: FFFD
+  Got 0051 != 0052: FAIL
+  Got 0051 != 0052: FAIL
+  Got 0051 != 0052: FAIL
+  Got 0051 != 0052: FAIL
+  Timer IRQ test: FFFC
+  Got 0051 != 0052: FAIL
+  Got 0051 != 0052: FAIL
+  Got 0051 != 0052: FAIL
+  Timer IRQ test: FFFB
+  Got 0051 != 0052: FAIL
+  Got 0051 != 0052: FAIL
+  Timer IRQ test: FFFA
+  Got 0051 != 0052: FAIL
+  Timer IRQ test: FFF9
+  Timer IRQ test: FFF8
+  Timer IRQ test: FFF7
+  
+  === Summary ===
+  No END: summaries were emitted yet; use the per-suite SRAM output above.

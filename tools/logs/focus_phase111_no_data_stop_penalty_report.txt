@@ -1,0 +1,48 @@
+$ cmake --build /Users/chaitanyamalhotra/development/gba embedded/build -j4
+build_exit_code=0
+
+=== Suite 03 ===
+command: /Users/chaitanyamalhotra/development/gba embedded/build/gba_suite_runner --suite 2
+log: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite03_phase111_no_data_stop_penalty.log
+parsed_json: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite03_phase111_no_data_stop_penalty.parsed.json
+exit_code: 0
+fail_lines: 2
+Run: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite03_phase111_no_data_stop_penalty.log
+  ROM: tests/assets/roms/suite.gba
+  BIOS: tests/assets/roms/gba_bios.bin
+  Boot: frames=60 pc=0x00000348 cpsr=0x6000005F halted=1 cycle=16769984
+  Suites parsed: 1
+  Overall: 455/456 passed
+  Suite 03 Timing: 455/456 passed via mgba (frames=131, pc=0x0802BAAC, halted=0, cycle=146263042)
+    Examples: mgba:ldr r2, [sp] / ldr r2, [#0x08000000] Thumb/ROM P.S
+tail:
+  FAIL: ldr r2, [sp] / ldr r2, [#0x08000000] Thumb/ROM P.S
+  [sram]
+  Game Boy Advance Test Suite
+  ===
+  Timing test: Calibration
+  Timing test: nop
+  Timing test: nop / nop
+  Timing test: ldrh r2, [sp]
+  Timing test: ldrh r2, [sp] / nop
+  Timing test: nop / ldrh r2, [sp]
+  Timing test: nop / ldrh r2, [sp] / nop
+  Timing test: ldrh r2, [#0x08000000]
+  Timing test: ldrh r2, [#0x08000000] / nop
+  Timing test: nop / ldrh r2, [#0x08000000]
+  Timing test: ldr r2, [sp]
+  Timing test: ldr r2, [sp] / nop
+  Timing test: nop / ldr r2, [sp]
+  Timing test: ldr r2, [#0x08000000]
+  Timing test: ldr r2, [#0x08000000] / nop
+  Timing test: nop / ldr r2, [#0x08000000]
+  Timing test: strh r3, [sp]
+  Timing test: strh r3, [sp] / nop
+  Timing test: nop / strh r3, [sp]
+  Timing test: nop / strh r3, [sp] / nop
+  Timing test: ldr r2, [sp] x2
+  Timing test: ldr r2, [#0x08000000] / ldr r2, [sp]
+  Timing test: ldr r2, [sp] / ldr r2, [#0x08000000]
+  
+  === Summary ===
+  No END: summaries were emitted yet; use the per-suite SRAM output above.

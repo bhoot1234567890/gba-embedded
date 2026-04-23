@@ -1,0 +1,3861 @@
+=== GBA Test Suite Runner ===
+ROM:  tests/assets/roms/suite.gba
+BIOS: tests/assets/roms/gba_bios.bin
+Booting...
+After 60 frames: PC=0x00000348 CPSR=0x6000005F halted=1 cycle=16769984
+[DBG] Game Boy Advance Test Suite
+===
+[DBG] BEGIN: Timing tests
+[DBG] Timing test: Calibration
+[DBG] PASS: Calibration ARM/ROM ...
+[DBG] PASS: Calibration ARM/ROM P..
+[DBG] PASS: Calibration ARM/ROM .N.
+[DBG] PASS: Calibration ARM/ROM PN.
+[DBG] PASS: Calibration ARM/ROM ..S
+[DBG] PASS: Calibration ARM/ROM P.S
+[DBG] PASS: Calibration ARM/ROM .NS
+[DBG] PASS: Calibration ARM/ROM PNS
+[DBG] PASS: Calibration ARM/WRAM
+[DBG] PASS: Calibration ARM/IWRAM
+[DBG] PASS: Calibration Thumb/ROM ...
+[DBG] PASS: Calibration Thumb/ROM P..
+[DBG] PASS: Calibration Thumb/ROM .N.
+[DBG] PASS: Calibration Thumb/ROM PN.
+[DBG] PASS: Calibration Thumb/ROM ..S
+[DBG] PASS: Calibration Thumb/ROM P.S
+[DBG] PASS: Calibration Thumb/ROM .NS
+[DBG] PASS: Calibration Thumb/ROM PNS
+[DBG] PASS: Calibration Thumb/WRAM
+[DBG] PASS: Calibration Thumb/IWRAM
+[DBG] Timing test: nop
+[DBG] PASS: nop ARM/ROM ...
+[DBG] PASS: nop ARM/ROM P..
+[DBG] PASS: nop ARM/ROM .N.
+[DBG] PASS: nop ARM/ROM PN.
+[DBG] PASS: nop ARM/ROM ..S
+[DBG] PASS: nop ARM/ROM P.S
+[DBG] PASS: nop ARM/ROM .NS
+[DBG] PASS: nop ARM/ROM PNS
+[DBG] PASS: nop ARM/WRAM
+[DBG] PASS: nop ARM/IWRAM
+[DBG] PASS: nop Thumb/ROM ...
+[DBG] PASS: nop Thumb/ROM P..
+[DBG] PASS: nop Thumb/ROM .N.
+[DBG] PASS: nop Thumb/ROM PN.
+[DBG] PASS: nop Thumb/ROM ..S
+[DBG] PASS: nop Thumb/ROM P.S
+[DBG] PASS: nop Thumb/ROM .NS
+[DBG] PASS: nop Thumb/ROM PNS
+[DBG] PASS: nop Thumb/WRAM
+[DBG] PASS: nop Thumb/IWRAM
+[DBG] Timing test: nop / nop
+[DBG] PASS: nop / nop ARM/ROM ...
+[DBG] PASS: nop / nop ARM/ROM P..
+[DBG] PASS: nop / nop ARM/ROM .N.
+[DBG] PASS: nop / nop ARM/ROM PN.
+[DBG] PASS: nop / nop ARM/ROM ..S
+[DBG] PASS: nop / nop ARM/ROM P.S
+[DBG] PASS: nop / nop ARM/ROM .NS
+[DBG] PASS: nop / nop ARM/ROM PNS
+[DBG] PASS: nop / nop ARM/WRAM
+[DBG] PASS: nop / nop ARM/IWRAM
+[DBG] PASS: nop / nop Thumb/ROM ...
+[DBG] PASS: nop / nop Thumb/ROM P..
+[DBG] PASS: nop / nop Thumb/ROM .N.
+[DBG] PASS: nop / nop Thumb/ROM PN.
+[DBG] PASS: nop / nop Thumb/ROM ..S
+[DBG] PASS: nop / nop Thumb/ROM P.S
+[DBG] PASS: nop / nop Thumb/ROM .NS
+[DBG] PASS: nop / nop Thumb/ROM PNS
+[DBG] PASS: nop / nop Thumb/WRAM
+[DBG] PASS: nop / nop Thumb/IWRAM
+[DBG] Timing test: ldrh r2, [sp]
+[DBG] PASS: ldrh r2, [sp] ARM/ROM ...
+[DBG] PASS: ldrh r2, [sp] ARM/ROM P..
+[DBG] PASS: ldrh r2, [sp] ARM/ROM .N.
+[DBG] PASS: ldrh r2, [sp] ARM/ROM PN.
+[DBG] PASS: ldrh r2, [sp] ARM/ROM ..S
+[DBG] PASS: ldrh r2, [sp] ARM/ROM P.S
+[DBG] PASS: ldrh r2, [sp] ARM/ROM .NS
+[DBG] PASS: ldrh r2, [sp] ARM/ROM PNS
+[DBG] PASS: ldrh r2, [sp] ARM/WRAM
+[DBG] PASS: ldrh r2, [sp] ARM/IWRAM
+[DBG] PASS: ldrh r2, [sp] Thumb/ROM ...
+[DBG] PASS: ldrh r2, [sp] Thumb/ROM P..
+[DBG] PASS: ldrh r2, [sp] Thumb/ROM .N.
+[DBG] PASS: ldrh r2, [sp] Thumb/ROM PN.
+[DBG] PASS: ldrh r2, [sp] Thumb/ROM ..S
+[DBG] PASS: ldrh r2, [sp] Thumb/ROM P.S
+[DBG] PASS: ldrh r2, [sp] Thumb/ROM .NS
+[DBG] PASS: ldrh r2, [sp] Thumb/ROM PNS
+[DBG] PASS: ldrh r2, [sp] Thumb/WRAM
+[DBG] PASS: ldrh r2, [sp] Thumb/IWRAM
+[DBG] Timing test: ldrh r2, [sp] / nop
+[DBG] PASS: ldrh r2, [sp] / nop ARM/ROM ...
+[DBG] PASS: ldrh r2, [sp] / nop ARM/ROM P..
+[DBG] PASS: ldrh r2, [sp] / nop ARM/ROM .N.
+[DBG] PASS: ldrh r2, [sp] / nop ARM/ROM PN.
+[DBG] PASS: ldrh r2, [sp] / nop ARM/ROM ..S
+[DBG] PASS: ldrh r2, [sp] / nop ARM/ROM P.S
+[DBG] PASS: ldrh r2, [sp] / nop ARM/ROM .NS
+[DBG] PASS: ldrh r2, [sp] / nop ARM/ROM PNS
+[DBG] PASS: ldrh r2, [sp] / nop ARM/WRAM
+[DBG] PASS: ldrh r2, [sp] / nop ARM/IWRAM
+[DBG] PASS: ldrh r2, [sp] / nop Thumb/ROM ...
+[DBG] PASS: ldrh r2, [sp] / nop Thumb/ROM P..
+[DBG] PASS: ldrh r2, [sp] / nop Thumb/ROM .N.
+[DBG] PASS: ldrh r2, [sp] / nop Thumb/ROM PN.
+[DBG] PASS: ldrh r2, [sp] / nop Thumb/ROM ..S
+[DBG] PASS: ldrh r2, [sp] / nop Thumb/ROM P.S
+[DBG] PASS: ldrh r2, [sp] / nop Thumb/ROM .NS
+[DBG] PASS: ldrh r2, [sp] / nop Thumb/ROM PNS
+[DBG] PASS: ldrh r2, [sp] / nop Thumb/WRAM
+[DBG] PASS: ldrh r2, [sp] / nop Thumb/IWRAM
+[DBG] Timing test: nop / ldrh r2, [sp]
+[DBG] PASS: nop / ldrh r2, [sp] ARM/ROM ...
+[DBG] PASS: nop / ldrh r2, [sp] ARM/ROM P..
+[DBG] PASS: nop / ldrh r2, [sp] ARM/ROM .N.
+[DBG] PASS: nop / ldrh r2, [sp] ARM/ROM PN.
+[DBG] PASS: nop / ldrh r2, [sp] ARM/ROM ..S
+[DBG] PASS: nop / ldrh r2, [sp] ARM/ROM P.S
+[DBG] PASS: nop / ldrh r2, [sp] ARM/ROM .NS
+[DBG] PASS: nop / ldrh r2, [sp] ARM/ROM PNS
+[DBG] PASS: nop / ldrh r2, [sp] ARM/WRAM
+[DBG] PASS: nop / ldrh r2, [sp] ARM/IWRAM
+[DBG] PASS: nop / ldrh r2, [sp] Thumb/ROM ...
+[DBG] PASS: nop / ldrh r2, [sp] Thumb/ROM P..
+[DBG] PASS: nop / ldrh r2, [sp] Thumb/ROM .N.
+[DBG] PASS: nop / ldrh r2, [sp] Thumb/ROM PN.
+[DBG] PASS: nop / ldrh r2, [sp] Thumb/ROM ..S
+[DBG] PASS: nop / ldrh r2, [sp] Thumb/ROM P.S
+[DBG] PASS: nop / ldrh r2, [sp] Thumb/ROM .NS
+[DBG] PASS: nop / ldrh r2, [sp] Thumb/ROM PNS
+[DBG] PASS: nop / ldrh r2, [sp] Thumb/WRAM
+[DBG] PASS: nop / ldrh r2, [sp] Thumb/IWRAM
+[DBG] Timing test: nop / ldrh r2, [sp] / nop
+[DBG] PASS: nop / ldrh r2, [sp] / nop ARM/ROM ...
+[DBG] PASS: nop / ldrh r2, [sp] / nop ARM/ROM P..
+[DBG] PASS: nop / ldrh r2, [sp] / nop ARM/ROM .N.
+[DBG] PASS: nop / ldrh r2, [sp] / nop ARM/ROM PN.
+[DBG] PASS: nop / ldrh r2, [sp] / nop ARM/ROM ..S
+[DBG] PASS: nop / ldrh r2, [sp] / nop ARM/ROM P.S
+[DBG] PASS: nop / ldrh r2, [sp] / nop ARM/ROM .NS
+[DBG] PASS: nop / ldrh r2, [sp] / nop ARM/ROM PNS
+[DBG] PASS: nop / ldrh r2, [sp] / nop ARM/WRAM
+[DBG] PASS: nop / ldrh r2, [sp] / nop ARM/IWRAM
+[DBG] PASS: nop / ldrh r2, [sp] / nop Thumb/ROM ...
+[DBG] PASS: nop / ldrh r2, [sp] / nop Thumb/ROM P..
+[DBG] PASS: nop / ldrh r2, [sp] / nop Thumb/ROM .N.
+[DBG] PASS: nop / ldrh r2, [sp] / nop Thumb/ROM PN.
+[DBG] PASS: nop / ldrh r2, [sp] / nop Thumb/ROM ..S
+[DBG] PASS: nop / ldrh r2, [sp] / nop Thumb/ROM P.S
+[DBG] PASS: nop / ldrh r2, [sp] / nop Thumb/ROM .NS
+[DBG] PASS: nop / ldrh r2, [sp] / nop Thumb/ROM PNS
+[DBG] PASS: nop / ldrh r2, [sp] / nop Thumb/WRAM
+[DBG] PASS: nop / ldrh r2, [sp] / nop Thumb/IWRAM
+[DBG] Timing test: ldrh r2, [#0x08000000]
+[DBG] PASS: ldrh r2, [#0x08000000] ARM/ROM ...
+[DBG] PASS: ldrh r2, [#0x08000000] ARM/ROM P..
+[DBG] PASS: ldrh r2, [#0x08000000] ARM/ROM .N.
+[DBG] PASS: ldrh r2, [#0x08000000] ARM/ROM PN.
+[DBG] PASS: ldrh r2, [#0x08000000] ARM/ROM ..S
+[DBG] PASS: ldrh r2, [#0x08000000] ARM/ROM P.S
+[DBG] PASS: ldrh r2, [#0x08000000] ARM/ROM .NS
+[DBG] PASS: ldrh r2, [#0x08000000] ARM/ROM PNS
+[DBG] PASS: ldrh r2, [#0x08000000] ARM/WRAM
+[DBG] PASS: ldrh r2, [#0x08000000] ARM/IWRAM
+[DBG] PASS: ldrh r2, [#0x08000000] Thumb/ROM ...
+[DBG] PASS: ldrh r2, [#0x08000000] Thumb/ROM P..
+[DBG] PASS: ldrh r2, [#0x08000000] Thumb/ROM .N.
+[DBG] PASS: ldrh r2, [#0x08000000] Thumb/ROM PN.
+[DBG] PASS: ldrh r2, [#0x08000000] Thumb/ROM ..S
+[DBG] PASS: ldrh r2, [#0x08000000] Thumb/ROM P.S
+[DBG] PASS: ldrh r2, [#0x08000000] Thumb/ROM .NS
+[DBG] PASS: ldrh r2, [#0x08000000] Thumb/ROM PNS
+[DBG] PASS: ldrh r2, [#0x08000000] Thumb/WRAM
+[DBG] PASS: ldrh r2, [#0x08000000] Thumb/IWRAM
+[DBG] Timing test: ldrh r2, [#0x08000000] / nop
+[DBG] PASS: ldrh r2, [#0x08000000] / nop ARM/ROM ...
+[DBG] PASS: ldrh r2, [#0x08000000] / nop ARM/ROM P..
+[DBG] PASS: ldrh r2, [#0x08000000] / nop ARM/ROM .N.
+[DBG] PASS: ldrh r2, [#0x08000000] / nop ARM/ROM PN.
+[DBG] PASS: ldrh r2, [#0x08000000] / nop ARM/ROM ..S
+[DBG] PASS: ldrh r2, [#0x08000000] / nop ARM/ROM P.S
+[DBG] PASS: ldrh r2, [#0x08000000] / nop ARM/ROM .NS
+[DBG] PASS: ldrh r2, [#0x08000000] / nop ARM/ROM PNS
+[DBG] PASS: ldrh r2, [#0x08000000] / nop ARM/WRAM
+[DBG] PASS: ldrh r2, [#0x08000000] / nop ARM/IWRAM
+[DBG] PASS: ldrh r2, [#0x08000000] / nop Thumb/ROM ...
+[DBG] PASS: ldrh r2, [#0x08000000] / nop Thumb/ROM P..
+[DBG] PASS: ldrh r2, [#0x08000000] / nop Thumb/ROM .N.
+[DBG] PASS: ldrh r2, [#0x08000000] / nop Thumb/ROM PN.
+[DBG] PASS: ldrh r2, [#0x08000000] / nop Thumb/ROM ..S
+[DBG] PASS: ldrh r2, [#0x08000000] / nop Thumb/ROM P.S
+[DBG] PASS: ldrh r2, [#0x08000000] / nop Thumb/ROM .NS
+[DBG] PASS: ldrh r2, [#0x08000000] / nop Thumb/ROM PNS
+[DBG] PASS: ldrh r2, [#0x08000000] / nop Thumb/WRAM
+[DBG] PASS: ldrh r2, [#0x08000000] / nop Thumb/IWRAM
+[DBG] Timing test: nop / ldrh r2, [#0x08000000]
+[DBG] PASS: nop / ldrh r2, [#0x08000000] ARM/ROM ...
+[DBG] PASS: nop / ldrh r2, [#0x08000000] ARM/ROM P..
+[DBG] PASS: nop / ldrh r2, [#0x08000000] ARM/ROM .N.
+[DBG] PASS: nop / ldrh r2, [#0x08000000] ARM/ROM PN.
+[DBG] PASS: nop / ldrh r2, [#0x08000000] ARM/ROM ..S
+[DBG] PASS: nop / ldrh r2, [#0x08000000] ARM/ROM P.S
+[DBG] PASS: nop / ldrh r2, [#0x08000000] ARM/ROM .NS
+[DBG] PASS: nop / ldrh r2, [#0x08000000] ARM/ROM PNS
+[DBG] PASS: nop / ldrh r2, [#0x08000000] ARM/WRAM
+[DBG] PASS: nop / ldrh r2, [#0x08000000] ARM/IWRAM
+[DBG] PASS: nop / ldrh r2, [#0x08000000] Thumb/ROM ...
+[DBG] PASS: nop / ldrh r2, [#0x08000000] Thumb/ROM P..
+[DBG] PASS: nop / ldrh r2, [#0x08000000] Thumb/ROM .N.
+[DBG] PASS: nop / ldrh r2, [#0x08000000] Thumb/ROM PN.
+[DBG] PASS: nop / ldrh r2, [#0x08000000] Thumb/ROM ..S
+[DBG] PASS: nop / ldrh r2, [#0x08000000] Thumb/ROM P.S
+[DBG] PASS: nop / ldrh r2, [#0x08000000] Thumb/ROM .NS
+[DBG] PASS: nop / ldrh r2, [#0x08000000] Thumb/ROM PNS
+[DBG] PASS: nop / ldrh r2, [#0x08000000] Thumb/WRAM
+[DBG] PASS: nop / ldrh r2, [#0x08000000] Thumb/IWRAM
+[DBG] Timing test: ldr r2, [sp]
+[DBG] PASS: ldr r2, [sp] ARM/ROM ...
+[DBG] PASS: ldr r2, [sp] ARM/ROM P..
+[DBG] PASS: ldr r2, [sp] ARM/ROM .N.
+[DBG] PASS: ldr r2, [sp] ARM/ROM PN.
+[DBG] PASS: ldr r2, [sp] ARM/ROM ..S
+[DBG] PASS: ldr r2, [sp] ARM/ROM P.S
+[DBG] PASS: ldr r2, [sp] ARM/ROM .NS
+[DBG] PASS: ldr r2, [sp] ARM/ROM PNS
+[DBG] PASS: ldr r2, [sp] ARM/WRAM
+[DBG] PASS: ldr r2, [sp] ARM/IWRAM
+[DBG] PASS: ldr r2, [sp] Thumb/ROM ...
+[DBG] PASS: ldr r2, [sp] Thumb/ROM P..
+[DBG] PASS: ldr r2, [sp] Thumb/ROM .N.
+[DBG] PASS: ldr r2, [sp] Thumb/ROM PN.
+[DBG] PASS: ldr r2, [sp] Thumb/ROM ..S
+[DBG] PASS: ldr r2, [sp] Thumb/ROM P.S
+[DBG] PASS: ldr r2, [sp] Thumb/ROM .NS
+[DBG] PASS: ldr r2, [sp] Thumb/ROM PNS
+[DBG] PASS: ldr r2, [sp] Thumb/WRAM
+[DBG] PASS: ldr r2, [sp] Thumb/IWRAM
+[DBG] Timing test: ldr r2, [sp] / nop
+[DBG] PASS: ldr r2, [sp] / nop ARM/ROM ...
+[DBG] PASS: ldr r2, [sp] / nop ARM/ROM P..
+[DBG] PASS: ldr r2, [sp] / nop ARM/ROM .N.
+[DBG] PASS: ldr r2, [sp] / nop ARM/ROM PN.
+[DBG] PASS: ldr r2, [sp] / nop ARM/ROM ..S
+[DBG] PASS: ldr r2, [sp] / nop ARM/ROM P.S
+[DBG] PASS: ldr r2, [sp] / nop ARM/ROM .NS
+[DBG] PASS: ldr r2, [sp] / nop ARM/ROM PNS
+[DBG] PASS: ldr r2, [sp] / nop ARM/WRAM
+[DBG] PASS: ldr r2, [sp] / nop ARM/IWRAM
+[DBG] PASS: ldr r2, [sp] / nop Thumb/ROM ...
+[DBG] PASS: ldr r2, [sp] / nop Thumb/ROM P..
+[DBG] PASS: ldr r2, [sp] / nop Thumb/ROM .N.
+[DBG] PASS: ldr r2, [sp] / nop Thumb/ROM PN.
+[DBG] PASS: ldr r2, [sp] / nop Thumb/ROM ..S
+[DBG] PASS: ldr r2, [sp] / nop Thumb/ROM P.S
+[DBG] PASS: ldr r2, [sp] / nop Thumb/ROM .NS
+[DBG] PASS: ldr r2, [sp] / nop Thumb/ROM PNS
+[DBG] PASS: ldr r2, [sp] / nop Thumb/WRAM
+[DBG] PASS: ldr r2, [sp] / nop Thumb/IWRAM
+[DBG] Timing test: nop / ldr r2, [sp]
+[DBG] PASS: nop / ldr r2, [sp] ARM/ROM ...
+[DBG] PASS: nop / ldr r2, [sp] ARM/ROM P..
+[DBG] PASS: nop / ldr r2, [sp] ARM/ROM .N.
+[DBG] PASS: nop / ldr r2, [sp] ARM/ROM PN.
+[DBG] PASS: nop / ldr r2, [sp] ARM/ROM ..S
+[DBG] PASS: nop / ldr r2, [sp] ARM/ROM P.S
+[DBG] PASS: nop / ldr r2, [sp] ARM/ROM .NS
+[DBG] PASS: nop / ldr r2, [sp] ARM/ROM PNS
+[DBG] PASS: nop / ldr r2, [sp] ARM/WRAM
+[DBG] PASS: nop / ldr r2, [sp] ARM/IWRAM
+[DBG] PASS: nop / ldr r2, [sp] Thumb/ROM ...
+[DBG] PASS: nop / ldr r2, [sp] Thumb/ROM P..
+[DBG] PASS: nop / ldr r2, [sp] Thumb/ROM .N.
+[DBG] PASS: nop / ldr r2, [sp] Thumb/ROM PN.
+[DBG] PASS: nop / ldr r2, [sp] Thumb/ROM ..S
+[DBG] PASS: nop / ldr r2, [sp] Thumb/ROM P.S
+[DBG] PASS: nop / ldr r2, [sp] Thumb/ROM .NS
+[DBG] PASS: nop / ldr r2, [sp] Thumb/ROM PNS
+[DBG] PASS: nop / ldr r2, [sp] Thumb/WRAM
+[DBG] PASS: nop / ldr r2, [sp] Thumb/IWRAM
+[DBG] Timing test: ldr r2, [#0x08000000]
+[DBG] PASS: ldr r2, [#0x08000000] ARM/ROM ...
+[DBG] PASS: ldr r2, [#0x08000000] ARM/ROM P..
+[DBG] PASS: ldr r2, [#0x08000000] ARM/ROM .N.
+[DBG] PASS: ldr r2, [#0x08000000] ARM/ROM PN.
+[DBG] PASS: ldr r2, [#0x08000000] ARM/ROM ..S
+[DBG] PASS: ldr r2, [#0x08000000] ARM/ROM P.S
+[DBG] PASS: ldr r2, [#0x08000000] ARM/ROM .NS
+[DBG] PASS: ldr r2, [#0x08000000] ARM/ROM PNS
+[DBG] PASS: ldr r2, [#0x08000000] ARM/WRAM
+[DBG] PASS: ldr r2, [#0x08000000] ARM/IWRAM
+[DBG] PASS: ldr r2, [#0x08000000] Thumb/ROM ...
+[DBG] PASS: ldr r2, [#0x08000000] Thumb/ROM P..
+[DBG] PASS: ldr r2, [#0x08000000] Thumb/ROM .N.
+[DBG] PASS: ldr r2, [#0x08000000] Thumb/ROM PN.
+[DBG] PASS: ldr r2, [#0x08000000] Thumb/ROM ..S
+[DBG] PASS: ldr r2, [#0x08000000] Thumb/ROM P.S
+[DBG] PASS: ldr r2, [#0x08000000] Thumb/ROM .NS
+[DBG] PASS: ldr r2, [#0x08000000] Thumb/ROM PNS
+[DBG] PASS: ldr r2, [#0x08000000] Thumb/WRAM
+[DBG] PASS: ldr r2, [#0x08000000] Thumb/IWRAM
+[DBG] Timing test: ldr r2, [#0x08000000] / nop
+[DBG] PASS: ldr r2, [#0x08000000] / nop ARM/ROM ...
+[DBG] PASS: ldr r2, [#0x08000000] / nop ARM/ROM P..
+[DBG] PASS: ldr r2, [#0x08000000] / nop ARM/ROM .N.
+[DBG] PASS: ldr r2, [#0x08000000] / nop ARM/ROM PN.
+[DBG] PASS: ldr r2, [#0x08000000] / nop ARM/ROM ..S
+[DBG] PASS: ldr r2, [#0x08000000] / nop ARM/ROM P.S
+[DBG] PASS: ldr r2, [#0x08000000] / nop ARM/ROM .NS
+[DBG] PASS: ldr r2, [#0x08000000] / nop ARM/ROM PNS
+[DBG] PASS: ldr r2, [#0x08000000] / nop ARM/WRAM
+[DBG] PASS: ldr r2, [#0x08000000] / nop ARM/IWRAM
+[DBG] PASS: ldr r2, [#0x08000000] / nop Thumb/ROM ...
+[DBG] PASS: ldr r2, [#0x08000000] / nop Thumb/ROM P..
+[DBG] PASS: ldr r2, [#0x08000000] / nop Thumb/ROM .N.
+[DBG] PASS: ldr r2, [#0x08000000] / nop Thumb/ROM PN.
+[DBG] PASS: ldr r2, [#0x08000000] / nop Thumb/ROM ..S
+[DBG] PASS: ldr r2, [#0x08000000] / nop Thumb/ROM P.S
+[DBG] PASS: ldr r2, [#0x08000000] / nop Thumb/ROM .NS
+[DBG] PASS: ldr r2, [#0x08000000] / nop Thumb/ROM PNS
+[DBG] PASS: ldr r2, [#0x08000000] / nop Thumb/WRAM
+[DBG] PASS: ldr r2, [#0x08000000] / nop Thumb/IWRAM
+[DBG] Timing test: nop / ldr r2, [#0x08000000]
+[DBG] PASS: nop / ldr r2, [#0x08000000] ARM/ROM ...
+[DBG] PASS: nop / ldr r2, [#0x08000000] ARM/ROM P..
+[DBG] PASS: nop / ldr r2, [#0x08000000] ARM/ROM .N.
+[DBG] PASS: nop / ldr r2, [#0x08000000] ARM/ROM PN.
+[DBG] PASS: nop / ldr r2, [#0x08000000] ARM/ROM ..S
+[DBG] PASS: nop / ldr r2, [#0x08000000] ARM/ROM P.S
+[DBG] PASS: nop / ldr r2, [#0x08000000] ARM/ROM .NS
+[DBG] PASS: nop / ldr r2, [#0x08000000] ARM/ROM PNS
+[DBG] PASS: nop / ldr r2, [#0x08000000] ARM/WRAM
+[DBG] PASS: nop / ldr r2, [#0x08000000] ARM/IWRAM
+[DBG] PASS: nop / ldr r2, [#0x08000000] Thumb/ROM ...
+[DBG] PASS: nop / ldr r2, [#0x08000000] Thumb/ROM P..
+[DBG] PASS: nop / ldr r2, [#0x08000000] Thumb/ROM .N.
+[DBG] PASS: nop / ldr r2, [#0x08000000] Thumb/ROM PN.
+[DBG] PASS: nop / ldr r2, [#0x08000000] Thumb/ROM ..S
+[DBG] PASS: nop / ldr r2, [#0x08000000] Thumb/ROM P.S
+[DBG] PASS: nop / ldr r2, [#0x08000000] Thumb/ROM .NS
+[DBG] PASS: nop / ldr r2, [#0x08000000] Thumb/ROM PNS
+[DBG] PASS: nop / ldr r2, [#0x08000000] Thumb/WRAM
+[DBG] PASS: nop / ldr r2, [#0x08000000] Thumb/IWRAM
+[DBG] Timing test: strh r3, [sp]
+[DBG] PASS: strh r3, [sp] ARM/ROM ...
+[DBG] PASS: strh r3, [sp] ARM/ROM P..
+[DBG] PASS: strh r3, [sp] ARM/ROM .N.
+[DBG] PASS: strh r3, [sp] ARM/ROM PN.
+[DBG] PASS: strh r3, [sp] ARM/ROM ..S
+[DBG] PASS: strh r3, [sp] ARM/ROM P.S
+[DBG] PASS: strh r3, [sp] ARM/ROM .NS
+[DBG] PASS: strh r3, [sp] ARM/ROM PNS
+[DBG] PASS: strh r3, [sp] ARM/WRAM
+[DBG] PASS: strh r3, [sp] ARM/IWRAM
+[DBG] PASS: strh r3, [sp] Thumb/ROM ...
+[DBG] PASS: strh r3, [sp] Thumb/ROM P..
+[DBG] PASS: strh r3, [sp] Thumb/ROM .N.
+[DBG] PASS: strh r3, [sp] Thumb/ROM PN.
+[DBG] PASS: strh r3, [sp] Thumb/ROM ..S
+[DBG] PASS: strh r3, [sp] Thumb/ROM P.S
+[DBG] PASS: strh r3, [sp] Thumb/ROM .NS
+[DBG] PASS: strh r3, [sp] Thumb/ROM PNS
+[DBG] PASS: strh r3, [sp] Thumb/WRAM
+[DBG] PASS: strh r3, [sp] Thumb/IWRAM
+[DBG] Timing test: strh r3, [sp] / nop
+[DBG] PASS: strh r3, [sp] / nop ARM/ROM ...
+[DBG] PASS: strh r3, [sp] / nop ARM/ROM P..
+[DBG] PASS: strh r3, [sp] / nop ARM/ROM .N.
+[DBG] PASS: strh r3, [sp] / nop ARM/ROM PN.
+[DBG] PASS: strh r3, [sp] / nop ARM/ROM ..S
+[DBG] PASS: strh r3, [sp] / nop ARM/ROM P.S
+[DBG] PASS: strh r3, [sp] / nop ARM/ROM .NS
+[DBG] PASS: strh r3, [sp] / nop ARM/ROM PNS
+[DBG] PASS: strh r3, [sp] / nop ARM/WRAM
+[DBG] PASS: strh r3, [sp] / nop ARM/IWRAM
+[DBG] PASS: strh r3, [sp] / nop Thumb/ROM ...
+[DBG] PASS: strh r3, [sp] / nop Thumb/ROM P..
+[DBG] PASS: strh r3, [sp] / nop Thumb/ROM .N.
+[DBG] PASS: strh r3, [sp] / nop Thumb/ROM PN.
+[DBG] PASS: strh r3, [sp] / nop Thumb/ROM ..S
+[DBG] PASS: strh r3, [sp] / nop Thumb/ROM P.S
+[DBG] PASS: strh r3, [sp] / nop Thumb/ROM .NS
+[DBG] PASS: strh r3, [sp] / nop Thumb/ROM PNS
+[DBG] PASS: strh r3, [sp] / nop Thumb/WRAM
+[DBG] PASS: strh r3, [sp] / nop Thumb/IWRAM
+[DBG] Timing test: nop / strh r3, [sp]
+[DBG] PASS: nop / strh r3, [sp] ARM/ROM ...
+[DBG] PASS: nop / strh r3, [sp] ARM/ROM P..
+[DBG] PASS: nop / strh r3, [sp] ARM/ROM .N.
+[DBG] PASS: nop / strh r3, [sp] ARM/ROM PN.
+[DBG] PASS: nop / strh r3, [sp] ARM/ROM ..S
+[DBG] PASS: nop / strh r3, [sp] ARM/ROM P.S
+[DBG] PASS: nop / strh r3, [sp] ARM/ROM .NS
+[DBG] PASS: nop / strh r3, [sp] ARM/ROM PNS
+[DBG] PASS: nop / strh r3, [sp] ARM/WRAM
+[DBG] PASS: nop / strh r3, [sp] ARM/IWRAM
+[DBG] PASS: nop / strh r3, [sp] Thumb/ROM ...
+[DBG] PASS: nop / strh r3, [sp] Thumb/ROM P..
+[DBG] PASS: nop / strh r3, [sp] Thumb/ROM .N.
+[DBG] PASS: nop / strh r3, [sp] Thumb/ROM PN.
+[DBG] PASS: nop / strh r3, [sp] Thumb/ROM ..S
+[DBG] PASS: nop / strh r3, [sp] Thumb/ROM P.S
+[DBG] PASS: nop / strh r3, [sp] Thumb/ROM .NS
+[DBG] PASS: nop / strh r3, [sp] Thumb/ROM PNS
+[DBG] PASS: nop / strh r3, [sp] Thumb/WRAM
+[DBG] PASS: nop / strh r3, [sp] Thumb/IWRAM
+[DBG] Timing test: nop / strh r3, [sp] / nop
+[DBG] PASS: nop / strh r3, [sp] / nop ARM/ROM ...
+[DBG] PASS: nop / strh r3, [sp] / nop ARM/ROM P..
+[DBG] PASS: nop / strh r3, [sp] / nop ARM/ROM .N.
+[DBG] PASS: nop / strh r3, [sp] / nop ARM/ROM PN.
+[DBG] PASS: nop / strh r3, [sp] / nop ARM/ROM ..S
+[DBG] PASS: nop / strh r3, [sp] / nop ARM/ROM P.S
+[DBG] PASS: nop / strh r3, [sp] / nop ARM/ROM .NS
+[DBG] PASS: nop / strh r3, [sp] / nop ARM/ROM PNS
+[DBG] PASS: nop / strh r3, [sp] / nop ARM/WRAM
+[DBG] PASS: nop / strh r3, [sp] / nop ARM/IWRAM
+[DBG] PASS: nop / strh r3, [sp] / nop Thumb/ROM ...
+[DBG] PASS: nop / strh r3, [sp] / nop Thumb/ROM P..
+[DBG] PASS: nop / strh r3, [sp] / nop Thumb/ROM .N.
+[DBG] PASS: nop / strh r3, [sp] / nop Thumb/ROM PN.
+[DBG] PASS: nop / strh r3, [sp] / nop Thumb/ROM ..S
+[DBG] PASS: nop / strh r3, [sp] / nop Thumb/ROM P.S
+[DBG] PASS: nop / strh r3, [sp] / nop Thumb/ROM .NS
+[DBG] PASS: nop / strh r3, [sp] / nop Thumb/ROM PNS
+[DBG] PASS: nop / strh r3, [sp] / nop Thumb/WRAM
+[DBG] PASS: nop / strh r3, [sp] / nop Thumb/IWRAM
+[DBG] Timing test: ldr r2, [sp] x2
+[DBG] PASS: ldr r2, [sp] x2 ARM/ROM ...
+[DBG] PASS: ldr r2, [sp] x2 ARM/ROM P..
+[DBG] PASS: ldr r2, [sp] x2 ARM/ROM .N.
+[DBG] PASS: ldr r2, [sp] x2 ARM/ROM PN.
+[DBG] PASS: ldr r2, [sp] x2 ARM/ROM ..S
+[DBG] PASS: ldr r2, [sp] x2 ARM/ROM P.S
+[DBG] PASS: ldr r2, [sp] x2 ARM/ROM .NS
+[DBG] PASS: ldr r2, [sp] x2 ARM/ROM PNS
+[DBG] PASS: ldr r2, [sp] x2 ARM/WRAM
+[DBG] PASS: ldr r2, [sp] x2 ARM/IWRAM
+[DBG] PASS: ldr r2, [sp] x2 Thumb/ROM ...
+[DBG] PASS: ldr r2, [sp] x2 Thumb/ROM P..
+[DBG] PASS: ldr r2, [sp] x2 Thumb/ROM .N.
+[DBG] PASS: ldr r2, [sp] x2 Thumb/ROM PN.
+[DBG] PASS: ldr r2, [sp] x2 Thumb/ROM ..S
+[DBG] PASS: ldr r2, [sp] x2 Thumb/ROM P.S
+[DBG] PASS: ldr r2, [sp] x2 Thumb/ROM .NS
+[DBG] PASS: ldr r2, [sp] x2 Thumb/ROM PNS
+[DBG] PASS: ldr r2, [sp] x2 Thumb/WRAM
+[DBG] PASS: ldr r2, [sp] x2 Thumb/IWRAM
+[DBG] Timing test: ldr r2, [#0x08000000] / ldr r2, [sp]
+[DBG] PASS: ldr r2, [#0x08000000] / ldr r2, [sp] ARM/ROM ...
+[DBG] PASS: ldr r2, [#0x08000000] / ldr r2, [sp] ARM/ROM P..
+[DBG] PASS: ldr r2, [#0x08000000] / ldr r2, [sp] ARM/ROM .N.
+[DBG] PASS: ldr r2, [#0x08000000] / ldr r2, [sp] ARM/ROM PN.
+[DBG] PASS: ldr r2, [#0x08000000] / ldr r2, [sp] ARM/ROM ..S
+[DBG] PASS: ldr r2, [#0x08000000] / ldr r2, [sp] ARM/ROM P.S
+[DBG] PASS: ldr r2, [#0x08000000] / ldr r2, [sp] ARM/ROM .NS
+[DBG] PASS: ldr r2, [#0x08000000] / ldr r2, [sp] ARM/ROM PNS
+[DBG] PASS: ldr r2, [#0x08000000] / ldr r2, [sp] ARM/WRAM
+[DBG] PASS: ldr r2, [#0x08000000] / ldr r2, [sp] ARM/IWRAM
+[DBG] PASS: ldr r2, [#0x08000000] / ldr r2, [sp] Thumb/ROM ...
+[DBG] PASS: ldr r2, [#0x08000000] / ldr r2, [sp] Thumb/ROM P..
+[DBG] PASS: ldr r2, [#0x08000000] / ldr r2, [sp] Thumb/ROM .N.
+[DBG] PASS: ldr r2, [#0x08000000] / ldr r2, [sp] Thumb/ROM PN.
+[DBG] PASS: ldr r2, [#0x08000000] / ldr r2, [sp] Thumb/ROM ..S
+[DBG] PASS: ldr r2, [#0x08000000] / ldr r2, [sp] Thumb/ROM P.S
+[DBG] PASS: ldr r2, [#0x08000000] / ldr r2, [sp] Thumb/ROM .NS
+[DBG] PASS: ldr r2, [#0x08000000] / ldr r2, [sp] Thumb/ROM PNS
+[DBG] PASS: ldr r2, [#0x08000000] / ldr r2, [sp] Thumb/WRAM
+[DBG] PASS: ldr r2, [#0x08000000] / ldr r2, [sp] Thumb/IWRAM
+[DBG] Timing test: ldr r2, [sp] / ldr r2, [#0x08000000]
+[DBG] PASS: ldr r2, [sp] / ldr r2, [#0x08000000] ARM/ROM ...
+[DBG] PASS: ldr r2, [sp] / ldr r2, [#0x08000000] ARM/ROM P..
+[DBG] PASS: ldr r2, [sp] / ldr r2, [#0x08000000] ARM/ROM .N.
+[DBG] PASS: ldr r2, [sp] / ldr r2, [#0x08000000] ARM/ROM PN.
+[DBG] PASS: ldr r2, [sp] / ldr r2, [#0x08000000] ARM/ROM ..S
+[DBG] PASS: ldr r2, [sp] / ldr r2, [#0x08000000] ARM/ROM P.S
+[DBG] PASS: ldr r2, [sp] / ldr r2, [#0x08000000] ARM/ROM .NS
+[DBG] PASS: ldr r2, [sp] / ldr r2, [#0x08000000] ARM/ROM PNS
+[DBG] PASS: ldr r2, [sp] / ldr r2, [#0x08000000] ARM/WRAM
+[DBG] PASS: ldr r2, [sp] / ldr r2, [#0x08000000] ARM/IWRAM
+[DBG] PASS: ldr r2, [sp] / ldr r2, [#0x08000000] Thumb/ROM ...
+[DBG] PASS: ldr r2, [sp] / ldr r2, [#0x08000000] Thumb/ROM P..
+[DBG] PASS: ldr r2, [sp] / ldr r2, [#0x08000000] Thumb/ROM .N.
+[DBG] PASS: ldr r2, [sp] / ldr r2, [#0x08000000] Thumb/ROM PN.
+[DBG] PASS: ldr r2, [sp] / ldr r2, [#0x08000000] Thumb/ROM ..S
+[DBG] PASS: ldr r2, [sp] / ldr r2, [#0x08000000] Thumb/ROM P.S
+[DBG] PASS: ldr r2, [sp] / ldr r2, [#0x08000000] Thumb/ROM .NS
+[DBG] PASS: ldr r2, [sp] / ldr r2, [#0x08000000] Thumb/ROM PNS
+[DBG] PASS: ldr r2, [sp] / ldr r2, [#0x08000000] Thumb/WRAM
+[DBG] PASS: ldr r2, [sp] / ldr r2, [#0x08000000] Thumb/IWRAM
+[DBG] Timing test: ldr r2, [#0x08000000] x2
+[DBG] PASS: ldr r2, [#0x08000000] x2 ARM/ROM ...
+[DBG] PASS: ldr r2, [#0x08000000] x2 ARM/ROM P..
+[DBG] PASS: ldr r2, [#0x08000000] x2 ARM/ROM .N.
+[DBG] PASS: ldr r2, [#0x08000000] x2 ARM/ROM PN.
+[DBG] PASS: ldr r2, [#0x08000000] x2 ARM/ROM ..S
+[DBG] PASS: ldr r2, [#0x08000000] x2 ARM/ROM P.S
+[DBG] PASS: ldr r2, [#0x08000000] x2 ARM/ROM .NS
+[DBG] PASS: ldr r2, [#0x08000000] x2 ARM/ROM PNS
+[DBG] PASS: ldr r2, [#0x08000000] x2 ARM/WRAM
+[DBG] PASS: ldr r2, [#0x08000000] x2 ARM/IWRAM
+[DBG] PASS: ldr r2, [#0x08000000] x2 Thumb/ROM ...
+[DBG] PASS: ldr r2, [#0x08000000] x2 Thumb/ROM P..
+[DBG] PASS: ldr r2, [#0x08000000] x2 Thumb/ROM .N.
+[DBG] PASS: ldr r2, [#0x08000000] x2 Thumb/ROM PN.
+[DBG] PASS: ldr r2, [#0x08000000] x2 Thumb/ROM ..S
+[DBG] PASS: ldr r2, [#0x08000000] x2 Thumb/ROM P.S
+[DBG] PASS: ldr r2, [#0x08000000] x2 Thumb/ROM .NS
+[DBG] PASS: ldr r2, [#0x08000000] x2 Thumb/ROM PNS
+[DBG] PASS: ldr r2, [#0x08000000] x2 Thumb/WRAM
+[DBG] PASS: ldr r2, [#0x08000000] x2 Thumb/IWRAM
+[DBG] Timing test: str r3, [sp] x2
+[DBG] PASS: str r3, [sp] x2 ARM/ROM ...
+[DBG] PASS: str r3, [sp] x2 ARM/ROM P..
+[DBG] PASS: str r3, [sp] x2 ARM/ROM .N.
+[DBG] PASS: str r3, [sp] x2 ARM/ROM PN.
+[DBG] PASS: str r3, [sp] x2 ARM/ROM ..S
+[DBG] PASS: str r3, [sp] x2 ARM/ROM P.S
+[DBG] PASS: str r3, [sp] x2 ARM/ROM .NS
+[DBG] PASS: str r3, [sp] x2 ARM/ROM PNS
+[DBG] PASS: str r3, [sp] x2 ARM/WRAM
+[DBG] PASS: str r3, [sp] x2 ARM/IWRAM
+[DBG] PASS: str r3, [sp] x2 Thumb/ROM ...
+[DBG] PASS: str r3, [sp] x2 Thumb/ROM P..
+[DBG] PASS: str r3, [sp] x2 Thumb/ROM .N.
+[DBG] PASS: str r3, [sp] x2 Thumb/ROM PN.
+[DBG] PASS: str r3, [sp] x2 Thumb/ROM ..S
+[DBG] PASS: str r3, [sp] x2 Thumb/ROM P.S
+[DBG] PASS: str r3, [sp] x2 Thumb/ROM .NS
+[DBG] PASS: str r3, [sp] x2 Thumb/ROM PNS
+[DBG] PASS: str r3, [sp] x2 Thumb/WRAM
+[DBG] PASS: str r3, [sp] x2 Thumb/IWRAM
+[DBG] Timing test: ldr r2, [sp] / str r2, [sp]
+[DBG] PASS: ldr r2, [sp] / str r2, [sp] ARM/ROM ...
+[DBG] PASS: ldr r2, [sp] / str r2, [sp] ARM/ROM P..
+[DBG] PASS: ldr r2, [sp] / str r2, [sp] ARM/ROM .N.
+[DBG] PASS: ldr r2, [sp] / str r2, [sp] ARM/ROM PN.
+[DBG] PASS: ldr r2, [sp] / str r2, [sp] ARM/ROM ..S
+[DBG] PASS: ldr r2, [sp] / str r2, [sp] ARM/ROM P.S
+[DBG] PASS: ldr r2, [sp] / str r2, [sp] ARM/ROM .NS
+[DBG] PASS: ldr r2, [sp] / str r2, [sp] ARM/ROM PNS
+[DBG] PASS: ldr r2, [sp] / str r2, [sp] ARM/WRAM
+[DBG] PASS: ldr r2, [sp] / str r2, [sp] ARM/IWRAM
+[DBG] PASS: ldr r2, [sp] / str r2, [sp] Thumb/ROM ...
+[DBG] PASS: ldr r2, [sp] / str r2, [sp] Thumb/ROM P..
+[DBG] PASS: ldr r2, [sp] / str r2, [sp] Thumb/ROM .N.
+[DBG] PASS: ldr r2, [sp] / str r2, [sp] Thumb/ROM PN.
+[DBG] PASS: ldr r2, [sp] / str r2, [sp] Thumb/ROM ..S
+[DBG] PASS: ldr r2, [sp] / str r2, [sp] Thumb/ROM P.S
+[DBG] PASS: ldr r2, [sp] / str r2, [sp] Thumb/ROM .NS
+[DBG] PASS: ldr r2, [sp] / str r2, [sp] Thumb/ROM PNS
+[DBG] PASS: ldr r2, [sp] / str r2, [sp] Thumb/WRAM
+[DBG] PASS: ldr r2, [sp] / str r2, [sp] Thumb/IWRAM
+[DBG] Timing test: str r3, [sp] / ldr r3, [sp]
+[DBG] PASS: str r3, [sp] / ldr r3, [sp] ARM/ROM ...
+[DBG] PASS: str r3, [sp] / ldr r3, [sp] ARM/ROM P..
+[DBG] PASS: str r3, [sp] / ldr r3, [sp] ARM/ROM .N.
+[DBG] PASS: str r3, [sp] / ldr r3, [sp] ARM/ROM PN.
+[DBG] PASS: str r3, [sp] / ldr r3, [sp] ARM/ROM ..S
+[DBG] PASS: str r3, [sp] / ldr r3, [sp] ARM/ROM P.S
+[DBG] PASS: str r3, [sp] / ldr r3, [sp] ARM/ROM .NS
+[DBG] PASS: str r3, [sp] / ldr r3, [sp] ARM/ROM PNS
+[DBG] PASS: str r3, [sp] / ldr r3, [sp] ARM/WRAM
+[DBG] PASS: str r3, [sp] / ldr r3, [sp] ARM/IWRAM
+[DBG] PASS: str r3, [sp] / ldr r3, [sp] Thumb/ROM ...
+[DBG] PASS: str r3, [sp] / ldr r3, [sp] Thumb/ROM P..
+[DBG] PASS: str r3, [sp] / ldr r3, [sp] Thumb/ROM .N.
+[DBG] PASS: str r3, [sp] / ldr r3, [sp] Thumb/ROM PN.
+[DBG] PASS: str r3, [sp] / ldr r3, [sp] Thumb/ROM ..S
+[DBG] PASS: str r3, [sp] / ldr r3, [sp] Thumb/ROM P.S
+[DBG] PASS: str r3, [sp] / ldr r3, [sp] Thumb/ROM .NS
+[DBG] PASS: str r3, [sp] / ldr r3, [sp] Thumb/ROM PNS
+[DBG] PASS: str r3, [sp] / ldr r3, [sp] Thumb/WRAM
+[DBG] PASS: str r3, [sp] / ldr r3, [sp] Thumb/IWRAM
+[DBG] Timing test: ldmia sp, {r2}
+[DBG] PASS: ldmia sp, {r2} ARM/ROM ...
+[DBG] PASS: ldmia sp, {r2} ARM/ROM P..
+[DBG] PASS: ldmia sp, {r2} ARM/ROM .N.
+[DBG] PASS: ldmia sp, {r2} ARM/ROM PN.
+[DBG] PASS: ldmia sp, {r2} ARM/ROM ..S
+[DBG] PASS: ldmia sp, {r2} ARM/ROM P.S
+[DBG] PASS: ldmia sp, {r2} ARM/ROM .NS
+[DBG] PASS: ldmia sp, {r2} ARM/ROM PNS
+[DBG] PASS: ldmia sp, {r2} ARM/WRAM
+[DBG] PASS: ldmia sp, {r2} ARM/IWRAM
+[DBG] Timing test: ldmia sp, {r2, r3}
+[DBG] PASS: ldmia sp, {r2, r3} ARM/ROM ...
+[DBG] PASS: ldmia sp, {r2, r3} ARM/ROM P..
+[DBG] PASS: ldmia sp, {r2, r3} ARM/ROM .N.
+[DBG] PASS: ldmia sp, {r2, r3} ARM/ROM PN.
+[DBG] PASS: ldmia sp, {r2, r3} ARM/ROM ..S
+[DBG] PASS: ldmia sp, {r2, r3} ARM/ROM P.S
+[DBG] PASS: ldmia sp, {r2, r3} ARM/ROM .NS
+[DBG] PASS: ldmia sp, {r2, r3} ARM/ROM PNS
+[DBG] PASS: ldmia sp, {r2, r3} ARM/WRAM
+[DBG] PASS: ldmia sp, {r2, r3} ARM/IWRAM
+[DBG] Timing test: ldmia sp, {r2-r7}
+[DBG] PASS: ldmia sp, {r2-r7} ARM/ROM ...
+[DBG] PASS: ldmia sp, {r2-r7} ARM/ROM P..
+[DBG] PASS: ldmia sp, {r2-r7} ARM/ROM .N.
+[DBG] PASS: ldmia sp, {r2-r7} ARM/ROM PN.
+[DBG] PASS: ldmia sp, {r2-r7} ARM/ROM ..S
+[DBG] PASS: ldmia sp, {r2-r7} ARM/ROM P.S
+[DBG] PASS: ldmia sp, {r2-r7} ARM/ROM .NS
+[DBG] PASS: ldmia sp, {r2-r7} ARM/ROM PNS
+[DBG] PASS: ldmia sp, {r2-r7} ARM/WRAM
+[DBG] PASS: ldmia sp, {r2-r7} ARM/IWRAM
+[DBG] Timing test: ldmia sp, {r2} x2
+[DBG] PASS: ldmia sp, {r2} x2 ARM/ROM ...
+[DBG] PASS: ldmia sp, {r2} x2 ARM/ROM P..
+[DBG] PASS: ldmia sp, {r2} x2 ARM/ROM .N.
+[DBG] PASS: ldmia sp, {r2} x2 ARM/ROM PN.
+[DBG] PASS: ldmia sp, {r2} x2 ARM/ROM ..S
+[DBG] PASS: ldmia sp, {r2} x2 ARM/ROM P.S
+[DBG] PASS: ldmia sp, {r2} x2 ARM/ROM .NS
+[DBG] PASS: ldmia sp, {r2} x2 ARM/ROM PNS
+[DBG] PASS: ldmia sp, {r2} x2 ARM/WRAM
+[DBG] PASS: ldmia sp, {r2} x2 ARM/IWRAM
+[DBG] Timing test: ldmia sp, {r2, r3} x2
+[DBG] PASS: ldmia sp, {r2, r3} x2 ARM/ROM ...
+[DBG] PASS: ldmia sp, {r2, r3} x2 ARM/ROM P..
+[DBG] PASS: ldmia sp, {r2, r3} x2 ARM/ROM .N.
+[DBG] PASS: ldmia sp, {r2, r3} x2 ARM/ROM PN.
+[DBG] PASS: ldmia sp, {r2, r3} x2 ARM/ROM ..S
+[DBG] PASS: ldmia sp, {r2, r3} x2 ARM/ROM P.S
+[DBG] PASS: ldmia sp, {r2, r3} x2 ARM/ROM .NS
+[DBG] PASS: ldmia sp, {r2, r3} x2 ARM/ROM PNS
+[DBG] PASS: ldmia sp, {r2, r3} x2 ARM/WRAM
+[DBG] PASS: ldmia sp, {r2, r3} x2 ARM/IWRAM
+[DBG] Timing test: ldmia sp, {r2-r7} x2
+[DBG] PASS: ldmia sp, {r2-r7} x2 ARM/ROM ...
+[DBG] PASS: ldmia sp, {r2-r7} x2 ARM/ROM P..
+[DBG] PASS: ldmia sp, {r2-r7} x2 ARM/ROM .N.
+[DBG] PASS: ldmia sp, {r2-r7} x2 ARM/ROM PN.
+[DBG] PASS: ldmia sp, {r2-r7} x2 ARM/ROM ..S
+[DBG] PASS: ldmia sp, {r2-r7} x2 ARM/ROM P.S
+[DBG] PASS: ldmia sp, {r2-r7} x2 ARM/ROM .NS
+[DBG] PASS: ldmia sp, {r2-r7} x2 ARM/ROM PNS
+[DBG] PASS: ldmia sp, {r2-r7} x2 ARM/WRAM
+[DBG] PASS: ldmia sp, {r2-r7} x2 ARM/IWRAM
+[DBG] Timing test: stmia sp, {r2}
+[DBG] PASS: stmia sp, {r2} ARM/ROM ...
+[DBG] PASS: stmia sp, {r2} ARM/ROM P..
+[DBG] PASS: stmia sp, {r2} ARM/ROM .N.
+[DBG] PASS: stmia sp, {r2} ARM/ROM PN.
+[DBG] PASS: stmia sp, {r2} ARM/ROM ..S
+[DBG] PASS: stmia sp, {r2} ARM/ROM P.S
+[DBG] PASS: stmia sp, {r2} ARM/ROM .NS
+[DBG] PASS: stmia sp, {r2} ARM/ROM PNS
+[DBG] PASS: stmia sp, {r2} ARM/WRAM
+[DBG] PASS: stmia sp, {r2} ARM/IWRAM
+[DBG] Timing test: stmia sp, {r2, r3}
+[DBG] PASS: stmia sp, {r2, r3} ARM/ROM ...
+[DBG] PASS: stmia sp, {r2, r3} ARM/ROM P..
+[DBG] PASS: stmia sp, {r2, r3} ARM/ROM .N.
+[DBG] PASS: stmia sp, {r2, r3} ARM/ROM PN.
+[DBG] PASS: stmia sp, {r2, r3} ARM/ROM ..S
+[DBG] PASS: stmia sp, {r2, r3} ARM/ROM P.S
+[DBG] PASS: stmia sp, {r2, r3} ARM/ROM .NS
+[DBG] PASS: stmia sp, {r2, r3} ARM/ROM PNS
+[DBG] PASS: stmia sp, {r2, r3} ARM/WRAM
+[DBG] PASS: stmia sp, {r2, r3} ARM/IWRAM
+[DBG] Timing test: stmia sp, {r2-r7}
+[DBG] PASS: stmia sp, {r2-r7} ARM/ROM ...
+[DBG] PASS: stmia sp, {r2-r7} ARM/ROM P..
+[DBG] PASS: stmia sp, {r2-r7} ARM/ROM .N.
+[DBG] PASS: stmia sp, {r2-r7} ARM/ROM PN.
+[DBG] PASS: stmia sp, {r2-r7} ARM/ROM ..S
+[DBG] PASS: stmia sp, {r2-r7} ARM/ROM P.S
+[DBG] PASS: stmia sp, {r2-r7} ARM/ROM .NS
+[DBG] PASS: stmia sp, {r2-r7} ARM/ROM PNS
+[DBG] PASS: stmia sp, {r2-r7} ARM/WRAM
+[DBG] PASS: stmia sp, {r2-r7} ARM/IWRAM
+[DBG] Timing test: stmia sp, {r2} x2
+[DBG] PASS: stmia sp, {r2} x2 ARM/ROM ...
+[DBG] PASS: stmia sp, {r2} x2 ARM/ROM P..
+[DBG] PASS: stmia sp, {r2} x2 ARM/ROM .N.
+[DBG] PASS: stmia sp, {r2} x2 ARM/ROM PN.
+[DBG] PASS: stmia sp, {r2} x2 ARM/ROM ..S
+[DBG] PASS: stmia sp, {r2} x2 ARM/ROM P.S
+[DBG] PASS: stmia sp, {r2} x2 ARM/ROM .NS
+[DBG] PASS: stmia sp, {r2} x2 ARM/ROM PNS
+[DBG] PASS: stmia sp, {r2} x2 ARM/WRAM
+[DBG] PASS: stmia sp, {r2} x2 ARM/IWRAM
+[DBG] Timing test: stmia sp, {r2, r3} x2
+[DBG] PASS: stmia sp, {r2, r3} x2 ARM/ROM ...
+[DBG] PASS: stmia sp, {r2, r3} x2 ARM/ROM P..
+[DBG] PASS: stmia sp, {r2, r3} x2 ARM/ROM .N.
+[DBG] PASS: stmia sp, {r2, r3} x2 ARM/ROM PN.
+[DBG] PASS: stmia sp, {r2, r3} x2 ARM/ROM ..S
+[DBG] PASS: stmia sp, {r2, r3} x2 ARM/ROM P.S
+[DBG] PASS: stmia sp, {r2, r3} x2 ARM/ROM .NS
+[DBG] PASS: stmia sp, {r2, r3} x2 ARM/ROM PNS
+[DBG] PASS: stmia sp, {r2, r3} x2 ARM/WRAM
+[DBG] PASS: stmia sp, {r2, r3} x2 ARM/IWRAM
+[DBG] Timing test: stmia sp, {r2-r7} x2
+[DBG] PASS: stmia sp, {r2-r7} x2 ARM/ROM ...
+[DBG] PASS: stmia sp, {r2-r7} x2 ARM/ROM P..
+[DBG] PASS: stmia sp, {r2-r7} x2 ARM/ROM .N.
+[DBG] PASS: stmia sp, {r2-r7} x2 ARM/ROM PN.
+[DBG] PASS: stmia sp, {r2-r7} x2 ARM/ROM ..S
+[DBG] PASS: stmia sp, {r2-r7} x2 ARM/ROM P.S
+[DBG] PASS: stmia sp, {r2-r7} x2 ARM/ROM .NS
+[DBG] PASS: stmia sp, {r2-r7} x2 ARM/ROM PNS
+[DBG] PASS: stmia sp, {r2-r7} x2 ARM/WRAM
+[DBG] PASS: stmia sp, {r2-r7} x2 ARM/IWRAM
+[DBG] Timing test: ldmia [#0x07FFFFFC]!, {r3-r7}
+[DBG] PASS: ldmia [#0x07FFFFFC]!, {r3-r7} ARM/ROM ...
+[DBG] PASS: ldmia [#0x07FFFFFC]!, {r3-r7} ARM/ROM P..
+[DBG] PASS: ldmia [#0x07FFFFFC]!, {r3-r7} ARM/ROM .N.
+[DBG] PASS: ldmia [#0x07FFFFFC]!, {r3-r7} ARM/ROM PN.
+[DBG] PASS: ldmia [#0x07FFFFFC]!, {r3-r7} ARM/ROM ..S
+[DBG] PASS: ldmia [#0x07FFFFFC]!, {r3-r7} ARM/ROM P.S
+[DBG] PASS: ldmia [#0x07FFFFFC]!, {r3-r7} ARM/ROM .NS
+[DBG] PASS: ldmia [#0x07FFFFFC]!, {r3-r7} ARM/ROM PNS
+[DBG] PASS: ldmia [#0x07FFFFFC]!, {r3-r7} ARM/WRAM
+[DBG] PASS: ldmia [#0x07FFFFFC]!, {r3-r7} ARM/IWRAM
+[DBG] PASS: ldmia [#0x07FFFFFC]!, {r3-r7} Thumb/ROM ...
+[DBG] PASS: ldmia [#0x07FFFFFC]!, {r3-r7} Thumb/ROM P..
+[DBG] PASS: ldmia [#0x07FFFFFC]!, {r3-r7} Thumb/ROM .N.
+[DBG] PASS: ldmia [#0x07FFFFFC]!, {r3-r7} Thumb/ROM PN.
+[DBG] PASS: ldmia [#0x07FFFFFC]!, {r3-r7} Thumb/ROM ..S
+[DBG] PASS: ldmia [#0x07FFFFFC]!, {r3-r7} Thumb/ROM P.S
+[DBG] PASS: ldmia [#0x07FFFFFC]!, {r3-r7} Thumb/ROM .NS
+[DBG] PASS: ldmia [#0x07FFFFFC]!, {r3-r7} Thumb/ROM PNS
+[DBG] PASS: ldmia [#0x07FFFFFC]!, {r3-r7} Thumb/WRAM
+[DBG] PASS: ldmia [#0x07FFFFFC]!, {r3-r7} Thumb/IWRAM
+[DBG] Timing test: ldmia [#0x07FFFFF8]!, {r3-r7}
+[DBG] PASS: ldmia [#0x07FFFFF8]!, {r3-r7} ARM/ROM ...
+[DBG] PASS: ldmia [#0x07FFFFF8]!, {r3-r7} ARM/ROM P..
+[DBG] PASS: ldmia [#0x07FFFFF8]!, {r3-r7} ARM/ROM .N.
+[DBG] PASS: ldmia [#0x07FFFFF8]!, {r3-r7} ARM/ROM PN.
+[DBG] PASS: ldmia [#0x07FFFFF8]!, {r3-r7} ARM/ROM ..S
+[DBG] PASS: ldmia [#0x07FFFFF8]!, {r3-r7} ARM/ROM P.S
+[DBG] PASS: ldmia [#0x07FFFFF8]!, {r3-r7} ARM/ROM .NS
+[DBG] PASS: ldmia [#0x07FFFFF8]!, {r3-r7} ARM/ROM PNS
+[DBG] PASS: ldmia [#0x07FFFFF8]!, {r3-r7} ARM/WRAM
+[DBG] PASS: ldmia [#0x07FFFFF8]!, {r3-r7} ARM/IWRAM
+[DBG] PASS: ldmia [#0x07FFFFF8]!, {r3-r7} Thumb/ROM ...
+[DBG] PASS: ldmia [#0x07FFFFF8]!, {r3-r7} Thumb/ROM P..
+[DBG] PASS: ldmia [#0x07FFFFF8]!, {r3-r7} Thumb/ROM .N.
+[DBG] PASS: ldmia [#0x07FFFFF8]!, {r3-r7} Thumb/ROM PN.
+[DBG] PASS: ldmia [#0x07FFFFF8]!, {r3-r7} Thumb/ROM ..S
+[DBG] PASS: ldmia [#0x07FFFFF8]!, {r3-r7} Thumb/ROM P.S
+[DBG] PASS: ldmia [#0x07FFFFF8]!, {r3-r7} Thumb/ROM .NS
+[DBG] PASS: ldmia [#0x07FFFFF8]!, {r3-r7} Thumb/ROM PNS
+[DBG] PASS: ldmia [#0x07FFFFF8]!, {r3-r7} Thumb/WRAM
+[DBG] PASS: ldmia [#0x07FFFFF8]!, {r3-r7} Thumb/IWRAM
+[DBG] Timing test: ldmia [#0x07FFFFF4]!, {r3-r7}
+[DBG] PASS: ldmia [#0x07FFFFF4]!, {r3-r7} ARM/ROM ...
+[DBG] PASS: ldmia [#0x07FFFFF4]!, {r3-r7} ARM/ROM P..
+[DBG] PASS: ldmia [#0x07FFFFF4]!, {r3-r7} ARM/ROM .N.
+[DBG] PASS: ldmia [#0x07FFFFF4]!, {r3-r7} ARM/ROM PN.
+[DBG] PASS: ldmia [#0x07FFFFF4]!, {r3-r7} ARM/ROM ..S
+[DBG] PASS: ldmia [#0x07FFFFF4]!, {r3-r7} ARM/ROM P.S
+[DBG] PASS: ldmia [#0x07FFFFF4]!, {r3-r7} ARM/ROM .NS
+[DBG] PASS: ldmia [#0x07FFFFF4]!, {r3-r7} ARM/ROM PNS
+[DBG] PASS: ldmia [#0x07FFFFF4]!, {r3-r7} ARM/WRAM
+[DBG] PASS: ldmia [#0x07FFFFF4]!, {r3-r7} ARM/IWRAM
+[DBG] PASS: ldmia [#0x07FFFFF4]!, {r3-r7} Thumb/ROM ...
+[DBG] PASS: ldmia [#0x07FFFFF4]!, {r3-r7} Thumb/ROM P..
+[DBG] PASS: ldmia [#0x07FFFFF4]!, {r3-r7} Thumb/ROM .N.
+[DBG] PASS: ldmia [#0x07FFFFF4]!, {r3-r7} Thumb/ROM PN.
+[DBG] PASS: ldmia [#0x07FFFFF4]!, {r3-r7} Thumb/ROM ..S
+[DBG] PASS: ldmia [#0x07FFFFF4]!, {r3-r7} Thumb/ROM P.S
+[DBG] PASS: ldmia [#0x07FFFFF4]!, {r3-r7} Thumb/ROM .NS
+[DBG] PASS: ldmia [#0x07FFFFF4]!, {r3-r7} Thumb/ROM PNS
+[DBG] PASS: ldmia [#0x07FFFFF4]!, {r3-r7} Thumb/WRAM
+[DBG] PASS: ldmia [#0x07FFFFF4]!, {r3-r7} Thumb/IWRAM
+[DBG] Timing test: ldmia [#0x07FFFFF0]!, {r3-r7}
+[DBG] PASS: ldmia [#0x07FFFFF0]!, {r3-r7} ARM/ROM ...
+[DBG] PASS: ldmia [#0x07FFFFF0]!, {r3-r7} ARM/ROM P..
+[DBG] PASS: ldmia [#0x07FFFFF0]!, {r3-r7} ARM/ROM .N.
+[DBG] PASS: ldmia [#0x07FFFFF0]!, {r3-r7} ARM/ROM PN.
+[DBG] PASS: ldmia [#0x07FFFFF0]!, {r3-r7} ARM/ROM ..S
+[DBG] PASS: ldmia [#0x07FFFFF0]!, {r3-r7} ARM/ROM P.S
+[DBG] PASS: ldmia [#0x07FFFFF0]!, {r3-r7} ARM/ROM .NS
+[DBG] PASS: ldmia [#0x07FFFFF0]!, {r3-r7} ARM/ROM PNS
+[DBG] PASS: ldmia [#0x07FFFFF0]!, {r3-r7} ARM/WRAM
+[DBG] PASS: ldmia [#0x07FFFFF0]!, {r3-r7} ARM/IWRAM
+[DBG] PASS: ldmia [#0x07FFFFF0]!, {r3-r7} Thumb/ROM ...
+[DBG] PASS: ldmia [#0x07FFFFF0]!, {r3-r7} Thumb/ROM P..
+[DBG] PASS: ldmia [#0x07FFFFF0]!, {r3-r7} Thumb/ROM .N.
+[DBG] PASS: ldmia [#0x07FFFFF0]!, {r3-r7} Thumb/ROM PN.
+[DBG] PASS: ldmia [#0x07FFFFF0]!, {r3-r7} Thumb/ROM ..S
+[DBG] PASS: ldmia [#0x07FFFFF0]!, {r3-r7} Thumb/ROM P.S
+[DBG] PASS: ldmia [#0x07FFFFF0]!, {r3-r7} Thumb/ROM .NS
+[DBG] PASS: ldmia [#0x07FFFFF0]!, {r3-r7} Thumb/ROM PNS
+[DBG] PASS: ldmia [#0x07FFFFF0]!, {r3-r7} Thumb/WRAM
+[DBG] PASS: ldmia [#0x07FFFFF0]!, {r3-r7} Thumb/IWRAM
+[DBG] Timing test: ldmia [#0x07FFFFEC]!, {r3-r7}
+[DBG] PASS: ldmia [#0x07FFFFEC]!, {r3-r7} ARM/ROM ...
+[DBG] PASS: ldmia [#0x07FFFFEC]!, {r3-r7} ARM/ROM P..
+[DBG] PASS: ldmia [#0x07FFFFEC]!, {r3-r7} ARM/ROM .N.
+[DBG] PASS: ldmia [#0x07FFFFEC]!, {r3-r7} ARM/ROM PN.
+[DBG] PASS: ldmia [#0x07FFFFEC]!, {r3-r7} ARM/ROM ..S
+[DBG] PASS: ldmia [#0x07FFFFEC]!, {r3-r7} ARM/ROM P.S
+[DBG] PASS: ldmia [#0x07FFFFEC]!, {r3-r7} ARM/ROM .NS
+[DBG] PASS: ldmia [#0x07FFFFEC]!, {r3-r7} ARM/ROM PNS
+[DBG] PASS: ldmia [#0x07FFFFEC]!, {r3-r7} ARM/WRAM
+[DBG] PASS: ldmia [#0x07FFFFEC]!, {r3-r7} ARM/IWRAM
+[DBG] PASS: ldmia [#0x07FFFFEC]!, {r3-r7} Thumb/ROM ...
+[DBG] PASS: ldmia [#0x07FFFFEC]!, {r3-r7} Thumb/ROM P..
+[DBG] PASS: ldmia [#0x07FFFFEC]!, {r3-r7} Thumb/ROM .N.
+[DBG] PASS: ldmia [#0x07FFFFEC]!, {r3-r7} Thumb/ROM PN.
+[DBG] PASS: ldmia [#0x07FFFFEC]!, {r3-r7} Thumb/ROM ..S
+[DBG] PASS: ldmia [#0x07FFFFEC]!, {r3-r7} Thumb/ROM P.S
+[DBG] PASS: ldmia [#0x07FFFFEC]!, {r3-r7} Thumb/ROM .NS
+[DBG] PASS: ldmia [#0x07FFFFEC]!, {r3-r7} Thumb/ROM PNS
+[DBG] PASS: ldmia [#0x07FFFFEC]!, {r3-r7} Thumb/WRAM
+[DBG] PASS: ldmia [#0x07FFFFEC]!, {r3-r7} Thumb/IWRAM
+[DBG] Timing test: mul #0x00000000, #0xFF
+[DBG] PASS: mul #0x00000000, #0xFF ARM/ROM ...
+[DBG] PASS: mul #0x00000000, #0xFF ARM/ROM P..
+[DBG] PASS: mul #0x00000000, #0xFF ARM/ROM .N.
+[DBG] PASS: mul #0x00000000, #0xFF ARM/ROM PN.
+[DBG] PASS: mul #0x00000000, #0xFF ARM/ROM ..S
+[DBG] PASS: mul #0x00000000, #0xFF ARM/ROM P.S
+[DBG] PASS: mul #0x00000000, #0xFF ARM/ROM .NS
+[DBG] PASS: mul #0x00000000, #0xFF ARM/ROM PNS
+[DBG] PASS: mul #0x00000000, #0xFF ARM/WRAM
+[DBG] PASS: mul #0x00000000, #0xFF ARM/IWRAM
+[DBG] PASS: mul #0x00000000, #0xFF Thumb/ROM ...
+[DBG] PASS: mul #0x00000000, #0xFF Thumb/ROM P..
+[DBG] PASS: mul #0x00000000, #0xFF Thumb/ROM .N.
+[DBG] PASS: mul #0x00000000, #0xFF Thumb/ROM PN.
+[DBG] PASS: mul #0x00000000, #0xFF Thumb/ROM ..S
+[DBG] PASS: mul #0x00000000, #0xFF Thumb/ROM P.S
+[DBG] PASS: mul #0x00000000, #0xFF Thumb/ROM .NS
+[DBG] PASS: mul #0x00000000, #0xFF Thumb/ROM PNS
+[DBG] PASS: mul #0x00000000, #0xFF Thumb/WRAM
+[DBG] PASS: mul #0x00000000, #0xFF Thumb/IWRAM
+[DBG] Timing test: mul #0x00000078, #0xFF
+[DBG] PASS: mul #0x00000078, #0xFF ARM/ROM ...
+[DBG] PASS: mul #0x00000078, #0xFF ARM/ROM P..
+[DBG] PASS: mul #0x00000078, #0xFF ARM/ROM .N.
+[DBG] PASS: mul #0x00000078, #0xFF ARM/ROM PN.
+[DBG] PASS: mul #0x00000078, #0xFF ARM/ROM ..S
+[DBG] PASS: mul #0x00000078, #0xFF ARM/ROM P.S
+[DBG] PASS: mul #0x00000078, #0xFF ARM/ROM .NS
+[DBG] PASS: mul #0x00000078, #0xFF ARM/ROM PNS
+[DBG] PASS: mul #0x00000078, #0xFF ARM/WRAM
+[DBG] PASS: mul #0x00000078, #0xFF ARM/IWRAM
+[DBG] PASS: mul #0x00000078, #0xFF Thumb/ROM ...
+[DBG] PASS: mul #0x00000078, #0xFF Thumb/ROM P..
+[DBG] PASS: mul #0x00000078, #0xFF Thumb/ROM .N.
+[DBG] PASS: mul #0x00000078, #0xFF Thumb/ROM PN.
+[DBG] PASS: mul #0x00000078, #0xFF Thumb/ROM ..S
+[DBG] PASS: mul #0x00000078, #0xFF Thumb/ROM P.S
+[DBG] PASS: mul #0x00000078, #0xFF Thumb/ROM .NS
+[DBG] PASS: mul #0x00000078, #0xFF Thumb/ROM PNS
+[DBG] PASS: mul #0x00000078, #0xFF Thumb/WRAM
+[DBG] PASS: mul #0x00000078, #0xFF Thumb/IWRAM
+[DBG] Timing test: mul #0x00005678, #0xFF
+[DBG] PASS: mul #0x00005678, #0xFF ARM/ROM ...
+[DBG] PASS: mul #0x00005678, #0xFF ARM/ROM P..
+[DBG] PASS: mul #0x00005678, #0xFF ARM/ROM .N.
+[DBG] PASS: mul #0x00005678, #0xFF ARM/ROM PN.
+[DBG] PASS: mul #0x00005678, #0xFF ARM/ROM ..S
+[DBG] PASS: mul #0x00005678, #0xFF ARM/ROM P.S
+[DBG] PASS: mul #0x00005678, #0xFF ARM/ROM .NS
+[DBG] PASS: mul #0x00005678, #0xFF ARM/ROM PNS
+[DBG] PASS: mul #0x00005678, #0xFF ARM/WRAM
+[DBG] PASS: mul #0x00005678, #0xFF ARM/IWRAM
+[DBG] PASS: mul #0x00005678, #0xFF Thumb/ROM ...
+[DBG] PASS: mul #0x00005678, #0xFF Thumb/ROM P..
+[DBG] PASS: mul #0x00005678, #0xFF Thumb/ROM .N.
+[DBG] PASS: mul #0x00005678, #0xFF Thumb/ROM PN.
+[DBG] PASS: mul #0x00005678, #0xFF Thumb/ROM ..S
+[DBG] PASS: mul #0x00005678, #0xFF Thumb/ROM P.S
+[DBG] PASS: mul #0x00005678, #0xFF Thumb/ROM .NS
+[DBG] PASS: mul #0x00005678, #0xFF Thumb/ROM PNS
+[DBG] PASS: mul #0x00005678, #0xFF Thumb/WRAM
+[DBG] PASS: mul #0x00005678, #0xFF Thumb/IWRAM
+[DBG] Timing test: mul #0x00345678, #0xFF
+[DBG] PASS: mul #0x00345678, #0xFF ARM/ROM ...
+[DBG] PASS: mul #0x00345678, #0xFF ARM/ROM P..
+[DBG] PASS: mul #0x00345678, #0xFF ARM/ROM .N.
+[DBG] PASS: mul #0x00345678, #0xFF ARM/ROM PN.
+[DBG] PASS: mul #0x00345678, #0xFF ARM/ROM ..S
+[DBG] PASS: mul #0x00345678, #0xFF ARM/ROM P.S
+[DBG] PASS: mul #0x00345678, #0xFF ARM/ROM .NS
+[DBG] PASS: mul #0x00345678, #0xFF ARM/ROM PNS
+[DBG] PASS: mul #0x00345678, #0xFF ARM/WRAM
+[DBG] PASS: mul #0x00345678, #0xFF ARM/IWRAM
+[DBG] PASS: mul #0x00345678, #0xFF Thumb/ROM ...
+[DBG] PASS: mul #0x00345678, #0xFF Thumb/ROM P..
+[DBG] PASS: mul #0x00345678, #0xFF Thumb/ROM .N.
+[DBG] PASS: mul #0x00345678, #0xFF Thumb/ROM PN.
+[DBG] PASS: mul #0x00345678, #0xFF Thumb/ROM ..S
+[DBG] PASS: mul #0x00345678, #0xFF Thumb/ROM P.S
+[DBG] PASS: mul #0x00345678, #0xFF Thumb/ROM .NS
+[DBG] PASS: mul #0x00345678, #0xFF Thumb/ROM PNS
+[DBG] PASS: mul #0x00345678, #0xFF Thumb/WRAM
+[DBG] PASS: mul #0x00345678, #0xFF Thumb/IWRAM
+[DBG] Timing test: mul #0x12345678, #0xFF
+[DBG] PASS: mul #0x12345678, #0xFF ARM/ROM ...
+[DBG] PASS: mul #0x12345678, #0xFF ARM/ROM P..
+[DBG] PASS: mul #0x12345678, #0xFF ARM/ROM .N.
+[DBG] PASS: mul #0x12345678, #0xFF ARM/ROM PN.
+[DBG] PASS: mul #0x12345678, #0xFF ARM/ROM ..S
+[DBG] PASS: mul #0x12345678, #0xFF ARM/ROM P.S
+[DBG] PASS: mul #0x12345678, #0xFF ARM/ROM .NS
+[DBG] PASS: mul #0x12345678, #0xFF ARM/ROM PNS
+[DBG] PASS: mul #0x12345678, #0xFF ARM/WRAM
+[DBG] PASS: mul #0x12345678, #0xFF ARM/IWRAM
+[DBG] PASS: mul #0x12345678, #0xFF Thumb/ROM ...
+[DBG] PASS: mul #0x12345678, #0xFF Thumb/ROM P..
+[DBG] PASS: mul #0x12345678, #0xFF Thumb/ROM .N.
+[DBG] PASS: mul #0x12345678, #0xFF Thumb/ROM PN.
+[DBG] PASS: mul #0x12345678, #0xFF Thumb/ROM ..S
+[DBG] PASS: mul #0x12345678, #0xFF Thumb/ROM P.S
+[DBG] PASS: mul #0x12345678, #0xFF Thumb/ROM .NS
+[DBG] PASS: mul #0x12345678, #0xFF Thumb/ROM PNS
+[DBG] PASS: mul #0x12345678, #0xFF Thumb/WRAM
+[DBG] PASS: mul #0x12345678, #0xFF Thumb/IWRAM
+[DBG] Timing test: mul #0xFF000000, #0xFF
+[DBG] PASS: mul #0xFF000000, #0xFF ARM/ROM ...
+[DBG] PASS: mul #0xFF000000, #0xFF ARM/ROM P..
+[DBG] PASS: mul #0xFF000000, #0xFF ARM/ROM .N.
+[DBG] PASS: mul #0xFF000000, #0xFF ARM/ROM PN.
+[DBG] PASS: mul #0xFF000000, #0xFF ARM/ROM ..S
+[DBG] PASS: mul #0xFF000000, #0xFF ARM/ROM P.S
+[DBG] PASS: mul #0xFF000000, #0xFF ARM/ROM .NS
+[DBG] PASS: mul #0xFF000000, #0xFF ARM/ROM PNS
+[DBG] PASS: mul #0xFF000000, #0xFF ARM/WRAM
+[DBG] PASS: mul #0xFF000000, #0xFF ARM/IWRAM
+[DBG] PASS: mul #0xFF000000, #0xFF Thumb/ROM ...
+[DBG] PASS: mul #0xFF000000, #0xFF Thumb/ROM P..
+[DBG] PASS: mul #0xFF000000, #0xFF Thumb/ROM .N.
+[DBG] PASS: mul #0xFF000000, #0xFF Thumb/ROM PN.
+[DBG] PASS: mul #0xFF000000, #0xFF Thumb/ROM ..S
+[DBG] PASS: mul #0xFF000000, #0xFF Thumb/ROM P.S
+[DBG] PASS: mul #0xFF000000, #0xFF Thumb/ROM .NS
+[DBG] PASS: mul #0xFF000000, #0xFF Thumb/ROM PNS
+[DBG] PASS: mul #0xFF000000, #0xFF Thumb/WRAM
+[DBG] PASS: mul #0xFF000000, #0xFF Thumb/IWRAM
+[DBG] Timing test: mul #0xFFFF0000, #0xFF
+[DBG] PASS: mul #0xFFFF0000, #0xFF ARM/ROM ...
+[DBG] PASS: mul #0xFFFF0000, #0xFF ARM/ROM P..
+[DBG] PASS: mul #0xFFFF0000, #0xFF ARM/ROM .N.
+[DBG] PASS: mul #0xFFFF0000, #0xFF ARM/ROM PN.
+[DBG] PASS: mul #0xFFFF0000, #0xFF ARM/ROM ..S
+[DBG] PASS: mul #0xFFFF0000, #0xFF ARM/ROM P.S
+[DBG] PASS: mul #0xFFFF0000, #0xFF ARM/ROM .NS
+[DBG] PASS: mul #0xFFFF0000, #0xFF ARM/ROM PNS
+[DBG] PASS: mul #0xFFFF0000, #0xFF ARM/WRAM
+[DBG] PASS: mul #0xFFFF0000, #0xFF ARM/IWRAM
+[DBG] PASS: mul #0xFFFF0000, #0xFF Thumb/ROM ...
+[DBG] PASS: mul #0xFFFF0000, #0xFF Thumb/ROM P..
+[DBG] PASS: mul #0xFFFF0000, #0xFF Thumb/ROM .N.
+[DBG] PASS: mul #0xFFFF0000, #0xFF Thumb/ROM PN.
+[DBG] PASS: mul #0xFFFF0000, #0xFF Thumb/ROM ..S
+[DBG] PASS: mul #0xFFFF0000, #0xFF Thumb/ROM P.S
+[DBG] PASS: mul #0xFFFF0000, #0xFF Thumb/ROM .NS
+[DBG] PASS: mul #0xFFFF0000, #0xFF Thumb/ROM PNS
+[DBG] PASS: mul #0xFFFF0000, #0xFF Thumb/WRAM
+[DBG] PASS: mul #0xFFFF0000, #0xFF Thumb/IWRAM
+[DBG] Timing test: mul #0xFFFFFF00, #0xFF
+[DBG] PASS: mul #0xFFFFFF00, #0xFF ARM/ROM ...
+[DBG] PASS: mul #0xFFFFFF00, #0xFF ARM/ROM P..
+[DBG] PASS: mul #0xFFFFFF00, #0xFF ARM/ROM .N.
+[DBG] PASS: mul #0xFFFFFF00, #0xFF ARM/ROM PN.
+[DBG] PASS: mul #0xFFFFFF00, #0xFF ARM/ROM ..S
+[DBG] PASS: mul #0xFFFFFF00, #0xFF ARM/ROM P.S
+[DBG] PASS: mul #0xFFFFFF00, #0xFF ARM/ROM .NS
+[DBG] PASS: mul #0xFFFFFF00, #0xFF ARM/ROM PNS
+[DBG] PASS: mul #0xFFFFFF00, #0xFF ARM/WRAM
+[DBG] PASS: mul #0xFFFFFF00, #0xFF ARM/IWRAM
+[DBG] PASS: mul #0xFFFFFF00, #0xFF Thumb/ROM ...
+[DBG] PASS: mul #0xFFFFFF00, #0xFF Thumb/ROM P..
+[DBG] PASS: mul #0xFFFFFF00, #0xFF Thumb/ROM .N.
+[DBG] PASS: mul #0xFFFFFF00, #0xFF Thumb/ROM PN.
+[DBG] PASS: mul #0xFFFFFF00, #0xFF Thumb/ROM ..S
+[DBG] PASS: mul #0xFFFFFF00, #0xFF Thumb/ROM P.S
+[DBG] PASS: mul #0xFFFFFF00, #0xFF Thumb/ROM .NS
+[DBG] PASS: mul #0xFFFFFF00, #0xFF Thumb/ROM PNS
+[DBG] PASS: mul #0xFFFFFF00, #0xFF Thumb/WRAM
+[DBG] PASS: mul #0xFFFFFF00, #0xFF Thumb/IWRAM
+[DBG] Timing test: mul #0xFFFFFFFF, #0xFF
+[DBG] PASS: mul #0xFFFFFFFF, #0xFF ARM/ROM ...
+[DBG] PASS: mul #0xFFFFFFFF, #0xFF ARM/ROM P..
+[DBG] PASS: mul #0xFFFFFFFF, #0xFF ARM/ROM .N.
+[DBG] PASS: mul #0xFFFFFFFF, #0xFF ARM/ROM PN.
+[DBG] PASS: mul #0xFFFFFFFF, #0xFF ARM/ROM ..S
+[DBG] PASS: mul #0xFFFFFFFF, #0xFF ARM/ROM P.S
+[DBG] PASS: mul #0xFFFFFFFF, #0xFF ARM/ROM .NS
+[DBG] PASS: mul #0xFFFFFFFF, #0xFF ARM/ROM PNS
+[DBG] PASS: mul #0xFFFFFFFF, #0xFF ARM/WRAM
+[DBG] PASS: mul #0xFFFFFFFF, #0xFF ARM/IWRAM
+[DBG] PASS: mul #0xFFFFFFFF, #0xFF Thumb/ROM ...
+[DBG] PASS: mul #0xFFFFFFFF, #0xFF Thumb/ROM P..
+[DBG] PASS: mul #0xFFFFFFFF, #0xFF Thumb/ROM .N.
+[DBG] PASS: mul #0xFFFFFFFF, #0xFF Thumb/ROM PN.
+[DBG] PASS: mul #0xFFFFFFFF, #0xFF Thumb/ROM ..S
+[DBG] PASS: mul #0xFFFFFFFF, #0xFF Thumb/ROM P.S
+[DBG] PASS: mul #0xFFFFFFFF, #0xFF Thumb/ROM .NS
+[DBG] PASS: mul #0xFFFFFFFF, #0xFF Thumb/ROM PNS
+[DBG] PASS: mul #0xFFFFFFFF, #0xFF Thumb/WRAM
+[DBG] PASS: mul #0xFFFFFFFF, #0xFF Thumb/IWRAM
+[DBG] Timing test: mul #0xFFFFFFFF, #0x00
+[DBG] PASS: mul #0xFFFFFFFF, #0x00 ARM/ROM ...
+[DBG] PASS: mul #0xFFFFFFFF, #0x00 ARM/ROM P..
+[DBG] PASS: mul #0xFFFFFFFF, #0x00 ARM/ROM .N.
+[DBG] PASS: mul #0xFFFFFFFF, #0x00 ARM/ROM PN.
+[DBG] PASS: mul #0xFFFFFFFF, #0x00 ARM/ROM ..S
+[DBG] PASS: mul #0xFFFFFFFF, #0x00 ARM/ROM P.S
+[DBG] PASS: mul #0xFFFFFFFF, #0x00 ARM/ROM .NS
+[DBG] PASS: mul #0xFFFFFFFF, #0x00 ARM/ROM PNS
+[DBG] PASS: mul #0xFFFFFFFF, #0x00 ARM/WRAM
+[DBG] PASS: mul #0xFFFFFFFF, #0x00 ARM/IWRAM
+[DBG] PASS: mul #0xFFFFFFFF, #0x00 Thumb/ROM ...
+[DBG] PASS: mul #0xFFFFFFFF, #0x00 Thumb/ROM P..
+[DBG] PASS: mul #0xFFFFFFFF, #0x00 Thumb/ROM .N.
+[DBG] PASS: mul #0xFFFFFFFF, #0x00 Thumb/ROM PN.
+[DBG] PASS: mul #0xFFFFFFFF, #0x00 Thumb/ROM ..S
+[DBG] PASS: mul #0xFFFFFFFF, #0x00 Thumb/ROM P.S
+[DBG] PASS: mul #0xFFFFFFFF, #0x00 Thumb/ROM .NS
+[DBG] PASS: mul #0xFFFFFFFF, #0x00 Thumb/ROM PNS
+[DBG] PASS: mul #0xFFFFFFFF, #0x00 Thumb/WRAM
+[DBG] PASS: mul #0xFFFFFFFF, #0x00 Thumb/IWRAM
+[DBG] Timing test: mla #0x00000000, #0xFF
+[DBG] PASS: mla #0x00000000, #0xFF ARM/ROM ...
+[DBG] PASS: mla #0x00000000, #0xFF ARM/ROM P..
+[DBG] PASS: mla #0x00000000, #0xFF ARM/ROM .N.
+[DBG] PASS: mla #0x00000000, #0xFF ARM/ROM PN.
+[DBG] PASS: mla #0x00000000, #0xFF ARM/ROM ..S
+[DBG] PASS: mla #0x00000000, #0xFF ARM/ROM P.S
+[DBG] PASS: mla #0x00000000, #0xFF ARM/ROM .NS
+[DBG] PASS: mla #0x00000000, #0xFF ARM/ROM PNS
+[DBG] PASS: mla #0x00000000, #0xFF ARM/WRAM
+[DBG] PASS: mla #0x00000000, #0xFF ARM/IWRAM
+[DBG] Timing test: mla #0x00000078, #0xFF
+[DBG] PASS: mla #0x00000078, #0xFF ARM/ROM ...
+[DBG] PASS: mla #0x00000078, #0xFF ARM/ROM P..
+[DBG] PASS: mla #0x00000078, #0xFF ARM/ROM .N.
+[DBG] PASS: mla #0x00000078, #0xFF ARM/ROM PN.
+[DBG] PASS: mla #0x00000078, #0xFF ARM/ROM ..S
+[DBG] PASS: mla #0x00000078, #0xFF ARM/ROM P.S
+[DBG] PASS: mla #0x00000078, #0xFF ARM/ROM .NS
+[DBG] PASS: mla #0x00000078, #0xFF ARM/ROM PNS
+[DBG] PASS: mla #0x00000078, #0xFF ARM/WRAM
+[DBG] PASS: mla #0x00000078, #0xFF ARM/IWRAM
+[DBG] Timing test: mla #0x00005678, #0xFF
+[DBG] PASS: mla #0x00005678, #0xFF ARM/ROM ...
+[DBG] PASS: mla #0x00005678, #0xFF ARM/ROM P..
+[DBG] PASS: mla #0x00005678, #0xFF ARM/ROM .N.
+[DBG] PASS: mla #0x00005678, #0xFF ARM/ROM PN.
+[DBG] PASS: mla #0x00005678, #0xFF ARM/ROM ..S
+[DBG] PASS: mla #0x00005678, #0xFF ARM/ROM P.S
+[DBG] PASS: mla #0x00005678, #0xFF ARM/ROM .NS
+[DBG] PASS: mla #0x00005678, #0xFF ARM/ROM PNS
+[DBG] PASS: mla #0x00005678, #0xFF ARM/WRAM
+[DBG] PASS: mla #0x00005678, #0xFF ARM/IWRAM
+[DBG] Timing test: mla #0x00345678, #0xFF
+[DBG] PASS: mla #0x00345678, #0xFF ARM/ROM ...
+[DBG] PASS: mla #0x00345678, #0xFF ARM/ROM P..
+[DBG] PASS: mla #0x00345678, #0xFF ARM/ROM .N.
+[DBG] PASS: mla #0x00345678, #0xFF ARM/ROM PN.
+[DBG] PASS: mla #0x00345678, #0xFF ARM/ROM ..S
+[DBG] PASS: mla #0x00345678, #0xFF ARM/ROM P.S
+[DBG] PASS: mla #0x00345678, #0xFF ARM/ROM .NS
+[DBG] PASS: mla #0x00345678, #0xFF ARM/ROM PNS
+[DBG] PASS: mla #0x00345678, #0xFF ARM/WRAM
+[DBG] PASS: mla #0x00345678, #0xFF ARM/IWRAM
+[DBG] Timing test: mla #0x12345678, #0xFF
+[DBG] PASS: mla #0x12345678, #0xFF ARM/ROM ...
+[DBG] PASS: mla #0x12345678, #0xFF ARM/ROM P..
+[DBG] PASS: mla #0x12345678, #0xFF ARM/ROM .N.
+[DBG] PASS: mla #0x12345678, #0xFF ARM/ROM PN.
+[DBG] PASS: mla #0x12345678, #0xFF ARM/ROM ..S
+[DBG] PASS: mla #0x12345678, #0xFF ARM/ROM P.S
+[DBG] PASS: mla #0x12345678, #0xFF ARM/ROM .NS
+[DBG] PASS: mla #0x12345678, #0xFF ARM/ROM PNS
+[DBG] PASS: mla #0x12345678, #0xFF ARM/WRAM
+[DBG] PASS: mla #0x12345678, #0xFF ARM/IWRAM
+[DBG] Timing test: mla #0xFF000000, #0xFF
+[DBG] PASS: mla #0xFF000000, #0xFF ARM/ROM ...
+[DBG] PASS: mla #0xFF000000, #0xFF ARM/ROM P..
+[DBG] PASS: mla #0xFF000000, #0xFF ARM/ROM .N.
+[DBG] PASS: mla #0xFF000000, #0xFF ARM/ROM PN.
+[DBG] PASS: mla #0xFF000000, #0xFF ARM/ROM ..S
+[DBG] PASS: mla #0xFF000000, #0xFF ARM/ROM P.S
+[DBG] PASS: mla #0xFF000000, #0xFF ARM/ROM .NS
+[DBG] PASS: mla #0xFF000000, #0xFF ARM/ROM PNS
+[DBG] PASS: mla #0xFF000000, #0xFF ARM/WRAM
+[DBG] PASS: mla #0xFF000000, #0xFF ARM/IWRAM
+[DBG] Timing test: mla #0xFFFF0000, #0xFF
+[DBG] PASS: mla #0xFFFF0000, #0xFF ARM/ROM ...
+[DBG] PASS: mla #0xFFFF0000, #0xFF ARM/ROM P..
+[DBG] PASS: mla #0xFFFF0000, #0xFF ARM/ROM .N.
+[DBG] PASS: mla #0xFFFF0000, #0xFF ARM/ROM PN.
+[DBG] PASS: mla #0xFFFF0000, #0xFF ARM/ROM ..S
+[DBG] PASS: mla #0xFFFF0000, #0xFF ARM/ROM P.S
+[DBG] PASS: mla #0xFFFF0000, #0xFF ARM/ROM .NS
+[DBG] PASS: mla #0xFFFF0000, #0xFF ARM/ROM PNS
+[DBG] PASS: mla #0xFFFF0000, #0xFF ARM/WRAM
+[DBG] PASS: mla #0xFFFF0000, #0xFF ARM/IWRAM
+[DBG] Timing test: mla #0xFFFFFF00, #0xFF
+[DBG] PASS: mla #0xFFFFFF00, #0xFF ARM/ROM ...
+[DBG] PASS: mla #0xFFFFFF00, #0xFF ARM/ROM P..
+[DBG] PASS: mla #0xFFFFFF00, #0xFF ARM/ROM .N.
+[DBG] PASS: mla #0xFFFFFF00, #0xFF ARM/ROM PN.
+[DBG] PASS: mla #0xFFFFFF00, #0xFF ARM/ROM ..S
+[DBG] PASS: mla #0xFFFFFF00, #0xFF ARM/ROM P.S
+[DBG] PASS: mla #0xFFFFFF00, #0xFF ARM/ROM .NS
+[DBG] PASS: mla #0xFFFFFF00, #0xFF ARM/ROM PNS
+[DBG] PASS: mla #0xFFFFFF00, #0xFF ARM/WRAM
+[DBG] PASS: mla #0xFFFFFF00, #0xFF ARM/IWRAM
+[DBG] Timing test: mla #0xFFFFFFFF, #0xFF
+[DBG] PASS: mla #0xFFFFFFFF, #0xFF ARM/ROM ...
+[DBG] PASS: mla #0xFFFFFFFF, #0xFF ARM/ROM P..
+[DBG] PASS: mla #0xFFFFFFFF, #0xFF ARM/ROM .N.
+[DBG] PASS: mla #0xFFFFFFFF, #0xFF ARM/ROM PN.
+[DBG] PASS: mla #0xFFFFFFFF, #0xFF ARM/ROM ..S
+[DBG] PASS: mla #0xFFFFFFFF, #0xFF ARM/ROM P.S
+[DBG] PASS: mla #0xFFFFFFFF, #0xFF ARM/ROM .NS
+[DBG] PASS: mla #0xFFFFFFFF, #0xFF ARM/ROM PNS
+[DBG] PASS: mla #0xFFFFFFFF, #0xFF ARM/WRAM
+[DBG] PASS: mla #0xFFFFFFFF, #0xFF ARM/IWRAM
+[DBG] Timing test: mla #0xFFFFFFFF, #0x00
+[DBG] PASS: mla #0xFFFFFFFF, #0x00 ARM/ROM ...
+[DBG] PASS: mla #0xFFFFFFFF, #0x00 ARM/ROM P..
+[DBG] PASS: mla #0xFFFFFFFF, #0x00 ARM/ROM .N.
+[DBG] PASS: mla #0xFFFFFFFF, #0x00 ARM/ROM PN.
+[DBG] PASS: mla #0xFFFFFFFF, #0x00 ARM/ROM ..S
+[DBG] PASS: mla #0xFFFFFFFF, #0x00 ARM/ROM P.S
+[DBG] PASS: mla #0xFFFFFFFF, #0x00 ARM/ROM .NS
+[DBG] PASS: mla #0xFFFFFFFF, #0x00 ARM/ROM PNS
+[DBG] PASS: mla #0xFFFFFFFF, #0x00 ARM/WRAM
+[DBG] PASS: mla #0xFFFFFFFF, #0x00 ARM/IWRAM
+[DBG] Timing test: smull #0x00000000, #0xFF
+[DBG] PASS: smull #0x00000000, #0xFF ARM/ROM ...
+[DBG] PASS: smull #0x00000000, #0xFF ARM/ROM P..
+[DBG] PASS: smull #0x00000000, #0xFF ARM/ROM .N.
+[DBG] PASS: smull #0x00000000, #0xFF ARM/ROM PN.
+[DBG] PASS: smull #0x00000000, #0xFF ARM/ROM ..S
+[DBG] PASS: smull #0x00000000, #0xFF ARM/ROM P.S
+[DBG] PASS: smull #0x00000000, #0xFF ARM/ROM .NS
+[DBG] PASS: smull #0x00000000, #0xFF ARM/ROM PNS
+[DBG] PASS: smull #0x00000000, #0xFF ARM/WRAM
+[DBG] PASS: smull #0x00000000, #0xFF ARM/IWRAM
+[DBG] Timing test: smull #0x00000078, #0xFF
+[DBG] PASS: smull #0x00000078, #0xFF ARM/ROM ...
+[DBG] PASS: smull #0x00000078, #0xFF ARM/ROM P..
+[DBG] PASS: smull #0x00000078, #0xFF ARM/ROM .N.
+[DBG] PASS: smull #0x00000078, #0xFF ARM/ROM PN.
+[DBG] PASS: smull #0x00000078, #0xFF ARM/ROM ..S
+[DBG] PASS: smull #0x00000078, #0xFF ARM/ROM P.S
+[DBG] PASS: smull #0x00000078, #0xFF ARM/ROM .NS
+[DBG] PASS: smull #0x00000078, #0xFF ARM/ROM PNS
+[DBG] PASS: smull #0x00000078, #0xFF ARM/WRAM
+[DBG] PASS: smull #0x00000078, #0xFF ARM/IWRAM
+[DBG] Timing test: smull #0x00005678, #0xFF
+[DBG] PASS: smull #0x00005678, #0xFF ARM/ROM ...
+[DBG] PASS: smull #0x00005678, #0xFF ARM/ROM P..
+[DBG] PASS: smull #0x00005678, #0xFF ARM/ROM .N.
+[DBG] PASS: smull #0x00005678, #0xFF ARM/ROM PN.
+[DBG] PASS: smull #0x00005678, #0xFF ARM/ROM ..S
+[DBG] PASS: smull #0x00005678, #0xFF ARM/ROM P.S
+[DBG] PASS: smull #0x00005678, #0xFF ARM/ROM .NS
+[DBG] PASS: smull #0x00005678, #0xFF ARM/ROM PNS
+[DBG] PASS: smull #0x00005678, #0xFF ARM/WRAM
+[DBG] PASS: smull #0x00005678, #0xFF ARM/IWRAM
+[DBG] Timing test: smull #0x00345678, #0xFF
+[DBG] PASS: smull #0x00345678, #0xFF ARM/ROM ...
+[DBG] PASS: smull #0x00345678, #0xFF ARM/ROM P..
+[DBG] PASS: smull #0x00345678, #0xFF ARM/ROM .N.
+[DBG] PASS: smull #0x00345678, #0xFF ARM/ROM PN.
+[DBG] PASS: smull #0x00345678, #0xFF ARM/ROM ..S
+[DBG] PASS: smull #0x00345678, #0xFF ARM/ROM P.S
+[DBG] PASS: smull #0x00345678, #0xFF ARM/ROM .NS
+[DBG] PASS: smull #0x00345678, #0xFF ARM/ROM PNS
+[DBG] PASS: smull #0x00345678, #0xFF ARM/WRAM
+[DBG] PASS: smull #0x00345678, #0xFF ARM/IWRAM
+[DBG] Timing test: smull #0x12345678, #0xFF
+[DBG] PASS: smull #0x12345678, #0xFF ARM/ROM ...
+[DBG] PASS: smull #0x12345678, #0xFF ARM/ROM P..
+[DBG] PASS: smull #0x12345678, #0xFF ARM/ROM .N.
+[DBG] PASS: smull #0x12345678, #0xFF ARM/ROM PN.
+[DBG] PASS: smull #0x12345678, #0xFF ARM/ROM ..S
+[DBG] PASS: smull #0x12345678, #0xFF ARM/ROM P.S
+[DBG] PASS: smull #0x12345678, #0xFF ARM/ROM .NS
+[DBG] PASS: smull #0x12345678, #0xFF ARM/ROM PNS
+[DBG] PASS: smull #0x12345678, #0xFF ARM/WRAM
+[DBG] PASS: smull #0x12345678, #0xFF ARM/IWRAM
+[DBG] Timing test: smull #0xFF000000, #0xFF
+[DBG] PASS: smull #0xFF000000, #0xFF ARM/ROM ...
+[DBG] PASS: smull #0xFF000000, #0xFF ARM/ROM P..
+[DBG] PASS: smull #0xFF000000, #0xFF ARM/ROM .N.
+[DBG] PASS: smull #0xFF000000, #0xFF ARM/ROM PN.
+[DBG] PASS: smull #0xFF000000, #0xFF ARM/ROM ..S
+[DBG] PASS: smull #0xFF000000, #0xFF ARM/ROM P.S
+[DBG] PASS: smull #0xFF000000, #0xFF ARM/ROM .NS
+[DBG] PASS: smull #0xFF000000, #0xFF ARM/ROM PNS
+[DBG] PASS: smull #0xFF000000, #0xFF ARM/WRAM
+[DBG] PASS: smull #0xFF000000, #0xFF ARM/IWRAM
+[DBG] Timing test: smull #0xFFFF0000, #0xFF
+[DBG] PASS: smull #0xFFFF0000, #0xFF ARM/ROM ...
+[DBG] PASS: smull #0xFFFF0000, #0xFF ARM/ROM P..
+[DBG] PASS: smull #0xFFFF0000, #0xFF ARM/ROM .N.
+[DBG] PASS: smull #0xFFFF0000, #0xFF ARM/ROM PN.
+[DBG] PASS: smull #0xFFFF0000, #0xFF ARM/ROM ..S
+[DBG] PASS: smull #0xFFFF0000, #0xFF ARM/ROM P.S
+[DBG] PASS: smull #0xFFFF0000, #0xFF ARM/ROM .NS
+[DBG] PASS: smull #0xFFFF0000, #0xFF ARM/ROM PNS
+[DBG] PASS: smull #0xFFFF0000, #0xFF ARM/WRAM
+[DBG] PASS: smull #0xFFFF0000, #0xFF ARM/IWRAM
+[DBG] Timing test: smull #0xFFFFFF00, #0xFF
+[DBG] PASS: smull #0xFFFFFF00, #0xFF ARM/ROM ...
+[DBG] PASS: smull #0xFFFFFF00, #0xFF ARM/ROM P..
+[DBG] PASS: smull #0xFFFFFF00, #0xFF ARM/ROM .N.
+[DBG] PASS: smull #0xFFFFFF00, #0xFF ARM/ROM PN.
+[DBG] PASS: smull #0xFFFFFF00, #0xFF ARM/ROM ..S
+[DBG] PASS: smull #0xFFFFFF00, #0xFF ARM/ROM P.S
+[DBG] PASS: smull #0xFFFFFF00, #0xFF ARM/ROM .NS
+[DBG] PASS: smull #0xFFFFFF00, #0xFF ARM/ROM PNS
+[DBG] PASS: smull #0xFFFFFF00, #0xFF ARM/WRAM
+[DBG] PASS: smull #0xFFFFFF00, #0xFF ARM/IWRAM
+[DBG] Timing test: smull #0xFFFFFFFF, #0xFF
+[DBG] PASS: smull #0xFFFFFFFF, #0xFF ARM/ROM ...
+[DBG] PASS: smull #0xFFFFFFFF, #0xFF ARM/ROM P..
+[DBG] PASS: smull #0xFFFFFFFF, #0xFF ARM/ROM .N.
+[DBG] PASS: smull #0xFFFFFFFF, #0xFF ARM/ROM PN.
+[DBG] PASS: smull #0xFFFFFFFF, #0xFF ARM/ROM ..S
+[DBG] PASS: smull #0xFFFFFFFF, #0xFF ARM/ROM P.S
+[DBG] PASS: smull #0xFFFFFFFF, #0xFF ARM/ROM .NS
+[DBG] PASS: smull #0xFFFFFFFF, #0xFF ARM/ROM PNS
+[DBG] PASS: smull #0xFFFFFFFF, #0xFF ARM/WRAM
+[DBG] PASS: smull #0xFFFFFFFF, #0xFF ARM/IWRAM
+[DBG] Timing test: smull #0xFFFFFFFF, #0x00
+[DBG] PASS: smull #0xFFFFFFFF, #0x00 ARM/ROM ...
+[DBG] PASS: smull #0xFFFFFFFF, #0x00 ARM/ROM P..
+[DBG] PASS: smull #0xFFFFFFFF, #0x00 ARM/ROM .N.
+[DBG] PASS: smull #0xFFFFFFFF, #0x00 ARM/ROM PN.
+[DBG] PASS: smull #0xFFFFFFFF, #0x00 ARM/ROM ..S
+[DBG] PASS: smull #0xFFFFFFFF, #0x00 ARM/ROM P.S
+[DBG] PASS: smull #0xFFFFFFFF, #0x00 ARM/ROM .NS
+[DBG] PASS: smull #0xFFFFFFFF, #0x00 ARM/ROM PNS
+[DBG] PASS: smull #0xFFFFFFFF, #0x00 ARM/WRAM
+[DBG] PASS: smull #0xFFFFFFFF, #0x00 ARM/IWRAM
+[DBG] Timing test: smlal #0x00000000, #0xFF
+[DBG] PASS: smlal #0x00000000, #0xFF ARM/ROM ...
+[DBG] PASS: smlal #0x00000000, #0xFF ARM/ROM P..
+[DBG] PASS: smlal #0x00000000, #0xFF ARM/ROM .N.
+[DBG] PASS: smlal #0x00000000, #0xFF ARM/ROM PN.
+[DBG] PASS: smlal #0x00000000, #0xFF ARM/ROM ..S
+[DBG] PASS: smlal #0x00000000, #0xFF ARM/ROM P.S
+[DBG] PASS: smlal #0x00000000, #0xFF ARM/ROM .NS
+[DBG] PASS: smlal #0x00000000, #0xFF ARM/ROM PNS
+[DBG] PASS: smlal #0x00000000, #0xFF ARM/WRAM
+[DBG] PASS: smlal #0x00000000, #0xFF ARM/IWRAM
+[DBG] Timing test: smlal #0x00000078, #0xFF
+[DBG] PASS: smlal #0x00000078, #0xFF ARM/ROM ...
+[DBG] PASS: smlal #0x00000078, #0xFF ARM/ROM P..
+[DBG] PASS: smlal #0x00000078, #0xFF ARM/ROM .N.
+[DBG] PASS: smlal #0x00000078, #0xFF ARM/ROM PN.
+[DBG] PASS: smlal #0x00000078, #0xFF ARM/ROM ..S
+[DBG] PASS: smlal #0x00000078, #0xFF ARM/ROM P.S
+[DBG] PASS: smlal #0x00000078, #0xFF ARM/ROM .NS
+[DBG] PASS: smlal #0x00000078, #0xFF ARM/ROM PNS
+[DBG] PASS: smlal #0x00000078, #0xFF ARM/WRAM
+[DBG] PASS: smlal #0x00000078, #0xFF ARM/IWRAM
+[DBG] Timing test: smlal #0x00005678, #0xFF
+[DBG] PASS: smlal #0x00005678, #0xFF ARM/ROM ...
+[DBG] PASS: smlal #0x00005678, #0xFF ARM/ROM P..
+[DBG] PASS: smlal #0x00005678, #0xFF ARM/ROM .N.
+[DBG] PASS: smlal #0x00005678, #0xFF ARM/ROM PN.
+[DBG] PASS: smlal #0x00005678, #0xFF ARM/ROM ..S
+[DBG] PASS: smlal #0x00005678, #0xFF ARM/ROM P.S
+[DBG] PASS: smlal #0x00005678, #0xFF ARM/ROM .NS
+[DBG] PASS: smlal #0x00005678, #0xFF ARM/ROM PNS
+[DBG] PASS: smlal #0x00005678, #0xFF ARM/WRAM
+[DBG] PASS: smlal #0x00005678, #0xFF ARM/IWRAM
+[DBG] Timing test: smlal #0x00345678, #0xFF
+[DBG] PASS: smlal #0x00345678, #0xFF ARM/ROM ...
+[DBG] PASS: smlal #0x00345678, #0xFF ARM/ROM P..
+[DBG] PASS: smlal #0x00345678, #0xFF ARM/ROM .N.
+[DBG] PASS: smlal #0x00345678, #0xFF ARM/ROM PN.
+[DBG] PASS: smlal #0x00345678, #0xFF ARM/ROM ..S
+[DBG] PASS: smlal #0x00345678, #0xFF ARM/ROM P.S
+[DBG] PASS: smlal #0x00345678, #0xFF ARM/ROM .NS
+[DBG] PASS: smlal #0x00345678, #0xFF ARM/ROM PNS
+[DBG] PASS: smlal #0x00345678, #0xFF ARM/WRAM
+[DBG] PASS: smlal #0x00345678, #0xFF ARM/IWRAM
+[DBG] Timing test: smlal #0x12345678, #0xFF
+[DBG] PASS: smlal #0x12345678, #0xFF ARM/ROM ...
+[DBG] PASS: smlal #0x12345678, #0xFF ARM/ROM P..
+[DBG] PASS: smlal #0x12345678, #0xFF ARM/ROM .N.
+[DBG] PASS: smlal #0x12345678, #0xFF ARM/ROM PN.
+[DBG] PASS: smlal #0x12345678, #0xFF ARM/ROM ..S
+[DBG] PASS: smlal #0x12345678, #0xFF ARM/ROM P.S
+[DBG] PASS: smlal #0x12345678, #0xFF ARM/ROM .NS
+[DBG] PASS: smlal #0x12345678, #0xFF ARM/ROM PNS
+[DBG] PASS: smlal #0x12345678, #0xFF ARM/WRAM
+[DBG] PASS: smlal #0x12345678, #0xFF ARM/IWRAM
+[DBG] Timing test: smlal #0xFF000000, #0xFF
+[DBG] PASS: smlal #0xFF000000, #0xFF ARM/ROM ...
+[DBG] PASS: smlal #0xFF000000, #0xFF ARM/ROM P..
+[DBG] PASS: smlal #0xFF000000, #0xFF ARM/ROM .N.
+[DBG] PASS: smlal #0xFF000000, #0xFF ARM/ROM PN.
+[DBG] PASS: smlal #0xFF000000, #0xFF ARM/ROM ..S
+[DBG] PASS: smlal #0xFF000000, #0xFF ARM/ROM P.S
+[DBG] PASS: smlal #0xFF000000, #0xFF ARM/ROM .NS
+[DBG] PASS: smlal #0xFF000000, #0xFF ARM/ROM PNS
+[DBG] PASS: smlal #0xFF000000, #0xFF ARM/WRAM
+[DBG] PASS: smlal #0xFF000000, #0xFF ARM/IWRAM
+[DBG] Timing test: smlal #0xFFFF0000, #0xFF
+[DBG] PASS: smlal #0xFFFF0000, #0xFF ARM/ROM ...
+[DBG] PASS: smlal #0xFFFF0000, #0xFF ARM/ROM P..
+[DBG] PASS: smlal #0xFFFF0000, #0xFF ARM/ROM .N.
+[DBG] PASS: smlal #0xFFFF0000, #0xFF ARM/ROM PN.
+[DBG] PASS: smlal #0xFFFF0000, #0xFF ARM/ROM ..S
+[DBG] PASS: smlal #0xFFFF0000, #0xFF ARM/ROM P.S
+[DBG] PASS: smlal #0xFFFF0000, #0xFF ARM/ROM .NS
+[DBG] PASS: smlal #0xFFFF0000, #0xFF ARM/ROM PNS
+[DBG] PASS: smlal #0xFFFF0000, #0xFF ARM/WRAM
+[DBG] PASS: smlal #0xFFFF0000, #0xFF ARM/IWRAM
+[DBG] Timing test: smlal #0xFFFFFF00, #0xFF
+[DBG] PASS: smlal #0xFFFFFF00, #0xFF ARM/ROM ...
+[DBG] PASS: smlal #0xFFFFFF00, #0xFF ARM/ROM P..
+[DBG] PASS: smlal #0xFFFFFF00, #0xFF ARM/ROM .N.
+[DBG] PASS: smlal #0xFFFFFF00, #0xFF ARM/ROM PN.
+[DBG] PASS: smlal #0xFFFFFF00, #0xFF ARM/ROM ..S
+[DBG] PASS: smlal #0xFFFFFF00, #0xFF ARM/ROM P.S
+[DBG] PASS: smlal #0xFFFFFF00, #0xFF ARM/ROM .NS
+[DBG] PASS: smlal #0xFFFFFF00, #0xFF ARM/ROM PNS
+[DBG] PASS: smlal #0xFFFFFF00, #0xFF ARM/WRAM
+[DBG] PASS: smlal #0xFFFFFF00, #0xFF ARM/IWRAM
+[DBG] Timing test: smlal #0xFFFFFFFF, #0xFF
+[DBG] PASS: smlal #0xFFFFFFFF, #0xFF ARM/ROM ...
+[DBG] PASS: smlal #0xFFFFFFFF, #0xFF ARM/ROM P..
+[DBG] PASS: smlal #0xFFFFFFFF, #0xFF ARM/ROM .N.
+[DBG] PASS: smlal #0xFFFFFFFF, #0xFF ARM/ROM PN.
+[DBG] PASS: smlal #0xFFFFFFFF, #0xFF ARM/ROM ..S
+[DBG] PASS: smlal #0xFFFFFFFF, #0xFF ARM/ROM P.S
+[DBG] PASS: smlal #0xFFFFFFFF, #0xFF ARM/ROM .NS
+[DBG] PASS: smlal #0xFFFFFFFF, #0xFF ARM/ROM PNS
+[DBG] PASS: smlal #0xFFFFFFFF, #0xFF ARM/WRAM
+[DBG] PASS: smlal #0xFFFFFFFF, #0xFF ARM/IWRAM
+[DBG] Timing test: smlal #0xFFFFFFFF, #0x00
+[DBG] PASS: smlal #0xFFFFFFFF, #0x00 ARM/ROM ...
+[DBG] PASS: smlal #0xFFFFFFFF, #0x00 ARM/ROM P..
+[DBG] PASS: smlal #0xFFFFFFFF, #0x00 ARM/ROM .N.
+[DBG] PASS: smlal #0xFFFFFFFF, #0x00 ARM/ROM PN.
+[DBG] PASS: smlal #0xFFFFFFFF, #0x00 ARM/ROM ..S
+[DBG] PASS: smlal #0xFFFFFFFF, #0x00 ARM/ROM P.S
+[DBG] PASS: smlal #0xFFFFFFFF, #0x00 ARM/ROM .NS
+[DBG] PASS: smlal #0xFFFFFFFF, #0x00 ARM/ROM PNS
+[DBG] PASS: smlal #0xFFFFFFFF, #0x00 ARM/WRAM
+[DBG] PASS: smlal #0xFFFFFFFF, #0x00 ARM/IWRAM
+[DBG] Timing test: umull #0x00000000, #0xFF
+[DBG] PASS: umull #0x00000000, #0xFF ARM/ROM ...
+[DBG] PASS: umull #0x00000000, #0xFF ARM/ROM P..
+[DBG] PASS: umull #0x00000000, #0xFF ARM/ROM .N.
+[DBG] PASS: umull #0x00000000, #0xFF ARM/ROM PN.
+[DBG] PASS: umull #0x00000000, #0xFF ARM/ROM ..S
+[DBG] PASS: umull #0x00000000, #0xFF ARM/ROM P.S
+[DBG] PASS: umull #0x00000000, #0xFF ARM/ROM .NS
+[DBG] PASS: umull #0x00000000, #0xFF ARM/ROM PNS
+[DBG] PASS: umull #0x00000000, #0xFF ARM/WRAM
+[DBG] PASS: umull #0x00000000, #0xFF ARM/IWRAM
+[DBG] Timing test: umull #0x00000078, #0xFF
+[DBG] PASS: umull #0x00000078, #0xFF ARM/ROM ...
+[DBG] PASS: umull #0x00000078, #0xFF ARM/ROM P..
+[DBG] PASS: umull #0x00000078, #0xFF ARM/ROM .N.
+[DBG] PASS: umull #0x00000078, #0xFF ARM/ROM PN.
+[DBG] PASS: umull #0x00000078, #0xFF ARM/ROM ..S
+[DBG] PASS: umull #0x00000078, #0xFF ARM/ROM P.S
+[DBG] PASS: umull #0x00000078, #0xFF ARM/ROM .NS
+[DBG] PASS: umull #0x00000078, #0xFF ARM/ROM PNS
+[DBG] PASS: umull #0x00000078, #0xFF ARM/WRAM
+[DBG] PASS: umull #0x00000078, #0xFF ARM/IWRAM
+[DBG] Timing test: umull #0x00005678, #0xFF
+[DBG] PASS: umull #0x00005678, #0xFF ARM/ROM ...
+[DBG] PASS: umull #0x00005678, #0xFF ARM/ROM P..
+[DBG] PASS: umull #0x00005678, #0xFF ARM/ROM .N.
+[DBG] PASS: umull #0x00005678, #0xFF ARM/ROM PN.
+[DBG] PASS: umull #0x00005678, #0xFF ARM/ROM ..S
+[DBG] PASS: umull #0x00005678, #0xFF ARM/ROM P.S
+[DBG] PASS: umull #0x00005678, #0xFF ARM/ROM .NS
+[DBG] PASS: umull #0x00005678, #0xFF ARM/ROM PNS
+[DBG] PASS: umull #0x00005678, #0xFF ARM/WRAM
+[DBG] PASS: umull #0x00005678, #0xFF ARM/IWRAM
+[DBG] Timing test: umull #0x00345678, #0xFF
+[DBG] PASS: umull #0x00345678, #0xFF ARM/ROM ...
+[DBG] PASS: umull #0x00345678, #0xFF ARM/ROM P..
+[DBG] PASS: umull #0x00345678, #0xFF ARM/ROM .N.
+[DBG] PASS: umull #0x00345678, #0xFF ARM/ROM PN.
+[DBG] PASS: umull #0x00345678, #0xFF ARM/ROM ..S
+[DBG] PASS: umull #0x00345678, #0xFF ARM/ROM P.S
+[DBG] PASS: umull #0x00345678, #0xFF ARM/ROM .NS
+[DBG] PASS: umull #0x00345678, #0xFF ARM/ROM PNS
+[DBG] PASS: umull #0x00345678, #0xFF ARM/WRAM
+[DBG] PASS: umull #0x00345678, #0xFF ARM/IWRAM
+[DBG] Timing test: umull #0x12345678, #0xFF
+[DBG] PASS: umull #0x12345678, #0xFF ARM/ROM ...
+[DBG] PASS: umull #0x12345678, #0xFF ARM/ROM P..
+[DBG] PASS: umull #0x12345678, #0xFF ARM/ROM .N.
+[DBG] PASS: umull #0x12345678, #0xFF ARM/ROM PN.
+[DBG] PASS: umull #0x12345678, #0xFF ARM/ROM ..S
+[DBG] PASS: umull #0x12345678, #0xFF ARM/ROM P.S
+[DBG] PASS: umull #0x12345678, #0xFF ARM/ROM .NS
+[DBG] PASS: umull #0x12345678, #0xFF ARM/ROM PNS
+[DBG] PASS: umull #0x12345678, #0xFF ARM/WRAM
+[DBG] PASS: umull #0x12345678, #0xFF ARM/IWRAM
+[DBG] Timing test: umull #0xFF000000, #0xFF
+[DBG] PASS: umull #0xFF000000, #0xFF ARM/ROM ...
+[DBG] PASS: umull #0xFF000000, #0xFF ARM/ROM P..
+[DBG] PASS: umull #0xFF000000, #0xFF ARM/ROM .N.
+[DBG] PASS: umull #0xFF000000, #0xFF ARM/ROM PN.
+[DBG] PASS: umull #0xFF000000, #0xFF ARM/ROM ..S
+[DBG] PASS: umull #0xFF000000, #0xFF ARM/ROM P.S
+[DBG] PASS: umull #0xFF000000, #0xFF ARM/ROM .NS
+[DBG] PASS: umull #0xFF000000, #0xFF ARM/ROM PNS
+[DBG] PASS: umull #0xFF000000, #0xFF ARM/WRAM
+[DBG] PASS: umull #0xFF000000, #0xFF ARM/IWRAM
+[DBG] Timing test: umull #0xFFFF0000, #0xFF
+[DBG] PASS: umull #0xFFFF0000, #0xFF ARM/ROM ...
+[DBG] PASS: umull #0xFFFF0000, #0xFF ARM/ROM P..
+[DBG] PASS: umull #0xFFFF0000, #0xFF ARM/ROM .N.
+[DBG] PASS: umull #0xFFFF0000, #0xFF ARM/ROM PN.
+[DBG] PASS: umull #0xFFFF0000, #0xFF ARM/ROM ..S
+[DBG] PASS: umull #0xFFFF0000, #0xFF ARM/ROM P.S
+[DBG] PASS: umull #0xFFFF0000, #0xFF ARM/ROM .NS
+[DBG] PASS: umull #0xFFFF0000, #0xFF ARM/ROM PNS
+[DBG] PASS: umull #0xFFFF0000, #0xFF ARM/WRAM
+[DBG] PASS: umull #0xFFFF0000, #0xFF ARM/IWRAM
+[DBG] Timing test: umull #0xFFFFFF00, #0xFF
+[DBG] PASS: umull #0xFFFFFF00, #0xFF ARM/ROM ...
+[DBG] PASS: umull #0xFFFFFF00, #0xFF ARM/ROM P..
+[DBG] PASS: umull #0xFFFFFF00, #0xFF ARM/ROM .N.
+[DBG] PASS: umull #0xFFFFFF00, #0xFF ARM/ROM PN.
+[DBG] PASS: umull #0xFFFFFF00, #0xFF ARM/ROM ..S
+[DBG] PASS: umull #0xFFFFFF00, #0xFF ARM/ROM P.S
+[DBG] PASS: umull #0xFFFFFF00, #0xFF ARM/ROM .NS
+[DBG] PASS: umull #0xFFFFFF00, #0xFF ARM/ROM PNS
+[DBG] PASS: umull #0xFFFFFF00, #0xFF ARM/WRAM
+[DBG] PASS: umull #0xFFFFFF00, #0xFF ARM/IWRAM
+[DBG] Timing test: umull #0xFFFFFFFF, #0xFF
+[DBG] PASS: umull #0xFFFFFFFF, #0xFF ARM/ROM ...
+[DBG] PASS: umull #0xFFFFFFFF, #0xFF ARM/ROM P..
+[DBG] PASS: umull #0xFFFFFFFF, #0xFF ARM/ROM .N.
+[DBG] PASS: umull #0xFFFFFFFF, #0xFF ARM/ROM PN.
+[DBG] PASS: umull #0xFFFFFFFF, #0xFF ARM/ROM ..S
+[DBG] PASS: umull #0xFFFFFFFF, #0xFF ARM/ROM P.S
+[DBG] PASS: umull #0xFFFFFFFF, #0xFF ARM/ROM .NS
+[DBG] PASS: umull #0xFFFFFFFF, #0xFF ARM/ROM PNS
+[DBG] PASS: umull #0xFFFFFFFF, #0xFF ARM/WRAM
+[DBG] PASS: umull #0xFFFFFFFF, #0xFF ARM/IWRAM
+[DBG] Timing test: umull #0xFFFFFFFF, #0x00
+[DBG] PASS: umull #0xFFFFFFFF, #0x00 ARM/ROM ...
+[DBG] PASS: umull #0xFFFFFFFF, #0x00 ARM/ROM P..
+[DBG] PASS: umull #0xFFFFFFFF, #0x00 ARM/ROM .N.
+[DBG] PASS: umull #0xFFFFFFFF, #0x00 ARM/ROM PN.
+[DBG] PASS: umull #0xFFFFFFFF, #0x00 ARM/ROM ..S
+[DBG] PASS: umull #0xFFFFFFFF, #0x00 ARM/ROM P.S
+[DBG] PASS: umull #0xFFFFFFFF, #0x00 ARM/ROM .NS
+[DBG] PASS: umull #0xFFFFFFFF, #0x00 ARM/ROM PNS
+[DBG] PASS: umull #0xFFFFFFFF, #0x00 ARM/WRAM
+[DBG] PASS: umull #0xFFFFFFFF, #0x00 ARM/IWRAM
+[DBG] Timing test: umlal #0x00000000, #0xFF
+[DBG] PASS: umlal #0x00000000, #0xFF ARM/ROM ...
+[DBG] PASS: umlal #0x00000000, #0xFF ARM/ROM P..
+[DBG] PASS: umlal #0x00000000, #0xFF ARM/ROM .N.
+[DBG] PASS: umlal #0x00000000, #0xFF ARM/ROM PN.
+[DBG] PASS: umlal #0x00000000, #0xFF ARM/ROM ..S
+[DBG] PASS: umlal #0x00000000, #0xFF ARM/ROM P.S
+[DBG] PASS: umlal #0x00000000, #0xFF ARM/ROM .NS
+[DBG] PASS: umlal #0x00000000, #0xFF ARM/ROM PNS
+[DBG] PASS: umlal #0x00000000, #0xFF ARM/WRAM
+[DBG] PASS: umlal #0x00000000, #0xFF ARM/IWRAM
+[DBG] Timing test: umlal #0x00000078, #0xFF
+[DBG] PASS: umlal #0x00000078, #0xFF ARM/ROM ...
+[DBG] PASS: umlal #0x00000078, #0xFF ARM/ROM P..
+[DBG] PASS: umlal #0x00000078, #0xFF ARM/ROM .N.
+[DBG] PASS: umlal #0x00000078, #0xFF ARM/ROM PN.
+[DBG] PASS: umlal #0x00000078, #0xFF ARM/ROM ..S
+[DBG] PASS: umlal #0x00000078, #0xFF ARM/ROM P.S
+[DBG] PASS: umlal #0x00000078, #0xFF ARM/ROM .NS
+[DBG] PASS: umlal #0x00000078, #0xFF ARM/ROM PNS
+[DBG] PASS: umlal #0x00000078, #0xFF ARM/WRAM
+[DBG] PASS: umlal #0x00000078, #0xFF ARM/IWRAM
+[DBG] Timing test: umlal #0x00005678, #0xFF
+[DBG] PASS: umlal #0x00005678, #0xFF ARM/ROM ...
+[DBG] PASS: umlal #0x00005678, #0xFF ARM/ROM P..
+[DBG] PASS: umlal #0x00005678, #0xFF ARM/ROM .N.
+[DBG] PASS: umlal #0x00005678, #0xFF ARM/ROM PN.
+[DBG] PASS: umlal #0x00005678, #0xFF ARM/ROM ..S
+[DBG] PASS: umlal #0x00005678, #0xFF ARM/ROM P.S
+[DBG] PASS: umlal #0x00005678, #0xFF ARM/ROM .NS
+[DBG] PASS: umlal #0x00005678, #0xFF ARM/ROM PNSTIMINGWRITE test=104 sub=-1 addr=03007A64 value=50344704 cycle=149072164
+TIMINGWRITE test=104 sub=-1 addr=03007A68 value=134506232 cycle=149072165
+TIMINGWRITE test=104 sub=-1 addr=03007A6C value=134539964 cycle=149072166
+TIMINGWRITE test=104 sub=-1 addr=03007A70 value=104 cycle=149072167
+TIMINGWRITE test=104 sub=-1 addr=03007A74 value=134258799 cycle=149072168
+TIMINGWRITE test=104 sub=0 addr=03003300 value=7 cycle=149072378
+TIMINGWRITE test=104 sub=1 addr=03003304 value=4 cycle=149072569
+TIMINGWRITE test=104 sub=2 addr=03003308 value=6 cycle=149072756
+TIMINGWRITE test=104 sub=3 addr=0300330C value=4 cycle=149072930
+TIMINGWRITE test=104 sub=4 addr=03003310 value=6 cycle=149073103
+TIMINGWRITE test=104 sub=5 addr=03003314 value=2 cycle=149073263
+TIMINGWRITE test=104 sub=6 addr=03003318 value=5 cycle=149073421
+TIMINGWRITE test=104 sub=7 addr=0300331C value=2 cycle=149073564
+TIMINGWRITE test=104 sub=8 addr=03003324 value=0 cycle=149073690
+TIMINGWRITE test=104 sub=9 addr=03003320 value=5 cycle=149073888
+TIMINGWRITE test=104 sub=10 addr=03003328 value=4 cycle=149074082
+TIMINGWRITE test=104 sub=11 addr=0300332C value=1 cycle=149074257
+TIMINGWRITE test=104 sub=12 addr=03003330 value=3 cycle=149074426
+TIMINGWRITE test=104 sub=13 addr=03003334 value=1 cycle=149074582
+TIMINGWRITE test=104 sub=14 addr=03003338 value=4 cycle=149074748
+TIMINGWRITE test=104 sub=15 addr=0300333C value=0 cycle=149074901
+TIMINGWRITE test=104 sub=16 addr=03003340 value=3 cycle=149075050
+TIMINGWRITE test=104 sub=17 addr=03003344 value=0 cycle=149075184
+TIMINGWRITE test=104 sub=18 addr=0300334C value=0 cycle=149075312
+TIMINGWRITE test=104 sub=19 addr=03003348 value=2 cycle=149075490
+TIMINGWRITE test=104 sub=-1 addr=03007A64 value=50344704 cycle=149075616
+TIMINGWRITE test=104 sub=-1 addr=03007A68 value=134506232 cycle=149075617
+TIMINGWRITE test=104 sub=-1 addr=03007A6C value=134539964 cycle=149075618
+TIMINGWRITE test=104 sub=-1 addr=03007A70 value=104 cycle=149075619
+TIMINGWRITE test=104 sub=-1 addr=03007A74 value=134258813 cycle=149075620
+TIMINGWRITE test=104 sub=0 addr=03007AB8 value=33 cycle=149075856
+TIMINGWRITE test=104 sub=1 addr=03007ABC value=30 cycle=149076073
+TIMINGWRITE test=104 sub=2 addr=03007AC0 value=31 cycle=149076285
+TIMINGWRITE test=104 sub=3 addr=03007AC4 value=29 cycle=149076484
+TIMINGWRITE test=104 sub=4 addr=03007AC8 value=25 cycle=149076676
+TIMINGWRITE test=104 sub=5 addr=03007ACC value=21 cycle=149076855
+TIMINGWRITE test=104 sub=6 addr=03007AD0 value=23 cycle=149077031
+TIMINGWRITE test=104 sub=7 addr=03007AD4 value=20 cycle=149077192
+TIMINGWRITE test=104 sub=8 addr=03007ADC value=4 cycle=149077322
+TIMINGWRITE test=104 sub=9 addr=03007AD8 value=29 cycle=149077544
+TIMINGWRITE test=104 sub=10 addr=03007AE0 value=18 cycle=149077752
+TIMINGWRITE test=104 sub=11 addr=03007AE4 value=15 cycle=149077941
+TIMINGWRITE test=104 sub=12 addr=03007AE8 value=16 cycle=149078123
+TIMINGWRITE test=104 sub=13 addr=03007AEC value=14 cycle=149078292
+TIMINGWRITE test=104 sub=14 addr=03007AF0 value=15 cycle=149078469
+TIMINGWRITE test=104 sub=15 addr=03007AF4 value=11 cycle=149078633
+TIMINGWRITE test=104 sub=16 addr=03007AF8 value=13 cycle=149078792
+TIMINGWRITE test=104 sub=17 addr=03007AFC value=10 cycle=149078936
+TIMINGWRITE test=104 sub=18 addr=03007B04 value=4 cycle=149079068
+TIMINGWRITE test=104 sub=19 addr=03007B00 value=14 cycle=149079258
+
+[DBG] PASS: umlal #0x00005678, #0xFF ARM/WRAM
+[DBG] PASS: umlal #0x00005678, #0xFF ARM/IWRAM
+[DBG] Timing test: umlal #0x00345678, #0xFF
+[DBG] PASS: umlal #0x00345678, #0xFF ARM/ROM ...
+[DBG] PASS: umlal #0x00345678, #0xFF ARM/ROM P..
+[DBG] PASS: umlal #0x00345678, #0xFF ARM/ROM .N.
+[DBG] PASS: umlal #0x00345678, #0xFF ARM/ROM PN.
+[DBG] PASS: umlal #0x00345678, #0xFF ARM/ROM ..S
+[DBG] PASS: umlal #0x00345678, #0xFF ARM/ROM P.S
+[DBG] PASS: umlal #0x00345678, #0xFF ARM/ROM .NS
+[DBG] PASS: umlal #0x00345678, #0xFF ARM/ROM PNS
+[DBG] PASS: umlal #0x00345678, #0xFF ARM/WRAM
+[DBG] PASS: umlal #0x00345678, #0xFF ARM/IWRAM
+[DBG] Timing test: umlal #0x12345678, #0xFF
+[DBG] PASS: umlal #0x12345678, #0xFF ARM/ROM ...
+[DBG] PASS: umlal #0x12345678, #0xFF ARM/ROM P..
+[DBG] PASS: umlal #0x12345678, #0xFF ARM/ROM .N.
+[DBG] PASS: umlal #0x12345678, #0xFF ARM/ROM PN.
+[DBG] PASS: umlal #0x12345678, #0xFF ARM/ROM ..S
+[DBG] PASS: umlal #0x12345678, #0xFF ARM/ROM P.S
+[DBG] PASS: umlal #0x12345678, #0xFF ARM/ROM .NS
+[DBG] PASS: umlal #0x12345678, #0xFF ARM/ROM PNS
+[DBG] PASS: umlal #0x12345678, #0xFF ARM/WRAM
+[DBG] PASS: umlal #0x12345678, #0xFF ARM/IWRAM
+[DBG] Timing test: umlal #0xFF000000, #0xFF
+[DBG] PASS: umlal #0xFF000000, #0xFF ARM/ROM ...
+[DBG] PASS: umlal #0xFF000000, #0xFF ARM/ROM P..
+[DBG] PASS: umlal #0xFF000000, #0xFF ARM/ROM .N.
+[DBG] PASS: umlal #0xFF000000, #0xFF ARM/ROM PN.
+[DBG] PASS: umlal #0xFF000000, #0xFF ARM/ROM ..S
+[DBG] PASS: umlal #0xFF000000, #0xFF ARM/ROM P.S
+[DBG] PASS: umlal #0xFF000000, #0xFF ARM/ROM .NS
+[DBG] PASS: umlal #0xFF000000, #0xFF ARM/ROM PNS
+[DBG] PASS: umlal #0xFF000000, #0xFF ARM/WRAM
+[DBG] PASS: umlal #0xFF000000, #0xFF ARM/IWRAM
+[DBG] Timing test: umlal #0xFFFF0000, #0xFF
+[DBG] PASS: umlal #0xFFFF0000, #0xFF ARM/ROM ...
+[DBG] PASS: umlal #0xFFFF0000, #0xFF ARM/ROM P..
+[DBG] PASS: umlal #0xFFFF0000, #0xFF ARM/ROM .N.
+[DBG] PASS: umlal #0xFFFF0000, #0xFF ARM/ROM PN.
+[DBG] PASS: umlal #0xFFFF0000, #0xFF ARM/ROM ..S
+[DBG] PASS: umlal #0xFFFF0000, #0xFF ARM/ROM P.S
+[DBG] PASS: umlal #0xFFFF0000, #0xFF ARM/ROM .NS
+[DBG] PASS: umlal #0xFFFF0000, #0xFF ARM/ROM PNS
+[DBG] PASS: umlal #0xFFFF0000, #0xFF ARM/WRAM
+[DBG] PASS: umlal #0xFFFF0000, #0xFF ARM/IWRAM
+[DBG] Timing test: umlal #0xFFFFFF00, #0xFF
+[DBG] PASS: umlal #0xFFFFFF00, #0xFF ARM/ROM ...
+[DBG] PASS: umlal #0xFFFFFF00, #0xFF ARM/ROM P..
+[DBG] PASS: umlal #0xFFFFFF00, #0xFF ARM/ROM .N.
+[DBG] PASS: umlal #0xFFFFFF00, #0xFF ARM/ROM PN.
+[DBG] PASS: umlal #0xFFFFFF00, #0xFF ARM/ROM ..S
+[DBG] PASS: umlal #0xFFFFFF00, #0xFF ARM/ROM P.S
+[DBG] PASS: umlal #0xFFFFFF00, #0xFF ARM/ROM .NS
+[DBG] PASS: umlal #0xFFFFFF00, #0xFF ARM/ROM PNS
+[DBG] PASS: umlal #0xFFFFFF00, #0xFF ARM/WRAM
+[DBG] PASS: umlal #0xFFFFFF00, #0xFF ARM/IWRAM
+[DBG] Timing test: umlal #0xFFFFFFFF, #0xFF
+[DBG] PASS: umlal #0xFFFFFFFF, #0xFF ARM/ROM ...
+[DBG] PASS: umlal #0xFFFFFFFF, #0xFF ARM/ROM P..
+[DBG] PASS: umlal #0xFFFFFFFF, #0xFF ARM/ROM .N.
+[DBG] PASS: umlal #0xFFFFFFFF, #0xFF ARM/ROM PN.
+[DBG] PASS: umlal #0xFFFFFFFF, #0xFF ARM/ROM ..S
+[DBG] PASS: umlal #0xFFFFFFFF, #0xFF ARM/ROM P.S
+[DBG] PASS: umlal #0xFFFFFFFF, #0xFF ARM/ROM .NS
+[DBG] PASS: umlal #0xFFFFFFFF, #0xFF ARM/ROM PNS
+[DBG] PASS: umlal #0xFFFFFFFF, #0xFF ARM/WRAM
+[DBG] PASS: umlal #0xFFFFFFFF, #0xFF ARM/IWRAM
+[DBG] Timing test: umlal #0xFFFFFFFF, #0x00
+[DBG] PASS: umlal #0xFFFFFFFF, #0x00 ARM/ROM ...
+[DBG] PASS: umlal #0xFFFFFFFF, #0x00 ARM/ROM P..
+[DBG] PASS: umlal #0xFFFFFFFF, #0x00 ARM/ROM .N.
+[DBG] PASS: umlal #0xFFFFFFFF, #0x00 ARM/ROM PN.
+[DBG] PASS: umlal #0xFFFFFFFF, #0x00 ARM/ROM ..S
+[DBG] PASS: umlal #0xFFFFFFFF, #0x00 ARM/ROM P.S
+[DBG] PASS: umlal #0xFFFFFFFF, #0x00 ARM/ROM .NS
+[DBG] PASS: umlal #0xFFFFFFFF, #0x00 ARM/ROM PNS
+[DBG] PASS: umlal #0xFFFFFFFF, #0x00 ARM/WRAM
+[DBG] PASS: umlal #0xFFFFFFFF, #0x00 ARM/IWRAM
+[DBG] Timing test: b pc
+[DBG] PASS: b pc ARM/ROM ...
+[DBG] PASS: b pc ARM/ROM P..
+[DBG] PASS: b pc ARM/ROM .N.
+[DBG] PASS: b pc ARM/ROM PN.
+[DBG] PASS: b pc ARM/ROM ..S
+[DBG] PASS: b pc ARM/ROM P.S
+[DBG] PASS: b pc ARM/ROM .NS
+[DBG] PASS: b pc ARM/ROM PNS
+[DBG] PASS: b pc ARM/WRAM
+[DBG] PASS: b pc TIMINGWRITE test=106 sub=-1 addr=03007A64 value=50344704 cycle=150195748
+TIMINGWRITE test=106 sub=-1 addr=03007A68 value=134506416 cycle=150195749
+TIMINGWRITE test=106 sub=-1 addr=03007A6C value=134540000 cycle=150195750
+TIMINGWRITE test=106 sub=-1 addr=03007A70 value=106 cycle=150195751
+TIMINGWRITE test=106 sub=-1 addr=03007A74 value=134258799 cycle=150195752
+TIMINGWRITE test=106 sub=0 addr=03003300 value=7 cycle=150195962
+TIMINGWRITE test=106 sub=1 addr=03003304 value=4 cycle=150196153
+TIMINGWRITE test=106 sub=2 addr=03003308 value=6 cycle=150196340
+TIMINGWRITE test=106 sub=3 addr=0300330C value=4 cycle=150196514
+TIMINGWRITE test=106 sub=4 addr=03003310 value=6 cycle=150196687
+TIMINGWRITE test=106 sub=5 addr=03003314 value=2 cycle=150196847
+TIMINGWRITE test=106 sub=6 addr=03003318 value=5 cycle=150197005
+TIMINGWRITE test=106 sub=7 addr=0300331C value=2 cycle=150197148
+TIMINGWRITE test=106 sub=8 addr=03003324 value=0 cycle=150197274
+TIMINGWRITE test=106 sub=9 addr=03003320 value=5 cycle=150197472
+TIMINGWRITE test=106 sub=10 addr=03003328 value=4 cycle=150197666
+TIMINGWRITE test=106 sub=11 addr=0300332C value=1 cycle=150197841
+TIMINGWRITE test=106 sub=12 addr=03003330 value=3 cycle=150198010
+TIMINGWRITE test=106 sub=13 addr=03003334 value=1 cycle=150198166
+TIMINGWRITE test=106 sub=14 addr=03003338 value=4 cycle=150198332
+TIMINGWRITE test=106 sub=15 addr=0300333C value=0 cycle=150198485
+TIMINGWRITE test=106 sub=16 addr=03003340 value=3 cycle=150198634
+TIMINGWRITE test=106 sub=17 addr=03003344 value=0 cycle=150198768
+TIMINGWRITE test=106 sub=18 addr=0300334C value=0 cycle=150198896
+TIMINGWRITE test=106 sub=19 addr=03003348 value=2 cycle=150199074
+TIMINGWRITE test=106 sub=-1 addr=03007A68 value=50344704 cycle=150199200
+TIMINGWRITE test=106 sub=-1 addr=03007A6C value=134506416 cycle=150199201
+TIMINGWRITE test=106 sub=-1 addr=03007A70 value=134540000 cycle=150199202
+TIMINGWRITE test=106 sub=-1 addr=03007A74 value=134258813 cycle=150199203
+TIMINGWRITE test=106 sub=0 addr=03007A54 value=50363064 cycle=150199245
+TIMINGWRITE test=106 sub=0 addr=03007A58 value=0 cycle=150199246
+TIMINGWRITE test=106 sub=0 addr=03007A5C value=50331824 cycle=150199247
+TIMINGWRITE test=106 sub=0 addr=03007A60 value=106 cycle=150199248
+TIMINGWRITE test=106 sub=0 addr=03007A64 value=134272961 cycle=150199249
+TIMINGWRITE test=106 sub=0 addr=03007A48 value=50363064 cycle=150199385
+TIMINGWRITE test=106 sub=0 addr=03007A4C value=0 cycle=150199386
+TIMINGWRITE test=106 sub=0 addr=03007A50 value=134272625 cycle=150199387
+TIMINGWRITE test=106 sub=0 addr=03007AB8 value=85 cycle=150199560
+TIMINGWRITE test=106 sub=1 addr=03007A48 value=50363064 cycle=150199687
+TIMINGWRITE test=106 sub=1 addr=03007A4C value=0 cycle=150199688
+TIMINGWRITE test=106 sub=1 addr=03007A50 value=134272659 cycle=150199689
+TIMINGWRITE test=106 sub=1 addr=03007ABC value=82 cycle=150199841
+TIMINGWRITE test=106 sub=2 addr=03007A48 value=50363064 cycle=150199960
+TIMINGWRITE test=106 sub=2 addr=03007A4C value=0 cycle=150199961
+TIMINGWRITE test=106 sub=2 addr=03007A50 value=134272693 cycle=150199962
+TIMINGWRITE test=106 sub=2 addr=03007AC0 value=80 cycle=150200123
+TIMINGWRITE test=106 sub=3 addr=03007A48 value=50363064 cycle=150200236
+TIMINGWRITE test=106 sub=3 addr=03007A4C value=0 cycle=150200237
+TIMINGWRITE test=106 sub=3 addr=03007A50 value=134272727 cycle=150200238
+TIMINGWRITE test=106 sub=3 addr=03007AC4 value=78 cycle=150200383
+TIMINGWRITE test=106 sub=4 addr=03007A48 value=50363064 cycle=150200495
+TIMINGWRITE test=106 sub=4 addr=03007A4C value=0 cycle=150200496
+TIMINGWRITE test=106 sub=4 addr=03007A50 value=134272761 cycle=150200497
+TIMINGWRITE test=106 sub=4 addr=03007AC8 value=65 cycle=150200636
+TIMINGWRITE test=106 sub=5 addr=03007A48 value=50363064 cycle=150200748
+TIMINGWRITE test=106 sub=5 addr=03007A4C value=0 cycle=150200749
+TIMINGWRITE test=106 sub=5 addr=03007A50 value=134272795 cycle=150200750
+TIMINGWRITE test=106 sub=5 addr=03007ACC value=61 cycle=150200865
+TIMINGWRITE test=106 sub=6 addr=03007A48 value=50363064 cycle=150200968
+TIMINGWRITE test=106 sub=6 addr=03007A4C value=0 cycle=150200969
+TIMINGWRITE test=106 sub=6 addr=03007A50 value=134272829 cycle=150200970
+TIMINGWRITE test=106 sub=6 addr=03007AD0 value=60 cycle=150201097
+TIMINGWRITE test=106 sub=7 addr=03007A48 value=50363064 cycle=150201195
+TIMINGWRITE test=106 sub=7 addr=03007A4C value=0 cycle=150201196
+TIMINGWRITE test=106 sub=7 addr=03007A50 value=134272863 cycle=150201197
+TIMINGWRITE test=106 sub=7 addr=03007AD4 value=57 cycle=150201305
+TIMINGWRITE test=106 sub=8 addr=03007A48 value=50363064 cycle=150201412
+TIMINGWRITE test=106 sub=8 addr=03007A4C value=0 cycle=150201413
+TIMINGWRITE test=106 sub=8 addr=03007A50 value=134272897 cycle=150201414
+TIMINGWRITE test=106 sub=8 addr=03007ADC value=22 cycle=150201462
+TIMINGWRITE test=106 sub=9 addr=03007A48 value=50363064 cycle=150201596
+TIMINGWRITE test=106 sub=9 addr=03007A4C value=0 cycle=150201597
+TIMINGWRITE test=106 sub=9 addr=03007A50 value=134272931 cycle=150201598
+TIMINGWRITE test=106 sub=9 addr=03007AD8 value=77 cycle=150201751
+TIMINGWRITE test=106 sub=1 addr=03007A54 value=50363064 cycle=150201847
+TIMINGWRITE test=106 sub=1 addr=03007A58 value=1 cycle=150201848
+TIMINGWRITE test=106 sub=1 addr=03007A5C value=50331824 cycle=150201849
+TIMINGWRITE test=106 sub=1 addr=03007A60 value=106 cycle=150201850
+TIMINGWRITE test=106 sub=1 addr=03007A64 value=134272971 cycle=150201851
+TIMINGWRITE test=106 sub=0 addr=03007A48 value=134272133 cycle=150201987
+TIMINGWRITE test=106 sub=0 addr=03007A4C value=50363064 cycle=150201988
+TIMINGWRITE test=106 sub=0 addr=03007A50 value=0 cycle=150201989
+TIMINGWRITE test=106 sub=0 addr=03007AE0 value=61 cycle=150202125
+TIMINGWRITE test=106 sub=1 addr=03007A48 value=134272167 cycle=150202252
+TIMINGWRITE test=106 sub=1 addr=03007A4C value=50363064 cycle=150202253
+TIMINGWRITE test=106 sub=1 addr=03007A50 value=0 cycle=150202254
+TIMINGWRITE test=106 sub=1 addr=03007AE4 value=58 cycle=150202370
+TIMINGWRITE test=106 sub=2 addr=03007A48 value=134272201 cycle=150202489
+TIMINGWRITE test=106 sub=2 addr=03007A4C value=50363064 cycle=150202490
+TIMINGWRITE test=106 sub=2 addr=03007A50 value=0 cycle=150202491
+TIMINGWRITE test=106 sub=2 addr=03007AE8 value=56 cycle=150202613
+TIMINGWRITE test=106 sub=3 addr=03007A48 value=134272235 cycle=150202726
+TIMINGWRITE test=106 sub=3 addr=03007A4C value=50363064 cycle=150202727
+TIMINGWRITE test=106 sub=3 addr=03007A50 value=0 cycle=150202728
+TIMINGWRITE test=106 sub=3 addr=03007AEC value=54 cycle=150202835
+TIMINGWRITE test=106 sub=4 addr=03007A48 value=134272269 cycle=150202947
+TIMINGWRITE test=106 sub=4 addr=03007A4C value=50363064 cycle=150202948
+TIMINGWRITE test=106 sub=4 addr=03007A50 value=0 cycle=150202949
+TIMINGWRITE test=106 sub=4 addr=03007AF0 value=49 cycle=150203067
+TIMINGWRITE test=106 sub=5 addr=03007A48 value=134272303 cycle=150203179
+TIMINGWRITE test=106 sub=5 addr=03007A4C value=50363064 cycle=150203180
+TIMINGWRITE test=106 sub=5 addr=03007A50 value=0 cycle=150203181
+TIMINGWRITE test=106 sub=5 addr=03007AF4 value=45 cycle=150203277
+TIMINGWRITE test=106 sub=6 addr=03007A48 value=134272337 cycle=150203380
+TIMINGWRITE test=106 sub=6 addr=03007A4C value=50363064 cycle=150203381
+TIMINGWRITE test=106 sub=6 addr=03007A50 value=0 cycle=150203382
+TIMINGWRITE test=106 sub=6 addr=03007AF8 value=44 cycle=150203486
+TIMINGWRITE test=106 sub=7 addr=03007A48 value=134272371 cycle=150203584
+TIMINGWRITE test=106 sub=7 addr=03007A4C value=50363064 cycle=150203585
+TIMINGWRITE test=106 sub=7 addr=03007A50 value=0 cycle=150203586
+TIMINGWRITE test=106 sub=7 addr=03007AFC value=41 cycle=150203673
+TIMINGWRITE test=106 sub=8 addr=03007A48 value=134272405 cycle=150203781
+TIMINGWRITE test=106 sub=8 addr=03007A4C value=50363064 cycle=150203782
+TIMINGWRITE test=106 sub=8 addr=03007A50 value=0 cycle=150203783
+TIMINGWRITE test=106 sub=8 addr=03007B04 value=24 cycle=150203836
+TIMINGWRITE test=106 sub=9 addr=03007A48 value=134272439 cycle=150203970
+TIMINGWRITE test=106 sub=9 addr=03007A4C value=50363064 cycle=150203971
+TIMINGWRITE test=106 sub=9 addr=03007A50 value=0 cycle=150203972
+TIMINGWRITE test=106 sub=9 addr=03007B00 value=53 cycle=150204084
+TIMINGWRITE test=109 sub=-1 addr=03007A64 value=50344704 cycle=151881124
+TIMINGWRITE test=109 sub=-1 addr=03007A68 value=134506692 cycle=151881125
+TIMINGWRITE test=109 sub=-1 addr=03007A6C value=134540032 cycle=151881126
+TIMINGWRITE test=109 sub=-1 addr=03007A70 value=109 cycle=151881127
+TIMINGWRITE test=109 sub=-1 addr=03007A74 value=134258799 cycle=151881128
+TIMINGWRITE test=109 sub=0 addr=03003300 value=7 cycle=151881338
+TIMINGWRITE test=109 sub=1 addr=03003304 value=4 cycle=151881529
+TIMINGWRITE test=109 sub=2 addr=03003308 value=6 cycle=151881716
+TIMINGWRITE test=109 sub=3 addr=0300330C value=4 cycle=151881890
+TIMINGWRITE test=109 sub=4 addr=03003310 value=6 cycle=151882063
+TIMINGWRITE test=109 sub=5 addr=03003314 value=2 cycle=151882223
+TIMINGWRITE test=109 sub=6 addr=03003318 value=5 cycle=151882381
+TIMINGWRITE test=109 sub=7 addr=0300331C value=2 cycle=151882524
+TIMINGWRITE test=109 sub=8 addr=03003324 value=0 cycle=151882650
+TIMINGWRITE test=109 sub=9 addr=03003320 value=5 cycle=151882848
+TIMINGWRITE test=109 sub=10 addr=03003328 value=4 cycle=151883042
+TIMINGWRITE test=109 sub=11 addr=0300332C value=1 cycle=151883217
+TIMINGWRITE test=109 sub=12 addr=03003330 value=3 cycle=151883386
+TIMINGWRITE test=109 sub=13 addr=03003334 value=1 cycle=151883542
+TIMINGWRITE test=109 sub=14 addr=03003338 value=4 cycle=151883708
+TIMINGWRITE test=109 sub=15 addr=0300333C value=0 cycle=151883861
+TIMINGWRITE test=109 sub=16 addr=03003340 value=3 cycle=151884010
+TIMINGWRITE test=109 sub=17 addr=03003344 value=0 cycle=151884144
+TIMINGWRITE test=109 sub=18 addr=0300334C value=0 cycle=151884272
+TIMINGWRITE test=109 sub=19 addr=03003348 value=2 cycle=151884450
+TIMINGWRITE test=109 sub=-1 addr=03007A68 value=50344704 cycle=151884576
+TIMINGWRITE test=109 sub=-1 addr=03007A6C value=134506692 cycle=151884577
+TIMINGWRITE test=109 sub=-1 addr=03007A70 value=134540032 cycle=151884578
+TIMINGWRITE test=109 sub=-1 addr=03007A74 value=134258813 cycle=151884579
+TIMINGWRITE test=109 sub=0 addr=03007A54 value=50363064 cycle=151884621
+TIMINGWRITE test=109 sub=0 addr=03007A58 value=0 cycle=151884622
+TIMINGWRITE test=109 sub=0 addr=03007A5C value=50331824 cycle=151884623
+TIMINGWRITE test=109 sub=0 addr=03007A60 value=109 cycle=151884624
+TIMINGWRITE test=109 sub=0 addr=03007A64 value=134351545 cycle=151884625
+TIMINGWRITE test=109 sub=0 addr=03007A4C value=50363064 cycle=151884761
+TIMINGWRITE test=109 sub=0 addr=03007A50 value=0 cycle=151884762
+TIMINGWRITE test=109 sub=0 addr=03007FD4 value=292 cycle=151884845
+TIMINGWRITE test=109 sub=0 addr=03007FD8 value=0 cycle=151884846
+TIMINGWRITE test=109 sub=0 addr=03007FDC value=134351076 cycle=151884847
+TIMINGWRITE test=109 sub=0 addr=03007FD0 value=31 cycle=151884861
+TIMINGWRITE test=109 sub=0 addr=03007A44 value=2 cycle=151884866
+TIMINGWRITE test=109 sub=0 addr=03007A48 value=134351209 cycle=151884867
+TIMINGWRITE test=109 sub=0 addr=03007AB8 value=394 cycle=151885243
+TIMINGWRITE test=109 sub=1 addr=03007A4C value=50363064 cycle=151885370
+TIMINGWRITE test=109 sub=1 addr=03007A50 value=0 cycle=151885371
+TIMINGWRITE test=109 sub=1 addr=03007FD4 value=292 cycle=151885447
+TIMINGWRITE test=109 sub=1 addr=03007FD8 value=0 cycle=151885448
+TIMINGWRITE test=109 sub=1 addr=03007FDC value=134351076 cycle=151885449
+TIMINGWRITE test=109 sub=1 addr=03007FD0 value=31 cycle=151885465
+TIMINGWRITE test=109 sub=1 addr=03007A44 value=394 cycle=151885470
+TIMINGWRITE test=109 sub=1 addr=03007A48 value=134351243 cycle=151885471
+TIMINGWRITE test=109 sub=1 addr=03007ABC value=393 cycle=151885835
+TIMINGWRITE test=109 sub=2 addr=03007A4C value=50363064 cycle=151885954
+TIMINGWRITE test=109 sub=2 addr=03007A50 value=0 cycle=151885955
+TIMINGWRITE test=109 sub=2 addr=03007FD4 value=292 cycle=151886032
+TIMINGWRITE test=109 sub=2 addr=03007FD8 value=0 cycle=151886033
+TIMINGWRITE test=109 sub=2 addr=03007FDC value=134351076 cycle=151886034
+TIMINGWRITE test=109 sub=2 addr=03007FD0 value=31 cycle=151886047
+TIMINGWRITE test=109 sub=2 addr=03007A44 value=393 cycle=151886052
+TIMINGWRITE test=109 sub=2 addr=03007A48 value=134351277 cycle=151886053
+TIMINGWRITE test=109 sub=2 addr=03007AC0 value=389 cycle=151886424
+TIMINGWRITE test=109 sub=3 addr=03007A4C value=50363064 cycle=151886537
+TIMINGWRITE test=109 sub=3 addr=03007A50 value=0 cycle=151886538
+TIMINGWRITE test=109 sub=3 addr=03007FD4 value=292 cycle=151886610
+TIMINGWRITE test=109 sub=3 addr=03007FD8 value=0 cycle=151886611
+TIMINGWRITE test=109 sub=3 addr=03007FDC value=134351076 cycle=151886612
+TIMINGWRITE test=109 sub=3 addr=03007FD0 value=31 cycle=151886626
+TIMINGWRITE test=109 sub=3 addr=03007A44 value=389 cycle=151886631
+TIMINGWRITE test=109 sub=3 addr=03007A48 value=134351311 cycle=151886632
+TIMINGWRITE test=109 sub=3 addr=03007AC4 value=388 cycle=151886994
+TIMINGWRITE test=109 sub=4 addr=03007A4C value=50363064 cycle=151887106
+TIMINGWRITE test=109 sub=4 addr=03007A50 value=0 cycle=151887107
+TIMINGWRITE test=109 sub=4 addr=03007FD4 value=292 cycle=151887176
+TIMINGWRITE test=109 sub=4 addr=03007FD8 value=0 cycle=151887177
+TIMINGWRITE test=109 sub=4 addr=03007FDC value=134351076 cycle=151887178
+TIMINGWRITE test=109 sub=4 addr=03007FD0 value=31 cycle=151887192
+TIMINGWRITE test=109 sub=4 addr=03007A44 value=388 cycle=151887197
+TIMINGWRITE test=109 sub=4 addr=03007A48 value=134351345 cycle=151887198
+TIMINGWRITE test=109 sub=4 addr=03007AC8 value=380 cycle=151887560
+TIMINGWRITE test=109 sub=5 addr=03007A4C value=50363064 cycle=151887672
+TIMINGWRITE test=109 sub=5 addr=03007A50 value=0 cycle=151887673
+TIMINGWRITE test=109 sub=5 addr=03007FD4 value=292 cycle=151887733
+TIMINGWRITE test=109 sub=5 addr=03007FD8 value=0 cycle=151887734
+TIMINGWRITE test=109 sub=5 addr=03007FDC value=134351076 cycle=151887735
+TIMINGWRITE test=109 sub=5 addr=03007FD0 value=31 cycle=151887752
+TIMINGWRITE test=109 sub=5 addr=03007A44 value=380 cycle=151887757
+TIMINGWRITE test=109 sub=5 addr=03007A48 value=134351379 cycle=151887758
+TIMINGWRITE test=109 sub=5 addr=03007ACC value=379 cycle=151888105
+TIMINGWRITE test=109 sub=6 addr=03007A4C value=50363064 cycle=151888208
+TIMINGWRITE test=109 sub=6 addr=03007A50 value=0 cycle=151888209
+TIMINGWRITE test=109 sub=6 addr=03007FD4 value=292 cycle=151888272
+TIMINGWRITE test=109 sub=6 addr=03007FD8 value=0 cycle=151888273
+TIMINGWRITE test=109 sub=6 addr=03007FDC value=134351076 cycle=151888274
+TIMINGWRITE test=109 sub=6 addr=03007FD0 value=31 cycle=151888287
+TIMINGWRITE test=109 sub=6 addr=03007A44 value=379 cycle=151888292
+TIMINGWRITE test=109 sub=6 addr=03007A48 value=134351413 cycle=151888293
+TIMINGWRITE test=109 sub=6 addr=03007AD0 value=375 cycle=151888650
+TIMINGWRITE test=109 sub=7 addr=03007A4C value=50363064 cycle=151888748
+TIMINGWRITE test=109 sub=7 addr=03007A50 value=0 cycle=151888749
+TIMINGWRITE test=109 sub=7 addr=03007FD4 value=292 cycle=151888805
+TIMINGWRITE test=109 sub=7 addr=03007FD8 value=0 cycle=151888806
+TIMINGWRITE test=109 sub=7 addr=03007FDC value=134351076 cycle=151888807
+TIMINGWRITE test=109 sub=7 addr=03007FD0 value=31 cycle=151888822
+TIMINGWRITE test=109 sub=7 addr=03007A44 value=375 cycle=151888827
+TIMINGWRITE test=109 sub=7 addr=03007A48 value=134351447 cycle=151888828
+TIMINGWRITE test=109 sub=7 addr=03007AD4 value=374 cycle=151889173
+TIMINGWRITE test=109 sub=8 addr=03007A4C value=50363064 cycle=151889280
+TIMINGWRITE test=109 sub=8 addr=03007A50 value=0 cycle=151889281
+TIMINGWRITE test=109 sub=8 addr=03007FD4 value=292 cycle=151889302
+TIMINGWRITE test=109 sub=8 addr=03007FD8 value=0 cycle=151889303
+TIMINGWRITE test=109 sub=8 addr=03007FDC value=50342620 cycle=151889304
+TIMINGWRITE test=109 sub=8 addr=03007FD0 value=31 cycle=151889314
+TIMINGWRITE test=109 sub=8 addr=03007A44 value=374 cycle=151889319
+TIMINGWRITE test=109 sub=8 addr=03007A48 value=134351481 cycle=151889320
+TIMINGWRITE test=109 sub=8 addr=03007ADC value=337 cycle=151889643
+TIMINGWRITE test=109 sub=9 addr=03007A4C value=50363064 cycle=151889777
+TIMINGWRITE test=109 sub=9 addr=03007A50 value=0 cycle=151889778
+TIMINGWRITE test=109 sub=9 addr=03007FD4 value=292 cycle=151889849
+TIMINGWRITE test=109 sub=9 addr=03007FD8 value=0 cycle=151889850
+TIMINGWRITE test=109 sub=9 addr=03007FDC value=33564676 cycle=151889851
+TIMINGWRITE test=109 sub=9 addr=03007FD0 value=31 cycle=151889863
+TIMINGWRITE test=109 sub=9 addr=03007A44 value=337 cycle=151889868
+TIMINGWRITE test=109 sub=9 addr=03007A48 value=134351515 cycle=151889869
+TIMINGWRITE test=109 sub=9 addr=03007AD8 value=384 cycle=151890237
+TIMINGWRITE test=109 sub=1 addr=03007A54 value=50363064 cycle=151890333
+TIMINGWRITE test=109 sub=1 addr=03007A58 value=1 cycle=151890334
+TIMINGWRITE test=109 sub=1 addr=03007A5C value=50331824 cycle=151890335
+TIMINGWRITE test=109 sub=1 addr=03007A60 value=109 cycle=151890336
+TIMINGWRITE test=109 sub=1 addr=03007A64 value=134351555 cycle=151890337
+TIMINGWRITE test=109 sub=0 addr=03007A4C value=50363064 cycle=151890470
+TIMINGWRITE test=109 sub=0 addr=03007A50 value=0 cycle=151890471
+TIMINGWRITE test=109 sub=0 addr=03007FD4 value=292 cycle=151890541
+TIMINGWRITE test=109 sub=0 addr=03007FD8 value=0 cycle=151890542
+TIMINGWRITE test=109 sub=0 addr=03007FDC value=134350654 cycle=151890543
+TIMINGWRITE test=109 sub=0 addr=03007FD0 value=63 cycle=151890557
+TIMINGWRITE test=109 sub=0 addr=03007A44 value=384 cycle=151890562
+TIMINGWRITE test=109 sub=0 addr=03007A48 value=134350717 cycle=151890563
+TIMINGWRITE test=109 sub=0 addr=03007AE0 value=370 cycle=151890912
+TIMINGWRITE test=109 sub=1 addr=03007A4C value=50363064 cycle=151891036
+TIMINGWRITE test=109 sub=1 addr=03007A50 value=0 cycle=151891037
+TIMINGWRITE test=109 sub=1 addr=03007FD4 value=292 cycle=151891100
+TIMINGWRITE test=109 sub=1 addr=03007FD8 value=0 cycle=151891101
+TIMINGWRITE test=109 sub=1 addr=03007FDC value=134350654 cycle=151891102
+TIMINGWRITE test=109 sub=1 addr=03007FD0 value=63 cycle=151891118
+TIMINGWRITE test=109 sub=1 addr=03007A44 value=370 cycle=151891123
+TIMINGWRITE test=109 sub=1 addr=03007A48 value=134350751 cycle=151891124
+TIMINGWRITE test=109 sub=1 addr=03007AE4 value=369 cycle=151891462
+TIMINGWRITE test=109 sub=2 addr=03007A4C value=50363064 cycle=151891578
+TIMINGWRITE test=109 sub=2 addr=03007A50 value=0 cycle=151891579
+TIMINGWRITE test=109 sub=2 addr=03007FD4 value=292 cycle=151891641
+TIMINGWRITE test=109 sub=2 addr=03007FD8 value=0 cycle=151891642
+TIMINGWRITE test=109 sub=2 addr=03007FDC value=134350654 cycle=151891643
+TIMINGWRITE test=109 sub=2 addr=03007FD0 value=63 cycle=151891656
+TIMINGWRITE test=109 sub=2 addr=03007A44 value=369 cycle=151891661
+TIMINGWRITE test=109 sub=2 addr=03007A48 value=134350785 cycle=151891662
+TIMINGWRITE test=109 sub=2 addr=03007AE8 value=365 cycle=151892006
+TIMINGWRITE test=109 sub=3 addr=03007A4C value=50363064 cycle=151892116
+TIMINGWRITE test=109 sub=3 addr=03007A50 value=0 cycle=151892117
+TIMINGWRITE test=109 sub=3 addr=03007FD4 value=292 cycle=151892174
+TIMINGWRITE test=109 sub=3 addr=03007FD8 value=0 cycle=151892175
+TIMINGWRITE test=109 sub=3 addr=03007FDC value=134350654 cycle=151892176
+TIMINGWRITE test=109 sub=3 addr=03007FD0 value=63 cycle=151892190
+TIMINGWRITE test=109 sub=3 addr=03007A44 value=365 cycle=151892195
+TIMINGWRITE test=109 sub=3 addr=03007A48 value=134350819 cycle=151892196
+TIMINGWRITE test=109 sub=3 addr=03007AEC value=364 cycle=151892532
+TIMINGWRITE test=109 sub=4 addr=03007A4C value=50363064 cycle=151892642
+TIMINGWRITE test=109 sub=4 addr=03007A50 value=0 cycle=151892643
+TIMINGWRITE test=109 sub=4 addr=03007FD4 value=292 cycle=151892707
+TIMINGWRITE test=109 sub=4 addr=03007FD8 value=0 cycle=151892708
+TIMINGWRITE test=109 sub=4 addr=03007FDC value=134350654 cycle=151892709
+TIMINGWRITE test=109 sub=4 addr=03007FD0 value=63 cycle=151892723
+TIMINGWRITE test=109 sub=4 addr=03007A44 value=364 cycle=151892728
+TIMINGWRITE test=109 sub=4 addr=03007A48 value=134350853 cycle=151892729
+TIMINGWRITE test=109 sub=4 addr=03007AF0 value=364 cycle=151893073
+TIMINGWRITE test=109 sub=5 addr=03007A4C value=50363064 cycle=151893183
+TIMINGWRITE test=109 sub=5 addr=03007A50 value=0 cycle=151893184
+TIMINGWRITE test=109 sub=5 addr=03007FD4 value=292 cycle=151893240
+TIMINGWRITE test=109 sub=5 addr=03007FD8 value=0 cycle=151893241
+TIMINGWRITE test=109 sub=5 addr=03007FDC value=134350654 cycle=151893242
+TIMINGWRITE test=109 sub=5 addr=03007FD0 value=63 cycle=151893259
+TIMINGWRITE test=109 sub=5 addr=03007A44 value=364 cycle=151893264
+TIMINGWRITE test=109 sub=5 addr=03007A48 value=134350887 cycle=151893265
+TIMINGWRITE test=109 sub=5 addr=03007AF4 value=363 cycle=151893596
+TIMINGWRITE test=109 sub=6 addr=03007A4C value=50363064 cycle=151893697
+TIMINGWRITE test=109 sub=6 addr=03007A50 value=0 cycle=151893698
+TIMINGWRITE test=109 sub=6 addr=03007FD4 value=292 cycle=151893754
+TIMINGWRITE test=109 sub=6 addr=03007FD8 value=0 cycle=151893755
+TIMINGWRITE test=109 sub=6 addr=03007FDC value=134350654 cycle=151893756
+TIMINGWRITE test=109 sub=6 addr=03007FD0 value=63 cycle=151893769
+TIMINGWRITE test=109 sub=6 addr=03007A44 value=363 cycle=151893774
+TIMINGWRITE test=109 sub=6 addr=03007A48 value=134350921 cycle=151893775
+TIMINGWRITE test=109 sub=6 addr=03007AF8 value=359 cycle=151894114
+TIMINGWRITE test=109 sub=7 addr=03007A4C value=50363064 cycle=151894210
+TIMINGWRITE test=109 sub=7 addr=03007A50 value=0 cycle=151894211
+TIMINGWRITE test=109 sub=7 addr=03007FD4 value=292 cycle=151894261
+TIMINGWRITE test=109 sub=7 addr=03007FD8 value=0 cycle=151894262
+TIMINGWRITE test=109 sub=7 addr=03007FDC value=134350654 cycle=151894263
+TIMINGWRITE test=109 sub=7 addr=03007FD0 value=63 cycle=151894278
+TIMINGWRITE test=109 sub=7 addr=03007A44 value=359 cycle=151894283
+TIMINGWRITE test=109 sub=7 addr=03007A48 value=134350955 cycle=151894284
+TIMINGWRITE test=109 sub=7 addr=03007AFC value=358 cycle=151894613
+TIMINGWRITE test=109 sub=8 addr=03007A4C value=50363064 cycle=151894720
+TIMINGWRITE test=109 sub=8 addr=03007A50 value=0 cycle=151894721
+TIMINGWRITE test=109 sub=8 addr=03007FD4 value=292 cycle=151894744
+TIMINGWRITE test=109 sub=8 addr=03007FD8 value=0 cycle=151894745
+TIMINGWRITE test=109 sub=8 addr=03007FDC value=50342558 cycle=151894746
+TIMINGWRITE test=109 sub=8 addr=03007FD0 value=63 cycle=151894756
+TIMINGWRITE test=109 sub=8 addr=03007A44 value=358 cycle=151894761
+TIMINGWRITE test=109 sub=8 addr=03007A48 value=134350989 cycle=151894762
+TIMINGWRITE test=109 sub=8 addr=03007B04 value=337 cycle=151895085
+TIMINGWRITE test=109 sub=9 addr=03007A4C value=50363064 cycle=151895216
+TIMINGWRITE test=109 sub=9 addr=03007A50 value=0 cycle=151895217
+TIMINGWRITE test=109 sub=9 addr=03007FD4 value=292 cycle=151895271
+TIMINGWRITE test=109 sub=9 addr=03007FD8 value=0 cycle=151895272
+TIMINGWRITE test=109 sub=9 addr=03007FDC value=33564614 cycle=151895273
+TIMINGWRITE test=109 sub=9 addr=03007FD0 value=63 cycle=151895285
+TIMINGWRITE test=109 sub=9 addr=03007A44 value=337 cycle=151895290
+TIMINGWRITE test=109 sub=9 addr=03007A48 value=134351023 cycle=151895291
+TIMINGWRITE test=109 sub=9 addr=03007B00 value=360 cycle=151895632
+ARM/IWRAM
+[DBG] PASS: b pc Thumb/ROM ...
+[DBG] PASS: b pc Thumb/ROM P..
+[DBG] PASS: b pc Thumb/ROM .N.
+[DBG] PASS: b pc Thumb/ROM PN.
+[DBG] PASS: b pc Thumb/ROM ..S
+[DBG] PASS: b pc Thumb/ROM P.S
+[DBG] PASS: b pc Thumb/ROM .NS
+[DBG] PASS: b pc Thumb/ROM PNS
+[DBG] PASS: b pc Thumb/WRAM
+[DBG] PASS: b pc Thumb/IWRAM
+[DBG] Timing test: nop ; b pc
+[DBG] PASS: nop ; b pc ARM/ROM ...
+[DBG] PASS: nop ; b pc ARM/ROM P..
+[DBG] PASS: nop ; b pc ARM/ROM .N.
+[DBG] PASS: nop ; b pc ARM/ROM PN.
+[DBG] PASS: nop ; b pc ARM/ROM ..S
+[DBG] PASS: nop ; b pc ARM/ROM P.S
+[DBG] PASS: nop ; b pc ARM/ROM .NS
+[DBG] PASS: nop ; b pc ARM/ROM PNS
+[DBG] PASS: nop ; b pc ARM/WRAM
+[DBG] PASS: nop ; b pc ARM/IWRAM
+[DBG] PASS: nop ; b pc Thumb/ROM ...
+[DBG] PASS: nop ; b pc Thumb/ROM P..
+[DBG] PASS: nop ; b pc Thumb/ROM .N.
+[DBG] PASS: nop ; b pc Thumb/ROM PN.
+[DBG] PASS: nop ; b pc Thumb/ROM ..S
+[DBG] PASS: nop ; b pc Thumb/ROM P.S
+[DBG] PASS: nop ; b pc Thumb/ROM .NS
+[DBG] PASS: nop ; b pc Thumb/ROM PNS
+[DBG] PASS: nop ; b pc Thumb/WRAM
+[DBG] PASS: nop ; b pc Thumb/IWRAM
+[DBG] Timing test: bx
+[DBG] PASS: bx ARM/ROM ...
+[DBG] PASS: bx ARM/ROM P..
+[DBG] PASS: bx ARM/ROM .N.
+[DBG] PASS: bx ARM/ROM PN.
+[DBG] PASS: bx ARM/ROM ..S
+[DBG] PASS: bx ARM/ROM P.S
+[DBG] PASS: bx ARM/ROM .NS
+[DBG] PASS: bx ARM/ROM PNS
+[DBG] PASS: bx ARM/WRAM
+[DBG] PASS: bx ARM/IWRAM
+[DBG] PASS: bx Thumb/ROM ...
+[DBG] PASS: bx Thumb/ROM P..
+[DBG] PASS: bx Thumb/ROM .N.
+[DBG] PASS: bx Thumb/ROM PN.
+[DBG] PASS: bx Thumb/ROM ..S
+[DBG] PASS: bx Thumb/ROM P.S
+[DBG] PASS: bx Thumb/ROM .NS
+[DBG] PASS: bx Thumb/ROM PNS
+[DBG] PASS: bx Thumb/WRAM
+[DBG] PASS: bx Thumb/IWRAM
+[DBG] Timing test: Trivial loop
+[DBG] PASS: Trivial loop ARM/ROM ...
+[DBG] PASS: Trivial loop ARM/ROM P..
+[DBG] PASS: Trivial loop ARM/ROM .N.
+[DBG] PASS: Trivial loop ARM/ROM PN.
+[DBG] PASS: Trivial loop ARM/ROM ..S
+[DBG] PASS: Trivial loop ARM/ROM P.S
+[DBG] PASS: Trivial loop ARM/ROM .NS
+[DBG] PASS: Trivial loop ARM/ROM PNS
+[DBG] PASS: Trivial loop ARM/WRAM
+[DBG] PASS: Trivial loop ARM/IWRAM
+[DBG] PASS: Trivial loop Thumb/ROM ...
+[DBG] PASS: Trivial loop Thumb/ROM P..
+[DBG] PASS: Trivial loop Thumb/ROM .N.
+[DBG] PASS: Trivial loop Thumb/ROM PN.
+[DBG] PASS: Trivial loop Thumb/ROM ..S
+[DBG] PASS: Trivial loop Thumb/ROM P.S
+[DBG] PASS: Trivial loop Thumb/ROM .NS
+[DBG] PASS: Trivial loop Thumb/ROM PNS
+[DBG] PASS: Trivial loop Thumb/WRAM
+[DBG] PASS: Trivial loop Thumb/IWRAM
+[DBG] Timing test: C loop
+[DBG] PASS: C loop ARM/ROM ...
+[DBG] PASS: C loop ARM/ROM P..
+[DBG] PASS: C loop ARM/ROM .N.
+[DBG] PASS: C loop ARM/ROM PN.
+[DBG] PASS: C loop ARM/ROM ..S
+[DBG] PASS: C loop ARM/ROM P.S
+[DBG] PASS: C loop ARM/ROM .NS
+[DBG] PASS: C loop ARM/ROM PNS
+[DBG] PASS: C loop ARM/WRAM
+[DBG] PASS: C loop ARM/IWRAM
+[DBG] PASS: C loop Thumb/ROM ...
+[DBG] PASS: C loop Thumb/ROM P..
+[DBG] PASS: C loop Thumb/ROM .N.
+[DBG] PASS: C loop Thumb/ROM PN.
+[DBG] PASS: C loop Thumb/ROM ..S
+[DBG] PASS: C loop Thumb/ROM P.S
+[DBG] PASS: C loop Thumb/ROM .NS
+[DBG] PASS: C loop Thumb/ROM PNS
+[DBG] PASS: C loop Thumb/WRAM
+[DBG] PASS: C loop Thumb/IWRAM
+[DBG] Timing test: BIOS Division
+[DBG] FAIL: BIOS Division ARM/ROM ...
+
+--- Suite 03: Timing ---
+Frames: 242  PC=0x0802BABA  CPSR=0x0000003F  halted=0  cycle=177442497
+[debug]
+Game Boy Advance Test Suite
+===
+BEGIN: Timing tests
+Timing test: Calibration
+PASS: Calibration ARM/ROM ...
+PASS: Calibration ARM/ROM P..
+PASS: Calibration ARM/ROM .N.
+PASS: Calibration ARM/ROM PN.
+PASS: Calibration ARM/ROM ..S
+PASS: Calibration ARM/ROM P.S
+PASS: Calibration ARM/ROM .NS
+PASS: Calibration ARM/ROM PNS
+PASS: Calibration ARM/WRAM
+PASS: Calibration ARM/IWRAM
+PASS: Calibration Thumb/ROM ...
+PASS: Calibration Thumb/ROM P..
+PASS: Calibration Thumb/ROM .N.
+PASS: Calibration Thumb/ROM PN.
+PASS: Calibration Thumb/ROM ..S
+PASS: Calibration Thumb/ROM P.S
+PASS: Calibration Thumb/ROM .NS
+PASS: Calibration Thumb/ROM PNS
+PASS: Calibration Thumb/WRAM
+PASS: Calibration Thumb/IWRAM
+Timing test: nop
+PASS: nop ARM/ROM ...
+PASS: nop ARM/ROM P..
+PASS: nop ARM/ROM .N.
+PASS: nop ARM/ROM PN.
+PASS: nop ARM/ROM ..S
+PASS: nop ARM/ROM P.S
+PASS: nop ARM/ROM .NS
+PASS: nop ARM/ROM PNS
+PASS: nop ARM/WRAM
+PASS: nop ARM/IWRAM
+PASS: nop Thumb/ROM ...
+PASS: nop Thumb/ROM P..
+PASS: nop Thumb/ROM .N.
+PASS: nop Thumb/ROM PN.
+PASS: nop Thumb/ROM ..S
+PASS: nop Thumb/ROM P.S
+PASS: nop Thumb/ROM .NS
+PASS: nop Thumb/ROM PNS
+PASS: nop Thumb/WRAM
+PASS: nop Thumb/IWRAM
+Timing test: nop / nop
+PASS: nop / nop ARM/ROM ...
+PASS: nop / nop ARM/ROM P..
+PASS: nop / nop ARM/ROM .N.
+PASS: nop / nop ARM/ROM PN.
+PASS: nop / nop ARM/ROM ..S
+PASS: nop / nop ARM/ROM P.S
+PASS: nop / nop ARM/ROM .NS
+PASS: nop / nop ARM/ROM PNS
+PASS: nop / nop ARM/WRAM
+PASS: nop / nop ARM/IWRAM
+PASS: nop / nop Thumb/ROM ...
+PASS: nop / nop Thumb/ROM P..
+PASS: nop / nop Thumb/ROM .N.
+PASS: nop / nop Thumb/ROM PN.
+PASS: nop / nop Thumb/ROM ..S
+PASS: nop / nop Thumb/ROM P.S
+PASS: nop / nop Thumb/ROM .NS
+PASS: nop / nop Thumb/ROM PNS
+PASS: nop / nop Thumb/WRAM
+PASS: nop / nop Thumb/IWRAM
+Timing test: ldrh r2, [sp]
+PASS: ldrh r2, [sp] ARM/ROM ...
+PASS: ldrh r2, [sp] ARM/ROM P..
+PASS: ldrh r2, [sp] ARM/ROM .N.
+PASS: ldrh r2, [sp] ARM/ROM PN.
+PASS: ldrh r2, [sp] ARM/ROM ..S
+PASS: ldrh r2, [sp] ARM/ROM P.S
+PASS: ldrh r2, [sp] ARM/ROM .NS
+PASS: ldrh r2, [sp] ARM/ROM PNS
+PASS: ldrh r2, [sp] ARM/WRAM
+PASS: ldrh r2, [sp] ARM/IWRAM
+PASS: ldrh r2, [sp] Thumb/ROM ...
+PASS: ldrh r2, [sp] Thumb/ROM P..
+PASS: ldrh r2, [sp] Thumb/ROM .N.
+PASS: ldrh r2, [sp] Thumb/ROM PN.
+PASS: ldrh r2, [sp] Thumb/ROM ..S
+PASS: ldrh r2, [sp] Thumb/ROM P.S
+PASS: ldrh r2, [sp] Thumb/ROM .NS
+PASS: ldrh r2, [sp] Thumb/ROM PNS
+PASS: ldrh r2, [sp] Thumb/WRAM
+PASS: ldrh r2, [sp] Thumb/IWRAM
+Timing test: ldrh r2, [sp] / nop
+PASS: ldrh r2, [sp] / nop ARM/ROM ...
+PASS: ldrh r2, [sp] / nop ARM/ROM P..
+PASS: ldrh r2, [sp] / nop ARM/ROM .N.
+PASS: ldrh r2, [sp] / nop ARM/ROM PN.
+PASS: ldrh r2, [sp] / nop ARM/ROM ..S
+PASS: ldrh r2, [sp] / nop ARM/ROM P.S
+PASS: ldrh r2, [sp] / nop ARM/ROM .NS
+PASS: ldrh r2, [sp] / nop ARM/ROM PNS
+PASS: ldrh r2, [sp] / nop ARM/WRAM
+PASS: ldrh r2, [sp] / nop ARM/IWRAM
+PASS: ldrh r2, [sp] / nop Thumb/ROM ...
+PASS: ldrh r2, [sp] / nop Thumb/ROM P..
+PASS: ldrh r2, [sp] / nop Thumb/ROM .N.
+PASS: ldrh r2, [sp] / nop Thumb/ROM PN.
+PASS: ldrh r2, [sp] / nop Thumb/ROM ..S
+PASS: ldrh r2, [sp] / nop Thumb/ROM P.S
+PASS: ldrh r2, [sp] / nop Thumb/ROM .NS
+PASS: ldrh r2, [sp] / nop Thumb/ROM PNS
+PASS: ldrh r2, [sp] / nop Thumb/WRAM
+PASS: ldrh r2, [sp] / nop Thumb/IWRAM
+Timing test: nop / ldrh r2, [sp]
+PASS: nop / ldrh r2, [sp] ARM/ROM ...
+PASS: nop / ldrh r2, [sp] ARM/ROM P..
+PASS: nop / ldrh r2, [sp] ARM/ROM .N.
+PASS: nop / ldrh r2, [sp] ARM/ROM PN.
+PASS: nop / ldrh r2, [sp] ARM/ROM ..S
+PASS: nop / ldrh r2, [sp] ARM/ROM P.S
+PASS: nop / ldrh r2, [sp] ARM/ROM .NS
+PASS: nop / ldrh r2, [sp] ARM/ROM PNS
+PASS: nop / ldrh r2, [sp] ARM/WRAM
+PASS: nop / ldrh r2, [sp] ARM/IWRAM
+PASS: nop / ldrh r2, [sp] Thumb/ROM ...
+PASS: nop / ldrh r2, [sp] Thumb/ROM P..
+PASS: nop / ldrh r2, [sp] Thumb/ROM .N.
+PASS: nop / ldrh r2, [sp] Thumb/ROM PN.
+PASS: nop / ldrh r2, [sp] Thumb/ROM ..S
+PASS: nop / ldrh r2, [sp] Thumb/ROM P.S
+PASS: nop / ldrh r2, [sp] Thumb/ROM .NS
+PASS: nop / ldrh r2, [sp] Thumb/ROM PNS
+PASS: nop / ldrh r2, [sp] Thumb/WRAM
+PASS: nop / ldrh r2, [sp] Thumb/IWRAM
+Timing test: nop / ldrh r2, [sp] / nop
+PASS: nop / ldrh r2, [sp] / nop ARM/ROM ...
+PASS: nop / ldrh r2, [sp] / nop ARM/ROM P..
+PASS: nop / ldrh r2, [sp] / nop ARM/ROM .N.
+PASS: nop / ldrh r2, [sp] / nop ARM/ROM PN.
+PASS: nop / ldrh r2, [sp] / nop ARM/ROM ..S
+PASS: nop / ldrh r2, [sp] / nop ARM/ROM P.S
+PASS: nop / ldrh r2, [sp] / nop ARM/ROM .NS
+PASS: nop / ldrh r2, [sp] / nop ARM/ROM PNS
+PASS: nop / ldrh r2, [sp] / nop ARM/WRAM
+PASS: nop / ldrh r2, [sp] / nop ARM/IWRAM
+PASS: nop / ldrh r2, [sp] / nop Thumb/ROM ...
+PASS: nop / ldrh r2, [sp] / nop Thumb/ROM P..
+PASS: nop / ldrh r2, [sp] / nop Thumb/ROM .N.
+PASS: nop / ldrh r2, [sp] / nop Thumb/ROM PN.
+PASS: nop / ldrh r2, [sp] / nop Thumb/ROM ..S
+PASS: nop / ldrh r2, [sp] / nop Thumb/ROM P.S
+PASS: nop / ldrh r2, [sp] / nop Thumb/ROM .NS
+PASS: nop / ldrh r2, [sp] / nop Thumb/ROM PNS
+PASS: nop / ldrh r2, [sp] / nop Thumb/WRAM
+PASS: nop / ldrh r2, [sp] / nop Thumb/IWRAM
+Timing test: ldrh r2, [#0x08000000]
+PASS: ldrh r2, [#0x08000000] ARM/ROM ...
+PASS: ldrh r2, [#0x08000000] ARM/ROM P..
+PASS: ldrh r2, [#0x08000000] ARM/ROM .N.
+PASS: ldrh r2, [#0x08000000] ARM/ROM PN.
+PASS: ldrh r2, [#0x08000000] ARM/ROM ..S
+PASS: ldrh r2, [#0x08000000] ARM/ROM P.S
+PASS: ldrh r2, [#0x08000000] ARM/ROM .NS
+PASS: ldrh r2, [#0x08000000] ARM/ROM PNS
+PASS: ldrh r2, [#0x08000000] ARM/WRAM
+PASS: ldrh r2, [#0x08000000] ARM/IWRAM
+PASS: ldrh r2, [#0x08000000] Thumb/ROM ...
+PASS: ldrh r2, [#0x08000000] Thumb/ROM P..
+PASS: ldrh r2, [#0x08000000] Thumb/ROM .N.
+PASS: ldrh r2, [#0x08000000] Thumb/ROM PN.
+PASS: ldrh r2, [#0x08000000] Thumb/ROM ..S
+PASS: ldrh r2, [#0x08000000] Thumb/ROM P.S
+PASS: ldrh r2, [#0x08000000] Thumb/ROM .NS
+PASS: ldrh r2, [#0x08000000] Thumb/ROM PNS
+PASS: ldrh r2, [#0x08000000] Thumb/WRAM
+PASS: ldrh r2, [#0x08000000] Thumb/IWRAM
+Timing test: ldrh r2, [#0x08000000] / nop
+PASS: ldrh r2, [#0x08000000] / nop ARM/ROM ...
+PASS: ldrh r2, [#0x08000000] / nop ARM/ROM P..
+PASS: ldrh r2, [#0x08000000] / nop ARM/ROM .N.
+PASS: ldrh r2, [#0x08000000] / nop ARM/ROM PN.
+PASS: ldrh r2, [#0x08000000] / nop ARM/ROM ..S
+PASS: ldrh r2, [#0x08000000] / nop ARM/ROM P.S
+PASS: ldrh r2, [#0x08000000] / nop ARM/ROM .NS
+PASS: ldrh r2, [#0x08000000] / nop ARM/ROM PNS
+PASS: ldrh r2, [#0x08000000] / nop ARM/WRAM
+PASS: ldrh r2, [#0x08000000] / nop ARM/IWRAM
+PASS: ldrh r2, [#0x08000000] / nop Thumb/ROM ...
+PASS: ldrh r2, [#0x08000000] / nop Thumb/ROM P..
+PASS: ldrh r2, [#0x08000000] / nop Thumb/ROM .N.
+PASS: ldrh r2, [#0x08000000] / nop Thumb/ROM PN.
+PASS: ldrh r2, [#0x08000000] / nop Thumb/ROM ..S
+PASS: ldrh r2, [#0x08000000] / nop Thumb/ROM P.S
+PASS: ldrh r2, [#0x08000000] / nop Thumb/ROM .NS
+PASS: ldrh r2, [#0x08000000] / nop Thumb/ROM PNS
+PASS: ldrh r2, [#0x08000000] / nop Thumb/WRAM
+PASS: ldrh r2, [#0x08000000] / nop Thumb/IWRAM
+Timing test: nop / ldrh r2, [#0x08000000]
+PASS: nop / ldrh r2, [#0x08000000] ARM/ROM ...
+PASS: nop / ldrh r2, [#0x08000000] ARM/ROM P..
+PASS: nop / ldrh r2, [#0x08000000] ARM/ROM .N.
+PASS: nop / ldrh r2, [#0x08000000] ARM/ROM PN.
+PASS: nop / ldrh r2, [#0x08000000] ARM/ROM ..S
+PASS: nop / ldrh r2, [#0x08000000] ARM/ROM P.S
+PASS: nop / ldrh r2, [#0x08000000] ARM/ROM .NS
+PASS: nop / ldrh r2, [#0x08000000] ARM/ROM PNS
+PASS: nop / ldrh r2, [#0x08000000] ARM/WRAM
+PASS: nop / ldrh r2, [#0x08000000] ARM/IWRAM
+PASS: nop / ldrh r2, [#0x08000000] Thumb/ROM ...
+PASS: nop / ldrh r2, [#0x08000000] Thumb/ROM P..
+PASS: nop / ldrh r2, [#0x08000000] Thumb/ROM .N.
+PASS: nop / ldrh r2, [#0x08000000] Thumb/ROM PN.
+PASS: nop / ldrh r2, [#0x08000000] Thumb/ROM ..S
+PASS: nop / ldrh r2, [#0x08000000] Thumb/ROM P.S
+PASS: nop / ldrh r2, [#0x08000000] Thumb/ROM .NS
+PASS: nop / ldrh r2, [#0x08000000] Thumb/ROM PNS
+PASS: nop / ldrh r2, [#0x08000000] Thumb/WRAM
+PASS: nop / ldrh r2, [#0x08000000] Thumb/IWRAM
+Timing test: ldr r2, [sp]
+PASS: ldr r2, [sp] ARM/ROM ...
+PASS: ldr r2, [sp] ARM/ROM P..
+PASS: ldr r2, [sp] ARM/ROM .N.
+PASS: ldr r2, [sp] ARM/ROM PN.
+PASS: ldr r2, [sp] ARM/ROM ..S
+PASS: ldr r2, [sp] ARM/ROM P.S
+PASS: ldr r2, [sp] ARM/ROM .NS
+PASS: ldr r2, [sp] ARM/ROM PNS
+PASS: ldr r2, [sp] ARM/WRAM
+PASS: ldr r2, [sp] ARM/IWRAM
+PASS: ldr r2, [sp] Thumb/ROM ...
+PASS: ldr r2, [sp] Thumb/ROM P..
+PASS: ldr r2, [sp] Thumb/ROM .N.
+PASS: ldr r2, [sp] Thumb/ROM PN.
+PASS: ldr r2, [sp] Thumb/ROM ..S
+PASS: ldr r2, [sp] Thumb/ROM P.S
+PASS: ldr r2, [sp] Thumb/ROM .NS
+PASS: ldr r2, [sp] Thumb/ROM PNS
+PASS: ldr r2, [sp] Thumb/WRAM
+PASS: ldr r2, [sp] Thumb/IWRAM
+Timing test: ldr r2, [sp] / nop
+PASS: ldr r2, [sp] / nop ARM/ROM ...
+PASS: ldr r2, [sp] / nop ARM/ROM P..
+PASS: ldr r2, [sp] / nop ARM/ROM .N.
+PASS: ldr r2, [sp] / nop ARM/ROM PN.
+PASS: ldr r2, [sp] / nop ARM/ROM ..S
+PASS: ldr r2, [sp] / nop ARM/ROM P.S
+PASS: ldr r2, [sp] / nop ARM/ROM .NS
+PASS: ldr r2, [sp] / nop ARM/ROM PNS
+PASS: ldr r2, [sp] / nop ARM/WRAM
+PASS: ldr r2, [sp] / nop ARM/IWRAM
+PASS: ldr r2, [sp] / nop Thumb/ROM ...
+PASS: ldr r2, [sp] / nop Thumb/ROM P..
+PASS: ldr r2, [sp] / nop Thumb/ROM .N.
+PASS: ldr r2, [sp] / nop Thumb/ROM PN.
+PASS: ldr r2, [sp] / nop Thumb/ROM ..S
+PASS: ldr r2, [sp] / nop Thumb/ROM P.S
+PASS: ldr r2, [sp] / nop Thumb/ROM .NS
+PASS: ldr r2, [sp] / nop Thumb/ROM PNS
+PASS: ldr r2, [sp] / nop Thumb/WRAM
+PASS: ldr r2, [sp] / nop Thumb/IWRAM
+Timing test: nop / ldr r2, [sp]
+PASS: nop / ldr r2, [sp] ARM/ROM ...
+PASS: nop / ldr r2, [sp] ARM/ROM P..
+PASS: nop / ldr r2, [sp] ARM/ROM .N.
+PASS: nop / ldr r2, [sp] ARM/ROM PN.
+PASS: nop / ldr r2, [sp] ARM/ROM ..S
+PASS: nop / ldr r2, [sp] ARM/ROM P.S
+PASS: nop / ldr r2, [sp] ARM/ROM .NS
+PASS: nop / ldr r2, [sp] ARM/ROM PNS
+PASS: nop / ldr r2, [sp] ARM/WRAM
+PASS: nop / ldr r2, [sp] ARM/IWRAM
+PASS: nop / ldr r2, [sp] Thumb/ROM ...
+PASS: nop / ldr r2, [sp] Thumb/ROM P..
+PASS: nop / ldr r2, [sp] Thumb/ROM .N.
+PASS: nop / ldr r2, [sp] Thumb/ROM PN.
+PASS: nop / ldr r2, [sp] Thumb/ROM ..S
+PASS: nop / ldr r2, [sp] Thumb/ROM P.S
+PASS: nop / ldr r2, [sp] Thumb/ROM .NS
+PASS: nop / ldr r2, [sp] Thumb/ROM PNS
+PASS: nop / ldr r2, [sp] Thumb/WRAM
+PASS: nop / ldr r2, [sp] Thumb/IWRAM
+Timing test: ldr r2, [#0x08000000]
+PASS: ldr r2, [#0x08000000] ARM/ROM ...
+PASS: ldr r2, [#0x08000000] ARM/ROM P..
+PASS: ldr r2, [#0x08000000] ARM/ROM .N.
+PASS: ldr r2, [#0x08000000] ARM/ROM PN.
+PASS: ldr r2, [#0x08000000] ARM/ROM ..S
+PASS: ldr r2, [#0x08000000] ARM/ROM P.S
+PASS: ldr r2, [#0x08000000] ARM/ROM .NS
+PASS: ldr r2, [#0x08000000] ARM/ROM PNS
+PASS: ldr r2, [#0x08000000] ARM/WRAM
+PASS: ldr r2, [#0x08000000] ARM/IWRAM
+PASS: ldr r2, [#0x08000000] Thumb/ROM ...
+PASS: ldr r2, [#0x08000000] Thumb/ROM P..
+PASS: ldr r2, [#0x08000000] Thumb/ROM .N.
+PASS: ldr r2, [#0x08000000] Thumb/ROM PN.
+PASS: ldr r2, [#0x08000000] Thumb/ROM ..S
+PASS: ldr r2, [#0x08000000] Thumb/ROM P.S
+PASS: ldr r2, [#0x08000000] Thumb/ROM .NS
+PASS: ldr r2, [#0x08000000] Thumb/ROM PNS
+PASS: ldr r2, [#0x08000000] Thumb/WRAM
+PASS: ldr r2, [#0x08000000] Thumb/IWRAM
+Timing test: ldr r2, [#0x08000000] / nop
+PASS: ldr r2, [#0x08000000] / nop ARM/ROM ...
+PASS: ldr r2, [#0x08000000] / nop ARM/ROM P..
+PASS: ldr r2, [#0x08000000] / nop ARM/ROM .N.
+PASS: ldr r2, [#0x08000000] / nop ARM/ROM PN.
+PASS: ldr r2, [#0x08000000] / nop ARM/ROM ..S
+PASS: ldr r2, [#0x08000000] / nop ARM/ROM P.S
+PASS: ldr r2, [#0x08000000] / nop ARM/ROM .NS
+PASS: ldr r2, [#0x08000000] / nop ARM/ROM PNS
+PASS: ldr r2, [#0x08000000] / nop ARM/WRAM
+PASS: ldr r2, [#0x08000000] / nop ARM/IWRAM
+PASS: ldr r2, [#0x08000000] / nop Thumb/ROM ...
+PASS: ldr r2, [#0x08000000] / nop Thumb/ROM P..
+PASS: ldr r2, [#0x08000000] / nop Thumb/ROM .N.
+PASS: ldr r2, [#0x08000000] / nop Thumb/ROM PN.
+PASS: ldr r2, [#0x08000000] / nop Thumb/ROM ..S
+PASS: ldr r2, [#0x08000000] / nop Thumb/ROM P.S
+PASS: ldr r2, [#0x08000000] / nop Thumb/ROM .NS
+PASS: ldr r2, [#0x08000000] / nop Thumb/ROM PNS
+PASS: ldr r2, [#0x08000000] / nop Thumb/WRAM
+PASS: ldr r2, [#0x08000000] / nop Thumb/IWRAM
+Timing test: nop / ldr r2, [#0x08000000]
+PASS: nop / ldr r2, [#0x08000000] ARM/ROM ...
+PASS: nop / ldr r2, [#0x08000000] ARM/ROM P..
+PASS: nop / ldr r2, [#0x08000000] ARM/ROM .N.
+PASS: nop / ldr r2, [#0x08000000] ARM/ROM PN.
+PASS: nop / ldr r2, [#0x08000000] ARM/ROM ..S
+PASS: nop / ldr r2, [#0x08000000] ARM/ROM P.S
+PASS: nop / ldr r2, [#0x08000000] ARM/ROM .NS
+PASS: nop / ldr r2, [#0x08000000] ARM/ROM PNS
+PASS: nop / ldr r2, [#0x08000000] ARM/WRAM
+PASS: nop / ldr r2, [#0x08000000] ARM/IWRAM
+PASS: nop / ldr r2, [#0x08000000] Thumb/ROM ...
+PASS: nop / ldr r2, [#0x08000000] Thumb/ROM P..
+PASS: nop / ldr r2, [#0x08000000] Thumb/ROM .N.
+PASS: nop / ldr r2, [#0x08000000] Thumb/ROM PN.
+PASS: nop / ldr r2, [#0x08000000] Thumb/ROM ..S
+PASS: nop / ldr r2, [#0x08000000] Thumb/ROM P.S
+PASS: nop / ldr r2, [#0x08000000] Thumb/ROM .NS
+PASS: nop / ldr r2, [#0x08000000] Thumb/ROM PNS
+PASS: nop / ldr r2, [#0x08000000] Thumb/WRAM
+PASS: nop / ldr r2, [#0x08000000] Thumb/IWRAM
+Timing test: strh r3, [sp]
+PASS: strh r3, [sp] ARM/ROM ...
+PASS: strh r3, [sp] ARM/ROM P..
+PASS: strh r3, [sp] ARM/ROM .N.
+PASS: strh r3, [sp] ARM/ROM PN.
+PASS: strh r3, [sp] ARM/ROM ..S
+PASS: strh r3, [sp] ARM/ROM P.S
+PASS: strh r3, [sp] ARM/ROM .NS
+PASS: strh r3, [sp] ARM/ROM PNS
+PASS: strh r3, [sp] ARM/WRAM
+PASS: strh r3, [sp] ARM/IWRAM
+PASS: strh r3, [sp] Thumb/ROM ...
+PASS: strh r3, [sp] Thumb/ROM P..
+PASS: strh r3, [sp] Thumb/ROM .N.
+PASS: strh r3, [sp] Thumb/ROM PN.
+PASS: strh r3, [sp] Thumb/ROM ..S
+PASS: strh r3, [sp] Thumb/ROM P.S
+PASS: strh r3, [sp] Thumb/ROM .NS
+PASS: strh r3, [sp] Thumb/ROM PNS
+PASS: strh r3, [sp] Thumb/WRAM
+PASS: strh r3, [sp] Thumb/IWRAM
+Timing test: strh r3, [sp] / nop
+PASS: strh r3, [sp] / nop ARM/ROM ...
+PASS: strh r3, [sp] / nop ARM/ROM P..
+PASS: strh r3, [sp] / nop ARM/ROM .N.
+PASS: strh r3, [sp] / nop ARM/ROM PN.
+PASS: strh r3, [sp] / nop ARM/ROM ..S
+PASS: strh r3, [sp] / nop ARM/ROM P.S
+PASS: strh r3, [sp] / nop ARM/ROM .NS
+PASS: strh r3, [sp] / nop ARM/ROM PNS
+PASS: strh r3, [sp] / nop ARM/WRAM
+PASS: strh r3, [sp] / nop ARM/IWRAM
+PASS: strh r3, [sp] / nop Thumb/ROM ...
+PASS: strh r3, [sp] / nop Thumb/ROM P..
+PASS: strh r3, [sp] / nop Thumb/ROM .N.
+PASS: strh r3, [sp] / nop Thumb/ROM PN.
+PASS: strh r3, [sp] / nop Thumb/ROM ..S
+PASS: strh r3, [sp] / nop Thumb/ROM P.S
+PASS: strh r3, [sp] / nop Thumb/ROM .NS
+PASS: strh r3, [sp] / nop Thumb/ROM PNS
+PASS: strh r3, [sp] / nop Thumb/WRAM
+PASS: strh r3, [sp] / nop Thumb/IWRAM
+Timing test: nop / strh r3, [sp]
+PASS: nop / strh r3, [sp] ARM/ROM ...
+PASS: nop / strh r3, [sp] ARM/ROM P..
+PASS: nop / strh r3, [sp] ARM/ROM .N.
+PASS: nop / strh r3, [sp] ARM/ROM PN.
+PASS: nop / strh r3, [sp] ARM/ROM ..S
+PASS: nop / strh r3, [sp] ARM/ROM P.S
+PASS: nop / strh r3, [sp] ARM/ROM .NS
+PASS: nop / strh r3, [sp] ARM/ROM PNS
+PASS: nop / strh r3, [sp] ARM/WRAM
+PASS: nop / strh r3, [sp] ARM/IWRAM
+PASS: nop / strh r3, [sp] Thumb/ROM ...
+PASS: nop / strh r3, [sp] Thumb/ROM P..
+PASS: nop / strh r3, [sp] Thumb/ROM .N.
+PASS: nop / strh r3, [sp] Thumb/ROM PN.
+PASS: nop / strh r3, [sp] Thumb/ROM ..S
+PASS: nop / strh r3, [sp] Thumb/ROM P.S
+PASS: nop / strh r3, [sp] Thumb/ROM .NS
+PASS: nop / strh r3, [sp] Thumb/ROM PNS
+PASS: nop / strh r3, [sp] Thumb/WRAM
+PASS: nop / strh r3, [sp] Thumb/IWRAM
+Timing test: nop / strh r3, [sp] / nop
+PASS: nop / strh r3, [sp] / nop ARM/ROM ...
+PASS: nop / strh r3, [sp] / nop ARM/ROM P..
+PASS: nop / strh r3, [sp] / nop ARM/ROM .N.
+PASS: nop / strh r3, [sp] / nop ARM/ROM PN.
+PASS: nop / strh r3, [sp] / nop ARM/ROM ..S
+PASS: nop / strh r3, [sp] / nop ARM/ROM P.S
+PASS: nop / strh r3, [sp] / nop ARM/ROM .NS
+PASS: nop / strh r3, [sp] / nop ARM/ROM PNS
+PASS: nop / strh r3, [sp] / nop ARM/WRAM
+PASS: nop / strh r3, [sp] / nop ARM/IWRAM
+PASS: nop / strh r3, [sp] / nop Thumb/ROM ...
+PASS: nop / strh r3, [sp] / nop Thumb/ROM P..
+PASS: nop / strh r3, [sp] / nop Thumb/ROM .N.
+PASS: nop / strh r3, [sp] / nop Thumb/ROM PN.
+PASS: nop / strh r3, [sp] / nop Thumb/ROM ..S
+PASS: nop / strh r3, [sp] / nop Thumb/ROM P.S
+PASS: nop / strh r3, [sp] / nop Thumb/ROM .NS
+PASS: nop / strh r3, [sp] / nop Thumb/ROM PNS
+PASS: nop / strh r3, [sp] / nop Thumb/WRAM
+PASS: nop / strh r3, [sp] / nop Thumb/IWRAM
+Timing test: ldr r2, [sp] x2
+PASS: ldr r2, [sp] x2 ARM/ROM ...
+PASS: ldr r2, [sp] x2 ARM/ROM P..
+PASS: ldr r2, [sp] x2 ARM/ROM .N.
+PASS: ldr r2, [sp] x2 ARM/ROM PN.
+PASS: ldr r2, [sp] x2 ARM/ROM ..S
+PASS: ldr r2, [sp] x2 ARM/ROM P.S
+PASS: ldr r2, [sp] x2 ARM/ROM .NS
+PASS: ldr r2, [sp] x2 ARM/ROM PNS
+PASS: ldr r2, [sp] x2 ARM/WRAM
+PASS: ldr r2, [sp] x2 ARM/IWRAM
+PASS: ldr r2, [sp] x2 Thumb/ROM ...
+PASS: ldr r2, [sp] x2 Thumb/ROM P..
+PASS: ldr r2, [sp] x2 Thumb/ROM .N.
+PASS: ldr r2, [sp] x2 Thumb/ROM PN.
+PASS: ldr r2, [sp] x2 Thumb/ROM ..S
+PASS: ldr r2, [sp] x2 Thumb/ROM P.S
+PASS: ldr r2, [sp] x2 Thumb/ROM .NS
+PASS: ldr r2, [sp] x2 Thumb/ROM PNS
+PASS: ldr r2, [sp] x2 Thumb/WRAM
+PASS: ldr r2, [sp] x2 Thumb/IWRAM
+Timing test: ldr r2, [#0x08000000] / ldr r2, [sp]
+PASS: ldr r2, [#0x08000000] / ldr r2, [sp] ARM/ROM ...
+PASS: ldr r2, [#0x08000000] / ldr r2, [sp] ARM/ROM P..
+PASS: ldr r2, [#0x08000000] / ldr r2, [sp] ARM/ROM .N.
+PASS: ldr r2, [#0x08000000] / ldr r2, [sp] ARM/ROM PN.
+PASS: ldr r2, [#0x08000000] / ldr r2, [sp] ARM/ROM ..S
+PASS: ldr r2, [#0x08000000] / ldr r2, [sp] ARM/ROM P.S
+PASS: ldr r2, [#0x08000000] / ldr r2, [sp] ARM/ROM .NS
+PASS: ldr r2, [#0x08000000] / ldr r2, [sp] ARM/ROM PNS
+PASS: ldr r2, [#0x08000000] / ldr r2, [sp] ARM/WRAM
+PASS: ldr r2, [#0x08000000] / ldr r2, [sp] ARM/IWRAM
+PASS: ldr r2, [#0x08000000] / ldr r2, [sp] Thumb/ROM ...
+PASS: ldr r2, [#0x08000000] / ldr r2, [sp] Thumb/ROM P..
+PASS: ldr r2, [#0x08000000] / ldr r2, [sp] Thumb/ROM .N.
+PASS: ldr r2, [#0x08000000] / ldr r2, [sp] Thumb/ROM PN.
+PASS: ldr r2, [#0x08000000] / ldr r2, [sp] Thumb/ROM ..S
+PASS: ldr r2, [#0x08000000] / ldr r2, [sp] Thumb/ROM P.S
+PASS: ldr r2, [#0x08000000] / ldr r2, [sp] Thumb/ROM .NS
+PASS: ldr r2, [#0x08000000] / ldr r2, [sp] Thumb/ROM PNS
+PASS: ldr r2, [#0x08000000] / ldr r2, [sp] Thumb/WRAM
+PASS: ldr r2, [#0x08000000] / ldr r2, [sp] Thumb/IWRAM
+Timing test: ldr r2, [sp] / ldr r2, [#0x08000000]
+PASS: ldr r2, [sp] / ldr r2, [#0x08000000] ARM/ROM ...
+PASS: ldr r2, [sp] / ldr r2, [#0x08000000] ARM/ROM P..
+PASS: ldr r2, [sp] / ldr r2, [#0x08000000] ARM/ROM .N.
+PASS: ldr r2, [sp] / ldr r2, [#0x08000000] ARM/ROM PN.
+PASS: ldr r2, [sp] / ldr r2, [#0x08000000] ARM/ROM ..S
+PASS: ldr r2, [sp] / ldr r2, [#0x08000000] ARM/ROM P.S
+PASS: ldr r2, [sp] / ldr r2, [#0x08000000] ARM/ROM .NS
+PASS: ldr r2, [sp] / ldr r2, [#0x08000000] ARM/ROM PNS
+PASS: ldr r2, [sp] / ldr r2, [#0x08000000] ARM/WRAM
+PASS: ldr r2, [sp] / ldr r2, [#0x08000000] ARM/IWRAM
+PASS: ldr r2, [sp] / ldr r2, [#0x08000000] Thumb/ROM ...
+PASS: ldr r2, [sp] / ldr r2, [#0x08000000] Thumb/ROM P..
+PASS: ldr r2, [sp] / ldr r2, [#0x08000000] Thumb/ROM .N.
+PASS: ldr r2, [sp] / ldr r2, [#0x08000000] Thumb/ROM PN.
+PASS: ldr r2, [sp] / ldr r2, [#0x08000000] Thumb/ROM ..S
+PASS: ldr r2, [sp] / ldr r2, [#0x08000000] Thumb/ROM P.S
+PASS: ldr r2, [sp] / ldr r2, [#0x08000000] Thumb/ROM .NS
+PASS: ldr r2, [sp] / ldr r2, [#0x08000000] Thumb/ROM PNS
+PASS: ldr r2, [sp] / ldr r2, [#0x08000000] Thumb/WRAM
+PASS: ldr r2, [sp] / ldr r2, [#0x08000000] Thumb/IWRAM
+Timing test: ldr r2, [#0x08000000] x2
+PASS: ldr r2, [#0x08000000] x2 ARM/ROM ...
+PASS: ldr r2, [#0x08000000] x2 ARM/ROM P..
+PASS: ldr r2, [#0x08000000] x2 ARM/ROM .N.
+PASS: ldr r2, [#0x08000000] x2 ARM/ROM PN.
+PASS: ldr r2, [#0x08000000] x2 ARM/ROM ..S
+PASS: ldr r2, [#0x08000000] x2 ARM/ROM P.S
+PASS: ldr r2, [#0x08000000] x2 ARM/ROM .NS
+PASS: ldr r2, [#0x08000000] x2 ARM/ROM PNS
+PASS: ldr r2, [#0x08000000] x2 ARM/WRAM
+PASS: ldr r2, [#0x08000000] x2 ARM/IWRAM
+PASS: ldr r2, [#0x08000000] x2 Thumb/ROM ...
+PASS: ldr r2, [#0x08000000] x2 Thumb/ROM P..
+PASS: ldr r2, [#0x08000000] x2 Thumb/ROM .N.
+PASS: ldr r2, [#0x08000000] x2 Thumb/ROM PN.
+PASS: ldr r2, [#0x08000000] x2 Thumb/ROM ..S
+PASS: ldr r2, [#0x08000000] x2 Thumb/ROM P.S
+PASS: ldr r2, [#0x08000000] x2 Thumb/ROM .NS
+PASS: ldr r2, [#0x08000000] x2 Thumb/ROM PNS
+PASS: ldr r2, [#0x08000000] x2 Thumb/WRAM
+PASS: ldr r2, [#0x08000000] x2 Thumb/IWRAM
+Timing test: str r3, [sp] x2
+PASS: str r3, [sp] x2 ARM/ROM ...
+PASS: str r3, [sp] x2 ARM/ROM P..
+PASS: str r3, [sp] x2 ARM/ROM .N.
+PASS: str r3, [sp] x2 ARM/ROM PN.
+PASS: str r3, [sp] x2 ARM/ROM ..S
+PASS: str r3, [sp] x2 ARM/ROM P.S
+PASS: str r3, [sp] x2 ARM/ROM .NS
+PASS: str r3, [sp] x2 ARM/ROM PNS
+PASS: str r3, [sp] x2 ARM/WRAM
+PASS: str r3, [sp] x2 ARM/IWRAM
+PASS: str r3, [sp] x2 Thumb/ROM ...
+PASS: str r3, [sp] x2 Thumb/ROM P..
+PASS: str r3, [sp] x2 Thumb/ROM .N.
+PASS: str r3, [sp] x2 Thumb/ROM PN.
+PASS: str r3, [sp] x2 Thumb/ROM ..S
+PASS: str r3, [sp] x2 Thumb/ROM P.S
+PASS: str r3, [sp] x2 Thumb/ROM .NS
+PASS: str r3, [sp] x2 Thumb/ROM PNS
+PASS: str r3, [sp] x2 Thumb/WRAM
+PASS: str r3, [sp] x2 Thumb/IWRAM
+Timing test: ldr r2, [sp] / str r2, [sp]
+PASS: ldr r2, [sp] / str r2, [sp] ARM/ROM ...
+PASS: ldr r2, [sp] / str r2, [sp] ARM/ROM P..
+PASS: ldr r2, [sp] / str r2, [sp] ARM/ROM .N.
+PASS: ldr r2, [sp] / str r2, [sp] ARM/ROM PN.
+PASS: ldr r2, [sp] / str r2, [sp] ARM/ROM ..S
+PASS: ldr r2, [sp] / str r2, [sp] ARM/ROM P.S
+PASS: ldr r2, [sp] / str r2, [sp] ARM/ROM .NS
+PASS: ldr r2, [sp] / str r2, [sp] ARM/ROM PNS
+PASS: ldr r2, [sp] / str r2, [sp] ARM/WRAM
+PASS: ldr r2, [sp] / str r2, [sp] ARM/IWRAM
+PASS: ldr r2, [sp] / str r2, [sp] Thumb/ROM ...
+PASS: ldr r2, [sp] / str r2, [sp] Thumb/ROM P..
+PASS: ldr r2, [sp] / str r2, [sp] Thumb/ROM .N.
+PASS: ldr r2, [sp] / str r2, [sp] Thumb/ROM PN.
+PASS: ldr r2, [sp] / str r2, [sp] Thumb/ROM ..S
+PASS: ldr r2, [sp] / str r2, [sp] Thumb/ROM P.S
+PASS: ldr r2, [sp] / str r2, [sp] Thumb/ROM .NS
+PASS: ldr r2, [sp] / str r2, [sp] Thumb/ROM PNS
+PASS: ldr r2, [sp] / str r2, [sp] Thumb/WRAM
+PASS: ldr r2, [sp] / str r2, [sp] Thumb/IWRAM
+Timing test: str r3, [sp] / ldr r3, [sp]
+PASS: str r3, [sp] / ldr r3, [sp] ARM/ROM ...
+PASS: str r3, [sp] / ldr r3, [sp] ARM/ROM P..
+PASS: str r3, [sp] / ldr r3, [sp] ARM/ROM .N.
+PASS: str r3, [sp] / ldr r3, [sp] ARM/ROM PN.
+PASS: str r3, [sp] / ldr r3, [sp] ARM/ROM ..S
+PASS: str r3, [sp] / ldr r3, [sp] ARM/ROM P.S
+PASS: str r3, [sp] / ldr r3, [sp] ARM/ROM .NS
+PASS: str r3, [sp] / ldr r3, [sp] ARM/ROM PNS
+PASS: str r3, [sp] / ldr r3, [sp] ARM/WRAM
+PASS: str r3, [sp] / ldr r3, [sp] ARM/IWRAM
+PASS: str r3, [sp] / ldr r3, [sp] Thumb/ROM ...
+PASS: str r3, [sp] / ldr r3, [sp] Thumb/ROM P..
+PASS: str r3, [sp] / ldr r3, [sp] Thumb/ROM .N.
+PASS: str r3, [sp] / ldr r3, [sp] Thumb/ROM PN.
+PASS: str r3, [sp] / ldr r3, [sp] Thumb/ROM ..S
+PASS: str r3, [sp] / ldr r3, [sp] Thumb/ROM P.S
+PASS: str r3, [sp] / ldr r3, [sp] Thumb/ROM .NS
+PASS: str r3, [sp] / ldr r3, [sp] Thumb/ROM PNS
+PASS: str r3, [sp] / ldr r3, [sp] Thumb/WRAM
+PASS: str r3, [sp] / ldr r3, [sp] Thumb/IWRAM
+Timing test: ldmia sp, {r2}
+PASS: ldmia sp, {r2} ARM/ROM ...
+PASS: ldmia sp, {r2} ARM/ROM P..
+PASS: ldmia sp, {r2} ARM/ROM .N.
+PASS: ldmia sp, {r2} ARM/ROM PN.
+PASS: ldmia sp, {r2} ARM/ROM ..S
+PASS: ldmia sp, {r2} ARM/ROM P.S
+PASS: ldmia sp, {r2} ARM/ROM .NS
+PASS: ldmia sp, {r2} ARM/ROM PNS
+PASS: ldmia sp, {r2} ARM/WRAM
+PASS: ldmia sp, {r2} ARM/IWRAM
+Timing test: ldmia sp, {r2, r3}
+PASS: ldmia sp, {r2, r3} ARM/ROM ...
+PASS: ldmia sp, {r2, r3} ARM/ROM P..
+PASS: ldmia sp, {r2, r3} ARM/ROM .N.
+PASS: ldmia sp, {r2, r3} ARM/ROM PN.
+PASS: ldmia sp, {r2, r3} ARM/ROM ..S
+PASS: ldmia sp, {r2, r3} ARM/ROM P.S
+PASS: ldmia sp, {r2, r3} ARM/ROM .NS
+PASS: ldmia sp, {r2, r3} ARM/ROM PNS
+PASS: ldmia sp, {r2, r3} ARM/WRAM
+PASS: ldmia sp, {r2, r3} ARM/IWRAM
+Timing test: ldmia sp, {r2-r7}
+PASS: ldmia sp, {r2-r7} ARM/ROM ...
+PASS: ldmia sp, {r2-r7} ARM/ROM P..
+PASS: ldmia sp, {r2-r7} ARM/ROM .N.
+PASS: ldmia sp, {r2-r7} ARM/ROM PN.
+PASS: ldmia sp, {r2-r7} ARM/ROM ..S
+PASS: ldmia sp, {r2-r7} ARM/ROM P.S
+PASS: ldmia sp, {r2-r7} ARM/ROM .NS
+PASS: ldmia sp, {r2-r7} ARM/ROM PNS
+PASS: ldmia sp, {r2-r7} ARM/WRAM
+PASS: ldmia sp, {r2-r7} ARM/IWRAM
+Timing test: ldmia sp, {r2} x2
+PASS: ldmia sp, {r2} x2 ARM/ROM ...
+PASS: ldmia sp, {r2} x2 ARM/ROM P..
+PASS: ldmia sp, {r2} x2 ARM/ROM .N.
+PASS: ldmia sp, {r2} x2 ARM/ROM PN.
+PASS: ldmia sp, {r2} x2 ARM/ROM ..S
+PASS: ldmia sp, {r2} x2 ARM/ROM P.S
+PASS: ldmia sp, {r2} x2 ARM/ROM .NS
+PASS: ldmia sp, {r2} x2 ARM/ROM PNS
+PASS: ldmia sp, {r2} x2 ARM/WRAM
+PASS: ldmia sp, {r2} x2 ARM/IWRAM
+Timing test: ldmia sp, {r2, r3} x2
+PASS: ldmia sp, {r2, r3} x2 ARM/ROM ...
+PASS: ldmia sp, {r2, r3} x2 ARM/ROM P..
+PASS: ldmia sp, {r2, r3} x2 ARM/ROM .N.
+PASS: ldmia sp, {r2, r3} x2 ARM/ROM PN.
+PASS: ldmia sp, {r2, r3} x2 ARM/ROM ..S
+PASS: ldmia sp, {r2, r3} x2 ARM/ROM P.S
+PASS: ldmia sp, {r2, r3} x2 ARM/ROM .NS
+PASS: ldmia sp, {r2, r3} x2 ARM/ROM PNS
+PASS: ldmia sp, {r2, r3} x2 ARM/WRAM
+PASS: ldmia sp, {r2, r3} x2 ARM/IWRAM
+Timing test: ldmia sp, {r2-r7} x2
+PASS: ldmia sp, {r2-r7} x2 ARM/ROM ...
+PASS: ldmia sp, {r2-r7} x2 ARM/ROM P..
+PASS: ldmia sp, {r2-r7} x2 ARM/ROM .N.
+PASS: ldmia sp, {r2-r7} x2 ARM/ROM PN.
+PASS: ldmia sp, {r2-r7} x2 ARM/ROM ..S
+PASS: ldmia sp, {r2-r7} x2 ARM/ROM P.S
+PASS: ldmia sp, {r2-r7} x2 ARM/ROM .NS
+PASS: ldmia sp, {r2-r7} x2 ARM/ROM PNS
+PASS: ldmia sp, {r2-r7} x2 ARM/WRAM
+PASS: ldmia sp, {r2-r7} x2 ARM/IWRAM
+Timing test: stmia sp, {r2}
+PASS: stmia sp, {r2} ARM/ROM ...
+PASS: stmia sp, {r2} ARM/ROM P..
+PASS: stmia sp, {r2} ARM/ROM .N.
+PASS: stmia sp, {r2} ARM/ROM PN.
+PASS: stmia sp, {r2} ARM/ROM ..S
+PASS: stmia sp, {r2} ARM/ROM P.S
+PASS: stmia sp, {r2} ARM/ROM .NS
+PASS: stmia sp, {r2} ARM/ROM PNS
+PASS: stmia sp, {r2} ARM/WRAM
+PASS: stmia sp, {r2} ARM/IWRAM
+Timing test: stmia sp, {r2, r3}
+PASS: stmia sp, {r2, r3} ARM/ROM ...
+PASS: stmia sp, {r2, r3} ARM/ROM P..
+PASS: stmia sp, {r2, r3} ARM/ROM .N.
+PASS: stmia sp, {r2, r3} ARM/ROM PN.
+PASS: stmia sp, {r2, r3} ARM/ROM ..S
+PASS: stmia sp, {r2, r3} ARM/ROM P.S
+PASS: stmia sp, {r2, r3} ARM/ROM .NS
+PASS: stmia sp, {r2, r3} ARM/ROM PNS
+PASS: stmia sp, {r2, r3} ARM/WRAM
+PASS: stmia sp, {r2, r3} ARM/IWRAM
+Timing test: stmia sp, {r2-r7}
+PASS: stmia sp, {r2-r7} ARM/ROM ...
+PASS: stmia sp, {r2-r7} ARM/ROM P..
+PASS: stmia sp, {r2-r7} ARM/ROM .N.
+PASS: stmia sp, {r2-r7} ARM/ROM PN.
+PASS: stmia sp, {r2-r7} ARM/ROM ..S
+PASS: stmia sp, {r2-r7} ARM/ROM P.S
+PASS: stmia sp, {r2-r7} ARM/ROM .NS
+PASS: stmia sp, {r2-r7} ARM/ROM PNS
+PASS: stmia sp, {r2-r7} ARM/WRAM
+PASS: stmia sp, {r2-r7} ARM/IWRAM
+Timing test: stmia sp, {r2} x2
+PASS: stmia sp, {r2} x2 ARM/ROM ...
+PASS: stmia sp, {r2} x2 ARM/ROM P..
+PASS: stmia sp, {r2} x2 ARM/ROM .N.
+PASS: stmia sp, {r2} x2 ARM/ROM PN.
+PASS: stmia sp, {r2} x2 ARM/ROM ..S
+PASS: stmia sp, {r2} x2 ARM/ROM P.S
+PASS: stmia sp, {r2} x2 ARM/ROM .NS
+PASS: stmia sp, {r2} x2 ARM/ROM PNS
+PASS: stmia sp, {r2} x2 ARM/WRAM
+PASS: stmia sp, {r2} x2 ARM/IWRAM
+Timing test: stmia sp, {r2, r3} x2
+PASS: stmia sp, {r2, r3} x2 ARM/ROM ...
+PASS: stmia sp, {r2, r3} x2 ARM/ROM P..
+PASS: stmia sp, {r2, r3} x2 ARM/ROM .N.
+PASS: stmia sp, {r2, r3} x2 ARM/ROM PN.
+PASS: stmia sp, {r2, r3} x2 ARM/ROM ..S
+PASS: stmia sp, {r2, r3} x2 ARM/ROM P.S
+PASS: stmia sp, {r2, r3} x2 ARM/ROM .NS
+PASS: stmia sp, {r2, r3} x2 ARM/ROM PNS
+PASS: stmia sp, {r2, r3} x2 ARM/WRAM
+PASS: stmia sp, {r2, r3} x2 ARM/IWRAM
+Timing test: stmia sp, {r2-r7} x2
+PASS: stmia sp, {r2-r7} x2 ARM/ROM ...
+PASS: stmia sp, {r2-r7} x2 ARM/ROM P..
+PASS: stmia sp, {r2-r7} x2 ARM/ROM .N.
+PASS: stmia sp, {r2-r7} x2 ARM/ROM PN.
+PASS: stmia sp, {r2-r7} x2 ARM/ROM ..S
+PASS: stmia sp, {r2-r7} x2 ARM/ROM P.S
+PASS: stmia sp, {r2-r7} x2 ARM/ROM .NS
+PASS: stmia sp, {r2-r7} x2 ARM/ROM PNS
+PASS: stmia sp, {r2-r7} x2 ARM/WRAM
+PASS: stmia sp, {r2-r7} x2 ARM/IWRAM
+Timing test: ldmia [#0x07FFFFFC]!, {r3-r7}
+PASS: ldmia [#0x07FFFFFC]!, {r3-r7} ARM/ROM ...
+PASS: ldmia [#0x07FFFFFC]!, {r3-r7} ARM/ROM P..
+PASS: ldmia [#0x07FFFFFC]!, {r3-r7} ARM/ROM .N.
+PASS: ldmia [#0x07FFFFFC]!, {r3-r7} ARM/ROM PN.
+PASS: ldmia [#0x07FFFFFC]!, {r3-r7} ARM/ROM ..S
+PASS: ldmia [#0x07FFFFFC]!, {r3-r7} ARM/ROM P.S
+PASS: ldmia [#0x07FFFFFC]!, {r3-r7} ARM/ROM .NS
+PASS: ldmia [#0x07FFFFFC]!, {r3-r7} ARM/ROM PNS
+PASS: ldmia [#0x07FFFFFC]!, {r3-r7} ARM/WRAM
+PASS: ldmia [#0x07FFFFFC]!, {r3-r7} ARM/IWRAM
+PASS: ldmia [#0x07FFFFFC]!, {r3-r7} Thumb/ROM ...
+PASS: ldmia [#0x07FFFFFC]!, {r3-r7} Thumb/ROM P..
+PASS: ldmia [#0x07FFFFFC]!, {r3-r7} Thumb/ROM .N.
+PASS: ldmia [#0x07FFFFFC]!, {r3-r7} Thumb/ROM PN.
+PASS: ldmia [#0x07FFFFFC]!, {r3-r7} Thumb/ROM ..S
+PASS: ldmia [#0x07FFFFFC]!, {r3-r7} Thumb/ROM P.S
+PASS: ldmia [#0x07FFFFFC]!, {r3-r7} Thumb/ROM .NS
+PASS: ldmia [#0x07FFFFFC]!, {r3-r7} Thumb/ROM PNS
+PASS: ldmia [#0x07FFFFFC]!, {r3-r7} Thumb/WRAM
+PASS: ldmia [#0x07FFFFFC]!, {r3-r7} Thumb/IWRAM
+Timing test: ldmia [#0x07FFFFF8]!, {r3-r7}
+PASS: ldmia [#0x07FFFFF8]!, {r3-r7} ARM/ROM ...
+PASS: ldmia [#0x07FFFFF8]!, {r3-r7} ARM/ROM P..
+PASS: ldmia [#0x07FFFFF8]!, {r3-r7} ARM/ROM .N.
+PASS: ldmia [#0x07FFFFF8]!, {r3-r7} ARM/ROM PN.
+PASS: ldmia [#0x07FFFFF8]!, {r3-r7} ARM/ROM ..S
+PASS: ldmia [#0x07FFFFF8]!, {r3-r7} ARM/ROM P.S
+PASS: ldmia [#0x07FFFFF8]!, {r3-r7} ARM/ROM .NS
+PASS: ldmia [#0x07FFFFF8]!, {r3-r7} ARM/ROM PNS
+PASS: ldmia [#0x07FFFFF8]!, {r3-r7} ARM/WRAM
+PASS: ldmia [#0x07FFFFF8]!, {r3-r7} ARM/IWRAM
+PASS: ldmia [#0x07FFFFF8]!, {r3-r7} Thumb/ROM ...
+PASS: ldmia [#0x07FFFFF8]!, {r3-r7} Thumb/ROM P..
+PASS: ldmia [#0x07FFFFF8]!, {r3-r7} Thumb/ROM .N.
+PASS: ldmia [#0x07FFFFF8]!, {r3-r7} Thumb/ROM PN.
+PASS: ldmia [#0x07FFFFF8]!, {r3-r7} Thumb/ROM ..S
+PASS: ldmia [#0x07FFFFF8]!, {r3-r7} Thumb/ROM P.S
+PASS: ldmia [#0x07FFFFF8]!, {r3-r7} Thumb/ROM .NS
+PASS: ldmia [#0x07FFFFF8]!, {r3-r7} Thumb/ROM PNS
+PASS: ldmia [#0x07FFFFF8]!, {r3-r7} Thumb/WRAM
+PASS: ldmia [#0x07FFFFF8]!, {r3-r7} Thumb/IWRAM
+Timing test: ldmia [#0x07FFFFF4]!, {r3-r7}
+PASS: ldmia [#0x07FFFFF4]!, {r3-r7} ARM/ROM ...
+PASS: ldmia [#0x07FFFFF4]!, {r3-r7} ARM/ROM P..
+PASS: ldmia [#0x07FFFFF4]!, {r3-r7} ARM/ROM .N.
+PASS: ldmia [#0x07FFFFF4]!, {r3-r7} ARM/ROM PN.
+PASS: ldmia [#0x07FFFFF4]!, {r3-r7} ARM/ROM ..S
+PASS: ldmia [#0x07FFFFF4]!, {r3-r7} ARM/ROM P.S
+PASS: ldmia [#0x07FFFFF4]!, {r3-r7} ARM/ROM .NS
+PASS: ldmia [#0x07FFFFF4]!, {r3-r7} ARM/ROM PNS
+PASS: ldmia [#0x07FFFFF4]!, {r3-r7} ARM/WRAM
+PASS: ldmia [#0x07FFFFF4]!, {r3-r7} ARM/IWRAM
+PASS: ldmia [#0x07FFFFF4]!, {r3-r7} Thumb/ROM ...
+PASS: ldmia [#0x07FFFFF4]!, {r3-r7} Thumb/ROM P..
+PASS: ldmia [#0x07FFFFF4]!, {r3-r7} Thumb/ROM .N.
+PASS: ldmia [#0x07FFFFF4]!, {r3-r7} Thumb/ROM PN.
+PASS: ldmia [#0x07FFFFF4]!, {r3-r7} Thumb/ROM ..S
+PASS: ldmia [#0x07FFFFF4]!, {r3-r7} Thumb/ROM P.S
+PASS: ldmia [#0x07FFFFF4]!, {r3-r7} Thumb/ROM .NS
+PASS: ldmia [#0x07FFFFF4]!, {r3-r7} Thumb/ROM PNS
+PASS: ldmia [#0x07FFFFF4]!, {r3-r7} Thumb/WRAM
+PASS: ldmia [#0x07FFFFF4]!, {r3-r7} Thumb/IWRAM
+Timing test: ldmia [#0x07FFFFF0]!, {r3-r7}
+PASS: ldmia [#0x07FFFFF0]!, {r3-r7} ARM/ROM ...
+PASS: ldmia [#0x07FFFFF0]!, {r3-r7} ARM/ROM P..
+PASS: ldmia [#0x07FFFFF0]!, {r3-r7} ARM/ROM .N.
+PASS: ldmia [#0x07FFFFF0]!, {r3-r7} ARM/ROM PN.
+PASS: ldmia [#0x07FFFFF0]!, {r3-r7} ARM/ROM ..S
+PASS: ldmia [#0x07FFFFF0]!, {r3-r7} ARM/ROM P.S
+PASS: ldmia [#0x07FFFFF0]!, {r3-r7} ARM/ROM .NS
+PASS: ldmia [#0x07FFFFF0]!, {r3-r7} ARM/ROM PNS
+PASS: ldmia [#0x07FFFFF0]!, {r3-r7} ARM/WRAM
+PASS: ldmia [#0x07FFFFF0]!, {r3-r7} ARM/IWRAM
+PASS: ldmia [#0x07FFFFF0]!, {r3-r7} Thumb/ROM ...
+PASS: ldmia [#0x07FFFFF0]!, {r3-r7} Thumb/ROM P..
+PASS: ldmia [#0x07FFFFF0]!, {r3-r7} Thumb/ROM .N.
+PASS: ldmia [#0x07FFFFF0]!, {r3-r7} Thumb/ROM PN.
+PASS: ldmia [#0x07FFFFF0]!, {r3-r7} Thumb/ROM ..S
+PASS: ldmia [#0x07FFFFF0]!, {r3-r7} Thumb/ROM P.S
+PASS: ldmia [#0x07FFFFF0]!, {r3-r7} Thumb/ROM .NS
+PASS: ldmia [#0x07FFFFF0]!, {r3-r7} Thumb/ROM PNS
+PASS: ldmia [#0x07FFFFF0]!, {r3-r7} Thumb/WRAM
+PASS: ldmia [#0x07FFFFF0]!, {r3-r7} Thumb/IWRAM
+Timing test: ldmia [#0x07FFFFEC]!, {r3-r7}
+PASS: ldmia [#0x07FFFFEC]!, {r3-r7} ARM/ROM ...
+PASS: ldmia [#0x07FFFFEC]!, {r3-r7} ARM/ROM P..
+PASS: ldmia [#0x07FFFFEC]!, {r3-r7} ARM/ROM .N.
+PASS: ldmia [#0x07FFFFEC]!, {r3-r7} ARM/ROM PN.
+PASS: ldmia [#0x07FFFFEC]!, {r3-r7} ARM/ROM ..S
+PASS: ldmia [#0x07FFFFEC]!, {r3-r7} ARM/ROM P.S
+PASS: ldmia [#0x07FFFFEC]!, {r3-r7} ARM/ROM .NS
+PASS: ldmia [#0x07FFFFEC]!, {r3-r7} ARM/ROM PNS
+PASS: ldmia [#0x07FFFFEC]!, {r3-r7} ARM/WRAM
+PASS: ldmia [#0x07FFFFEC]!, {r3-r7} ARM/IWRAM
+PASS: ldmia [#0x07FFFFEC]!, {r3-r7} Thumb/ROM ...
+PASS: ldmia [#0x07FFFFEC]!, {r3-r7} Thumb/ROM P..
+PASS: ldmia [#0x07FFFFEC]!, {r3-r7} Thumb/ROM .N.
+PASS: ldmia [#0x07FFFFEC]!, {r3-r7} Thumb/ROM PN.
+PASS: ldmia [#0x07FFFFEC]!, {r3-r7} Thumb/ROM ..S
+PASS: ldmia [#0x07FFFFEC]!, {r3-r7} Thumb/ROM P.S
+PASS: ldmia [#0x07FFFFEC]!, {r3-r7} Thumb/ROM .NS
+PASS: ldmia [#0x07FFFFEC]!, {r3-r7} Thumb/ROM PNS
+PASS: ldmia [#0x07FFFFEC]!, {r3-r7} Thumb/WRAM
+PASS: ldmia [#0x07FFFFEC]!, {r3-r7} Thumb/IWRAM
+Timing test: mul #0x00000000, #0xFF
+PASS: mul #0x00000000, #0xFF ARM/ROM ...
+PASS: mul #0x00000000, #0xFF ARM/ROM P..
+PASS: mul #0x00000000, #0xFF ARM/ROM .N.
+PASS: mul #0x00000000, #0xFF ARM/ROM PN.
+PASS: mul #0x00000000, #0xFF ARM/ROM ..S
+PASS: mul #0x00000000, #0xFF ARM/ROM P.S
+PASS: mul #0x00000000, #0xFF ARM/ROM .NS
+PASS: mul #0x00000000, #0xFF ARM/ROM PNS
+PASS: mul #0x00000000, #0xFF ARM/WRAM
+PASS: mul #0x00000000, #0xFF ARM/IWRAM
+PASS: mul #0x00000000, #0xFF Thumb/ROM ...
+PASS: mul #0x00000000, #0xFF Thumb/ROM P..
+PASS: mul #0x00000000, #0xFF Thumb/ROM .N.
+PASS: mul #0x00000000, #0xFF Thumb/ROM PN.
+PASS: mul #0x00000000, #0xFF Thumb/ROM ..S
+PASS: mul #0x00000000, #0xFF Thumb/ROM P.S
+PASS: mul #0x00000000, #0xFF Thumb/ROM .NS
+PASS: mul #0x00000000, #0xFF Thumb/ROM PNS
+PASS: mul #0x00000000, #0xFF Thumb/WRAM
+PASS: mul #0x00000000, #0xFF Thumb/IWRAM
+Timing test: mul #0x00000078, #0xFF
+PASS: mul #0x00000078, #0xFF ARM/ROM ...
+PASS: mul #0x00000078, #0xFF ARM/ROM P..
+PASS: mul #0x00000078, #0xFF ARM/ROM .N.
+PASS: mul #0x00000078, #0xFF ARM/ROM PN.
+PASS: mul #0x00000078, #0xFF ARM/ROM ..S
+PASS: mul #0x00000078, #0xFF ARM/ROM P.S
+PASS: mul #0x00000078, #0xFF ARM/ROM .NS
+PASS: mul #0x00000078, #0xFF ARM/ROM PNS
+PASS: mul #0x00000078, #0xFF ARM/WRAM
+PASS: mul #0x00000078, #0xFF ARM/IWRAM
+PASS: mul #0x00000078, #0xFF Thumb/ROM ...
+PASS: mul #0x00000078, #0xFF Thumb/ROM P..
+PASS: mul #0x00000078, #0xFF Thumb/ROM .N.
+PASS: mul #0x00000078, #0xFF Thumb/ROM PN.
+PASS: mul #0x00000078, #0xFF Thumb/ROM ..S
+PASS: mul #0x00000078, #0xFF Thumb/ROM P.S
+PASS: mul #0x00000078, #0xFF Thumb/ROM .NS
+PASS: mul #0x00000078, #0xFF Thumb/ROM PNS
+PASS: mul #0x00000078, #0xFF Thumb/WRAM
+PASS: mul #0x00000078, #0xFF Thumb/IWRAM
+Timing test: mul #0x00005678, #0xFF
+PASS: mul #0x00005678, #0xFF ARM/ROM ...
+PASS: mul #0x00005678, #0xFF ARM/ROM P..
+PASS: mul #0x00005678, #0xFF ARM/ROM .N.
+PASS: mul #0x00005678, #0xFF ARM/ROM PN.
+PASS: mul #0x00005678, #0xFF ARM/ROM ..S
+PASS: mul #0x00005678, #0xFF ARM/ROM P.S
+PASS: mul #0x00005678, #0xFF ARM/ROM .NS
+PASS: mul #0x00005678, #0xFF ARM/ROM PNS
+PASS: mul #0x00005678, #0xFF ARM/WRAM
+PASS: mul #0x00005678, #0xFF ARM/IWRAM
+PASS: mul #0x00005678, #0xFF Thumb/ROM ...
+PASS: mul #0x00005678, #0xFF Thumb/ROM P..
+PASS: mul #0x00005678, #0xFF Thumb/ROM .N.
+PASS: mul #0x00005678, #0xFF Thumb/ROM PN.
+PASS: mul #0x00005678, #0xFF Thumb/ROM ..S
+PASS: mul #0x00005678, #0xFF Thumb/ROM P.S
+PASS: mul #0x00005678, #0xFF Thumb/ROM .NS
+PASS: mul #0x00005678, #0xFF Thumb/ROM PNS
+PASS: mul #0x00005678, #0xFF Thumb/WRAM
+PASS: mul #0x00005678, #0xFF Thumb/IWRAM
+Timing test: mul #0x00345678, #0xFF
+PASS: mul #0x00345678, #0xFF ARM/ROM ...
+PASS: mul #0x00345678, #0xFF ARM/ROM P..
+PASS: mul #0x00345678, #0xFF ARM/ROM .N.
+PASS: mul #0x00345678, #0xFF ARM/ROM PN.
+PASS: mul #0x00345678, #0xFF ARM/ROM ..S
+PASS: mul #0x00345678, #0xFF ARM/ROM P.S
+PASS: mul #0x00345678, #0xFF ARM/ROM .NS
+PASS: mul #0x00345678, #0xFF ARM/ROM PNS
+PASS: mul #0x00345678, #0xFF ARM/WRAM
+PASS: mul #0x00345678, #0xFF ARM/IWRAM
+PASS: mul #0x00345678, #0xFF Thumb/ROM ...
+PASS: mul #0x00345678, #0xFF Thumb/ROM P..
+PASS: mul #0x00345678, #0xFF Thumb/ROM .N.
+PASS: mul #0x00345678, #0xFF Thumb/ROM PN.
+PASS: mul #0x00345678, #0xFF Thumb/ROM ..S
+PASS: mul #0x00345678, #0xFF Thumb/ROM P.S
+PASS: mul #0x00345678, #0xFF Thumb/ROM .NS
+PASS: mul #0x00345678, #0xFF Thumb/ROM PNS
+PASS: mul #0x00345678, #0xFF Thumb/WRAM
+PASS: mul #0x00345678, #0xFF Thumb/IWRAM
+Timing test: mul #0x12345678, #0xFF
+PASS: mul #0x12345678, #0xFF ARM/ROM ...
+PASS: mul #0x12345678, #0xFF ARM/ROM P..
+PASS: mul #0x12345678, #0xFF ARM/ROM .N.
+PASS: mul #0x12345678, #0xFF ARM/ROM PN.
+PASS: mul #0x12345678, #0xFF ARM/ROM ..S
+PASS: mul #0x12345678, #0xFF ARM/ROM P.S
+PASS: mul #0x12345678, #0xFF ARM/ROM .NS
+PASS: mul #0x12345678, #0xFF ARM/ROM PNS
+PASS: mul #0x12345678, #0xFF ARM/WRAM
+PASS: mul #0x12345678, #0xFF ARM/IWRAM
+PASS: mul #0x12345678, #0xFF Thumb/ROM ...
+PASS: mul #0x12345678, #0xFF Thumb/ROM P..
+PASS: mul #0x12345678, #0xFF Thumb/ROM .N.
+PASS: mul #0x12345678, #0xFF Thumb/ROM PN.
+PASS: mul #0x12345678, #0xFF Thumb/ROM ..S
+PASS: mul #0x12345678, #0xFF Thumb/ROM P.S
+PASS: mul #0x12345678, #0xFF Thumb/ROM .NS
+PASS: mul #0x12345678, #0xFF Thumb/ROM PNS
+PASS: mul #0x12345678, #0xFF Thumb/WRAM
+PASS: mul #0x12345678, #0xFF Thumb/IWRAM
+Timing test: mul #0xFF000000, #0xFF
+PASS: mul #0xFF000000, #0xFF ARM/ROM ...
+PASS: mul #0xFF000000, #0xFF ARM/ROM P..
+PASS: mul #0xFF000000, #0xFF ARM/ROM .N.
+PASS: mul #0xFF000000, #0xFF ARM/ROM PN.
+PASS: mul #0xFF000000, #0xFF ARM/ROM ..S
+PASS: mul #0xFF000000, #0xFF ARM/ROM P.S
+PASS: mul #0xFF000000, #0xFF ARM/ROM .NS
+PASS: mul #0xFF000000, #0xFF ARM/ROM PNS
+PASS: mul #0xFF000000, #0xFF ARM/WRAM
+PASS: mul #0xFF000000, #0xFF ARM/IWRAM
+PASS: mul #0xFF000000, #0xFF Thumb/ROM ...
+PASS: mul #0xFF000000, #0xFF Thumb/ROM P..
+PASS: mul #0xFF000000, #0xFF Thumb/ROM .N.
+PASS: mul #0xFF000000, #0xFF Thumb/ROM PN.
+PASS: mul #0xFF000000, #0xFF Thumb/ROM ..S
+PASS: mul #0xFF000000, #0xFF Thumb/ROM P.S
+PASS: mul #0xFF000000, #0xFF Thumb/ROM .NS
+PASS: mul #0xFF000000, #0xFF Thumb/ROM PNS
+PASS: mul #0xFF000000, #0xFF Thumb/WRAM
+PASS: mul #0xFF000000, #0xFF Thumb/IWRAM
+Timing test: mul #0xFFFF0000, #0xFF
+PASS: mul #0xFFFF0000, #0xFF ARM/ROM ...
+PASS: mul #0xFFFF0000, #0xFF ARM/ROM P..
+PASS: mul #0xFFFF0000, #0xFF ARM/ROM .N.
+PASS: mul #0xFFFF0000, #0xFF ARM/ROM PN.
+PASS: mul #0xFFFF0000, #0xFF ARM/ROM ..S
+PASS: mul #0xFFFF0000, #0xFF ARM/ROM P.S
+PASS: mul #0xFFFF0000, #0xFF ARM/ROM .NS
+PASS: mul #0xFFFF0000, #0xFF ARM/ROM PNS
+PASS: mul #0xFFFF0000, #0xFF ARM/WRAM
+PASS: mul #0xFFFF0000, #0xFF ARM/IWRAM
+PASS: mul #0xFFFF0000, #0xFF Thumb/ROM ...
+PASS: mul #0xFFFF0000, #0xFF Thumb/ROM P..
+PASS: mul #0xFFFF0000, #0xFF Thumb/ROM .N.
+PASS: mul #0xFFFF0000, #0xFF Thumb/ROM PN.
+PASS: mul #0xFFFF0000, #0xFF Thumb/ROM ..S
+PASS: mul #0xFFFF0000, #0xFF Thumb/ROM P.S
+PASS: mul #0xFFFF0000, #0xFF Thumb/ROM .NS
+PASS: mul #0xFFFF0000, #0xFF Thumb/ROM PNS
+PASS: mul #0xFFFF0000, #0xFF Thumb/WRAM
+PASS: mul #0xFFFF0000, #0xFF Thumb/IWRAM
+Timing test: mul #0xFFFFFF00, #0xFF
+PASS: mul #0xFFFFFF00, #0xFF ARM/ROM ...
+PASS: mul #0xFFFFFF00, #0xFF ARM/ROM P..
+PASS: mul #0xFFFFFF00, #0xFF ARM/ROM .N.
+PASS: mul #0xFFFFFF00, #0xFF ARM/ROM PN.
+PASS: mul #0xFFFFFF00, #0xFF ARM/ROM ..S
+PASS: mul #0xFFFFFF00, #0xFF ARM/ROM P.S
+PASS: mul #0xFFFFFF00, #0xFF ARM/ROM .NS
+PASS: mul #0xFFFFFF00, #0xFF ARM/ROM PNS
+PASS: mul #0xFFFFFF00, #0xFF ARM/WRAM
+PASS: mul #0xFFFFFF00, #0xFF ARM/IWRAM
+PASS: mul #0xFFFFFF00, #0xFF Thumb/ROM ...
+PASS: mul #0xFFFFFF00, #0xFF Thumb/ROM P..
+PASS: mul #0xFFFFFF00, #0xFF Thumb/ROM .N.
+PASS: mul #0xFFFFFF00, #0xFF Thumb/ROM PN.
+PASS: mul #0xFFFFFF00, #0xFF Thumb/ROM ..S
+PASS: mul #0xFFFFFF00, #0xFF Thumb/ROM P.S
+PASS: mul #0xFFFFFF00, #0xFF Thumb/ROM .NS
+PASS: mul #0xFFFFFF00, #0xFF Thumb/ROM PNS
+PASS: mul #0xFFFFFF00, #0xFF Thumb/WRAM
+PASS: mul #0xFFFFFF00, #0xFF Thumb/IWRAM
+Timing test: mul #0xFFFFFFFF, #0xFF
+PASS: mul #0xFFFFFFFF, #0xFF ARM/ROM ...
+PASS: mul #0xFFFFFFFF, #0xFF ARM/ROM P..
+PASS: mul #0xFFFFFFFF, #0xFF ARM/ROM .N.
+PASS: mul #0xFFFFFFFF, #0xFF ARM/ROM PN.
+PASS: mul #0xFFFFFFFF, #0xFF ARM/ROM ..S
+PASS: mul #0xFFFFFFFF, #0xFF ARM/ROM P.S
+PASS: mul #0xFFFFFFFF, #0xFF ARM/ROM .NS
+PASS: mul #0xFFFFFFFF, #0xFF ARM/ROM PNS
+PASS: mul #0xFFFFFFFF, #0xFF ARM/WRAM
+PASS: mul #0xFFFFFFFF, #0xFF ARM/IWRAM
+PASS: mul #0xFFFFFFFF, #0xFF Thumb/ROM ...
+PASS: mul #0xFFFFFFFF, #0xFF Thumb/ROM P..
+PASS: mul #0xFFFFFFFF, #0xFF Thumb/ROM .N.
+PASS: mul #0xFFFFFFFF, #0xFF Thumb/ROM PN.
+PASS: mul #0xFFFFFFFF, #0xFF Thumb/ROM ..S
+PASS: mul #0xFFFFFFFF, #0xFF Thumb/ROM P.S
+PASS: mul #0xFFFFFFFF, #0xFF Thumb/ROM .NS
+PASS: mul #0xFFFFFFFF, #0xFF Thumb/ROM PNS
+PASS: mul #0xFFFFFFFF, #0xFF Thumb/WRAM
+PASS: mul #0xFFFFFFFF, #0xFF Thumb/IWRAM
+Timing test: mul #0xFFFFFFFF, #0x00
+PASS: mul #0xFFFFFFFF, #0x00 ARM/ROM ...
+PASS: mul #0xFFFFFFFF, #0x00 ARM/ROM P..
+PASS: mul #0xFFFFFFFF, #0x00 ARM/ROM .N.
+PASS: mul #0xFFFFFFFF, #0x00 ARM/ROM PN.
+PASS: mul #0xFFFFFFFF, #0x00 ARM/ROM ..S
+PASS: mul #0xFFFFFFFF, #0x00 ARM/ROM P.S
+PASS: mul #0xFFFFFFFF, #0x00 ARM/ROM .NS
+PASS: mul #0xFFFFFFFF, #0x00 ARM/ROM PNS
+PASS: mul #0xFFFFFFFF, #0x00 ARM/WRAM
+PASS: mul #0xFFFFFFFF, #0x00 ARM/IWRAM
+PASS: mul #0xFFFFFFFF, #0x00 Thumb/ROM ...
+PASS: mul #0xFFFFFFFF, #0x00 Thumb/ROM P..
+PASS: mul #0xFFFFFFFF, #0x00 Thumb/ROM .N.
+PASS: mul #0xFFFFFFFF, #0x00 Thumb/ROM PN.
+PASS: mul #0xFFFFFFFF, #0x00 Thumb/ROM ..S
+PASS: mul #0xFFFFFFFF, #0x00 Thumb/ROM P.S
+PASS: mul #0xFFFFFFFF, #0x00 Thumb/ROM .NS
+PASS: mul #0xFFFFFFFF, #0x00 Thumb/ROM PNS
+PASS: mul #0xFFFFFFFF, #0x00 Thumb/WRAM
+PASS: mul #0xFFFFFFFF, #0x00 Thumb/IWRAM
+Timing test: mla #0x00000000, #0xFF
+PASS: mla #0x00000000, #0xFF ARM/ROM ...
+PASS: mla #0x00000000, #0xFF ARM/ROM P..
+PASS: mla #0x00000000, #0xFF ARM/ROM .N.
+PASS: mla #0x00000000, #0xFF ARM/ROM PN.
+PASS: mla #0x00000000, #0xFF ARM/ROM ..S
+PASS: mla #0x00000000, #0xFF ARM/ROM P.S
+PASS: mla #0x00000000, #0xFF ARM/ROM .NS
+PASS: mla #0x00000000, #0xFF ARM/ROM PNS
+PASS: mla #0x00000000, #0xFF ARM/WRAM
+PASS: mla #0x00000000, #0xFF ARM/IWRAM
+Timing test: mla #0x00000078, #0xFF
+PASS: mla #0x00000078, #0xFF ARM/ROM ...
+PASS: mla #0x00000078, #0xFF ARM/ROM P..
+PASS: mla #0x00000078, #0xFF ARM/ROM .N.
+PASS: mla #0x00000078, #0xFF ARM/ROM PN.
+PASS: mla #0x00000078, #0xFF ARM/ROM ..S
+PASS: mla #0x00000078, #0xFF ARM/ROM P.S
+PASS: mla #0x00000078, #0xFF ARM/ROM .NS
+PASS: mla #0x00000078, #0xFF ARM/ROM PNS
+PASS: mla #0x00000078, #0xFF ARM/WRAM
+PASS: mla #0x00000078, #0xFF ARM/IWRAM
+Timing test: mla #0x00005678, #0xFF
+PASS: mla #0x00005678, #0xFF ARM/ROM ...
+PASS: mla #0x00005678, #0xFF ARM/ROM P..
+PASS: mla #0x00005678, #0xFF ARM/ROM .N.
+PASS: mla #0x00005678, #0xFF ARM/ROM PN.
+PASS: mla #0x00005678, #0xFF ARM/ROM ..S
+PASS: mla #0x00005678, #0xFF ARM/ROM P.S
+PASS: mla #0x00005678, #0xFF ARM/ROM .NS
+PASS: mla #0x00005678, #0xFF ARM/ROM PNS
+PASS: mla #0x00005678, #0xFF ARM/WRAM
+PASS: mla #0x00005678, #0xFF ARM/IWRAM
+Timing test: mla #0x00345678, #0xFF
+PASS: mla #0x00345678, #0xFF ARM/ROM ...
+PASS: mla #0x00345678, #0xFF ARM/ROM P..
+PASS: mla #0x00345678, #0xFF ARM/ROM .N.
+PASS: mla #0x00345678, #0xFF ARM/ROM PN.
+PASS: mla #0x00345678, #0xFF ARM/ROM ..S
+PASS: mla #0x00345678, #0xFF ARM/ROM P.S
+PASS: mla #0x00345678, #0xFF ARM/ROM .NS
+PASS: mla #0x00345678, #0xFF ARM/ROM PNS
+PASS: mla #0x00345678, #0xFF ARM/WRAM
+PASS: mla #0x00345678, #0xFF ARM/IWRAM
+Timing test: mla #0x12345678, #0xFF
+PASS: mla #0x12345678, #0xFF ARM/ROM ...
+PASS: mla #0x12345678, #0xFF ARM/ROM P..
+PASS: mla #0x12345678, #0xFF ARM/ROM .N.
+PASS: mla #0x12345678, #0xFF ARM/ROM PN.
+PASS: mla #0x12345678, #0xFF ARM/ROM ..S
+PASS: mla #0x12345678, #0xFF ARM/ROM P.S
+PASS: mla #0x12345678, #0xFF ARM/ROM .NS
+PASS: mla #0x12345678, #0xFF ARM/ROM PNS
+PASS: mla #0x12345678, #0xFF ARM/WRAM
+PASS: mla #0x12345678, #0xFF ARM/IWRAM
+Timing test: mla #0xFF000000, #0xFF
+PASS: mla #0xFF000000, #0xFF ARM/ROM ...
+PASS: mla #0xFF000000, #0xFF ARM/ROM P..
+PASS: mla #0xFF000000, #0xFF ARM/ROM .N.
+PASS: mla #0xFF000000, #0xFF ARM/ROM PN.
+PASS: mla #0xFF000000, #0xFF ARM/ROM ..S
+PASS: mla #0xFF000000, #0xFF ARM/ROM P.S
+PASS: mla #0xFF000000, #0xFF ARM/ROM .NS
+PASS: mla #0xFF000000, #0xFF ARM/ROM PNS
+PASS: mla #0xFF000000, #0xFF ARM/WRAM
+PASS: mla #0xFF000000, #0xFF ARM/IWRAM
+Timing test: mla #0xFFFF0000, #0xFF
+PASS: mla #0xFFFF0000, #0xFF ARM/ROM ...
+PASS: mla #0xFFFF0000, #0xFF ARM/ROM P..
+PASS: mla #0xFFFF0000, #0xFF ARM/ROM .N.
+PASS: mla #0xFFFF0000, #0xFF ARM/ROM PN.
+PASS: mla #0xFFFF0000, #0xFF ARM/ROM ..S
+PASS: mla #0xFFFF0000, #0xFF ARM/ROM P.S
+PASS: mla #0xFFFF0000, #0xFF ARM/ROM .NS
+PASS: mla #0xFFFF0000, #0xFF ARM/ROM PNS
+PASS: mla #0xFFFF0000, #0xFF ARM/WRAM
+PASS: mla #0xFFFF0000, #0xFF ARM/IWRAM
+Timing test: mla #0xFFFFFF00, #0xFF
+PASS: mla #0xFFFFFF00, #0xFF ARM/ROM ...
+PASS: mla #0xFFFFFF00, #0xFF ARM/ROM P..
+PASS: mla #0xFFFFFF00, #0xFF ARM/ROM .N.
+PASS: mla #0xFFFFFF00, #0xFF ARM/ROM PN.
+PASS: mla #0xFFFFFF00, #0xFF ARM/ROM ..S
+PASS: mla #0xFFFFFF00, #0xFF ARM/ROM P.S
+PASS: mla #0xFFFFFF00, #0xFF ARM/ROM .NS
+PASS: mla #0xFFFFFF00, #0xFF ARM/ROM PNS
+PASS: mla #0xFFFFFF00, #0xFF ARM/WRAM
+PASS: mla #0xFFFFFF00, #0xFF ARM/IWRAM
+Timing test: mla #0xFFFFFFFF, #0xFF
+PASS: mla #0xFFFFFFFF, #0xFF ARM/ROM ...
+PASS: mla #0xFFFFFFFF, #0xFF ARM/ROM P..
+PASS: mla #0xFFFFFFFF, #0xFF ARM/ROM .N.
+PASS: mla #0xFFFFFFFF, #0xFF ARM/ROM PN.
+PASS: mla #0xFFFFFFFF, #0xFF ARM/ROM ..S
+PASS: mla #0xFFFFFFFF, #0xFF ARM/ROM P.S
+PASS: mla #0xFFFFFFFF, #0xFF ARM/ROM .NS
+PASS: mla #0xFFFFFFFF, #0xFF ARM/ROM PNS
+PASS: mla #0xFFFFFFFF, #0xFF ARM/WRAM
+PASS: mla #0xFFFFFFFF, #0xFF ARM/IWRAM
+Timing test: mla #0xFFFFFFFF, #0x00
+PASS: mla #0xFFFFFFFF, #0x00 ARM/ROM ...
+PASS: mla #0xFFFFFFFF, #0x00 ARM/ROM P..
+PASS: mla #0xFFFFFFFF, #0x00 ARM/ROM .N.
+PASS: mla #0xFFFFFFFF, #0x00 ARM/ROM PN.
+PASS: mla #0xFFFFFFFF, #0x00 ARM/ROM ..S
+PASS: mla #0xFFFFFFFF, #0x00 ARM/ROM P.S
+PASS: mla #0xFFFFFFFF, #0x00 ARM/ROM .NS
+PASS: mla #0xFFFFFFFF, #0x00 ARM/ROM PNS
+PASS: mla #0xFFFFFFFF, #0x00 ARM/WRAM
+PASS: mla #0xFFFFFFFF, #0x00 ARM/IWRAM
+Timing test: smull #0x00000000, #0xFF
+PASS: smull #0x00000000, #0xFF ARM/ROM ...
+PASS: smull #0x00000000, #0xFF ARM/ROM P..
+PASS: smull #0x00000000, #0xFF ARM/ROM .N.
+PASS: smull #0x00000000, #0xFF ARM/ROM PN.
+PASS: smull #0x00000000, #0xFF ARM/ROM ..S
+PASS: smull #0x00000000, #0xFF ARM/ROM P.S
+PASS: smull #0x00000000, #0xFF ARM/ROM .NS
+PASS: smull #0x00000000, #0xFF ARM/ROM PNS
+PASS: smull #0x00000000, #0xFF ARM/WRAM
+PASS: smull #0x00000000, #0xFF ARM/IWRAM
+Timing test: smull #0x00000078, #0xFF
+PASS: smull #0x00000078, #0xFF ARM/ROM ...
+PASS: smull #0x00000078, #0xFF ARM/ROM P..
+PASS: smull #0x00000078, #0xFF ARM/ROM .N.
+PASS: smull #0x00000078, #0xFF ARM/ROM PN.
+PASS: smull #0x00000078, #0xFF ARM/ROM ..S
+PASS: smull #0x00000078, #0xFF ARM/ROM P.S
+PASS: smull #0x00000078, #0xFF ARM/ROM .NS
+PASS: smull #0x00000078, #0xFF ARM/ROM PNS
+PASS: smull #0x00000078, #0xFF ARM/WRAM
+PASS: smull #0x00000078, #0xFF ARM/IWRAM
+Timing test: smull #0x00005678, #0xFF
+PASS: smull #0x00005678, #0xFF ARM/ROM ...
+PASS: smull #0x00005678, #0xFF ARM/ROM P..
+PASS: smull #0x00005678, #0xFF ARM/ROM .N.
+PASS: smull #0x00005678, #0xFF ARM/ROM PN.
+PASS: smull #0x00005678, #0xFF ARM/ROM ..S
+PASS: smull #0x00005678, #0xFF ARM/ROM P.S
+PASS: smull #0x00005678, #0xFF ARM/ROM .NS
+PASS: smull #0x00005678, #0xFF ARM/ROM PNS
+PASS: smull #0x00005678, #0xFF ARM/WRAM
+PASS: smull #0x00005678, #0xFF ARM/IWRAM
+Timing test: smull #0x00345678, #0xFF
+PASS: smull #0x00345678, #0xFF ARM/ROM ...
+PASS: smull #0x00345678, #0xFF ARM/ROM P..
+PASS: smull #0x00345678, #0xFF ARM/ROM .N.
+PASS: smull #0x00345678, #0xFF ARM/ROM PN.
+PASS: smull #0x00345678, #0xFF ARM/ROM ..S
+PASS: smull #0x00345678, #0xFF ARM/ROM P.S
+PASS: smull #0x00345678, #0xFF ARM/ROM .NS
+PASS: smull #0x00345678, #0xFF ARM/ROM PNS
+PASS: smull #0x00345678, #0xFF ARM/WRAM
+PASS: smull #0x00345678, #0xFF ARM/IWRAM
+Timing test: smull #0x12345678, #0xFF
+PASS: smull #0x12345678, #0xFF ARM/ROM ...
+PASS: smull #0x12345678, #0xFF ARM/ROM P..
+PASS: smull #0x12345678, #0xFF ARM/ROM .N.
+PASS: smull #0x12345678, #0xFF ARM/ROM PN.
+PASS: smull #0x12345678, #0xFF ARM/ROM ..S
+PASS: smull #0x12345678, #0xFF ARM/ROM P.S
+PASS: smull #0x12345678, #0xFF ARM/ROM .NS
+PASS: smull #0x12345678, #0xFF ARM/ROM PNS
+PASS: smull #0x12345678, #0xFF ARM/WRAM
+PASS: smull #0x12345678, #0xFF ARM/IWRAM
+Timing test: smull #0xFF000000, #0xFF
+PASS: smull #0xFF000000, #0xFF ARM/ROM ...
+PASS: smull #0xFF000000, #0xFF ARM/ROM P..
+PASS: smull #0xFF000000, #0xFF ARM/ROM .N.
+PASS: smull #0xFF000000, #0xFF ARM/ROM PN.
+PASS: smull #0xFF000000, #0xFF ARM/ROM ..S
+PASS: smull #0xFF000000, #0xFF ARM/ROM P.S
+PASS: smull #0xFF000000, #0xFF ARM/ROM .NS
+PASS: smull #0xFF000000, #0xFF ARM/ROM PNS
+PASS: smull #0xFF000000, #0xFF ARM/WRAM
+PASS: smull #0xFF000000, #0xFF ARM/IWRAM
+Timing test: smull #0xFFFF0000, #0xFF
+PASS: smull #0xFFFF0000, #0xFF ARM/ROM ...
+PASS: smull #0xFFFF0000, #0xFF ARM/ROM P..
+PASS: smull #0xFFFF0000, #0xFF ARM/ROM .N.
+PASS: smull #0xFFFF0000, #0xFF ARM/ROM PN.
+PASS: smull #0xFFFF0000, #0xFF ARM/ROM ..S
+PASS: smull #0xFFFF0000, #0xFF ARM/ROM P.S
+PASS: smull #0xFFFF0000, #0xFF ARM/ROM .NS
+PASS: smull #0xFFFF0000, #0xFF ARM/ROM PNS
+PASS: smull #0xFFFF0000, #0xFF ARM/WRAM
+PASS: smull #0xFFFF0000, #0xFF ARM/IWRAM
+Timing test: smull #0xFFFFFF00, #0xFF
+PASS: smull #0xFFFFFF00, #0xFF ARM/ROM ...
+PASS: smull #0xFFFFFF00, #0xFF ARM/ROM P..
+PASS: smull #0xFFFFFF00, #0xFF ARM/ROM .N.
+PASS: smull #0xFFFFFF00, #0xFF ARM/ROM PN.
+PASS: smull #0xFFFFFF00, #0xFF ARM/ROM ..S
+PASS: smull #0xFFFFFF00, #0xFF ARM/ROM P.S
+PASS: smull #0xFFFFFF00, #0xFF ARM/ROM .NS
+PASS: smull #0xFFFFFF00, #0xFF ARM/ROM PNS
+PASS: smull #0xFFFFFF00, #0xFF ARM/WRAM
+PASS: smull #0xFFFFFF00, #0xFF ARM/IWRAM
+Timing test: smull #0xFFFFFFFF, #0xFF
+PASS: smull #0xFFFFFFFF, #0xFF ARM/ROM ...
+PASS: smull #0xFFFFFFFF, #0xFF ARM/ROM P..
+PASS: smull #0xFFFFFFFF, #0xFF ARM/ROM .N.
+PASS: smull #0xFFFFFFFF, #0xFF ARM/ROM PN.
+PASS: smull #0xFFFFFFFF, #0xFF ARM/ROM ..S
+PASS: smull #0xFFFFFFFF, #0xFF ARM/ROM P.S
+PASS: smull #0xFFFFFFFF, #0xFF ARM/ROM .NS
+PASS: smull #0xFFFFFFFF, #0xFF ARM/ROM PNS
+PASS: smull #0xFFFFFFFF, #0xFF ARM/WRAM
+PASS: smull #0xFFFFFFFF, #0xFF ARM/IWRAM
+Timing test: smull #0xFFFFFFFF, #0x00
+PASS: smull #0xFFFFFFFF, #0x00 ARM/ROM ...
+PASS: smull #0xFFFFFFFF, #0x00 ARM/ROM P..
+PASS: smull #0xFFFFFFFF, #0x00 ARM/ROM .N.
+PASS: smull #0xFFFFFFFF, #0x00 ARM/ROM PN.
+PASS: smull #0xFFFFFFFF, #0x00 ARM/ROM ..S
+PASS: smull #0xFFFFFFFF, #0x00 ARM/ROM P.S
+PASS: smull #0xFFFFFFFF, #0x00 ARM/ROM .NS
+PASS: smull #0xFFFFFFFF, #0x00 ARM/ROM PNS
+PASS: smull #0xFFFFFFFF, #0x00 ARM/WRAM
+PASS: smull #0xFFFFFFFF, #0x00 ARM/IWRAM
+Timing test: smlal #0x00000000, #0xFF
+PASS: smlal #0x00000000, #0xFF ARM/ROM ...
+PASS: smlal #0x00000000, #0xFF ARM/ROM P..
+PASS: smlal #0x00000000, #0xFF ARM/ROM .N.
+PASS: smlal #0x00000000, #0xFF ARM/ROM PN.
+PASS: smlal #0x00000000, #0xFF ARM/ROM ..S
+PASS: smlal #0x00000000, #0xFF ARM/ROM P.S
+PASS: smlal #0x00000000, #0xFF ARM/ROM .NS
+PASS: smlal #0x00000000, #0xFF ARM/ROM PNS
+PASS: smlal #0x00000000, #0xFF ARM/WRAM
+PASS: smlal #0x00000000, #0xFF ARM/IWRAM
+Timing test: smlal #0x00000078, #0xFF
+PASS: smlal #0x00000078, #0xFF ARM/ROM ...
+PASS: smlal #0x00000078, #0xFF ARM/ROM P..
+PASS: smlal #0x00000078, #0xFF ARM/ROM .N.
+PASS: smlal #0x00000078, #0xFF ARM/ROM PN.
+PASS: smlal #0x00000078, #0xFF ARM/ROM ..S
+PASS: smlal #0x00000078, #0xFF ARM/ROM P.S
+PASS: smlal #0x00000078, #0xFF ARM/ROM .NS
+PASS: smlal #0x00000078, #0xFF ARM/ROM PNS
+PASS: smlal #0x00000078, #0xFF ARM/WRAM
+PASS: smlal #0x00000078, #0xFF ARM/IWRAM
+Timing test: smlal #0x00005678, #0xFF
+PASS: smlal #0x00005678, #0xFF ARM/ROM ...
+PASS: smlal #0x00005678, #0xFF ARM/ROM P..
+PASS: smlal #0x00005678, #0xFF ARM/ROM .N.
+PASS: smlal #0x00005678, #0xFF ARM/ROM PN.
+PASS: smlal #0x00005678, #0xFF ARM/ROM ..S
+PASS: smlal #0x00005678, #0xFF ARM/ROM P.S
+PASS: smlal #0x00005678, #0xFF ARM/ROM .NS
+PASS: smlal #0x00005678, #0xFF ARM/ROM PNS
+PASS: smlal #0x00005678, #0xFF ARM/WRAM
+PASS: smlal #0x00005678, #0xFF ARM/IWRAM
+Timing test: smlal #0x00345678, #0xFF
+PASS: smlal #0x00345678, #0xFF ARM/ROM ...
+PASS: smlal #0x00345678, #0xFF ARM/ROM P..
+PASS: smlal #0x00345678, #0xFF ARM/ROM .N.
+PASS: smlal #0x00345678, #0xFF ARM/ROM PN.
+PASS: smlal #0x00345678, #0xFF ARM/ROM ..S
+PASS: smlal #0x00345678, #0xFF ARM/ROM P.S
+PASS: smlal #0x00345678, #0xFF ARM/ROM .NS
+PASS: smlal #0x00345678, #0xFF ARM/ROM PNS
+PASS: smlal #0x00345678, #0xFF ARM/WRAM
+PASS: smlal #0x00345678, #0xFF ARM/IWRAM
+Timing test: smlal #0x12345678, #0xFF
+PASS: smlal #0x12345678, #0xFF ARM/ROM ...
+PASS: smlal #0x12345678, #0xFF ARM/ROM P..
+PASS: smlal #0x12345678, #0xFF ARM/ROM .N.
+PASS: smlal #0x12345678, #0xFF ARM/ROM PN.
+PASS: smlal #0x12345678, #0xFF ARM/ROM ..S
+PASS: smlal #0x12345678, #0xFF ARM/ROM P.S
+PASS: smlal #0x12345678, #0xFF ARM/ROM .NS
+PASS: smlal #0x12345678, #0xFF ARM/ROM PNS
+PASS: smlal #0x12345678, #0xFF ARM/WRAM
+PASS: smlal #0x12345678, #0xFF ARM/IWRAM
+Timing test: smlal #0xFF000000, #0xFF
+PASS: smlal #0xFF000000, #0xFF ARM/ROM ...
+PASS: smlal #0xFF000000, #0xFF ARM/ROM P..
+PASS: smlal #0xFF000000, #0xFF ARM/ROM .N.
+PASS: smlal #0xFF000000, #0xFF ARM/ROM PN.
+PASS: smlal #0xFF000000, #0xFF ARM/ROM ..S
+PASS: smlal #0xFF000000, #0xFF ARM/ROM P.S
+PASS: smlal #0xFF000000, #0xFF ARM/ROM .NS
+PASS: smlal #0xFF000000, #0xFF ARM/ROM PNS
+PASS: smlal #0xFF000000, #0xFF ARM/WRAM
+PASS: smlal #0xFF000000, #0xFF ARM/IWRAM
+Timing test: smlal #0xFFFF0000, #0xFF
+PASS: smlal #0xFFFF0000, #0xFF ARM/ROM ...
+PASS: smlal #0xFFFF0000, #0xFF ARM/ROM P..
+PASS: smlal #0xFFFF0000, #0xFF ARM/ROM .N.
+PASS: smlal #0xFFFF0000, #0xFF ARM/ROM PN.
+PASS: smlal #0xFFFF0000, #0xFF ARM/ROM ..S
+PASS: smlal #0xFFFF0000, #0xFF ARM/ROM P.S
+PASS: smlal #0xFFFF0000, #0xFF ARM/ROM .NS
+PASS: smlal #0xFFFF0000, #0xFF ARM/ROM PNS
+PASS: smlal #0xFFFF0000, #0xFF ARM/WRAM
+PASS: smlal #0xFFFF0000, #0xFF ARM/IWRAM
+Timing test: smlal #0xFFFFFF00, #0xFF
+PASS: smlal #0xFFFFFF00, #0xFF ARM/ROM ...
+PASS: smlal #0xFFFFFF00, #0xFF ARM/ROM P..
+PASS: smlal #0xFFFFFF00, #0xFF ARM/ROM .N.
+PASS: smlal #0xFFFFFF00, #0xFF ARM/ROM PN.
+PASS: smlal #0xFFFFFF00, #0xFF ARM/ROM ..S
+PASS: smlal #0xFFFFFF00, #0xFF ARM/ROM P.S
+PASS: smlal #0xFFFFFF00, #0xFF ARM/ROM .NS
+PASS: smlal #0xFFFFFF00, #0xFF ARM/ROM PNS
+PASS: smlal #0xFFFFFF00, #0xFF ARM/WRAM
+PASS: smlal #0xFFFFFF00, #0xFF ARM/IWRAM
+Timing test: smlal #0xFFFFFFFF, #0xFF
+PASS: smlal #0xFFFFFFFF, #0xFF ARM/ROM ...
+PASS: smlal #0xFFFFFFFF, #0xFF ARM/ROM P..
+PASS: smlal #0xFFFFFFFF, #0xFF ARM/ROM .N.
+PASS: smlal #0xFFFFFFFF, #0xFF ARM/ROM PN.
+PASS: smlal #0xFFFFFFFF, #0xFF ARM/ROM ..S
+PASS: smlal #0xFFFFFFFF, #0xFF ARM/ROM P.S
+PASS: smlal #0xFFFFFFFF, #0xFF ARM/ROM .NS
+PASS: smlal #0xFFFFFFFF, #0xFF ARM/ROM PNS
+PASS: smlal #0xFFFFFFFF, #0xFF ARM/WRAM
+PASS: smlal #0xFFFFFFFF, #0xFF ARM/IWRAM
+Timing test: smlal #0xFFFFFFFF, #0x00
+PASS: smlal #0xFFFFFFFF, #0x00 ARM/ROM ...
+PASS: smlal #0xFFFFFFFF, #0x00 ARM/ROM P..
+PASS: smlal #0xFFFFFFFF, #0x00 ARM/ROM .N.
+PASS: smlal #0xFFFFFFFF, #0x00 ARM/ROM PN.
+PASS: smlal #0xFFFFFFFF, #0x00 ARM/ROM ..S
+PASS: smlal #0xFFFFFFFF, #0x00 ARM/ROM P.S
+PASS: smlal #0xFFFFFFFF, #0x00 ARM/ROM .NS
+PASS: smlal #0xFFFFFFFF, #0x00 ARM/ROM PNS
+PASS: smlal #0xFFFFFFFF, #0x00 ARM/WRAM
+PASS: smlal #0xFFFFFFFF, #0x00 ARM/IWRAM
+Timing test: umull #0x00000000, #0xFF
+PASS: umull #0x00000000, #0xFF ARM/ROM ...
+PASS: umull #0x00000000, #0xFF ARM/ROM P..
+PASS: umull #0x00000000, #0xFF ARM/ROM .N.
+PASS: umull #0x00000000, #0xFF ARM/ROM PN.
+PASS: umull #0x00000000, #0xFF ARM/ROM ..S
+PASS: umull #0x00000000, #0xFF ARM/ROM P.S
+PASS: umull #0x00000000, #0xFF ARM/ROM .NS
+PASS: umull #0x00000000, #0xFF ARM/ROM PNS
+PASS: umull #0x00000000, #0xFF ARM/WRAM
+PASS: umull #0x00000000, #0xFF ARM/IWRAM
+Timing test: umull #0x00000078, #0xFF
+PASS: umull #0x00000078, #0xFF ARM/ROM ...
+PASS: umull #0x00000078, #0xFF ARM/ROM P..
+PASS: umull #0x00000078, #0xFF ARM/ROM .N.
+PASS: umull #0x00000078, #0xFF ARM/ROM PN.
+PASS: umull #0x00000078, #0xFF ARM/ROM ..S
+PASS: umull #0x00000078, #0xFF ARM/ROM P.S
+PASS: umull #0x00000078, #0xFF ARM/ROM .NS
+PASS: umull #0x00000078, #0xFF ARM/ROM PNS
+PASS: umull #0x00000078, #0xFF ARM/WRAM
+PASS: umull #0x00000078, #0xFF ARM/IWRAM
+Timing test: umull #0x00005678, #0xFF
+PASS: umull #0x00005678, #0xFF ARM/ROM ...
+PASS: umull #0x00005678, #0xFF ARM/ROM P..
+PASS: umull #0x00005678, #0xFF ARM/ROM .N.
+PASS: umull #0x00005678, #0xFF ARM/ROM PN.
+PASS: umull #0x00005678, #0xFF ARM/ROM ..S
+PASS: umull #0x00005678, #0xFF ARM/ROM P.S
+PASS: umull #0x00005678, #0xFF ARM/ROM .NS
+PASS: umull #0x00005678, #0xFF ARM/ROM PNS
+PASS: umull #0x00005678, #0xFF ARM/WRAM
+PASS: umull #0x00005678, #0xFF ARM/IWRAM
+Timing test: umull #0x00345678, #0xFF
+PASS: umull #0x00345678, #0xFF ARM/ROM ...
+PASS: umull #0x00345678, #0xFF ARM/ROM P..
+PASS: umull #0x00345678, #0xFF ARM/ROM .N.
+PASS: umull #0x00345678, #0xFF ARM/ROM PN.
+PASS: umull #0x00345678, #0xFF ARM/ROM ..S
+PASS: umull #0x00345678, #0xFF ARM/ROM P.S
+PASS: umull #0x00345678, #0xFF ARM/ROM .NS
+PASS: umull #0x00345678, #0xFF ARM/ROM PNS
+PASS: umull #0x00345678, #0xFF ARM/WRAM
+PASS: umull #0x00345678, #0xFF ARM/IWRAM
+Timing test: umull #0x12345678, #0xFF
+PASS: umull #0x12345678, #0xFF ARM/ROM ...
+PASS: umull #0x12345678, #0xFF ARM/ROM P..
+PASS: umull #0x12345678, #0xFF ARM/ROM .N.
+PASS: umull #0x12345678, #0xFF ARM/ROM PN.
+PASS: umull #0x12345678, #0xFF ARM/ROM ..S
+PASS: umull #0x12345678, #0xFF ARM/ROM P.S
+PASS: umull #0x12345678, #0xFF ARM/ROM .NS
+PASS: umull #0x12345678, #0xFF ARM/ROM PNS
+PASS: umull #0x12345678, #0xFF ARM/WRAM
+PASS: umull #0x12345678, #0xFF ARM/IWRAM
+Timing test: umull #0xFF000000, #0xFF
+PASS: umull #0xFF000000, #0xFF ARM/ROM ...
+PASS: umull #0xFF000000, #0xFF ARM/ROM P..
+PASS: umull #0xFF000000, #0xFF ARM/ROM .N.
+PASS: umull #0xFF000000, #0xFF ARM/ROM PN.
+PASS: umull #0xFF000000, #0xFF ARM/ROM ..S
+PASS: umull #0xFF000000, #0xFF ARM/ROM P.S
+PASS: umull #0xFF000000, #0xFF ARM/ROM .NS
+PASS: umull #0xFF000000, #0xFF ARM/ROM PNS
+PASS: umull #0xFF000000, #0xFF ARM/WRAM
+PASS: umull #0xFF000000, #0xFF ARM/IWRAM
+Timing test: umull #0xFFFF0000, #0xFF
+PASS: umull #0xFFFF0000, #0xFF ARM/ROM ...
+PASS: umull #0xFFFF0000, #0xFF ARM/ROM P..
+PASS: umull #0xFFFF0000, #0xFF ARM/ROM .N.
+PASS: umull #0xFFFF0000, #0xFF ARM/ROM PN.
+PASS: umull #0xFFFF0000, #0xFF ARM/ROM ..S
+PASS: umull #0xFFFF0000, #0xFF ARM/ROM P.S
+PASS: umull #0xFFFF0000, #0xFF ARM/ROM .NS
+PASS: umull #0xFFFF0000, #0xFF ARM/ROM PNS
+PASS: umull #0xFFFF0000, #0xFF ARM/WRAM
+PASS: umull #0xFFFF0000, #0xFF ARM/IWRAM
+Timing test: umull #0xFFFFFF00, #0xFF
+PASS: umull #0xFFFFFF00, #0xFF ARM/ROM ...
+PASS: umull #0xFFFFFF00, #0xFF ARM/ROM P..
+PASS: umull #0xFFFFFF00, #0xFF ARM/ROM .N.
+PASS: umull #0xFFFFFF00, #0xFF ARM/ROM PN.
+PASS: umull #0xFFFFFF00, #0xFF ARM/ROM ..S
+PASS: umull #0xFFFFFF00, #0xFF ARM/ROM P.S
+PASS: umull #0xFFFFFF00, #0xFF ARM/ROM .NS
+PASS: umull #0xFFFFFF00, #0xFF ARM/ROM PNS
+PASS: umull #0xFFFFFF00, #0xFF ARM/WRAM
+PASS: umull #0xFFFFFF00, #0xFF ARM/IWRAM
+Timing test: umull #0xFFFFFFFF, #0xFF
+PASS: umull #0xFFFFFFFF, #0xFF ARM/ROM ...
+PASS: umull #0xFFFFFFFF, #0xFF ARM/ROM P..
+PASS: umull #0xFFFFFFFF, #0xFF ARM/ROM .N.
+PASS: umull #0xFFFFFFFF, #0xFF ARM/ROM PN.
+PASS: umull #0xFFFFFFFF, #0xFF ARM/ROM ..S
+PASS: umull #0xFFFFFFFF, #0xFF ARM/ROM P.S
+PASS: umull #0xFFFFFFFF, #0xFF ARM/ROM .NS
+PASS: umull #0xFFFFFFFF, #0xFF ARM/ROM PNS
+PASS: umull #0xFFFFFFFF, #0xFF ARM/WRAM
+PASS: umull #0xFFFFFFFF, #0xFF ARM/IWRAM
+Timing test: umull #0xFFFFFFFF, #0x00
+PASS: umull #0xFFFFFFFF, #0x00 ARM/ROM ...
+PASS: umull #0xFFFFFFFF, #0x00 ARM/ROM P..
+PASS: umull #0xFFFFFFFF, #0x00 ARM/ROM .N.
+PASS: umull #0xFFFFFFFF, #0x00 ARM/ROM PN.
+PASS: umull #0xFFFFFFFF, #0x00 ARM/ROM ..S
+PASS: umull #0xFFFFFFFF, #0x00 ARM/ROM P.S
+PASS: umull #0xFFFFFFFF, #0x00 ARM/ROM .NS
+PASS: umull #0xFFFFFFFF, #0x00 ARM/ROM PNS
+PASS: umull #0xFFFFFFFF, #0x00 ARM/WRAM
+PASS: umull #0xFFFFFFFF, #0x00 ARM/IWRAM
+Timing test: umlal #0x00000000, #0xFF
+PASS: umlal #0x00000000, #0xFF ARM/ROM ...
+PASS: umlal #0x00000000, #0xFF ARM/ROM P..
+PASS: umlal #0x00000000, #0xFF ARM/ROM .N.
+PASS: umlal #0x00000000, #0xFF ARM/ROM PN.
+PASS: umlal #0x00000000, #0xFF ARM/ROM ..S
+PASS: umlal #0x00000000, #0xFF ARM/ROM P.S
+PASS: umlal #0x00000000, #0xFF ARM/ROM .NS
+PASS: umlal #0x00000000, #0xFF ARM/ROM PNS
+PASS: umlal #0x00000000, #0xFF ARM/WRAM
+PASS: umlal #0x00000000, #0xFF ARM/IWRAM
+Timing test: umlal #0x00000078, #0xFF
+PASS: umlal #0x00000078, #0xFF ARM/ROM ...
+PASS: umlal #0x00000078, #0xFF ARM/ROM P..
+PASS: umlal #0x00000078, #0xFF ARM/ROM .N.
+PASS: umlal #0x00000078, #0xFF ARM/ROM PN.
+PASS: umlal #0x00000078, #0xFF ARM/ROM ..S
+PASS: umlal #0x00000078, #0xFF ARM/ROM P.S
+PASS: umlal #0x00000078, #0xFF ARM/ROM .NS
+PASS: umlal #0x00000078, #0xFF ARM/ROM PNS
+PASS: umlal #0x00000078, #0xFF ARM/WRAM
+PASS: umlal #0x00000078, #0xFF ARM/IWRAM
+Timing test: umlal #0x00005678, #0xFF
+PASS: umlal #0x00005678, #0xFF ARM/ROM ...
+PASS: umlal #0x00005678, #0xFF ARM/ROM P..
+PASS: umlal #0x00005678, #0xFF ARM/ROM .N.
+PASS: umlal #0x00005678, #0xFF ARM/ROM PN.
+PASS: umlal #0x00005678, #0xFF ARM/ROM ..S
+PASS: umlal #0x00005678, #0xFF ARM/ROM P.S
+PASS: umlal #0x00005678, #0xFF ARM/ROM .NS
+PASS: umlal #0x00005678, #0xFF ARM/ROM PNS
+PASS: umlal #0x00005678, #0xFF ARM/WRAM
+PASS: umlal #0x00005678, #0xFF ARM/IWRAM
+Timing test: umlal #0x00345678, #0xFF
+PASS: umlal #0x00345678, #0xFF ARM/ROM ...
+PASS: umlal #0x00345678, #0xFF ARM/ROM P..
+PASS: umlal #0x00345678, #0xFF ARM/ROM .N.
+PASS: umlal #0x00345678, #0xFF ARM/ROM PN.
+PASS: umlal #0x00345678, #0xFF ARM/ROM ..S
+PASS: umlal #0x00345678, #0xFF ARM/ROM P.S
+PASS: umlal #0x00345678, #0xFF ARM/ROM .NS
+PASS: umlal #0x00345678, #0xFF ARM/ROM PNS
+PASS: umlal #0x00345678, #0xFF ARM/WRAM
+PASS: umlal #0x00345678, #0xFF ARM/IWRAM
+Timing test: umlal #0x12345678, #0xFF
+PASS: umlal #0x12345678, #0xFF ARM/ROM ...
+PASS: umlal #0x12345678, #0xFF ARM/ROM P..
+PASS: umlal #0x12345678, #0xFF ARM/ROM .N.
+PASS: umlal #0x12345678, #0xFF ARM/ROM PN.
+PASS: umlal #0x12345678, #0xFF ARM/ROM ..S
+PASS: umlal #0x12345678, #0xFF ARM/ROM P.S
+PASS: umlal #0x12345678, #0xFF ARM/ROM .NS
+PASS: umlal #0x12345678, #0xFF ARM/ROM PNS
+PASS: umlal #0x12345678, #0xFF ARM/WRAM
+PASS: umlal #0x12345678, #0xFF ARM/IWRAM
+Timing test: umlal #0xFF000000, #0xFF
+PASS: umlal #0xFF000000, #0xFF ARM/ROM ...
+PASS: umlal #0xFF000000, #0xFF ARM/ROM P..
+PASS: umlal #0xFF000000, #0xFF ARM/ROM .N.
+PASS: umlal #0xFF000000, #0xFF ARM/ROM PN.
+PASS: umlal #0xFF000000, #0xFF ARM/ROM ..S
+PASS: umlal #0xFF000000, #0xFF ARM/ROM P.S
+PASS: umlal #0xFF000000, #0xFF ARM/ROM .NS
+PASS: umlal #0xFF000000, #0xFF ARM/ROM PNS
+PASS: umlal #0xFF000000, #0xFF ARM/WRAM
+PASS: umlal #0xFF000000, #0xFF ARM/IWRAM
+Timing test: umlal #0xFFFF0000, #0xFF
+PASS: umlal #0xFFFF0000, #0xFF ARM/ROM ...
+PASS: umlal #0xFFFF0000, #0xFF ARM/ROM P..
+PASS: umlal #0xFFFF0000, #0xFF ARM/ROM .N.
+PASS: umlal #0xFFFF0000, #0xFF ARM/ROM PN.
+PASS: umlal #0xFFFF0000, #0xFF ARM/ROM ..S
+PASS: umlal #0xFFFF0000, #0xFF ARM/ROM P.S
+PASS: umlal #0xFFFF0000, #0xFF ARM/ROM .NS
+PASS: umlal #0xFFFF0000, #0xFF ARM/ROM PNS
+PASS: umlal #0xFFFF0000, #0xFF ARM/WRAM
+PASS: umlal #0xFFFF0000, #0xFF ARM/IWRAM
+Timing test: umlal #0xFFFFFF00, #0xFF
+PASS: umlal #0xFFFFFF00, #0xFF ARM/ROM ...
+PASS: umlal #0xFFFFFF00, #0xFF ARM/ROM P..
+PASS: umlal #0xFFFFFF00, #0xFF ARM/ROM .N.
+PASS: umlal #0xFFFFFF00, #0xFF ARM/ROM PN.
+PASS: umlal #0xFFFFFF00, #0xFF ARM/ROM ..S
+PASS: umlal #0xFFFFFF00, #0xFF ARM/ROM P.S
+PASS: umlal #0xFFFFFF00, #0xFF ARM/ROM .NS
+PASS: umlal #0xFFFFFF00, #0xFF ARM/ROM PNS
+PASS: umlal #0xFFFFFF00, #0xFF ARM/WRAM
+PASS: umlal #0xFFFFFF00, #0xFF ARM/IWRAM
+Timing test: umlal #0xFFFFFFFF, #0xFF
+PASS: umlal #0xFFFFFFFF, #0xFF ARM/ROM ...
+PASS: umlal #0xFFFFFFFF, #0xFF ARM/ROM P..
+PASS: umlal #0xFFFFFFFF, #0xFF ARM/ROM .N.
+PASS: umlal #0xFFFFFFFF, #0xFF ARM/ROM PN.
+PASS: umlal #0xFFFFFFFF, #0xFF ARM/ROM ..S
+PASS: umlal #0xFFFFFFFF, #0xFF ARM/ROM P.S
+PASS: umlal #0xFFFFFFFF, #0xFF ARM/ROM .NS
+PASS: umlal #0xFFFFFFFF, #0xFF ARM/ROM PNS
+PASS: umlal #0xFFFFFFFF, #0xFF ARM/WRAM
+PASS: umlal #0xFFFFFFFF, #0xFF ARM/IWRAM
+Timing test: umlal #0xFFFFFFFF, #0x00
+PASS: umlal #0xFFFFFFFF, #0x00 ARM/ROM ...
+PASS: umlal #0xFFFFFFFF, #0x00 ARM/ROM P..
+PASS: umlal #0xFFFFFFFF, #0x00 ARM/ROM .N.
+PASS: umlal #0xFFFFFFFF, #0x00 ARM/ROM PN.
+PASS: umlal #0xFFFFFFFF, #0x00 ARM/ROM ..S
+PASS: umlal #0xFFFFFFFF, #0x00 ARM/ROM P.S
+PASS: umlal #0xFFFFFFFF, #0x00 ARM/ROM .NS
+PASS: umlal #0xFFFFFFFF, #0x00 ARM/ROM PNS
+PASS: umlal #0xFFFFFFFF, #0x00 ARM/WRAM
+PASS: umlal #0xFFFFFFFF, #0x00 ARM/IWRAM
+Timing test: b pc
+PASS: b pc ARM/ROM ...
+PASS: b pc ARM/ROM P..
+PASS: b pc ARM/ROM .N.
+PASS: b pc ARM/ROM PN.
+PASS: b pc ARM/ROM ..S
+PASS: b pc ARM/ROM P.S
+PASS: b pc ARM/ROM .NS
+PASS: b pc ARM/ROM PNS
+PASS: b pc ARM/WRAM
+PASS: b pc ARM/IWRAM
+PASS: b pc Thumb/ROM ...
+PASS: b pc Thumb/ROM P..
+PASS: b pc Thumb/ROM .N.
+PASS: b pc Thumb/ROM PN.
+PASS: b pc Thumb/ROM ..S
+PASS: b pc Thumb/ROM P.S
+PASS: b pc Thumb/ROM .NS
+PASS: b pc Thumb/ROM PNS
+PASS: b pc Thumb/WRAM
+PASS: b pc Thumb/IWRAM
+Timing test: nop ; b pc
+PASS: nop ; b pc ARM/ROM ...
+PASS: nop ; b pc ARM/ROM P..
+PASS: nop ; b pc ARM/ROM .N.
+PASS: nop ; b pc ARM/ROM PN.
+PASS: nop ; b pc ARM/ROM ..S
+PASS: nop ; b pc ARM/ROM P.S
+PASS: nop ; b pc ARM/ROM .NS
+PASS: nop ; b pc ARM/ROM PNS
+PASS: nop ; b pc ARM/WRAM
+PASS: nop ; b pc ARM/IWRAM
+PASS: nop ; b pc Thumb/ROM ...
+PASS: nop ; b pc Thumb/ROM P..
+PASS: nop ; b pc Thumb/ROM .N.
+PASS: nop ; b pc Thumb/ROM PN.
+PASS: nop ; b pc Thumb/ROM ..S
+PASS: nop ; b pc Thumb/ROM P.S
+PASS: nop ; b pc Thumb/ROM .NS
+PASS: nop ; b pc Thumb/ROM PNS
+PASS: nop ; b pc Thumb/WRAM
+PASS: nop ; b pc Thumb/IWRAM
+Timing test: bx
+PASS: bx ARM/ROM ...
+PASS: bx ARM/ROM P..
+PASS: bx ARM/ROM .N.
+PASS: bx ARM/ROM PN.
+PASS: bx ARM/ROM ..S
+PASS: bx ARM/ROM P.S
+PASS: bx ARM/ROM .NS
+PASS: bx ARM/ROM PNS
+PASS: bx ARM/WRAM
+PASS: bx ARM/IWRAM
+PASS: bx Thumb/ROM ...
+PASS: bx Thumb/ROM P..
+PASS: bx Thumb/ROM .N.
+PASS: bx Thumb/ROM PN.
+PASS: bx Thumb/ROM ..S
+PASS: bx Thumb/ROM P.S
+PASS: bx Thumb/ROM .NS
+PASS: bx Thumb/ROM PNS
+PASS: bx Thumb/WRAM
+PASS: bx Thumb/IWRAM
+Timing test: Trivial loop
+PASS: Trivial loop ARM/ROM ...
+PASS: Trivial loop ARM/ROM P..
+PASS: Trivial loop ARM/ROM .N.
+PASS: Trivial loop ARM/ROM PN.
+PASS: Trivial loop ARM/ROM ..S
+PASS: Trivial loop ARM/ROM P.S
+PASS: Trivial loop ARM/ROM .NS
+PASS: Trivial loop ARM/ROM PNS
+PASS: Trivial loop ARM/WRAM
+PASS: Trivial loop ARM/IWRAM
+PASS: Trivial loop Thumb/ROM ...
+PASS: Trivial loop Thumb/ROM P..
+PASS: Trivial loop Thumb/ROM .N.
+PASS: Trivial loop Thumb/ROM PN.
+PASS: Trivial loop Thumb/ROM ..S
+PASS: Trivial loop Thumb/ROM P.S
+PASS: Trivial loop Thumb/ROM .NS
+PASS: Trivial loop Thumb/ROM PNS
+PASS: Trivial loop Thumb/WRAM
+PASS: Trivial loop Thumb/IWRAM
+Timing test: C loop
+PASS: C loop ARM/ROM ...
+PASS: C loop ARM/ROM P..
+PASS: C loop ARM/ROM .N.
+PASS: C loop ARM/ROM PN.
+PASS: C loop ARM/ROM ..S
+PASS: C loop ARM/ROM P.S
+PASS: C loop ARM/ROM .NS
+PASS: C loop ARM/ROM PNS
+PASS: C loop ARM/WRAM
+PASS: C loop ARM/IWRAM
+PASS: C loop Thumb/ROM ...
+PASS: C loop Thumb/ROM P..
+PASS: C loop Thumb/ROM .N.
+PASS: C loop Thumb/ROM PN.
+PASS: C loop Thumb/ROM ..S
+PASS: C loop Thumb/ROM P.S
+PASS: C loop Thumb/ROM .NS
+PASS: C loop Thumb/ROM PNS
+PASS: C loop Thumb/WRAM
+PASS: C loop Thumb/IWRAM
+Timing test: BIOS Division
+FAIL: BIOS Division ARM/ROM ...
+[sram]
+Game Boy Advance Test Suite
+===
+Timing test: Calibration
+Timing test: nop
+Timing test: nop / nop
+Timing test: ldrh r2, [sp]
+Timing test: ldrh r2, [sp] / nop
+Timing test: nop / ldrh r2, [sp]
+Timing test: nop / ldrh r2, [sp] / nop
+Timing test: ldrh r2, [#0x08000000]
+Timing test: ldrh r2, [#0x08000000] / nop
+Timing test: nop / ldrh r2, [#0x08000000]
+Timing test: ldr r2, [sp]
+Timing test: ldr r2, [sp] / nop
+Timing test: nop / ldr r2, [sp]
+Timing test: ldr r2, [#0x08000000]
+Timing test: ldr r2, [#0x08000000] / nop
+Timing test: nop / ldr r2, [#0x08000000]
+Timing test: strh r3, [sp]
+Timing test: strh r3, [sp] / nop
+Timing test: nop / strh r3, [sp]
+Timing test: nop / strh r3, [sp] / nop
+Timing test: ldr r2, [sp] x2
+Timing test: ldr r2, [#0x08000000] / ldr r2, [sp]
+Timing test: ldr r2, [sp] / ldr r2, [#0x08000000]
+Timing test: ldr r2, [#0x08000000] x2
+Timing test: str r3, [sp] x2
+Timing test: ldr r2, [sp] / str r2, [sp]
+Timing test: str r3, [sp] / ldr r3, [sp]
+Timing test: ldmia sp, {r2}
+Timing test: ldmia sp, {r2, r3}
+Timing test: ldmia sp, {r2-r7}
+Timing test: ldmia sp, {r2} x2
+Timing test: ldmia sp, {r2, r3} x2
+Timing test: ldmia sp, {r2-r7} x2
+Timing test: stmia sp, {r2}
+Timing test: stmia sp, {r2, r3}
+Timing test: stmia sp, {r2-r7}
+Timing test: stmia sp, {r2} x2
+Timing test: stmia sp, {r2, r3} x2
+Timing test: stmia sp, {r2-r7} x2
+Timing test: ldmia [#0x07FFFFFC]!, {r3-r7}
+Timing test: ldmia [#0x07FFFFF8]!, {r3-r7}
+Timing test: ldmia [#0x07FFFFF4]!, {r3-r7}
+Timing test: ldmia [#0x07FFFFF0]!, {r3-r7}
+Timing test: ldmia [#0x07FFFFEC]!, {r3-r7}
+Timing test: mul #0x00000000, #0xFF
+Timing test: mul #0x00000078, #0xFF
+Timing test: mul #0x00005678, #0xFF
+Timing test: mul #0x00345678, #0xFF
+Timing test: mul #0x12345678, #0xFF
+Timing test: mul #0xFF000000, #0xFF
+Timing test: mul #0xFFFF0000, #0xFF
+Timing test: mul #0xFFFFFF00, #0xFF
+Timing test: mul #0xFFFFFFFF, #0xFF
+Timing test: mul #0xFFFFFFFF, #0x00
+Timing test: mla #0x00000000, #0xFF
+Timing test: mla #0x00000078, #0xFF
+Timing test: mla #0x00005678, #0xFF
+Timing test: mla #0x00345678, #0xFF
+Timing test: mla #0x12345678, #0xFF
+Timing test: mla #0xFF000000, #0xFF
+Timing test: mla #0xFFFF0000, #0xFF
+Timing test: mla #0xFFFFFF00, #0xFF
+Timing test: mla #0xFFFFFFFF, #0xFF
+Timing test: mla #0xFFFFFFFF, #0x00
+Timing test: smull #0x00000000, #0xFF
+Timing test: smull #0x00000078, #0xFF
+Timing test: smull #0x00005678, #0xFF
+Timing test: smull #0x00345678, #0xFF
+Timing test: smull #0x12345678, #0xFF
+Timing test: smull #0xFF000000, #0xFF
+Timing test: smull #0xFFFF0000, #0xFF
+Timing test: smull #0xFFFFFF00, #0xFF
+Timing test: smull #0xFFFFFFFF, #0xFF
+Timing test: smull #0xFFFFFFFF, #0x00
+Timing test: smlal #0x00000000, #0xFF
+Timing test: smlal #0x00000078, #0xFF
+Timing test: smlal #0x00005678, #0xFF
+Timing test: smlal #0x00345678, #0xFF
+Timing test: smlal #0x12345678, #0xFF
+Timing test: smlal #0xFF000000, #0xFF
+Timing test: smlal #0xFFFF0000, #0xFF
+Timing test: smlal #0xFFFFFF00, #0xFF
+Timing test: smlal #0xFFFFFFFF, #0xFF
+Timing test: smlal #0xFFFFFFFF, #0x00
+Timing test: umull #0x00000000, #0xFF
+Timing test: umull #0x00000078, #0xFF
+Timing test: umull #0x00005678, #0xFF
+Timing test: umull #0x00345678, #0xFF
+Timing test: umull #0x12345678, #0xFF
+Timing test: umull #0xFF000000, #0xFF
+Timing test: umull #0xFFFF0000, #0xFF
+Timing test: umull #0xFFFFFF00, #0xFF
+Timing test: umull #0xFFFFFFFF, #0xFF
+Timing test: umull #0xFFFFFFFF, #0x00
+Timing test: umlal #0x00000000, #0xFF
+Timing test: umlal #0x00000078, #0xFF
+Timing test: umlal #0x00005678, #0xFF
+Timing test: umlal #0x00345678, #0xFF
+Timing test: umlal #0x12345678, #0xFF
+Timing test: umlal #0xFF000000, #0xFF
+Timing test: umlal #0xFFFF0000, #0xFF
+Timing test: umlal #0xFFFFFF00, #0xFF
+Timing test: umlal #0xFFFFFFFF, #0xFF
+Timing test: umlal #0xFFFFFFFF, #0x00
+Timing test: b pc
+Timing test: nop ; b pc
+Timing test: bx
+Timing test: Trivial loop
+Timing test: C loop
+Timing test: BIOS Division
+
+=== Summary ===
+No END: summaries were emitted yet; use the per-suite SRAM output above.

@@ -1,0 +1,4 @@
+$ cmake --build /Users/chaitanyamalhotra/development/gba embedded/build -j4
+build_exit_code=2
+
+Build failed; suite runs were skipped.

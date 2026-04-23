@@ -1,0 +1,179 @@
+$ cmake --build /Users/chaitanyamalhotra/development/gba embedded/build -j4
+build_exit_code=0
+
+=== Suite 03 ===
+command: /Users/chaitanyamalhotra/development/gba embedded/build/gba_suite_runner --suite 2
+log: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite03_phase164_hi_half_sees_apply.log
+parsed_json: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite03_phase164_hi_half_sees_apply.parsed.json
+exit_code: 0
+fail_lines: 0
+Run: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite03_phase164_hi_half_sees_apply.log
+  ROM: tests/assets/roms/suite.gba
+  BIOS: tests/assets/roms/gba_bios.bin
+  Boot: frames=60 pc=0x00000348 cpsr=0x6000005F halted=1 cycle=16769984
+  Suites parsed: 1
+  Overall: 2020/2020 passed
+  Suite 03 Timing: 2020/2020 passed via mgba (frames=287, pc=0x0802BAB8, halted=0, cycle=190082818)
+tail:
+  Timing test: umlal #0xFFFF0000, #0xFF
+  Timing test: umlal #0xFFFFFF00, #0xFF
+  Timing test: umlal #0xFFFFFFFF, #0xFF
+  Timing test: umlal #0xFFFFFFFF, #0x00
+  Timing test: b pc
+  Timing test: nop ; b pc
+  Timing test: bx
+  Timing test: Trivial loop
+  Timing test: C loop
+  Timing test: BIOS Division
+  Timing test: BIOS Division 2
+  Timing test: BIOS Sqrt
+  Timing test: BIOS Sqrt 2
+  Timing test: BIOS Sqrt 3
+  Timing test: BIOS ArcTan
+  Timing test: CpuSet
+  Timing test: Trivial DMA (16)
+  Timing test: Trivial DMA (16/ROM)
+  Timing test: Trivial DMA (16/to ROM)
+  Timing test: Trivial DMA (16/ROM to ROM)
+  Timing test: Trivial DMA (32)
+  Timing test: Trivial DMA (32/from ROM)
+  Timing test: Trivial DMA (32/to ROM)
+  Timing test: Trivial DMA (32/ROM to ROM)
+  Timing test: Short DMA (16)
+  Timing test: Short DMA (16/from ROM)
+  Timing test: Short DMA (16/to ROM)
+  Timing test: Short DMA (16/ROM to ROM)
+  Timing test: Short DMA (32)
+  Timing test: Short DMA (32/from ROM)
+  Timing test: Short DMA (32/to ROM)
+  Timing test: Short DMA (32/ROM to ROM)
+  
+  === Summary ===
+  No END: summaries were emitted yet; use the per-suite SRAM output above.
+
+=== Suite 04 ===
+command: /Users/chaitanyamalhotra/development/gba embedded/build/gba_suite_runner --suite 3
+log: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite04_phase164_hi_half_sees_apply.log
+parsed_json: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite04_phase164_hi_half_sees_apply.parsed.json
+exit_code: 0
+fail_lines: 1490
+Run: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite04_phase164_hi_half_sees_apply.log
+  ROM: tests/assets/roms/suite.gba
+  BIOS: tests/assets/roms/gba_bios.bin
+  Boot: frames=60 pc=0x00000348 cpsr=0x6000005F halted=1 cycle=16769984
+  Suites parsed: 1
+  Overall: 638/936 passed
+  Suite 04 Timer count-up: 638/936 passed via mgba (frames=218, pc=0x0802BABE, halted=0, cycle=180813250)
+    Examples: sram:1xv 1d 2i | sram:16xv 1d 2i | sram:1xv 2d 2i | sram:16xv 2d 2i | sram:1xv 4d 2i | mgba:0b, 0x0005 1xv 1d 2i | mgba:0b, 0x0005 16xv 1d 2i | mgba:0b, 0x0005 1xv 2d 2i
+tail:
+  16xs 1d 4i: Got 0000BBE0 vs 0000BBD0: FAIL
+  1xs 2d 4i: Got 000021BF vs 000021BD: FAIL
+  1xs 4d 4i: Got 000021BE vs 000021BC: FAIL
+  16xs 4d 4i: Got 0000BBD0 vs 0000BBC0: FAIL
+  Timer count-up test: 10b, 0x0012
+  1xs 1d 1i: Got 000008EC vs 000008EB: FAIL
+  16xs 1d 1i: Got 000031B0 vs 000031A0: FAIL
+  16xs 2d 1i: Got 000031B0 vs 000031A0: FAIL
+  1xs 4d 1i: Got 000008EA vs 000008E9: FAIL
+  1xs 1d 2i: Got 000011DD vs 000011DC: FAIL
+  1xs 2d 2i: Got 000011DD vs 000011DB: FAIL
+  16xs 2d 2i: Got 00006370 vs 00006360: FAIL
+  1xs 4d 2i: Got 000011DB vs 000011DA: FAIL
+  1xs 1d 4i: Got 000023C0 vs 000023BE: FAIL
+  16xs 1d 4i: Got 0000C700 vs 0000C6F0: FAIL
+  1xs 2d 4i: Got 000023BF vs 000023BD: FAIL
+  1xs 4d 4i: Got 000023BE vs 000023BC: FAIL
+  16xs 4d 4i: Got 0000C6F0 vs 0000C6E0: FAIL
+  Timer count-up test: 10b, 0x0013
+  1xs 1d 1i: Got 0000096C vs 0000096B: FAIL
+  1xs 4d 1i: Got 0000096A vs 00000969: FAIL
+  16xs 4d 1i: Got 00003470 vs 00003460: FAIL
+  1xs 1d 2i: Got 000012DD vs 000012DC: FAIL
+  1xs 2d 2i: Got 000012DD vs 000012DB: FAIL
+  16xs 2d 2i: Got 00006900 vs 000068F0: FAIL
+  1xs 4d 2i: Got 000012DB vs 000012DA: FAIL
+  1xs 1d 4i: Got 000025C0 vs 000025BE: FAIL
+  16xs 1d 4i: Got 0000D220 vs 0000D210: FAIL
+  1xs 2d 4i: Got 000025BF vs 000025BD: FAIL
+  16xs 2d 4i: Got 0000D220 vs 0000D210: FAIL
+  1xs 4d 4i: Got 000025BE vs 000025BC: FAIL
+  16xs 4d 4i: Got 0000D210 vs 0000D200: FAIL
+  
+  === Summary ===
+  No END: summaries were emitted yet; use the per-suite SRAM output above.
+fail buckets by preface:
+  1xs 1d 4i: 32
+  1xs 2d 4i: 32
+  1xs 4d 4i: 32
+  16xs 2d 4i: 28
+  16xs 4d 4i: 28
+  1xs 1d 2i: 26
+  1xs 2d 2i: 26
+  1xs 4d 2i: 26
+  16xs 1d 4i: 26
+  1xs 1d 1i: 24
+  1xs 4d 1i: 24
+  1xv 1d 2i: 20
+fail deltas:
+  16xs delta +16: 110
+  1xs delta +1: 98
+  1xs delta +2: 88
+  1xv delta -4: 48
+  16xv delta -4: 42
+  1xv delta -12: 24
+  16xv delta -12: 18
+  1xs delta -7: 16
+  16xs delta -32: 16
+  1xv delta +1: 12
+  16xv delta +1: 12
+  16xs delta -48: 8
+
+=== Suite 05 ===
+command: /Users/chaitanyamalhotra/development/gba embedded/build/gba_suite_runner --suite 4
+log: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite05_phase164_hi_half_sees_apply.log
+parsed_json: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite05_phase164_hi_half_sees_apply.parsed.json
+exit_code: 0
+fail_lines: 0
+Run: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite05_phase164_hi_half_sees_apply.log
+  ROM: tests/assets/roms/suite.gba
+  BIOS: tests/assets/roms/gba_bios.bin
+  Boot: frames=60 pc=0x00000348 cpsr=0x6000005F halted=1 cycle=16769984
+  Suites parsed: 1
+  Overall: 90/90 passed
+  Suite 05 Timer IRQ: 90/90 passed via mgba (frames=91, pc=0x0802BB04, halted=0, cycle=155251712)
+tail:
+  PASS: FFF8 1 nop 
+  PASS: FFF8 2 nops
+  PASS: FFF8 3 nops
+  PASS: FFF8 4 nops
+  PASS: FFF8 5 nops
+  PASS: FFF8 6 nops
+  PASS: FFF8 7 nops
+  PASS: FFF8 8 nops
+  PASS: FFF8 9 nops
+  Timer IRQ test: FFF7
+  PASS: FFF7 0 nops
+  PASS: FFF7 1 nop 
+  PASS: FFF7 2 nops
+  PASS: FFF7 3 nops
+  PASS: FFF7 4 nops
+  PASS: FFF7 5 nops
+  PASS: FFF7 6 nops
+  PASS: FFF7 7 nops
+  PASS: FFF7 8 nops
+  PASS: FFF7 9 nops
+  [sram]
+  Game Boy Advance Test Suite
+  ===
+  Timer IRQ test: FFFF
+  Timer IRQ test: FFFE
+  Timer IRQ test: FFFD
+  Timer IRQ test: FFFC
+  Timer IRQ test: FFFB
+  Timer IRQ test: FFFA
+  Timer IRQ test: FFF9
+  Timer IRQ test: FFF8
+  Timer IRQ test: FFF7
+  
+  === Summary ===
+  No END: summaries were emitted yet; use the per-suite SRAM output above.

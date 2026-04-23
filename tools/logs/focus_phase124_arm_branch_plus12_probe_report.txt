@@ -1,0 +1,98 @@
+$ cmake --build /Users/chaitanyamalhotra/development/gba embedded/build -j4
+build_exit_code=0
+
+=== Suite 03 ===
+command: /Users/chaitanyamalhotra/development/gba embedded/build/gba_suite_runner --suite 2
+log: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite03_phase124_arm_branch_plus12_probe.log
+parsed_json: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite03_phase124_arm_branch_plus12_probe.parsed.json
+exit_code: 0
+fail_lines: 2
+Run: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite03_phase124_arm_branch_plus12_probe.log
+  ROM: tests/assets/roms/suite.gba
+  BIOS: tests/assets/roms/gba_bios.bin
+  Boot: frames=60 pc=0x00000348 cpsr=0x6000005F halted=1 cycle=16769984
+  Suites parsed: 1
+  Overall: 1464/1465 passed
+  Suite 03 Timing: 1464/1465 passed via mgba (frames=232, pc=0x0802B9B8, halted=0, cycle=174633539)
+    Examples: mgba:b pc ARM/ROM ..S
+tail:
+  Timing test: ldmia sp, {r2, r3}
+  Timing test: ldmia sp, {r2-r7}
+  Timing test: ldmia sp, {r2} x2
+  Timing test: ldmia sp, {r2, r3} x2
+  Timing test: ldmia sp, {r2-r7} x2
+  Timing test: stmia sp, {r2}
+  Timing test: stmia sp, {r2, r3}
+  Timing test: stmia sp, {r2-r7}
+  Timing test: stmia sp, {r2} x2
+  Timing test: stmia sp, {r2, r3} x2
+  Timing test: stmia sp, {r2-r7} x2
+  Timing test: ldmia [#0x07FFFFFC]!, {r3-r7}
+  Timing test: ldmia [#0x07FFFFF8]!, {r3-r7}
+  Timing test: ldmia [#0x07FFFFF4]!, {r3-r7}
+  Timing test: ldmia [#0x07FFFFF0]!, {r3-r7}
+  Timing test: ldmia [#0x07FFFFEC]!, {r3-r7}
+  Timing test: mul #0x00000000, #0xFF
+  Timing test: mul #0x00000078, #0xFF
+  Timing test: mul #0x00005678, #0xFF
+  Timing test: mul #0x00345678, #0xFF
+  Timing test: mul #0x12345678, #0xFF
+  Timing test: mul #0xFF000000, #0xFF
+  Timing test: mul #0xFFFF0000, #0xFF
+  Timing test: mul #0xFFFFFF00, #0xFF
+  Timing test: mul #0xFFFFFFFF, #0xFF
+  Timing test: mul #0xFFFFFFFF, #0x00
+  Timing test: mla #0x00000000, #0xFF
+  Timing test: mla #0x00000078, #0xFF
+  Timing test: mla #0x00005678, #0xFF
+  Timing test: mla #0x00345678, #0xFF
+  Timing test: mla #0x12345678, #0xFF
+  Timing test: mla #0xFF000000, #0xFF
+  Timing test: mla #0xFFFF0000, #0xFF
+  Timing test: mla #0xFFFFFF00, #0xFF
+  Timing test: mla #0xFFFFFFFF, #0xFF
+  Timing test: mla #0xFFFFFFFF, #0x00
+  Timing test: smull #0x00000000, #0xFF
+  Timing test: smull #0x00000078, #0xFF
+  Timing test: smull #0x00005678, #0xFF
+  Timing test: smull #0x00345678, #0xFF
+  Timing test: smull #0x12345678, #0xFF
+  Timing test: smull #0xFF000000, #0xFF
+  Timing test: smull #0xFFFF0000, #0xFF
+  Timing test: smull #0xFFFFFF00, #0xFF
+  Timing test: smull #0xFFFFFFFF, #0xFF
+  Timing test: smull #0xFFFFFFFF, #0x00
+  Timing test: smlal #0x00000000, #0xFF
+  Timing test: smlal #0x00000078, #0xFF
+  Timing test: smlal #0x00005678, #0xFF
+  Timing test: smlal #0x00345678, #0xFF
+  Timing test: smlal #0x12345678, #0xFF
+  Timing test: smlal #0xFF000000, #0xFF
+  Timing test: smlal #0xFFFF0000, #0xFF
+  Timing test: smlal #0xFFFFFF00, #0xFF
+  Timing test: smlal #0xFFFFFFFF, #0xFF
+  Timing test: smlal #0xFFFFFFFF, #0x00
+  Timing test: umull #0x00000000, #0xFF
+  Timing test: umull #0x00000078, #0xFF
+  Timing test: umull #0x00005678, #0xFF
+  Timing test: umull #0x00345678, #0xFF
+  Timing test: umull #0x12345678, #0xFF
+  Timing test: umull #0xFF000000, #0xFF
+  Timing test: umull #0xFFFF0000, #0xFF
+  Timing test: umull #0xFFFFFF00, #0xFF
+  Timing test: umull #0xFFFFFFFF, #0xFF
+  Timing test: umull #0xFFFFFFFF, #0x00
+  Timing test: umlal #0x00000000, #0xFF
+  Timing test: umlal #0x00000078, #0xFF
+  Timing test: umlal #0x00005678, #0xFF
+  Timing test: umlal #0x00345678, #0xFF
+  Timing test: umlal #0x12345678, #0xFF
+  Timing test: umlal #0xFF000000, #0xFF
+  Timing test: umlal #0xFFFF0000, #0xFF
+  Timing test: umlal #0xFFFFFF00, #0xFF
+  Timing test: umlal #0xFFFFFFFF, #0xFF
+  Timing test: umlal #0xFFFFFFFF, #0x00
+  Timing test: b pc
+  
+  === Summary ===
+  No END: summaries were emitted yet; use the per-suite SRAM output above.

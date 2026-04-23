@@ -1,0 +1,58 @@
+$ cmake --build /Users/chaitanyamalhotra/development/gba embedded/build -j4
+build_exit_code=0
+
+=== Suite 03 ===
+command: /Users/chaitanyamalhotra/development/gba embedded/build/gba_suite_runner --suite 2
+log: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite03_phase112_word_data_stop_penalty.log
+parsed_json: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite03_phase112_word_data_stop_penalty.parsed.json
+exit_code: 0
+fail_lines: 2
+Run: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite03_phase112_word_data_stop_penalty.log
+  ROM: tests/assets/roms/suite.gba
+  BIOS: tests/assets/roms/gba_bios.bin
+  Boot: frames=60 pc=0x00000348 cpsr=0x6000005F halted=1 cycle=16769984
+  Suites parsed: 1
+  Overall: 167/168 passed
+  Suite 03 Timing: 167/168 passed via mgba (frames=102, pc=0x0802BBB4, halted=0, cycle=138117059)
+    Examples: mgba:ldrh r2, [#0x08000000] / nop ARM/ROM PNS
+tail:
+  PASS: ldrh r2, [#0x08000000] ARM/ROM ..S
+  PASS: ldrh r2, [#0x08000000] ARM/ROM P.S
+  PASS: ldrh r2, [#0x08000000] ARM/ROM .NS
+  PASS: ldrh r2, [#0x08000000] ARM/ROM PNS
+  PASS: ldrh r2, [#0x08000000] ARM/WRAM
+  PASS: ldrh r2, [#0x08000000] ARM/IWRAM
+  PASS: ldrh r2, [#0x08000000] Thumb/ROM ...
+  PASS: ldrh r2, [#0x08000000] Thumb/ROM P..
+  PASS: ldrh r2, [#0x08000000] Thumb/ROM .N.
+  PASS: ldrh r2, [#0x08000000] Thumb/ROM PN.
+  PASS: ldrh r2, [#0x08000000] Thumb/ROM ..S
+  PASS: ldrh r2, [#0x08000000] Thumb/ROM P.S
+  PASS: ldrh r2, [#0x08000000] Thumb/ROM .NS
+  PASS: ldrh r2, [#0x08000000] Thumb/ROM PNS
+  PASS: ldrh r2, [#0x08000000] Thumb/WRAM
+  PASS: ldrh r2, [#0x08000000] Thumb/IWRAM
+  Timing test: ldrh r2, [#0x08000000] / nop
+  PASS: ldrh r2, [#0x08000000] / nop ARM/ROM ...
+  PASS: ldrh r2, [#0x08000000] / nop ARM/ROM P..
+  PASS: ldrh r2, [#0x08000000] / nop ARM/ROM .N.
+  PASS: ldrh r2, [#0x08000000] / nop ARM/ROM PN.
+  PASS: ldrh r2, [#0x08000000] / nop ARM/ROM ..S
+  PASS: ldrh r2, [#0x08000000] / nop ARM/ROM P.S
+  PASS: ldrh r2, [#0x08000000] / nop ARM/ROM .NS
+  FAIL: ldrh r2, [#0x08000000] / nop ARM/ROM PNS
+  [sram]
+  Game Boy Advance Test Suite
+  ===
+  Timing test: Calibration
+  Timing test: nop
+  Timing test: nop / nop
+  Timing test: ldrh r2, [sp]
+  Timing test: ldrh r2, [sp] / nop
+  Timing test: nop / ldrh r2, [sp]
+  Timing test: nop / ldrh r2, [sp] / nop
+  Timing test: ldrh r2, [#0x08000000]
+  Timing test: ldrh r2, [#0x08000000] / nop
+  
+  === Summary ===
+  No END: summaries were emitted yet; use the per-suite SRAM output above.

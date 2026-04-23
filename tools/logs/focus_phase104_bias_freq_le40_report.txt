@@ -1,0 +1,72 @@
+$ cmake --build /Users/chaitanyamalhotra/development/gba embedded/build -j4
+build_exit_code=0
+
+=== Suite 04 ===
+command: /Users/chaitanyamalhotra/development/gba embedded/build/gba_suite_runner --suite 3
+log: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite04_phase104_bias_freq_le40.log
+parsed_json: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite04_phase104_bias_freq_le40.parsed.json
+exit_code: 0
+fail_lines: 0
+Run: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite04_phase104_bias_freq_le40.log
+  ROM: tests/assets/roms/suite.gba
+  BIOS: tests/assets/roms/gba_bios.bin
+  Boot: frames=60 pc=0x00000348 cpsr=0x6000005F halted=1 cycle=16769984
+  Suites parsed: 1
+  Overall: 936/936 passed
+  Suite 04 Timer count-up: 936/936 passed via mgba (frames=174, pc=0x0802BA52, halted=0, cycle=168453829)
+tail:
+  Timer count-up test: 0b, 0x0025
+  Timer count-up test: 0b, 0x0040
+  Timer count-up test: 0b, 0x0080
+  Timer count-up test: 0b, 0x0800
+  Timer count-up test: 0b, 0x8000
+  Timer count-up test: 6b, 0x0010
+  Timer count-up test: 6b, 0x0011
+  Timer count-up test: 6b, 0x0012
+  Timer count-up test: 6b, 0x0013
+  Timer count-up test: 8b, 0x0010
+  Timer count-up test: 8b, 0x0011
+  Timer count-up test: 8b, 0x0012
+  Timer count-up test: 8b, 0x0013
+  Timer count-up test: 10b, 0x0010
+  Timer count-up test: 10b, 0x0011
+  Timer count-up test: 10b, 0x0012
+  Timer count-up test: 10b, 0x0013
+  
+  === Summary ===
+  No END: summaries were emitted yet; use the per-suite SRAM output above.
+
+=== Suite 05 ===
+command: /Users/chaitanyamalhotra/development/gba embedded/build/gba_suite_runner --suite 4
+log: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite05_phase104_bias_freq_le40.log
+parsed_json: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite05_phase104_bias_freq_le40.parsed.json
+exit_code: 0
+fail_lines: 0
+Run: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite05_phase104_bias_freq_le40.log
+  ROM: tests/assets/roms/suite.gba
+  BIOS: tests/assets/roms/gba_bios.bin
+  Boot: frames=60 pc=0x00000348 cpsr=0x6000005F halted=1 cycle=16769984
+  Suites parsed: 1
+  Overall: 90/90 passed
+  Suite 05 Timer IRQ: 90/90 passed via mgba (frames=91, pc=0x0802BAC8, halted=0, cycle=155251713)
+tail:
+  PASS: FFF7 5 nops
+  PASS: FFF7 6 nops
+  PASS: FFF7 7 nops
+  PASS: FFF7 8 nops
+  PASS: FFF7 9 nops
+  [sram]
+  Game Boy Advance Test Suite
+  ===
+  Timer IRQ test: FFFF
+  Timer IRQ test: FFFE
+  Timer IRQ test: FFFD
+  Timer IRQ test: FFFC
+  Timer IRQ test: FFFB
+  Timer IRQ test: FFFA
+  Timer IRQ test: FFF9
+  Timer IRQ test: FFF8
+  Timer IRQ test: FFF7
+  
+  === Summary ===
+  No END: summaries were emitted yet; use the per-suite SRAM output above.

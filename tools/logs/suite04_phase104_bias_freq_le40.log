@@ -1,0 +1,1971 @@
+=== GBA Test Suite Runner ===
+ROM:  tests/assets/roms/suite.gba
+BIOS: tests/assets/roms/gba_bios.bin
+Booting...
+After 60 frames: PC=0x00000348 CPSR=0x6000005F halted=1 cycle=16769984
+[DBG] Game Boy Advance Test Suite
+===
+[DBG] BEGIN: Timer count-up tests
+[DBG] Timer count-up test: 0b, 0x0001
+[DBG] PASS: 0b, 0x0001 1xs 1d 1i
+[DBG] PASS: 0b, 0x0001 16xs 1d 1i
+[DBG] PASS: 0b, 0x0001 1xv 1d 1i
+[DBG] PASS: 0b, 0x0001 16xv 1d 1i
+[DBG] PASS: 0b, 0x0001 1xs 2d 1i
+[DBG] PASS: 0b, 0x0001 16xs 2d 1i
+[DBG] PASS: 0b, 0x0001 1xv 2d 1i
+[DBG] PASS: 0b, 0x0001 16xv 2d 1i
+[DBG] PASS: 0b, 0x0001 1xs 4d 1i
+[DBG] PASS: 0b, 0x0001 16xs 4d 1i
+[DBG] PASS: 0b, 0x0001 1xv 4d 1i
+[DBG] PASS: 0b, 0x0001 16xv 4d 1i
+[DBG] PASS: 0b, 0x0001 1xs 1d 2i
+[DBG] PASS: 0b, 0x0001 16xs 1d 2i
+[DBG] PASS: 0b, 0x0001 1xv 1d 2i
+[DBG] PASS: 0b, 0x0001 16xv 1d 2i
+[DBG] PASS: 0b, 0x0001 1xs 2d 2i
+[DBG] PASS: 0b, 0x0001 16xs 2d 2i
+[DBG] PASS: 0b, 0x0001 1xv 2d 2i
+[DBG] PASS: 0b, 0x0001 16xv 2d 2i
+[DBG] PASS: 0b, 0x0001 1xs 4d 2i
+[DBG] PASS: 0b, 0x0001 16xs 4d 2i
+[DBG] PASS: 0b, 0x0001 1xv 4d 2i
+[DBG] PASS: 0b, 0x0001 16xv 4d 2i
+[DBG] PASS: 0b, 0x0001 1xs 1d 4i
+[DBG] PASS: 0b, 0x0001 16xs 1d 4i
+[DBG] PASS: 0b, 0x0001 1xv 1d 4i
+[DBG] PASS: 0b, 0x0001 16xv 1d 4i
+[DBG] PASS: 0b, 0x0001 1xs 2d 4i
+[DBG] PASS: 0b, 0x0001 16xs 2d 4i
+[DBG] PASS: 0b, 0x0001 1xv 2d 4i
+[DBG] PASS: 0b, 0x0001 16xv 2d 4i
+[DBG] PASS: 0b, 0x0001 1xs 4d 4i
+[DBG] PASS: 0b, 0x0001 16xs 4d 4i
+[DBG] PASS: 0b, 0x0001 1xv 4d 4i
+[DBG] PASS: 0b, 0x0001 16xv 4d 4i
+[DBG] Timer count-up test: 0b, 0x0005
+[DBG] PASS: 0b, 0x0005 1xs 1d 1i
+[DBG] PASS: 0b, 0x0005 16xs 1d 1i
+[DBG] PASS: 0b, 0x0005 1xv 1d 1i
+[DBG] PASS: 0b, 0x0005 16xv 1d 1i
+[DBG] PASS: 0b, 0x0005 1xs 2d 1i
+[DBG] PASS: 0b, 0x0005 16xs 2d 1i
+[DBG] PASS: 0b, 0x0005 1xv 2d 1i
+[DBG] PASS: 0b, 0x0005 16xv 2d 1i
+[DBG] PASS: 0b, 0x0005 1xs 4d 1i
+[DBG] PASS: 0b, 0x0005 16xs 4d 1i
+[DBG] PASS: 0b, 0x0005 1xv 4d 1i
+[DBG] PASS: 0b, 0x0005 16xv 4d 1i
+[DBG] PASS: 0b, 0x0005 1xs 1d 2i
+[DBG] PASS: 0b, 0x0005 16xs 1d 2i
+[DBG] PASS: 0b, 0x0005 1xv 1d 2i
+[DBG] PASS: 0b, 0x0005 16xv 1d 2i
+[DBG] PASS: 0b, 0x0005 1xs 2d 2i
+[DBG] PASS: 0b, 0x0005 16xs 2d 2i
+[DBG] PASS: 0b, 0x0005 1xv 2d 2i
+[DBG] PASS: 0b, 0x0005 16xv 2d 2i
+[DBG] PASS: 0b, 0x0005 1xs 4d 2i
+[DBG] PASS: 0b, 0x0005 16xs 4d 2i
+[DBG] PASS: 0b, 0x0005 1xv 4d 2i
+[DBG] PASS: 0b, 0x0005 16xv 4d 2i
+[DBG] PASS: 0b, 0x0005 1xs 1d 4i
+[DBG] PASS: 0b, 0x0005 16xs 1d 4i
+[DBG] PASS: 0b, 0x0005 1xv 1d 4i
+[DBG] PASS: 0b, 0x0005 16xv 1d 4i
+[DBG] PASS: 0b, 0x0005 1xs 2d 4i
+[DBG] PASS: 0b, 0x0005 16xs 2d 4i
+[DBG] PASS: 0b, 0x0005 1xv 2d 4i
+[DBG] PASS: 0b, 0x0005 16xv 2d 4i
+[DBG] PASS: 0b, 0x0005 1xs 4d 4i
+[DBG] PASS: 0b, 0x0005 16xs 4d 4i
+[DBG] PASS: 0b, 0x0005 1xv 4d 4i
+[DBG] PASS: 0b, 0x0005 16xv 4d 4i
+[DBG] Timer count-up test: 0b, 0x000C
+[DBG] PASS: 0b, 0x000C 1xs 1d 1i
+[DBG] PASS: 0b, 0x000C 16xs 1d 1i
+[DBG] PASS: 0b, 0x000C 1xv 1d 1i
+[DBG] PASS: 0b, 0x000C 16xv 1d 1i
+[DBG] PASS: 0b, 0x000C 1xs 2d 1i
+[DBG] PASS: 0b, 0x000C 16xs 2d 1i
+[DBG] PASS: 0b, 0x000C 1xv 2d 1i
+[DBG] PASS: 0b, 0x000C 16xv 2d 1i
+[DBG] PASS: 0b, 0x000C 1xs 4d 1i
+[DBG] PASS: 0b, 0x000C 16xs 4d 1i
+[DBG] PASS: 0b, 0x000C 1xv 4d 1i
+[DBG] PASS: 0b, 0x000C 16xv 4d 1i
+[DBG] PASS: 0b, 0x000C 1xs 1d 2i
+[DBG] PASS: 0b, 0x000C 16xs 1d 2i
+[DBG] PASS: 0b, 0x000C 1xv 1d 2i
+[DBG] PASS: 0b, 0x000C 16xv 1d 2i
+[DBG] PASS: 0b, 0x000C 1xs 2d 2i
+[DBG] PASS: 0b, 0x000C 16xs 2d 2i
+[DBG] PASS: 0b, 0x000C 1xv 2d 2i
+[DBG] PASS: 0b, 0x000C 16xv 2d 2i
+[DBG] PASS: 0b, 0x000C 1xs 4d 2i
+[DBG] PASS: 0b, 0x000C 16xs 4d 2i
+[DBG] PASS: 0b, 0x000C 1xv 4d 2i
+[DBG] PASS: 0b, 0x000C 16xv 4d 2i
+[DBG] PASS: 0b, 0x000C 1xs 1d 4i
+[DBG] PASS: 0b, 0x000C 16xs 1d 4i
+[DBG] PASS: 0b, 0x000C 1xv 1d 4i
+[DBG] PASS: 0b, 0x000C 16xv 1d 4i
+[DBG] PASS: 0b, 0x000C 1xs 2d 4i
+[DBG] PASS: 0b, 0x000C 16xs 2d 4i
+[DBG] PASS: 0b, 0x000C 1xv 2d 4i
+[DBG] PASS: 0b, 0x000C 16xv 2d 4i
+[DBG] PASS: 0b, 0x000C 1xs 4d 4i
+[DBG] PASS: 0b, 0x000C 16xs 4d 4i
+[DBG] PASS: 0b, 0x000C 1xv 4d 4i
+[DBG] PASS: 0b, 0x000C 16xv 4d 4i
+[DBG] Timer count-up test: 0b, 0x000D
+[DBG] PASS: 0b, 0x000D 1xs 1d 1i
+[DBG] PASS: 0b, 0x000D 16xs 1d 1i
+[DBG] PASS: 0b, 0x000D 1xv 1d 1i
+[DBG] PASS: 0b, 0x000D 16xv 1d 1i
+[DBG] PASS: 0b, 0x000D 1xs 2d 1i
+[DBG] PASS: 0b, 0x000D 16xs 2d 1i
+[DBG] PASS: 0b, 0x000D 1xv 2d 1i
+[DBG] PASS: 0b, 0x000D 16xv 2d 1i
+[DBG] PASS: 0b, 0x000D 1xs 4d 1i
+[DBG] PASS: 0b, 0x000D 16xs 4d 1i
+[DBG] PASS: 0b, 0x000D 1xv 4d 1i
+[DBG] PASS: 0b, 0x000D 16xv 4d 1i
+[DBG] PASS: 0b, 0x000D 1xs 1d 2i
+[DBG] PASS: 0b, 0x000D 16xs 1d 2i
+[DBG] PASS: 0b, 0x000D 1xv 1d 2i
+[DBG] PASS: 0b, 0x000D 16xv 1d 2i
+[DBG] PASS: 0b, 0x000D 1xs 2d 2i
+[DBG] PASS: 0b, 0x000D 16xs 2d 2i
+[DBG] PASS: 0b, 0x000D 1xv 2d 2i
+[DBG] PASS: 0b, 0x000D 16xv 2d 2i
+[DBG] PASS: 0b, 0x000D 1xs 4d 2i
+[DBG] PASS: 0b, 0x000D 16xs 4d 2i
+[DBG] PASS: 0b, 0x000D 1xv 4d 2i
+[DBG] PASS: 0b, 0x000D 16xv 4d 2i
+[DBG] PASS: 0b, 0x000D 1xs 1d 4i
+[DBG] PASS: 0b, 0x000D 16xs 1d 4i
+[DBG] PASS: 0b, 0x000D 1xv 1d 4i
+[DBG] PASS: 0b, 0x000D 16xv 1d 4i
+[DBG] PASS: 0b, 0x000D 1xs 2d 4i
+[DBG] PASS: 0b, 0x000D 16xs 2d 4i
+[DBG] PASS: 0b, 0x000D 1xv 2d 4i
+[DBG] PASS: 0b, 0x000D 16xv 2d 4i
+[DBG] PASS: 0b, 0x000D 1xs 4d 4i
+[DBG] PASS: 0b, 0x000D 16xs 4d 4i
+[DBG] PASS: 0b, 0x000D 1xv 4d 4i
+[DBG] PASS: 0b, 0x000D 16xv 4d 4i
+[DBG] Timer count-up test: 0b, 0x0010
+[DBG] PASS: 0b, 0x0010 1xs 1d 1i
+[DBG] PASS: 0b, 0x0010 16xs 1d 1i
+[DBG] PASS: 0b, 0x0010 1xv 1d 1i
+[DBG] PASS: 0b, 0x0010 16xv 1d 1i
+[DBG] PASS: 0b, 0x0010 1xs 2d 1i
+[DBG] PASS: 0b, 0x0010 16xs 2d 1i
+[DBG] PASS: 0b, 0x0010 1xv 2d 1i
+[DBG] PASS: 0b, 0x0010 16xv 2d 1i
+[DBG] PASS: 0b, 0x0010 1xs 4d 1i
+[DBG] PASS: 0b, 0x0010 16xs 4d 1i
+[DBG] PASS: 0b, 0x0010 1xv 4d 1i
+[DBG] PASS: 0b, 0x0010 16xv 4d 1i
+[DBG] PASS: 0b, 0x0010 1xs 1d 2i
+[DBG] PASS: 0b, 0x0010 16xs 1d 2i
+[DBG] PASS: 0b, 0x0010 1xv 1d 2i
+[DBG] PASS: 0b, 0x0010 16xv 1d 2i
+[DBG] PASS: 0b, 0x0010 1xs 2d 2i
+[DBG] PASS: 0b, 0x0010 16xs 2d 2i
+[DBG] PASS: 0b, 0x0010 1xv 2d 2i
+[DBG] PASS: 0b, 0x0010 16xv 2d 2i
+[DBG] PASS: 0b, 0x0010 1xs 4d 2i
+[DBG] PASS: 0b, 0x0010 16xs 4d 2i
+[DBG] PASS: 0b, 0x0010 1xv 4d 2i
+[DBG] PASS: 0b, 0x0010 16xv 4d 2i
+[DBG] PASS: 0b, 0x0010 1xs 1d 4i
+[DBG] PASS: 0b, 0x0010 16xs 1d 4i
+[DBG] PASS: 0b, 0x0010 1xv 1d 4i
+[DBG] PASS: 0b, 0x0010 16xv 1d 4i
+[DBG] PASS: 0b, 0x0010 1xs 2d 4i
+[DBG] PASS: 0b, 0x0010 16xs 2d 4i
+[DBG] PASS: 0b, 0x0010 1xv 2d 4i
+[DBG] PASS: 0b, 0x0010 16xv 2d 4i
+[DBG] PASS: 0b, 0x0010 1xs 4d 4i
+[DBG] PASS: 0b, 0x0010 16xs 4d 4i
+[DBG] PASS: 0b, 0x0010 1xv 4d 4i
+[DBG] PASS: 0b, 0x0010 16xv 4d 4i
+[DBG] Timer count-up test: 0b, 0x0014
+[DBG] PASS: 0b, 0x0014 1xs 1d 1i
+[DBG] PASS: 0b, 0x0014 16xs 1d 1i
+[DBG] PASS: 0b, 0x0014 1xv 1d 1i
+[DBG] PASS: 0b, 0x0014 16xv 1d 1i
+[DBG] PASS: 0b, 0x0014 1xs 2d 1i
+[DBG] PASS: 0b, 0x0014 16xs 2d 1i
+[DBG] PASS: 0b, 0x0014 1xv 2d 1i
+[DBG] PASS: 0b, 0x0014 16xv 2d 1i
+[DBG] PASS: 0b, 0x0014 1xs 4d 1i
+[DBG] PASS: 0b, 0x0014 16xs 4d 1i
+[DBG] PASS: 0b, 0x0014 1xv 4d 1i
+[DBG] PASS: 0b, 0x0014 16xv 4d 1i
+[DBG] PASS: 0b, 0x0014 1xs 1d 2i
+[DBG] PASS: 0b, 0x0014 16xs 1d 2i
+[DBG] PASS: 0b, 0x0014 1xv 1d 2i
+[DBG] PASS: 0b, 0x0014 16xv 1d 2i
+[DBG] PASS: 0b, 0x0014 1xs 2d 2i
+[DBG] PASS: 0b, 0x0014 16xs 2d 2i
+[DBG] PASS: 0b, 0x0014 1xv 2d 2i
+[DBG] PASS: 0b, 0x0014 16xv 2d 2i
+[DBG] PASS: 0b, 0x0014 1xs 4d 2i
+[DBG] PASS: 0b, 0x0014 16xs 4d 2i
+[DBG] PASS: 0b, 0x0014 1xv 4d 2i
+[DBG] PASS: 0b, 0x0014 16xv 4d 2i
+[DBG] PASS: 0b, 0x0014 1xs 1d 4i
+[DBG] PASS: 0b, 0x0014 16xs 1d 4i
+[DBG] PASS: 0b, 0x0014 1xv 1d 4i
+[DBG] PASS: 0b, 0x0014 16xv 1d 4i
+[DBG] PASS: 0b, 0x0014 1xs 2d 4i
+[DBG] PASS: 0b, 0x0014 16xs 2d 4i
+[DBG] PASS: 0b, 0x0014 1xv 2d 4i
+[DBG] PASS: 0b, 0x0014 16xv 2d 4i
+[DBG] PASS: 0b, 0x0014 1xs 4d 4i
+[DBG] PASS: 0b, 0x0014 16xs 4d 4i
+[DBG] PASS: 0b, 0x0014 1xv 4d 4i
+[DBG] PASS: 0b, 0x0014 16xv 4d 4i
+[DBG] Timer count-up test: 0b, 0x0015
+[DBG] PASS: 0b, 0x0015 1xs 1d 1i
+[DBG] PASS: 0b, 0x0015 16xs 1d 1i
+[DBG] PASS: 0b, 0x0015 1xv 1d 1i
+[DBG] PASS: 0b, 0x0015 16xv 1d 1i
+[DBG] PASS: 0b, 0x0015 1xs 2d 1i
+[DBG] PASS: 0b, 0x0015 16xs 2d 1i
+[DBG] PASS: 0b, 0x0015 1xv 2d 1i
+[DBG] PASS: 0b, 0x0015 16xv 2d 1i
+[DBG] PASS: 0b, 0x0015 1xs 4d 1i
+[DBG] PASS: 0b, 0x0015 16xs 4d 1i
+[DBG] PASS: 0b, 0x0015 1xv 4d 1i
+[DBG] PASS: 0b, 0x0015 16xv 4d 1i
+[DBG] PASS: 0b, 0x0015 1xs 1d 2i
+[DBG] PASS: 0b, 0x0015 16xs 1d 2i
+[DBG] PASS: 0b, 0x0015 1xv 1d 2i
+[DBG] PASS: 0b, 0x0015 16xv 1d 2i
+[DBG] PASS: 0b, 0x0015 1xs 2d 2i
+[DBG] PASS: 0b, 0x0015 16xs 2d 2i
+[DBG] PASS: 0b, 0x0015 1xv 2d 2i
+[DBG] PASS: 0b, 0x0015 16xv 2d 2i
+[DBG] PASS: 0b, 0x0015 1xs 4d 2i
+[DBG] PASS: 0b, 0x0015 16xs 4d 2i
+[DBG] PASS: 0b, 0x0015 1xv 4d 2i
+[DBG] PASS: 0b, 0x0015 16xv 4d 2i
+[DBG] PASS: 0b, 0x0015 1xs 1d 4i
+[DBG] PASS: 0b, 0x0015 16xs 1d 4i
+[DBG] PASS: 0b, 0x0015 1xv 1d 4i
+[DBG] PASS: 0b, 0x0015 16xv 1d 4i
+[DBG] PASS: 0b, 0x0015 1xs 2d 4i
+[DBG] PASS: 0b, 0x0015 16xs 2d 4i
+[DBG] PASS: 0b, 0x0015 1xv 2d 4i
+[DBG] PASS: 0b, 0x0015 16xv 2d 4i
+[DBG] PASS: 0b, 0x0015 1xs 4d 4i
+[DBG] PASS: 0b, 0x0015 16xs 4d 4i
+[DBG] PASS: 0b, 0x0015 1xv 4d 4i
+[DBG] PASS: 0b, 0x0015 16xv 4d 4i
+[DBG] Timer count-up test: 0b, 0x0020
+[DBG] PASS: 0b, 0x0020 1xs 1d 1i
+[DBG] PASS: 0b, 0x0020 16xs 1d 1i
+[DBG] PASS: 0b, 0x0020 1xv 1d 1i
+[DBG] PASS: 0b, 0x0020 16xv 1d 1i
+[DBG] PASS: 0b, 0x0020 1xs 2d 1i
+[DBG] PASS: 0b, 0x0020 16xs 2d 1i
+[DBG] PASS: 0b, 0x0020 1xv 2d 1i
+[DBG] PASS: 0b, 0x0020 16xv 2d 1i
+[DBG] PASS: 0b, 0x0020 1xs 4d 1i
+[DBG] PASS: 0b, 0x0020 16xs 4d 1i
+[DBG] PASS: 0b, 0x0020 1xv 4d 1i
+[DBG] PASS: 0b, 0x0020 16xv 4d 1i
+[DBG] PASS: 0b, 0x0020 1xs 1d 2i
+[DBG] PASS: 0b, 0x0020 16xs 1d 2i
+[DBG] PASS: 0b, 0x0020 1xv 1d 2i
+[DBG] PASS: 0b, 0x0020 16xv 1d 2i
+[DBG] PASS: 0b, 0x0020 1xs 2d 2i
+[DBG] PASS: 0b, 0x0020 16xs 2d 2i
+[DBG] PASS: 0b, 0x0020 1xv 2d 2i
+[DBG] PASS: 0b, 0x0020 16xv 2d 2i
+[DBG] PASS: 0b, 0x0020 1xs 4d 2i
+[DBG] PASS: 0b, 0x0020 16xs 4d 2i
+[DBG] PASS: 0b, 0x0020 1xv 4d 2i
+[DBG] PASS: 0b, 0x0020 16xv 4d 2i
+[DBG] PASS: 0b, 0x0020 1xs 1d 4i
+[DBG] PASS: 0b, 0x0020 16xs 1d 4i
+[DBG] PASS: 0b, 0x0020 1xv 1d 4i
+[DBG] PASS: 0b, 0x0020 16xv 1d 4i
+[DBG] PASS: 0b, 0x0020 1xs 2d 4i
+[DBG] PASS: 0b, 0x0020 16xs 2d 4i
+[DBG] PASS: 0b, 0x0020 1xv 2d 4i
+[DBG] PASS: 0b, 0x0020 16xv 2d 4i
+[DBG] PASS: 0b, 0x0020 1xs 4d 4i
+[DBG] PASS: 0b, 0x0020 16xs 4d 4i
+[DBG] PASS: 0b, 0x0020 1xv 4d 4i
+[DBG] PASS: 0b, 0x0020 16xv 4d 4i
+[DBG] Timer count-up test: 0b, 0x0024
+[DBG] PASS: 0b, 0x0024 1xs 1d 1i
+[DBG] PASS: 0b, 0x0024 16xs 1d 1i
+[DBG] PASS: 0b, 0x0024 1xv 1d 1i
+[DBG] PASS: 0b, 0x0024 16xv 1d 1i
+[DBG] PASS: 0b, 0x0024 1xs 2d 1i
+[DBG] PASS: 0b, 0x0024 16xs 2d 1i
+[DBG] PASS: 0b, 0x0024 1xv 2d 1i
+[DBG] PASS: 0b, 0x0024 16xv 2d 1i
+[DBG] PASS: 0b, 0x0024 1xs 4d 1i
+[DBG] PASS: 0b, 0x0024 16xs 4d 1i
+[DBG] PASS: 0b, 0x0024 1xv 4d 1i
+[DBG] PASS: 0b, 0x0024 16xv 4d 1i
+[DBG] PASS: 0b, 0x0024 1xs 1d 2i
+[DBG] PASS: 0b, 0x0024 16xs 1d 2i
+[DBG] PASS: 0b, 0x0024 1xv 1d 2i
+[DBG] PASS: 0b, 0x0024 16xv 1d 2i
+[DBG] PASS: 0b, 0x0024 1xs 2d 2i
+[DBG] PASS: 0b, 0x0024 16xs 2d 2i
+[DBG] PASS: 0b, 0x0024 1xv 2d 2i
+[DBG] PASS: 0b, 0x0024 16xv 2d 2i
+[DBG] PASS: 0b, 0x0024 1xs 4d 2i
+[DBG] PASS: 0b, 0x0024 16xs 4d 2i
+[DBG] PASS: 0b, 0x0024 1xv 4d 2i
+[DBG] PASS: 0b, 0x0024 16xv 4d 2i
+[DBG] PASS: 0b, 0x0024 1xs 1d 4i
+[DBG] PASS: 0b, 0x0024 16xs 1d 4i
+[DBG] PASS: 0b, 0x0024 1xv 1d 4i
+[DBG] PASS: 0b, 0x0024 16xv 1d 4i
+[DBG] PASS: 0b, 0x0024 1xs 2d 4i
+[DBG] PASS: 0b, 0x0024 16xs 2d 4i
+[DBG] PASS: 0b, 0x0024 1xv 2d 4i
+[DBG] PASS: 0b, 0x0024 16xv 2d 4i
+[DBG] PASS: 0b, 0x0024 1xs 4d 4i
+[DBG] PASS: 0b, 0x0024 16xs 4d 4i
+[DBG] PASS: 0b, 0x0024 1xv 4d 4i
+[DBG] PASS: 0b, 0x0024 16xv 4d 4i
+[DBG] Timer count-up test: 0b, 0x0025
+[DBG] PASS: 0b, 0x0025 1xs 1d 1i
+[DBG] PASS: 0b, 0x0025 16xs 1d 1i
+[DBG] PASS: 0b, 0x0025 1xv 1d 1i
+[DBG] PASS: 0b, 0x0025 16xv 1d 1i
+[DBG] PASS: 0b, 0x0025 1xs 2d 1i
+[DBG] PASS: 0b, 0x0025 16xs 2d 1i
+[DBG] PASS: 0b, 0x0025 1xv 2d 1i
+[DBG] PASS: 0b, 0x0025 16xv 2d 1i
+[DBG] PASS: 0b, 0x0025 1xs 4d 1i
+[DBG] PASS: 0b, 0x0025 16xs 4d 1i
+[DBG] PASS: 0b, 0x0025 1xv 4d 1i
+[DBG] PASS: 0b, 0x0025 16xv 4d 1i
+[DBG] PASS: 0b, 0x0025 1xs 1d 2i
+[DBG] PASS: 0b, 0x0025 16xs 1d 2i
+[DBG] PASS: 0b, 0x0025 1xv 1d 2i
+[DBG] PASS: 0b, 0x0025 16xv 1d 2i
+[DBG] PASS: 0b, 0x0025 1xs 2d 2i
+[DBG] PASS: 0b, 0x0025 16xs 2d 2i
+[DBG] PASS: 0b, 0x0025 1xv 2d 2i
+[DBG] PASS: 0b, 0x0025 16xv 2d 2i
+[DBG] PASS: 0b, 0x0025 1xs 4d 2i
+[DBG] PASS: 0b, 0x0025 16xs 4d 2i
+[DBG] PASS: 0b, 0x0025 1xv 4d 2i
+[DBG] PASS: 0b, 0x0025 16xv 4d 2i
+[DBG] PASS: 0b, 0x0025 1xs 1d 4i
+[DBG] PASS: 0b, 0x0025 16xs 1d 4i
+[DBG] PASS: 0b, 0x0025 1xv 1d 4i
+[DBG] PASS: 0b, 0x0025 16xv 1d 4i
+[DBG] PASS: 0b, 0x0025 1xs 2d 4i
+[DBG] PASS: 0b, 0x0025 16xs 2d 4i
+[DBG] PASS: 0b, 0x0025 1xv 2d 4i
+[DBG] PASS: 0b, 0x0025 16xv 2d 4i
+[DBG] PASS: 0b, 0x0025 1xs 4d 4i
+[DBG] PASS: 0b, 0x0025 16xs 4d 4i
+[DBG] PASS: 0b, 0x0025 1xv 4d 4i
+[DBG] PASS: 0b, 0x0025 16xv 4d 4i
+[DBG] Timer count-up test: 0b, 0x0040
+[DBG] PASS: 0b, 0x0040 1xs 1d 1i
+[DBG] PASS: 0b, 0x0040 16xs 1d 1i
+[DBG] PASS: 0b, 0x0040 1xv 1d 1i
+[DBG] PASS: 0b, 0x0040 16xv 1d 1i
+[DBG] PASS: 0b, 0x0040 1xs 2d 1i
+[DBG] PASS: 0b, 0x0040 16xs 2d 1i
+[DBG] PASS: 0b, 0x0040 1xv 2d 1i
+[DBG] PASS: 0b, 0x0040 16xv 2d 1i
+[DBG] PASS: 0b, 0x0040 1xs 4d 1i
+[DBG] PASS: 0b, 0x0040 16xs 4d 1i
+[DBG] PASS: 0b, 0x0040 1xv 4d 1i
+[DBG] PASS: 0b, 0x0040 16xv 4d 1i
+[DBG] PASS: 0b, 0x0040 1xs 1d 2i
+[DBG] PASS: 0b, 0x0040 16xs 1d 2i
+[DBG] PASS: 0b, 0x0040 1xv 1d 2i
+[DBG] PASS: 0b, 0x0040 16xv 1d 2i
+[DBG] PASS: 0b, 0x0040 1xs 2d 2i
+[DBG] PASS: 0b, 0x0040 16xs 2d 2i
+[DBG] PASS: 0b, 0x0040 1xv 2d 2i
+[DBG] PASS: 0b, 0x0040 16xv 2d 2i
+[DBG] PASS: 0b, 0x0040 1xs 4d 2i
+[DBG] PASS: 0b, 0x0040 16xs 4d 2i
+[DBG] PASS: 0b, 0x0040 1xv 4d 2i
+[DBG] PASS: 0b, 0x0040 16xv 4d 2i
+[DBG] PASS: 0b, 0x0040 1xs 1d 4i
+[DBG] PASS: 0b, 0x0040 16xs 1d 4i
+[DBG] PASS: 0b, 0x0040 1xv 1d 4i
+[DBG] PASS: 0b, 0x0040 16xv 1d 4i
+[DBG] PASS: 0b, 0x0040 1xs 2d 4i
+[DBG] PASS: 0b, 0x0040 16xs 2d 4i
+[DBG] PASS: 0b, 0x0040 1xv 2d 4i
+[DBG] PASS: 0b, 0x0040 16xv 2d 4i
+[DBG] PASS: 0b, 0x0040 1xs 4d 4i
+[DBG] PASS: 0b, 0x0040 16xs 4d 4i
+[DBG] PASS: 0b, 0x0040 1xv 4d 4i
+[DBG] PASS: 0b, 0x0040 16xv 4d 4i
+[DBG] Timer count-up test: 0b, 0x0080
+[DBG] PASS: 0b, 0x0080 1xs 1d 1i
+[DBG] PASS: 0b, 0x0080 16xs 1d 1i
+[DBG] PASS: 0b, 0x0080 1xv 1d 1i
+[DBG] PASS: 0b, 0x0080 16xv 1d 1i
+[DBG] PASS: 0b, 0x0080 1xs 2d 1i
+[DBG] PASS: 0b, 0x0080 16xs 2d 1i
+[DBG] PASS: 0b, 0x0080 1xv 2d 1i
+[DBG] PASS: 0b, 0x0080 16xv 2d 1i
+[DBG] PASS: 0b, 0x0080 1xs 4d 1i
+[DBG] PASS: 0b, 0x0080 16xs 4d 1i
+[DBG] PASS: 0b, 0x0080 1xv 4d 1i
+[DBG] PASS: 0b, 0x0080 16xv 4d 1i
+[DBG] PASS: 0b, 0x0080 1xs 1d 2i
+[DBG] PASS: 0b, 0x0080 16xs 1d 2i
+[DBG] PASS: 0b, 0x0080 1xv 1d 2i
+[DBG] PASS: 0b, 0x0080 16xv 1d 2i
+[DBG] PASS: 0b, 0x0080 1xs 2d 2i
+[DBG] PASS: 0b, 0x0080 16xs 2d 2i
+[DBG] PASS: 0b, 0x0080 1xv 2d 2i
+[DBG] PASS: 0b, 0x0080 16xv 2d 2i
+[DBG] PASS: 0b, 0x0080 1xs 4d 2i
+[DBG] PASS: 0b, 0x0080 16xs 4d 2i
+[DBG] PASS: 0b, 0x0080 1xv 4d 2i
+[DBG] PASS: 0b, 0x0080 16xv 4d 2i
+[DBG] PASS: 0b, 0x0080 1xs 1d 4i
+[DBG] PASS: 0b, 0x0080 16xs 1d 4i
+[DBG] PASS: 0b, 0x0080 1xv 1d 4i
+[DBG] PASS: 0b, 0x0080 16xv 1d 4i
+[DBG] PASS: 0b, 0x0080 1xs 2d 4i
+[DBG] PASS: 0b, 0x0080 16xs 2d 4i
+[DBG] PASS: 0b, 0x0080 1xv 2d 4i
+[DBG] PASS: 0b, 0x0080 16xv 2d 4i
+[DBG] PASS: 0b, 0x0080 1xs 4d 4i
+[DBG] PASS: 0b, 0x0080 16xs 4d 4i
+[DBG] PASS: 0b, 0x0080 1xv 4d 4i
+[DBG] PASS: 0b, 0x0080 16xv 4d 4i
+[DBG] Timer count-up test: 0b, 0x0800
+[DBG] PASS: 0b, 0x0800 1xs 1d 1i
+[DBG] PASS: 0b, 0x0800 16xs 1d 1i
+[DBG] PASS: 0b, 0x0800 1xv 1d 1i
+[DBG] PASS: 0b, 0x0800 16xv 1d 1i
+[DBG] PASS: 0b, 0x0800 1xs 2d 1i
+[DBG] PASS: 0b, 0x0800 16xs 2d 1i
+[DBG] PASS: 0b, 0x0800 1xv 2d 1i
+[DBG] PASS: 0b, 0x0800 16xv 2d 1i
+[DBG] PASS: 0b, 0x0800 1xs 4d 1i
+[DBG] PASS: 0b, 0x0800 16xs 4d 1i
+[DBG] PASS: 0b, 0x0800 1xv 4d 1i
+[DBG] PASS: 0b, 0x0800 16xv 4d 1i
+[DBG] PASS: 0b, 0x0800 1xs 1d 2i
+[DBG] PASS: 0b, 0x0800 16xs 1d 2i
+[DBG] PASS: 0b, 0x0800 1xv 1d 2i
+[DBG] PASS: 0b, 0x0800 16xv 1d 2i
+[DBG] PASS: 0b, 0x0800 1xs 2d 2i
+[DBG] PASS: 0b, 0x0800 16xs 2d 2i
+[DBG] PASS: 0b, 0x0800 1xv 2d 2i
+[DBG] PASS: 0b, 0x0800 16xv 2d 2i
+[DBG] PASS: 0b, 0x0800 1xs 4d 2i
+[DBG] PASS: 0b, 0x0800 16xs 4d 2i
+[DBG] PASS: 0b, 0x0800 1xv 4d 2i
+[DBG] PASS: 0b, 0x0800 16xv 4d 2i
+[DBG] PASS: 0b, 0x0800 1xs 1d 4i
+[DBG] PASS: 0b, 0x0800 16xs 1d 4i
+[DBG] PASS: 0b, 0x0800 1xv 1d 4i
+[DBG] PASS: 0b, 0x0800 16xv 1d 4i
+[DBG] PASS: 0b, 0x0800 1xs 2d 4i
+[DBG] PASS: 0b, 0x0800 16xs 2d 4i
+[DBG] PASS: 0b, 0x0800 1xv 2d 4i
+[DBG] PASS: 0b, 0x0800 16xv 2d 4i
+[DBG] PASS: 0b, 0x0800 1xs 4d 4i
+[DBG] PASS: 0b, 0x0800 16xs 4d 4i
+[DBG] PASS: 0b, 0x0800 1xv 4d 4i
+[DBG] PASS: 0b, 0x0800 16xv 4d 4i
+[DBG] Timer count-up test: 0b, 0x8000
+[DBG] PASS: 0b, 0x8000 1xs 1d 1i
+[DBG] PASS: 0b, 0x8000 16xs 1d 1i
+[DBG] PASS: 0b, 0x8000 1xv 1d 1i
+[DBG] PASS: 0b, 0x8000 16xv 1d 1i
+[DBG] PASS: 0b, 0x8000 1xs 2d 1i
+[DBG] PASS: 0b, 0x8000 16xs 2d 1i
+[DBG] PASS: 0b, 0x8000 1xv 2d 1i
+[DBG] PASS: 0b, 0x8000 16xv 2d 1i
+[DBG] PASS: 0b, 0x8000 1xs 4d 1i
+[DBG] PASS: 0b, 0x8000 16xs 4d 1i
+[DBG] PASS: 0b, 0x8000 1xv 4d 1i
+[DBG] PASS: 0b, 0x8000 16xv 4d 1i
+[DBG] PASS: 0b, 0x8000 1xs 1d 2i
+[DBG] PASS: 0b, 0x8000 16xs 1d 2i
+[DBG] PASS: 0b, 0x8000 1xv 1d 2i
+[DBG] PASS: 0b, 0x8000 16xv 1d 2i
+[DBG] PASS: 0b, 0x8000 1xs 2d 2i
+[DBG] PASS: 0b, 0x8000 16xs 2d 2i
+[DBG] PASS: 0b, 0x8000 1xv 2d 2i
+[DBG] PASS: 0b, 0x8000 16xv 2d 2i
+[DBG] PASS: 0b, 0x8000 1xs 4d 2i
+[DBG] PASS: 0b, 0x8000 16xs 4d 2i
+[DBG] PASS: 0b, 0x8000 1xv 4d 2i
+[DBG] PASS: 0b, 0x8000 16xv 4d 2i
+[DBG] PASS: 0b, 0x8000 1xs 1d 4i
+[DBG] PASS: 0b, 0x8000 16xs 1d 4i
+[DBG] PASS: 0b, 0x8000 1xv 1d 4i
+[DBG] PASS: 0b, 0x8000 16xv 1d 4i
+[DBG] PASS: 0b, 0x8000 1xs 2d 4i
+[DBG] PASS: 0b, 0x8000 16xs 2d 4i
+[DBG] PASS: 0b, 0x8000 1xv 2d 4i
+[DBG] PASS: 0b, 0x8000 16xv 2d 4i
+[DBG] PASS: 0b, 0x8000 1xs 4d 4i
+[DBG] PASS: 0b, 0x8000 16xs 4d 4i
+[DBG] PASS: 0b, 0x8000 1xv 4d 4i
+[DBG] PASS: 0b, 0x8000 16xv 4d 4i
+[DBG] Timer count-up test: 6b, 0x0010
+[DBG] PASS: 6b, 0x0010 1xs 1d 1i
+[DBG] PASS: 6b, 0x0010 16xs 1d 1i
+[DBG] PASS: 6b, 0x0010 1xv 1d 1i
+[DBG] PASS: 6b, 0x0010 16xv 1d 1i
+[DBG] PASS: 6b, 0x0010 1xs 2d 1i
+[DBG] PASS: 6b, 0x0010 16xs 2d 1i
+[DBG] PASS: 6b, 0x0010 1xv 2d 1i
+[DBG] PASS: 6b, 0x0010 16xv 2d 1i
+[DBG] PASS: 6b, 0x0010 1xs 4d 1i
+[DBG] PASS: 6b, 0x0010 16xs 4d 1i
+[DBG] PASS: 6b, 0x0010 1xv 4d 1i
+[DBG] PASS: 6b, 0x0010 16xv 4d 1i
+[DBG] PASS: 6b, 0x0010 1xs 1d 2i
+[DBG] PASS: 6b, 0x0010 16xs 1d 2i
+[DBG] PASS: 6b, 0x0010 1xv 1d 2i
+[DBG] PASS: 6b, 0x0010 16xv 1d 2i
+[DBG] PASS: 6b, 0x0010 1xs 2d 2i
+[DBG] PASS: 6b, 0x0010 16xs 2d 2i
+[DBG] PASS: 6b, 0x0010 1xv 2d 2i
+[DBG] PASS: 6b, 0x0010 16xv 2d 2i
+[DBG] PASS: 6b, 0x0010 1xs 4d 2i
+[DBG] PASS: 6b, 0x0010 16xs 4d 2i
+[DBG] PASS: 6b, 0x0010 1xv 4d 2i
+[DBG] PASS: 6b, 0x0010 16xv 4d 2i
+[DBG] PASS: 6b, 0x0010 1xs 1d 4i
+[DBG] PASS: 6b, 0x0010 16xs 1d 4i
+[DBG] PASS: 6b, 0x0010 1xv 1d 4i
+[DBG] PASS: 6b, 0x0010 16xv 1d 4i
+[DBG] PASS: 6b, 0x0010 1xs 2d 4i
+[DBG] PASS: 6b, 0x0010 16xs 2d 4i
+[DBG] PASS: 6b, 0x0010 1xv 2d 4i
+[DBG] PASS: 6b, 0x0010 16xv 2d 4i
+[DBG] PASS: 6b, 0x0010 1xs 4d 4i
+[DBG] PASS: 6b, 0x0010 16xs 4d 4i
+[DBG] PASS: 6b, 0x0010 1xv 4d 4i
+[DBG] PASS: 6b, 0x0010 16xv 4d 4i
+[DBG] Timer count-up test: 6b, 0x0011
+[DBG] PASS: 6b, 0x0011 1xs 1d 1i
+[DBG] PASS: 6b, 0x0011 16xs 1d 1i
+[DBG] PASS: 6b, 0x0011 1xv 1d 1i
+[DBG] PASS: 6b, 0x0011 16xv 1d 1i
+[DBG] PASS: 6b, 0x0011 1xs 2d 1i
+[DBG] PASS: 6b, 0x0011 16xs 2d 1i
+[DBG] PASS: 6b, 0x0011 1xv 2d 1i
+[DBG] PASS: 6b, 0x0011 16xv 2d 1i
+[DBG] PASS: 6b, 0x0011 1xs 4d 1i
+[DBG] PASS: 6b, 0x0011 16xs 4d 1i
+[DBG] PASS: 6b, 0x0011 1xv 4d 1i
+[DBG] PASS: 6b, 0x0011 16xv 4d 1i
+[DBG] PASS: 6b, 0x0011 1xs 1d 2i
+[DBG] PASS: 6b, 0x0011 16xs 1d 2i
+[DBG] PASS: 6b, 0x0011 1xv 1d 2i
+[DBG] PASS: 6b, 0x0011 16xv 1d 2i
+[DBG] PASS: 6b, 0x0011 1xs 2d 2i
+[DBG] PASS: 6b, 0x0011 16xs 2d 2i
+[DBG] PASS: 6b, 0x0011 1xv 2d 2i
+[DBG] PASS: 6b, 0x0011 16xv 2d 2i
+[DBG] PASS: 6b, 0x0011 1xs 4d 2i
+[DBG] PASS: 6b, 0x0011 16xs 4d 2i
+[DBG] PASS: 6b, 0x0011 1xv 4d 2i
+[DBG] PASS: 6b, 0x0011 16xv 4d 2i
+[DBG] PASS: 6b, 0x0011 1xs 1d 4i
+[DBG] PASS: 6b, 0x0011 16xs 1d 4i
+[DBG] PASS: 6b, 0x0011 1xv 1d 4i
+[DBG] PASS: 6b, 0x0011 16xv 1d 4i
+[DBG] PASS: 6b, 0x0011 1xs 2d 4i
+[DBG] PASS: 6b, 0x0011 16xs 2d 4i
+[DBG] PASS: 6b, 0x0011 1xv 2d 4i
+[DBG] PASS: 6b, 0x0011 16xv 2d 4i
+[DBG] PASS: 6b, 0x0011 1xs 4d 4i
+[DBG] PASS: 6b, 0x0011 16xs 4d 4i
+[DBG] PASS: 6b, 0x0011 1xv 4d 4i
+[DBG] PASS: 6b, 0x0011 16xv 4d 4i
+[DBG] Timer count-up test: 6b, 0x0012
+[DBG] PASS: 6b, 0x0012 1xs 1d 1i
+[DBG] PASS: 6b, 0x0012 16xs 1d 1i
+[DBG] PASS: 6b, 0x0012 1xv 1d 1i
+[DBG] PASS: 6b, 0x0012 16xv 1d 1i
+[DBG] PASS: 6b, 0x0012 1xs 2d 1i
+[DBG] PASS: 6b, 0x0012 16xs 2d 1i
+[DBG] PASS: 6b, 0x0012 1xv 2d 1i
+[DBG] PASS: 6b, 0x0012 16xv 2d 1i
+[DBG] PASS: 6b, 0x0012 1xs 4d 1i
+[DBG] PASS: 6b, 0x0012 16xs 4d 1i
+[DBG] PASS: 6b, 0x0012 1xv 4d 1i
+[DBG] PASS: 6b, 0x0012 16xv 4d 1i
+[DBG] PASS: 6b, 0x0012 1xs 1d 2i
+[DBG] PASS: 6b, 0x0012 16xs 1d 2i
+[DBG] PASS: 6b, 0x0012 1xv 1d 2i
+[DBG] PASS: 6b, 0x0012 16xv 1d 2i
+[DBG] PASS: 6b, 0x0012 1xs 2d 2i
+[DBG] PASS: 6b, 0x0012 16xs 2d 2i
+[DBG] PASS: 6b, 0x0012 1xv 2d 2i
+[DBG] PASS: 6b, 0x0012 16xv 2d 2i
+[DBG] PASS: 6b, 0x0012 1xs 4d 2i
+[DBG] PASS: 6b, 0x0012 16xs 4d 2i
+[DBG] PASS: 6b, 0x0012 1xv 4d 2i
+[DBG] PASS: 6b, 0x0012 16xv 4d 2i
+[DBG] PASS: 6b, 0x0012 1xs 1d 4i
+[DBG] PASS: 6b, 0x0012 16xs 1d 4i
+[DBG] PASS: 6b, 0x0012 1xv 1d 4i
+[DBG] PASS: 6b, 0x0012 16xv 1d 4i
+[DBG] PASS: 6b, 0x0012 1xs 2d 4i
+[DBG] PASS: 6b, 0x0012 16xs 2d 4i
+[DBG] PASS: 6b, 0x0012 1xv 2d 4i
+[DBG] PASS: 6b, 0x0012 16xv 2d 4i
+[DBG] PASS: 6b, 0x0012 1xs 4d 4i
+[DBG] PASS: 6b, 0x0012 16xs 4d 4i
+[DBG] PASS: 6b, 0x0012 1xv 4d 4i
+[DBG] PASS: 6b, 0x0012 16xv 4d 4i
+[DBG] Timer count-up test: 6b, 0x0013
+[DBG] PASS: 6b, 0x0013 1xs 1d 1i
+[DBG] PASS: 6b, 0x0013 16xs 1d 1i
+[DBG] PASS: 6b, 0x0013 1xv 1d 1i
+[DBG] PASS: 6b, 0x0013 16xv 1d 1i
+[DBG] PASS: 6b, 0x0013 1xs 2d 1i
+[DBG] PASS: 6b, 0x0013 16xs 2d 1i
+[DBG] PASS: 6b, 0x0013 1xv 2d 1i
+[DBG] PASS: 6b, 0x0013 16xv 2d 1i
+[DBG] PASS: 6b, 0x0013 1xs 4d 1i
+[DBG] PASS: 6b, 0x0013 16xs 4d 1i
+[DBG] PASS: 6b, 0x0013 1xv 4d 1i
+[DBG] PASS: 6b, 0x0013 16xv 4d 1i
+[DBG] PASS: 6b, 0x0013 1xs 1d 2i
+[DBG] PASS: 6b, 0x0013 16xs 1d 2i
+[DBG] PASS: 6b, 0x0013 1xv 1d 2i
+[DBG] PASS: 6b, 0x0013 16xv 1d 2i
+[DBG] PASS: 6b, 0x0013 1xs 2d 2i
+[DBG] PASS: 6b, 0x0013 16xs 2d 2i
+[DBG] PASS: 6b, 0x0013 1xv 2d 2i
+[DBG] PASS: 6b, 0x0013 16xv 2d 2i
+[DBG] PASS: 6b, 0x0013 1xs 4d 2i
+[DBG] PASS: 6b, 0x0013 16xs 4d 2i
+[DBG] PASS: 6b, 0x0013 1xv 4d 2i
+[DBG] PASS: 6b, 0x0013 16xv 4d 2i
+[DBG] PASS: 6b, 0x0013 1xs 1d 4i
+[DBG] PASS: 6b, 0x0013 16xs 1d 4i
+[DBG] PASS: 6b, 0x0013 1xv 1d 4i
+[DBG] PASS: 6b, 0x0013 16xv 1d 4i
+[DBG] PASS: 6b, 0x0013 1xs 2d 4i
+[DBG] PASS: 6b, 0x0013 16xs 2d 4i
+[DBG] PASS: 6b, 0x0013 1xv 2d 4i
+[DBG] PASS: 6b, 0x0013 16xv 2d 4i
+[DBG] PASS: 6b, 0x0013 1xs 4d 4i
+[DBG] PASS: 6b, 0x0013 16xs 4d 4i
+[DBG] PASS: 6b, 0x0013 1xv 4d 4i
+[DBG] PASS: 6b, 0x0013 16xv 4d 4i
+[DBG] Timer count-up test: 8b, 0x0010
+[DBG] PASS: 8b, 0x0010 1xs 1d 1i
+[DBG] PASS: 8b, 0x0010 16xs 1d 1i
+[DBG] PASS: 8b, 0x0010 1xv 1d 1i
+[DBG] PASS: 8b, 0x0010 16xv 1d 1i
+[DBG] PASS: 8b, 0x0010 1xs 2d 1i
+[DBG] PASS: 8b, 0x0010 16xs 2d 1i
+[DBG] PASS: 8b, 0x0010 1xv 2d 1i
+[DBG] PASS: 8b, 0x0010 16xv 2d 1i
+[DBG] PASS: 8b, 0x0010 1xs 4d 1i
+[DBG] PASS: 8b, 0x0010 16xs 4d 1i
+[DBG] PASS: 8b, 0x0010 1xv 4d 1i
+[DBG] PASS: 8b, 0x0010 16xv 4d 1i
+[DBG] PASS: 8b, 0x0010 1xs 1d 2i
+[DBG] PASS: 8b, 0x0010 16xs 1d 2i
+[DBG] PASS: 8b, 0x0010 1xv 1d 2i
+[DBG] PASS: 8b, 0x0010 16xv 1d 2i
+[DBG] PASS: 8b, 0x0010 1xs 2d 2i
+[DBG] PASS: 8b, 0x0010 16xs 2d 2i
+[DBG] PASS: 8b, 0x0010 1xv 2d 2i
+[DBG] PASS: 8b, 0x0010 16xv 2d 2i
+[DBG] PASS: 8b, 0x0010 1xs 4d 2i
+[DBG] PASS: 8b, 0x0010 16xs 4d 2i
+[DBG] PASS: 8b, 0x0010 1xv 4d 2i
+[DBG] PASS: 8b, 0x0010 16xv 4d 2i
+[DBG] PASS: 8b, 0x0010 1xs 1d 4i
+[DBG] PASS: 8b, 0x0010 16xs 1d 4i
+[DBG] PASS: 8b, 0x0010 1xv 1d 4i
+[DBG] PASS: 8b, 0x0010 16xv 1d 4i
+[DBG] PASS: 8b, 0x0010 1xs 2d 4i
+[DBG] PASS: 8b, 0x0010 16xs 2d 4i
+[DBG] PASS: 8b, 0x0010 1xv 2d 4i
+[DBG] PASS: 8b, 0x0010 16xv 2d 4i
+[DBG] PASS: 8b, 0x0010 1xs 4d 4i
+[DBG] PASS: 8b, 0x0010 16xs 4d 4i
+[DBG] PASS: 8b, 0x0010 1xv 4d 4i
+[DBG] PASS: 8b, 0x0010 16xv 4d 4i
+[DBG] Timer count-up test: 8b, 0x0011
+[DBG] PASS: 8b, 0x0011 1xs 1d 1i
+[DBG] PASS: 8b, 0x0011 16xs 1d 1i
+[DBG] PASS: 8b, 0x0011 1xv 1d 1i
+[DBG] PASS: 8b, 0x0011 16xv 1d 1i
+[DBG] PASS: 8b, 0x0011 1xs 2d 1i
+[DBG] PASS: 8b, 0x0011 16xs 2d 1i
+[DBG] PASS: 8b, 0x0011 1xv 2d 1i
+[DBG] PASS: 8b, 0x0011 16xv 2d 1i
+[DBG] PASS: 8b, 0x0011 1xs 4d 1i
+[DBG] PASS: 8b, 0x0011 16xs 4d 1i
+[DBG] PASS: 8b, 0x0011 1xv 4d 1i
+[DBG] PASS: 8b, 0x0011 16xv 4d 1i
+[DBG] PASS: 8b, 0x0011 1xs 1d 2i
+[DBG] PASS: 8b, 0x0011 16xs 1d 2i
+[DBG] PASS: 8b, 0x0011 1xv 1d 2i
+[DBG] PASS: 8b, 0x0011 16xv 1d 2i
+[DBG] PASS: 8b, 0x0011 1xs 2d 2i
+[DBG] PASS: 8b, 0x0011 16xs 2d 2i
+[DBG] PASS: 8b, 0x0011 1xv 2d 2i
+[DBG] PASS: 8b, 0x0011 16xv 2d 2i
+[DBG] PASS: 8b, 0x0011 1xs 4d 2i
+[DBG] PASS: 8b, 0x0011 16xs 4d 2i
+[DBG] PASS: 8b, 0x0011 1xv 4d 2i
+[DBG] PASS: 8b, 0x0011 16xv 4d 2i
+[DBG] PASS: 8b, 0x0011 1xs 1d 4i
+[DBG] PASS: 8b, 0x0011 16xs 1d 4i
+[DBG] PASS: 8b, 0x0011 1xv 1d 4i
+[DBG] PASS: 8b, 0x0011 16xv 1d 4i
+[DBG] PASS: 8b, 0x0011 1xs 2d 4i
+[DBG] PASS: 8b, 0x0011 16xs 2d 4i
+[DBG] PASS: 8b, 0x0011 1xv 2d 4i
+[DBG] PASS: 8b, 0x0011 16xv 2d 4i
+[DBG] PASS: 8b, 0x0011 1xs 4d 4i
+[DBG] PASS: 8b, 0x0011 16xs 4d 4i
+[DBG] PASS: 8b, 0x0011 1xv 4d 4i
+[DBG] PASS: 8b, 0x0011 16xv 4d 4i
+[DBG] Timer count-up test: 8b, 0x0012
+[DBG] PASS: 8b, 0x0012 1xs 1d 1i
+[DBG] PASS: 8b, 0x0012 16xs 1d 1i
+[DBG] PASS: 8b, 0x0012 1xv 1d 1i
+[DBG] PASS: 8b, 0x0012 16xv 1d 1i
+[DBG] PASS: 8b, 0x0012 1xs 2d 1i
+[DBG] PASS: 8b, 0x0012 16xs 2d 1i
+[DBG] PASS: 8b, 0x0012 1xv 2d 1i
+[DBG] PASS: 8b, 0x0012 16xv 2d 1i
+[DBG] PASS: 8b, 0x0012 1xs 4d 1i
+[DBG] PASS: 8b, 0x0012 16xs 4d 1i
+[DBG] PASS: 8b, 0x0012 1xv 4d 1i
+[DBG] PASS: 8b, 0x0012 16xv 4d 1i
+[DBG] PASS: 8b, 0x0012 1xs 1d 2i
+[DBG] PASS: 8b, 0x0012 16xs 1d 2i
+[DBG] PASS: 8b, 0x0012 1xv 1d 2i
+[DBG] PASS: 8b, 0x0012 16xv 1d 2i
+[DBG] PASS: 8b, 0x0012 1xs 2d 2i
+[DBG] PASS: 8b, 0x0012 16xs 2d 2i
+[DBG] PASS: 8b, 0x0012 1xv 2d 2i
+[DBG] PASS: 8b, 0x0012 16xv 2d 2i
+[DBG] PASS: 8b, 0x0012 1xs 4d 2i
+[DBG] PASS: 8b, 0x0012 16xs 4d 2i
+[DBG] PASS: 8b, 0x0012 1xv 4d 2i
+[DBG] PASS: 8b, 0x0012 16xv 4d 2i
+[DBG] PASS: 8b, 0x0012 1xs 1d 4i
+[DBG] PASS: 8b, 0x0012 16xs 1d 4i
+[DBG] PASS: 8b, 0x0012 1xv 1d 4i
+[DBG] PASS: 8b, 0x0012 16xv 1d 4i
+[DBG] PASS: 8b, 0x0012 1xs 2d 4i
+[DBG] PASS: 8b, 0x0012 16xs 2d 4i
+[DBG] PASS: 8b, 0x0012 1xv 2d 4i
+[DBG] PASS: 8b, 0x0012 16xv 2d 4i
+[DBG] PASS: 8b, 0x0012 1xs 4d 4i
+[DBG] PASS: 8b, 0x0012 16xs 4d 4i
+[DBG] PASS: 8b, 0x0012 1xv 4d 4i
+[DBG] PASS: 8b, 0x0012 16xv 4d 4i
+[DBG] Timer count-up test: 8b, 0x0013
+[DBG] PASS: 8b, 0x0013 1xs 1d 1i
+[DBG] PASS: 8b, 0x0013 16xs 1d 1i
+[DBG] PASS: 8b, 0x0013 1xv 1d 1i
+[DBG] PASS: 8b, 0x0013 16xv 1d 1i
+[DBG] PASS: 8b, 0x0013 1xs 2d 1i
+[DBG] PASS: 8b, 0x0013 16xs 2d 1i
+[DBG] PASS: 8b, 0x0013 1xv 2d 1i
+[DBG] PASS: 8b, 0x0013 16xv 2d 1i
+[DBG] PASS: 8b, 0x0013 1xs 4d 1i
+[DBG] PASS: 8b, 0x0013 16xs 4d 1i
+[DBG] PASS: 8b, 0x0013 1xv 4d 1i
+[DBG] PASS: 8b, 0x0013 16xv 4d 1i
+[DBG] PASS: 8b, 0x0013 1xs 1d 2i
+[DBG] PASS: 8b, 0x0013 16xs 1d 2i
+[DBG] PASS: 8b, 0x0013 1xv 1d 2i
+[DBG] PASS: 8b, 0x0013 16xv 1d 2i
+[DBG] PASS: 8b, 0x0013 1xs 2d 2i
+[DBG] PASS: 8b, 0x0013 16xs 2d 2i
+[DBG] PASS: 8b, 0x0013 1xv 2d 2i
+[DBG] PASS: 8b, 0x0013 16xv 2d 2i
+[DBG] PASS: 8b, 0x0013 1xs 4d 2i
+[DBG] PASS: 8b, 0x0013 16xs 4d 2i
+[DBG] PASS: 8b, 0x0013 1xv 4d 2i
+[DBG] PASS: 8b, 0x0013 16xv 4d 2i
+[DBG] PASS: 8b, 0x0013 1xs 1d 4i
+[DBG] PASS: 8b, 0x0013 16xs 1d 4i
+[DBG] PASS: 8b, 0x0013 1xv 1d 4i
+[DBG] PASS: 8b, 0x0013 16xv 1d 4i
+[DBG] PASS: 8b, 0x0013 1xs 2d 4i
+[DBG] PASS: 8b, 0x0013 16xs 2d 4i
+[DBG] PASS: 8b, 0x0013 1xv 2d 4i
+[DBG] PASS: 8b, 0x0013 16xv 2d 4i
+[DBG] PASS: 8b, 0x0013 1xs 4d 4i
+[DBG] PASS: 8b, 0x0013 16xs 4d 4i
+[DBG] PASS: 8b, 0x0013 1xv 4d 4i
+[DBG] PASS: 8b, 0x0013 16xv 4d 4i
+[DBG] Timer count-up test: 10b, 0x0010
+[DBG] PASS: 10b, 0x0010 1xs 1d 1i
+[DBG] PASS: 10b, 0x0010 16xs 1d 1i
+[DBG] PASS: 10b, 0x0010 1xv 1d 1i
+[DBG] PASS: 10b, 0x0010 16xv 1d 1i
+[DBG] PASS: 10b, 0x0010 1xs 2d 1i
+[DBG] PASS: 10b, 0x0010 16xs 2d 1i
+[DBG] PASS: 10b, 0x0010 1xv 2d 1i
+[DBG] PASS: 10b, 0x0010 16xv 2d 1i
+[DBG] PASS: 10b, 0x0010 1xs 4d 1i
+[DBG] PASS: 10b, 0x0010 16xs 4d 1i
+[DBG] PASS: 10b, 0x0010 1xv 4d 1i
+[DBG] PASS: 10b, 0x0010 16xv 4d 1i
+[DBG] PASS: 10b, 0x0010 1xs 1d 2i
+[DBG] PASS: 10b, 0x0010 16xs 1d 2i
+[DBG] PASS: 10b, 0x0010 1xv 1d 2i
+[DBG] PASS: 10b, 0x0010 16xv 1d 2i
+[DBG] PASS: 10b, 0x0010 1xs 2d 2i
+[DBG] PASS: 10b, 0x0010 16xs 2d 2i
+[DBG] PASS: 10b, 0x0010 1xv 2d 2i
+[DBG] PASS: 10b, 0x0010 16xv 2d 2i
+[DBG] PASS: 10b, 0x0010 1xs 4d 2i
+[DBG] PASS: 10b, 0x0010 16xs 4d 2i
+[DBG] PASS: 10b, 0x0010 1xv 4d 2i
+[DBG] PASS: 10b, 0x0010 16xv 4d 2i
+[DBG] PASS: 10b, 0x0010 1xs 1d 4i
+[DBG] PASS: 10b, 0x0010 16xs 1d 4i
+[DBG] PASS: 10b, 0x0010 1xv 1d 4i
+[DBG] PASS: 10b, 0x0010 16xv 1d 4i
+[DBG] PASS: 10b, 0x0010 1xs 2d 4i
+[DBG] PASS: 10b, 0x0010 16xs 2d 4i
+[DBG] PASS: 10b, 0x0010 1xv 2d 4i
+[DBG] PASS: 10b, 0x0010 16xv 2d 4i
+[DBG] PASS: 10b, 0x0010 1xs 4d 4i
+[DBG] PASS: 10b, 0x0010 16xs 4d 4i
+[DBG] PASS: 10b, 0x0010 1xv 4d 4i
+[DBG] PASS: 10b, 0x0010 16xv 4d 4i
+[DBG] Timer count-up test: 10b, 0x0011
+[DBG] PASS: 10b, 0x0011 1xs 1d 1i
+[DBG] PASS: 10b, 0x0011 16xs 1d 1i
+[DBG] PASS: 10b, 0x0011 1xv 1d 1i
+[DBG] PASS: 10b, 0x0011 16xv 1d 1i
+[DBG] PASS: 10b, 0x0011 1xs 2d 1i
+[DBG] PASS: 10b, 0x0011 16xs 2d 1i
+[DBG] PASS: 10b, 0x0011 1xv 2d 1i
+[DBG] PASS: 10b, 0x0011 16xv 2d 1i
+[DBG] PASS: 10b, 0x0011 1xs 4d 1i
+[DBG] PASS: 10b, 0x0011 16xs 4d 1i
+[DBG] PASS: 10b, 0x0011 1xv 4d 1i
+[DBG] PASS: 10b, 0x0011 16xv 4d 1i
+[DBG] PASS: 10b, 0x0011 1xs 1d 2i
+[DBG] PASS: 10b, 0x0011 16xs 1d 2i
+[DBG] PASS: 10b, 0x0011 1xv 1d 2i
+[DBG] PASS: 10b, 0x0011 16xv 1d 2i
+[DBG] PASS: 10b, 0x0011 1xs 2d 2i
+[DBG] PASS: 10b, 0x0011 16xs 2d 2i
+[DBG] PASS: 10b, 0x0011 1xv 2d 2i
+[DBG] PASS: 10b, 0x0011 16xv 2d 2i
+[DBG] PASS: 10b, 0x0011 1xs 4d 2i
+[DBG] PASS: 10b, 0x0011 16xs 4d 2i
+[DBG] PASS: 10b, 0x0011 1xv 4d 2i
+[DBG] PASS: 10b, 0x0011 16xv 4d 2i
+[DBG] PASS: 10b, 0x0011 1xs 1d 4i
+[DBG] PASS: 10b, 0x0011 16xs 1d 4i
+[DBG] PASS: 10b, 0x0011 1xv 1d 4i
+[DBG] PASS: 10b, 0x0011 16xv 1d 4i
+[DBG] PASS: 10b, 0x0011 1xs 2d 4i
+[DBG] PASS: 10b, 0x0011 16xs 2d 4i
+[DBG] PASS: 10b, 0x0011 1xv 2d 4i
+[DBG] PASS: 10b, 0x0011 16xv 2d 4i
+[DBG] PASS: 10b, 0x0011 1xs 4d 4i
+[DBG] PASS: 10b, 0x0011 16xs 4d 4i
+[DBG] PASS: 10b, 0x0011 1xv 4d 4i
+[DBG] PASS: 10b, 0x0011 16xv 4d 4i
+[DBG] Timer count-up test: 10b, 0x0012
+[DBG] PASS: 10b, 0x0012 1xs 1d 1i
+[DBG] PASS: 10b, 0x0012 16xs 1d 1i
+[DBG] PASS: 10b, 0x0012 1xv 1d 1i
+[DBG] PASS: 10b, 0x0012 16xv 1d 1i
+[DBG] PASS: 10b, 0x0012 1xs 2d 1i
+[DBG] PASS: 10b, 0x0012 16xs 2d 1i
+[DBG] PASS: 10b, 0x0012 1xv 2d 1i
+[DBG] PASS: 10b, 0x0012 16xv 2d 1i
+[DBG] PASS: 10b, 0x0012 1xs 4d 1i
+[DBG] PASS: 10b, 0x0012 16xs 4d 1i
+[DBG] PASS: 10b, 0x0012 1xv 4d 1i
+[DBG] PASS: 10b, 0x0012 16xv 4d 1i
+[DBG] PASS: 10b, 0x0012 1xs 1d 2i
+[DBG] PASS: 10b, 0x0012 16xs 1d 2i
+[DBG] PASS: 10b, 0x0012 1xv 1d 2i
+[DBG] PASS: 10b, 0x0012 16xv 1d 2i
+[DBG] PASS: 10b, 0x0012 1xs 2d 2i
+[DBG] PASS: 10b, 0x0012 16xs 2d 2i
+[DBG] PASS: 10b, 0x0012 1xv 2d 2i
+[DBG] PASS: 10b, 0x0012 16xv 2d 2i
+[DBG] PASS: 10b, 0x0012 1xs 4d 2i
+[DBG] PASS: 10b, 0x0012 16xs 4d 2i
+[DBG] PASS: 10b, 0x0012 1xv 4d 2i
+[DBG] PASS: 10b, 0x0012 16xv 4d 2i
+[DBG] PASS: 10b, 0x0012 1xs 1d 4i
+[DBG] PASS: 10b, 0x0012 16xs 1d 4i
+[DBG] PASS: 10b, 0x0012 1xv 1d 4i
+[DBG] PASS: 10b, 0x0012 16xv 1d 4i
+[DBG] PASS: 10b, 0x0012 1xs 2d 4i
+[DBG] PASS: 10b, 0x0012 16xs 2d 4i
+[DBG] PASS: 10b, 0x0012 1xv 2d 4i
+[DBG] PASS: 10b, 0x0012 16xv 2d 4i
+[DBG] PASS: 10b, 0x0012 1xs 4d 4i
+[DBG] PASS: 10b, 0x0012 16xs 4d 4i
+[DBG] PASS: 10b, 0x0012 1xv 4d 4i
+[DBG] PASS: 10b, 0x0012 16xv 4d 4i
+[DBG] Timer count-up test: 10b, 0x0013
+[DBG] PASS: 10b, 0x0013 1xs 1d 1i
+[DBG] PASS: 10b, 0x0013 16xs 1d 1i
+[DBG] PASS: 10b, 0x0013 1xv 1d 1i
+[DBG] PASS: 10b, 0x0013 16xv 1d 1i
+[DBG] PASS: 10b, 0x0013 1xs 2d 1i
+[DBG] PASS: 10b, 0x0013 16xs 2d 1i
+[DBG] PASS: 10b, 0x0013 1xv 2d 1i
+[DBG] PASS: 10b, 0x0013 16xv 2d 1i
+[DBG] PASS: 10b, 0x0013 1xs 4d 1i
+[DBG] PASS: 10b, 0x0013 16xs 4d 1i
+[DBG] PASS: 10b, 0x0013 1xv 4d 1i
+[DBG] PASS: 10b, 0x0013 16xv 4d 1i
+[DBG] PASS: 10b, 0x0013 1xs 1d 2i
+[DBG] PASS: 10b, 0x0013 16xs 1d 2i
+[DBG] PASS: 10b, 0x0013 1xv 1d 2i
+[DBG] PASS: 10b, 0x0013 16xv 1d 2i
+[DBG] PASS: 10b, 0x0013 1xs 2d 2i
+[DBG] PASS: 10b, 0x0013 16xs 2d 2i
+[DBG] PASS: 10b, 0x0013 1xv 2d 2i
+[DBG] PASS: 10b, 0x0013 16xv 2d 2i
+[DBG] PASS: 10b, 0x0013 1xs 4d 2i
+[DBG] PASS: 10b, 0x0013 16xs 4d 2i
+[DBG] PASS: 10b, 0x0013 1xv 4d 2i
+[DBG] PASS: 10b, 0x0013 16xv 4d 2i
+[DBG] PASS: 10b, 0x0013 1xs 1d 4i
+[DBG] PASS: 10b, 0x0013 16xs 1d 4i
+[DBG] PASS: 10b, 0x0013 1xv 1d 4i
+[DBG] PASS: 10b, 0x0013 16xv 1d 4i
+[DBG] PASS: 10b, 0x0013 1xs 2d 4i
+[DBG] PASS: 10b, 0x0013 16xs 2d 4i
+[DBG] PASS: 10b, 0x0013 1xv 2d 4i
+[DBG] PASS: 10b, 0x0013 16xv 2d 4i
+[DBG] PASS: 10b, 0x0013 1xs 4d 4i
+[DBG] PASS: 10b, 0x0013 16xs 4d 4i
+[DBG] PASS: 10b, 0x0013 1xv 4d 4i
+[DBG] PASS: 10b, 0x0013 16xv 4d 4i
+
+--- Suite 04: Timer count-up ---
+Frames: 174  PC=0x0802BA52  CPSR=0x2000003F  halted=0  cycle=168453829
+[debug]
+Game Boy Advance Test Suite
+===
+BEGIN: Timer count-up tests
+Timer count-up test: 0b, 0x0001
+PASS: 0b, 0x0001 1xs 1d 1i
+PASS: 0b, 0x0001 16xs 1d 1i
+PASS: 0b, 0x0001 1xv 1d 1i
+PASS: 0b, 0x0001 16xv 1d 1i
+PASS: 0b, 0x0001 1xs 2d 1i
+PASS: 0b, 0x0001 16xs 2d 1i
+PASS: 0b, 0x0001 1xv 2d 1i
+PASS: 0b, 0x0001 16xv 2d 1i
+PASS: 0b, 0x0001 1xs 4d 1i
+PASS: 0b, 0x0001 16xs 4d 1i
+PASS: 0b, 0x0001 1xv 4d 1i
+PASS: 0b, 0x0001 16xv 4d 1i
+PASS: 0b, 0x0001 1xs 1d 2i
+PASS: 0b, 0x0001 16xs 1d 2i
+PASS: 0b, 0x0001 1xv 1d 2i
+PASS: 0b, 0x0001 16xv 1d 2i
+PASS: 0b, 0x0001 1xs 2d 2i
+PASS: 0b, 0x0001 16xs 2d 2i
+PASS: 0b, 0x0001 1xv 2d 2i
+PASS: 0b, 0x0001 16xv 2d 2i
+PASS: 0b, 0x0001 1xs 4d 2i
+PASS: 0b, 0x0001 16xs 4d 2i
+PASS: 0b, 0x0001 1xv 4d 2i
+PASS: 0b, 0x0001 16xv 4d 2i
+PASS: 0b, 0x0001 1xs 1d 4i
+PASS: 0b, 0x0001 16xs 1d 4i
+PASS: 0b, 0x0001 1xv 1d 4i
+PASS: 0b, 0x0001 16xv 1d 4i
+PASS: 0b, 0x0001 1xs 2d 4i
+PASS: 0b, 0x0001 16xs 2d 4i
+PASS: 0b, 0x0001 1xv 2d 4i
+PASS: 0b, 0x0001 16xv 2d 4i
+PASS: 0b, 0x0001 1xs 4d 4i
+PASS: 0b, 0x0001 16xs 4d 4i
+PASS: 0b, 0x0001 1xv 4d 4i
+PASS: 0b, 0x0001 16xv 4d 4i
+Timer count-up test: 0b, 0x0005
+PASS: 0b, 0x0005 1xs 1d 1i
+PASS: 0b, 0x0005 16xs 1d 1i
+PASS: 0b, 0x0005 1xv 1d 1i
+PASS: 0b, 0x0005 16xv 1d 1i
+PASS: 0b, 0x0005 1xs 2d 1i
+PASS: 0b, 0x0005 16xs 2d 1i
+PASS: 0b, 0x0005 1xv 2d 1i
+PASS: 0b, 0x0005 16xv 2d 1i
+PASS: 0b, 0x0005 1xs 4d 1i
+PASS: 0b, 0x0005 16xs 4d 1i
+PASS: 0b, 0x0005 1xv 4d 1i
+PASS: 0b, 0x0005 16xv 4d 1i
+PASS: 0b, 0x0005 1xs 1d 2i
+PASS: 0b, 0x0005 16xs 1d 2i
+PASS: 0b, 0x0005 1xv 1d 2i
+PASS: 0b, 0x0005 16xv 1d 2i
+PASS: 0b, 0x0005 1xs 2d 2i
+PASS: 0b, 0x0005 16xs 2d 2i
+PASS: 0b, 0x0005 1xv 2d 2i
+PASS: 0b, 0x0005 16xv 2d 2i
+PASS: 0b, 0x0005 1xs 4d 2i
+PASS: 0b, 0x0005 16xs 4d 2i
+PASS: 0b, 0x0005 1xv 4d 2i
+PASS: 0b, 0x0005 16xv 4d 2i
+PASS: 0b, 0x0005 1xs 1d 4i
+PASS: 0b, 0x0005 16xs 1d 4i
+PASS: 0b, 0x0005 1xv 1d 4i
+PASS: 0b, 0x0005 16xv 1d 4i
+PASS: 0b, 0x0005 1xs 2d 4i
+PASS: 0b, 0x0005 16xs 2d 4i
+PASS: 0b, 0x0005 1xv 2d 4i
+PASS: 0b, 0x0005 16xv 2d 4i
+PASS: 0b, 0x0005 1xs 4d 4i
+PASS: 0b, 0x0005 16xs 4d 4i
+PASS: 0b, 0x0005 1xv 4d 4i
+PASS: 0b, 0x0005 16xv 4d 4i
+Timer count-up test: 0b, 0x000C
+PASS: 0b, 0x000C 1xs 1d 1i
+PASS: 0b, 0x000C 16xs 1d 1i
+PASS: 0b, 0x000C 1xv 1d 1i
+PASS: 0b, 0x000C 16xv 1d 1i
+PASS: 0b, 0x000C 1xs 2d 1i
+PASS: 0b, 0x000C 16xs 2d 1i
+PASS: 0b, 0x000C 1xv 2d 1i
+PASS: 0b, 0x000C 16xv 2d 1i
+PASS: 0b, 0x000C 1xs 4d 1i
+PASS: 0b, 0x000C 16xs 4d 1i
+PASS: 0b, 0x000C 1xv 4d 1i
+PASS: 0b, 0x000C 16xv 4d 1i
+PASS: 0b, 0x000C 1xs 1d 2i
+PASS: 0b, 0x000C 16xs 1d 2i
+PASS: 0b, 0x000C 1xv 1d 2i
+PASS: 0b, 0x000C 16xv 1d 2i
+PASS: 0b, 0x000C 1xs 2d 2i
+PASS: 0b, 0x000C 16xs 2d 2i
+PASS: 0b, 0x000C 1xv 2d 2i
+PASS: 0b, 0x000C 16xv 2d 2i
+PASS: 0b, 0x000C 1xs 4d 2i
+PASS: 0b, 0x000C 16xs 4d 2i
+PASS: 0b, 0x000C 1xv 4d 2i
+PASS: 0b, 0x000C 16xv 4d 2i
+PASS: 0b, 0x000C 1xs 1d 4i
+PASS: 0b, 0x000C 16xs 1d 4i
+PASS: 0b, 0x000C 1xv 1d 4i
+PASS: 0b, 0x000C 16xv 1d 4i
+PASS: 0b, 0x000C 1xs 2d 4i
+PASS: 0b, 0x000C 16xs 2d 4i
+PASS: 0b, 0x000C 1xv 2d 4i
+PASS: 0b, 0x000C 16xv 2d 4i
+PASS: 0b, 0x000C 1xs 4d 4i
+PASS: 0b, 0x000C 16xs 4d 4i
+PASS: 0b, 0x000C 1xv 4d 4i
+PASS: 0b, 0x000C 16xv 4d 4i
+Timer count-up test: 0b, 0x000D
+PASS: 0b, 0x000D 1xs 1d 1i
+PASS: 0b, 0x000D 16xs 1d 1i
+PASS: 0b, 0x000D 1xv 1d 1i
+PASS: 0b, 0x000D 16xv 1d 1i
+PASS: 0b, 0x000D 1xs 2d 1i
+PASS: 0b, 0x000D 16xs 2d 1i
+PASS: 0b, 0x000D 1xv 2d 1i
+PASS: 0b, 0x000D 16xv 2d 1i
+PASS: 0b, 0x000D 1xs 4d 1i
+PASS: 0b, 0x000D 16xs 4d 1i
+PASS: 0b, 0x000D 1xv 4d 1i
+PASS: 0b, 0x000D 16xv 4d 1i
+PASS: 0b, 0x000D 1xs 1d 2i
+PASS: 0b, 0x000D 16xs 1d 2i
+PASS: 0b, 0x000D 1xv 1d 2i
+PASS: 0b, 0x000D 16xv 1d 2i
+PASS: 0b, 0x000D 1xs 2d 2i
+PASS: 0b, 0x000D 16xs 2d 2i
+PASS: 0b, 0x000D 1xv 2d 2i
+PASS: 0b, 0x000D 16xv 2d 2i
+PASS: 0b, 0x000D 1xs 4d 2i
+PASS: 0b, 0x000D 16xs 4d 2i
+PASS: 0b, 0x000D 1xv 4d 2i
+PASS: 0b, 0x000D 16xv 4d 2i
+PASS: 0b, 0x000D 1xs 1d 4i
+PASS: 0b, 0x000D 16xs 1d 4i
+PASS: 0b, 0x000D 1xv 1d 4i
+PASS: 0b, 0x000D 16xv 1d 4i
+PASS: 0b, 0x000D 1xs 2d 4i
+PASS: 0b, 0x000D 16xs 2d 4i
+PASS: 0b, 0x000D 1xv 2d 4i
+PASS: 0b, 0x000D 16xv 2d 4i
+PASS: 0b, 0x000D 1xs 4d 4i
+PASS: 0b, 0x000D 16xs 4d 4i
+PASS: 0b, 0x000D 1xv 4d 4i
+PASS: 0b, 0x000D 16xv 4d 4i
+Timer count-up test: 0b, 0x0010
+PASS: 0b, 0x0010 1xs 1d 1i
+PASS: 0b, 0x0010 16xs 1d 1i
+PASS: 0b, 0x0010 1xv 1d 1i
+PASS: 0b, 0x0010 16xv 1d 1i
+PASS: 0b, 0x0010 1xs 2d 1i
+PASS: 0b, 0x0010 16xs 2d 1i
+PASS: 0b, 0x0010 1xv 2d 1i
+PASS: 0b, 0x0010 16xv 2d 1i
+PASS: 0b, 0x0010 1xs 4d 1i
+PASS: 0b, 0x0010 16xs 4d 1i
+PASS: 0b, 0x0010 1xv 4d 1i
+PASS: 0b, 0x0010 16xv 4d 1i
+PASS: 0b, 0x0010 1xs 1d 2i
+PASS: 0b, 0x0010 16xs 1d 2i
+PASS: 0b, 0x0010 1xv 1d 2i
+PASS: 0b, 0x0010 16xv 1d 2i
+PASS: 0b, 0x0010 1xs 2d 2i
+PASS: 0b, 0x0010 16xs 2d 2i
+PASS: 0b, 0x0010 1xv 2d 2i
+PASS: 0b, 0x0010 16xv 2d 2i
+PASS: 0b, 0x0010 1xs 4d 2i
+PASS: 0b, 0x0010 16xs 4d 2i
+PASS: 0b, 0x0010 1xv 4d 2i
+PASS: 0b, 0x0010 16xv 4d 2i
+PASS: 0b, 0x0010 1xs 1d 4i
+PASS: 0b, 0x0010 16xs 1d 4i
+PASS: 0b, 0x0010 1xv 1d 4i
+PASS: 0b, 0x0010 16xv 1d 4i
+PASS: 0b, 0x0010 1xs 2d 4i
+PASS: 0b, 0x0010 16xs 2d 4i
+PASS: 0b, 0x0010 1xv 2d 4i
+PASS: 0b, 0x0010 16xv 2d 4i
+PASS: 0b, 0x0010 1xs 4d 4i
+PASS: 0b, 0x0010 16xs 4d 4i
+PASS: 0b, 0x0010 1xv 4d 4i
+PASS: 0b, 0x0010 16xv 4d 4i
+Timer count-up test: 0b, 0x0014
+PASS: 0b, 0x0014 1xs 1d 1i
+PASS: 0b, 0x0014 16xs 1d 1i
+PASS: 0b, 0x0014 1xv 1d 1i
+PASS: 0b, 0x0014 16xv 1d 1i
+PASS: 0b, 0x0014 1xs 2d 1i
+PASS: 0b, 0x0014 16xs 2d 1i
+PASS: 0b, 0x0014 1xv 2d 1i
+PASS: 0b, 0x0014 16xv 2d 1i
+PASS: 0b, 0x0014 1xs 4d 1i
+PASS: 0b, 0x0014 16xs 4d 1i
+PASS: 0b, 0x0014 1xv 4d 1i
+PASS: 0b, 0x0014 16xv 4d 1i
+PASS: 0b, 0x0014 1xs 1d 2i
+PASS: 0b, 0x0014 16xs 1d 2i
+PASS: 0b, 0x0014 1xv 1d 2i
+PASS: 0b, 0x0014 16xv 1d 2i
+PASS: 0b, 0x0014 1xs 2d 2i
+PASS: 0b, 0x0014 16xs 2d 2i
+PASS: 0b, 0x0014 1xv 2d 2i
+PASS: 0b, 0x0014 16xv 2d 2i
+PASS: 0b, 0x0014 1xs 4d 2i
+PASS: 0b, 0x0014 16xs 4d 2i
+PASS: 0b, 0x0014 1xv 4d 2i
+PASS: 0b, 0x0014 16xv 4d 2i
+PASS: 0b, 0x0014 1xs 1d 4i
+PASS: 0b, 0x0014 16xs 1d 4i
+PASS: 0b, 0x0014 1xv 1d 4i
+PASS: 0b, 0x0014 16xv 1d 4i
+PASS: 0b, 0x0014 1xs 2d 4i
+PASS: 0b, 0x0014 16xs 2d 4i
+PASS: 0b, 0x0014 1xv 2d 4i
+PASS: 0b, 0x0014 16xv 2d 4i
+PASS: 0b, 0x0014 1xs 4d 4i
+PASS: 0b, 0x0014 16xs 4d 4i
+PASS: 0b, 0x0014 1xv 4d 4i
+PASS: 0b, 0x0014 16xv 4d 4i
+Timer count-up test: 0b, 0x0015
+PASS: 0b, 0x0015 1xs 1d 1i
+PASS: 0b, 0x0015 16xs 1d 1i
+PASS: 0b, 0x0015 1xv 1d 1i
+PASS: 0b, 0x0015 16xv 1d 1i
+PASS: 0b, 0x0015 1xs 2d 1i
+PASS: 0b, 0x0015 16xs 2d 1i
+PASS: 0b, 0x0015 1xv 2d 1i
+PASS: 0b, 0x0015 16xv 2d 1i
+PASS: 0b, 0x0015 1xs 4d 1i
+PASS: 0b, 0x0015 16xs 4d 1i
+PASS: 0b, 0x0015 1xv 4d 1i
+PASS: 0b, 0x0015 16xv 4d 1i
+PASS: 0b, 0x0015 1xs 1d 2i
+PASS: 0b, 0x0015 16xs 1d 2i
+PASS: 0b, 0x0015 1xv 1d 2i
+PASS: 0b, 0x0015 16xv 1d 2i
+PASS: 0b, 0x0015 1xs 2d 2i
+PASS: 0b, 0x0015 16xs 2d 2i
+PASS: 0b, 0x0015 1xv 2d 2i
+PASS: 0b, 0x0015 16xv 2d 2i
+PASS: 0b, 0x0015 1xs 4d 2i
+PASS: 0b, 0x0015 16xs 4d 2i
+PASS: 0b, 0x0015 1xv 4d 2i
+PASS: 0b, 0x0015 16xv 4d 2i
+PASS: 0b, 0x0015 1xs 1d 4i
+PASS: 0b, 0x0015 16xs 1d 4i
+PASS: 0b, 0x0015 1xv 1d 4i
+PASS: 0b, 0x0015 16xv 1d 4i
+PASS: 0b, 0x0015 1xs 2d 4i
+PASS: 0b, 0x0015 16xs 2d 4i
+PASS: 0b, 0x0015 1xv 2d 4i
+PASS: 0b, 0x0015 16xv 2d 4i
+PASS: 0b, 0x0015 1xs 4d 4i
+PASS: 0b, 0x0015 16xs 4d 4i
+PASS: 0b, 0x0015 1xv 4d 4i
+PASS: 0b, 0x0015 16xv 4d 4i
+Timer count-up test: 0b, 0x0020
+PASS: 0b, 0x0020 1xs 1d 1i
+PASS: 0b, 0x0020 16xs 1d 1i
+PASS: 0b, 0x0020 1xv 1d 1i
+PASS: 0b, 0x0020 16xv 1d 1i
+PASS: 0b, 0x0020 1xs 2d 1i
+PASS: 0b, 0x0020 16xs 2d 1i
+PASS: 0b, 0x0020 1xv 2d 1i
+PASS: 0b, 0x0020 16xv 2d 1i
+PASS: 0b, 0x0020 1xs 4d 1i
+PASS: 0b, 0x0020 16xs 4d 1i
+PASS: 0b, 0x0020 1xv 4d 1i
+PASS: 0b, 0x0020 16xv 4d 1i
+PASS: 0b, 0x0020 1xs 1d 2i
+PASS: 0b, 0x0020 16xs 1d 2i
+PASS: 0b, 0x0020 1xv 1d 2i
+PASS: 0b, 0x0020 16xv 1d 2i
+PASS: 0b, 0x0020 1xs 2d 2i
+PASS: 0b, 0x0020 16xs 2d 2i
+PASS: 0b, 0x0020 1xv 2d 2i
+PASS: 0b, 0x0020 16xv 2d 2i
+PASS: 0b, 0x0020 1xs 4d 2i
+PASS: 0b, 0x0020 16xs 4d 2i
+PASS: 0b, 0x0020 1xv 4d 2i
+PASS: 0b, 0x0020 16xv 4d 2i
+PASS: 0b, 0x0020 1xs 1d 4i
+PASS: 0b, 0x0020 16xs 1d 4i
+PASS: 0b, 0x0020 1xv 1d 4i
+PASS: 0b, 0x0020 16xv 1d 4i
+PASS: 0b, 0x0020 1xs 2d 4i
+PASS: 0b, 0x0020 16xs 2d 4i
+PASS: 0b, 0x0020 1xv 2d 4i
+PASS: 0b, 0x0020 16xv 2d 4i
+PASS: 0b, 0x0020 1xs 4d 4i
+PASS: 0b, 0x0020 16xs 4d 4i
+PASS: 0b, 0x0020 1xv 4d 4i
+PASS: 0b, 0x0020 16xv 4d 4i
+Timer count-up test: 0b, 0x0024
+PASS: 0b, 0x0024 1xs 1d 1i
+PASS: 0b, 0x0024 16xs 1d 1i
+PASS: 0b, 0x0024 1xv 1d 1i
+PASS: 0b, 0x0024 16xv 1d 1i
+PASS: 0b, 0x0024 1xs 2d 1i
+PASS: 0b, 0x0024 16xs 2d 1i
+PASS: 0b, 0x0024 1xv 2d 1i
+PASS: 0b, 0x0024 16xv 2d 1i
+PASS: 0b, 0x0024 1xs 4d 1i
+PASS: 0b, 0x0024 16xs 4d 1i
+PASS: 0b, 0x0024 1xv 4d 1i
+PASS: 0b, 0x0024 16xv 4d 1i
+PASS: 0b, 0x0024 1xs 1d 2i
+PASS: 0b, 0x0024 16xs 1d 2i
+PASS: 0b, 0x0024 1xv 1d 2i
+PASS: 0b, 0x0024 16xv 1d 2i
+PASS: 0b, 0x0024 1xs 2d 2i
+PASS: 0b, 0x0024 16xs 2d 2i
+PASS: 0b, 0x0024 1xv 2d 2i
+PASS: 0b, 0x0024 16xv 2d 2i
+PASS: 0b, 0x0024 1xs 4d 2i
+PASS: 0b, 0x0024 16xs 4d 2i
+PASS: 0b, 0x0024 1xv 4d 2i
+PASS: 0b, 0x0024 16xv 4d 2i
+PASS: 0b, 0x0024 1xs 1d 4i
+PASS: 0b, 0x0024 16xs 1d 4i
+PASS: 0b, 0x0024 1xv 1d 4i
+PASS: 0b, 0x0024 16xv 1d 4i
+PASS: 0b, 0x0024 1xs 2d 4i
+PASS: 0b, 0x0024 16xs 2d 4i
+PASS: 0b, 0x0024 1xv 2d 4i
+PASS: 0b, 0x0024 16xv 2d 4i
+PASS: 0b, 0x0024 1xs 4d 4i
+PASS: 0b, 0x0024 16xs 4d 4i
+PASS: 0b, 0x0024 1xv 4d 4i
+PASS: 0b, 0x0024 16xv 4d 4i
+Timer count-up test: 0b, 0x0025
+PASS: 0b, 0x0025 1xs 1d 1i
+PASS: 0b, 0x0025 16xs 1d 1i
+PASS: 0b, 0x0025 1xv 1d 1i
+PASS: 0b, 0x0025 16xv 1d 1i
+PASS: 0b, 0x0025 1xs 2d 1i
+PASS: 0b, 0x0025 16xs 2d 1i
+PASS: 0b, 0x0025 1xv 2d 1i
+PASS: 0b, 0x0025 16xv 2d 1i
+PASS: 0b, 0x0025 1xs 4d 1i
+PASS: 0b, 0x0025 16xs 4d 1i
+PASS: 0b, 0x0025 1xv 4d 1i
+PASS: 0b, 0x0025 16xv 4d 1i
+PASS: 0b, 0x0025 1xs 1d 2i
+PASS: 0b, 0x0025 16xs 1d 2i
+PASS: 0b, 0x0025 1xv 1d 2i
+PASS: 0b, 0x0025 16xv 1d 2i
+PASS: 0b, 0x0025 1xs 2d 2i
+PASS: 0b, 0x0025 16xs 2d 2i
+PASS: 0b, 0x0025 1xv 2d 2i
+PASS: 0b, 0x0025 16xv 2d 2i
+PASS: 0b, 0x0025 1xs 4d 2i
+PASS: 0b, 0x0025 16xs 4d 2i
+PASS: 0b, 0x0025 1xv 4d 2i
+PASS: 0b, 0x0025 16xv 4d 2i
+PASS: 0b, 0x0025 1xs 1d 4i
+PASS: 0b, 0x0025 16xs 1d 4i
+PASS: 0b, 0x0025 1xv 1d 4i
+PASS: 0b, 0x0025 16xv 1d 4i
+PASS: 0b, 0x0025 1xs 2d 4i
+PASS: 0b, 0x0025 16xs 2d 4i
+PASS: 0b, 0x0025 1xv 2d 4i
+PASS: 0b, 0x0025 16xv 2d 4i
+PASS: 0b, 0x0025 1xs 4d 4i
+PASS: 0b, 0x0025 16xs 4d 4i
+PASS: 0b, 0x0025 1xv 4d 4i
+PASS: 0b, 0x0025 16xv 4d 4i
+Timer count-up test: 0b, 0x0040
+PASS: 0b, 0x0040 1xs 1d 1i
+PASS: 0b, 0x0040 16xs 1d 1i
+PASS: 0b, 0x0040 1xv 1d 1i
+PASS: 0b, 0x0040 16xv 1d 1i
+PASS: 0b, 0x0040 1xs 2d 1i
+PASS: 0b, 0x0040 16xs 2d 1i
+PASS: 0b, 0x0040 1xv 2d 1i
+PASS: 0b, 0x0040 16xv 2d 1i
+PASS: 0b, 0x0040 1xs 4d 1i
+PASS: 0b, 0x0040 16xs 4d 1i
+PASS: 0b, 0x0040 1xv 4d 1i
+PASS: 0b, 0x0040 16xv 4d 1i
+PASS: 0b, 0x0040 1xs 1d 2i
+PASS: 0b, 0x0040 16xs 1d 2i
+PASS: 0b, 0x0040 1xv 1d 2i
+PASS: 0b, 0x0040 16xv 1d 2i
+PASS: 0b, 0x0040 1xs 2d 2i
+PASS: 0b, 0x0040 16xs 2d 2i
+PASS: 0b, 0x0040 1xv 2d 2i
+PASS: 0b, 0x0040 16xv 2d 2i
+PASS: 0b, 0x0040 1xs 4d 2i
+PASS: 0b, 0x0040 16xs 4d 2i
+PASS: 0b, 0x0040 1xv 4d 2i
+PASS: 0b, 0x0040 16xv 4d 2i
+PASS: 0b, 0x0040 1xs 1d 4i
+PASS: 0b, 0x0040 16xs 1d 4i
+PASS: 0b, 0x0040 1xv 1d 4i
+PASS: 0b, 0x0040 16xv 1d 4i
+PASS: 0b, 0x0040 1xs 2d 4i
+PASS: 0b, 0x0040 16xs 2d 4i
+PASS: 0b, 0x0040 1xv 2d 4i
+PASS: 0b, 0x0040 16xv 2d 4i
+PASS: 0b, 0x0040 1xs 4d 4i
+PASS: 0b, 0x0040 16xs 4d 4i
+PASS: 0b, 0x0040 1xv 4d 4i
+PASS: 0b, 0x0040 16xv 4d 4i
+Timer count-up test: 0b, 0x0080
+PASS: 0b, 0x0080 1xs 1d 1i
+PASS: 0b, 0x0080 16xs 1d 1i
+PASS: 0b, 0x0080 1xv 1d 1i
+PASS: 0b, 0x0080 16xv 1d 1i
+PASS: 0b, 0x0080 1xs 2d 1i
+PASS: 0b, 0x0080 16xs 2d 1i
+PASS: 0b, 0x0080 1xv 2d 1i
+PASS: 0b, 0x0080 16xv 2d 1i
+PASS: 0b, 0x0080 1xs 4d 1i
+PASS: 0b, 0x0080 16xs 4d 1i
+PASS: 0b, 0x0080 1xv 4d 1i
+PASS: 0b, 0x0080 16xv 4d 1i
+PASS: 0b, 0x0080 1xs 1d 2i
+PASS: 0b, 0x0080 16xs 1d 2i
+PASS: 0b, 0x0080 1xv 1d 2i
+PASS: 0b, 0x0080 16xv 1d 2i
+PASS: 0b, 0x0080 1xs 2d 2i
+PASS: 0b, 0x0080 16xs 2d 2i
+PASS: 0b, 0x0080 1xv 2d 2i
+PASS: 0b, 0x0080 16xv 2d 2i
+PASS: 0b, 0x0080 1xs 4d 2i
+PASS: 0b, 0x0080 16xs 4d 2i
+PASS: 0b, 0x0080 1xv 4d 2i
+PASS: 0b, 0x0080 16xv 4d 2i
+PASS: 0b, 0x0080 1xs 1d 4i
+PASS: 0b, 0x0080 16xs 1d 4i
+PASS: 0b, 0x0080 1xv 1d 4i
+PASS: 0b, 0x0080 16xv 1d 4i
+PASS: 0b, 0x0080 1xs 2d 4i
+PASS: 0b, 0x0080 16xs 2d 4i
+PASS: 0b, 0x0080 1xv 2d 4i
+PASS: 0b, 0x0080 16xv 2d 4i
+PASS: 0b, 0x0080 1xs 4d 4i
+PASS: 0b, 0x0080 16xs 4d 4i
+PASS: 0b, 0x0080 1xv 4d 4i
+PASS: 0b, 0x0080 16xv 4d 4i
+Timer count-up test: 0b, 0x0800
+PASS: 0b, 0x0800 1xs 1d 1i
+PASS: 0b, 0x0800 16xs 1d 1i
+PASS: 0b, 0x0800 1xv 1d 1i
+PASS: 0b, 0x0800 16xv 1d 1i
+PASS: 0b, 0x0800 1xs 2d 1i
+PASS: 0b, 0x0800 16xs 2d 1i
+PASS: 0b, 0x0800 1xv 2d 1i
+PASS: 0b, 0x0800 16xv 2d 1i
+PASS: 0b, 0x0800 1xs 4d 1i
+PASS: 0b, 0x0800 16xs 4d 1i
+PASS: 0b, 0x0800 1xv 4d 1i
+PASS: 0b, 0x0800 16xv 4d 1i
+PASS: 0b, 0x0800 1xs 1d 2i
+PASS: 0b, 0x0800 16xs 1d 2i
+PASS: 0b, 0x0800 1xv 1d 2i
+PASS: 0b, 0x0800 16xv 1d 2i
+PASS: 0b, 0x0800 1xs 2d 2i
+PASS: 0b, 0x0800 16xs 2d 2i
+PASS: 0b, 0x0800 1xv 2d 2i
+PASS: 0b, 0x0800 16xv 2d 2i
+PASS: 0b, 0x0800 1xs 4d 2i
+PASS: 0b, 0x0800 16xs 4d 2i
+PASS: 0b, 0x0800 1xv 4d 2i
+PASS: 0b, 0x0800 16xv 4d 2i
+PASS: 0b, 0x0800 1xs 1d 4i
+PASS: 0b, 0x0800 16xs 1d 4i
+PASS: 0b, 0x0800 1xv 1d 4i
+PASS: 0b, 0x0800 16xv 1d 4i
+PASS: 0b, 0x0800 1xs 2d 4i
+PASS: 0b, 0x0800 16xs 2d 4i
+PASS: 0b, 0x0800 1xv 2d 4i
+PASS: 0b, 0x0800 16xv 2d 4i
+PASS: 0b, 0x0800 1xs 4d 4i
+PASS: 0b, 0x0800 16xs 4d 4i
+PASS: 0b, 0x0800 1xv 4d 4i
+PASS: 0b, 0x0800 16xv 4d 4i
+Timer count-up test: 0b, 0x8000
+PASS: 0b, 0x8000 1xs 1d 1i
+PASS: 0b, 0x8000 16xs 1d 1i
+PASS: 0b, 0x8000 1xv 1d 1i
+PASS: 0b, 0x8000 16xv 1d 1i
+PASS: 0b, 0x8000 1xs 2d 1i
+PASS: 0b, 0x8000 16xs 2d 1i
+PASS: 0b, 0x8000 1xv 2d 1i
+PASS: 0b, 0x8000 16xv 2d 1i
+PASS: 0b, 0x8000 1xs 4d 1i
+PASS: 0b, 0x8000 16xs 4d 1i
+PASS: 0b, 0x8000 1xv 4d 1i
+PASS: 0b, 0x8000 16xv 4d 1i
+PASS: 0b, 0x8000 1xs 1d 2i
+PASS: 0b, 0x8000 16xs 1d 2i
+PASS: 0b, 0x8000 1xv 1d 2i
+PASS: 0b, 0x8000 16xv 1d 2i
+PASS: 0b, 0x8000 1xs 2d 2i
+PASS: 0b, 0x8000 16xs 2d 2i
+PASS: 0b, 0x8000 1xv 2d 2i
+PASS: 0b, 0x8000 16xv 2d 2i
+PASS: 0b, 0x8000 1xs 4d 2i
+PASS: 0b, 0x8000 16xs 4d 2i
+PASS: 0b, 0x8000 1xv 4d 2i
+PASS: 0b, 0x8000 16xv 4d 2i
+PASS: 0b, 0x8000 1xs 1d 4i
+PASS: 0b, 0x8000 16xs 1d 4i
+PASS: 0b, 0x8000 1xv 1d 4i
+PASS: 0b, 0x8000 16xv 1d 4i
+PASS: 0b, 0x8000 1xs 2d 4i
+PASS: 0b, 0x8000 16xs 2d 4i
+PASS: 0b, 0x8000 1xv 2d 4i
+PASS: 0b, 0x8000 16xv 2d 4i
+PASS: 0b, 0x8000 1xs 4d 4i
+PASS: 0b, 0x8000 16xs 4d 4i
+PASS: 0b, 0x8000 1xv 4d 4i
+PASS: 0b, 0x8000 16xv 4d 4i
+Timer count-up test: 6b, 0x0010
+PASS: 6b, 0x0010 1xs 1d 1i
+PASS: 6b, 0x0010 16xs 1d 1i
+PASS: 6b, 0x0010 1xv 1d 1i
+PASS: 6b, 0x0010 16xv 1d 1i
+PASS: 6b, 0x0010 1xs 2d 1i
+PASS: 6b, 0x0010 16xs 2d 1i
+PASS: 6b, 0x0010 1xv 2d 1i
+PASS: 6b, 0x0010 16xv 2d 1i
+PASS: 6b, 0x0010 1xs 4d 1i
+PASS: 6b, 0x0010 16xs 4d 1i
+PASS: 6b, 0x0010 1xv 4d 1i
+PASS: 6b, 0x0010 16xv 4d 1i
+PASS: 6b, 0x0010 1xs 1d 2i
+PASS: 6b, 0x0010 16xs 1d 2i
+PASS: 6b, 0x0010 1xv 1d 2i
+PASS: 6b, 0x0010 16xv 1d 2i
+PASS: 6b, 0x0010 1xs 2d 2i
+PASS: 6b, 0x0010 16xs 2d 2i
+PASS: 6b, 0x0010 1xv 2d 2i
+PASS: 6b, 0x0010 16xv 2d 2i
+PASS: 6b, 0x0010 1xs 4d 2i
+PASS: 6b, 0x0010 16xs 4d 2i
+PASS: 6b, 0x0010 1xv 4d 2i
+PASS: 6b, 0x0010 16xv 4d 2i
+PASS: 6b, 0x0010 1xs 1d 4i
+PASS: 6b, 0x0010 16xs 1d 4i
+PASS: 6b, 0x0010 1xv 1d 4i
+PASS: 6b, 0x0010 16xv 1d 4i
+PASS: 6b, 0x0010 1xs 2d 4i
+PASS: 6b, 0x0010 16xs 2d 4i
+PASS: 6b, 0x0010 1xv 2d 4i
+PASS: 6b, 0x0010 16xv 2d 4i
+PASS: 6b, 0x0010 1xs 4d 4i
+PASS: 6b, 0x0010 16xs 4d 4i
+PASS: 6b, 0x0010 1xv 4d 4i
+PASS: 6b, 0x0010 16xv 4d 4i
+Timer count-up test: 6b, 0x0011
+PASS: 6b, 0x0011 1xs 1d 1i
+PASS: 6b, 0x0011 16xs 1d 1i
+PASS: 6b, 0x0011 1xv 1d 1i
+PASS: 6b, 0x0011 16xv 1d 1i
+PASS: 6b, 0x0011 1xs 2d 1i
+PASS: 6b, 0x0011 16xs 2d 1i
+PASS: 6b, 0x0011 1xv 2d 1i
+PASS: 6b, 0x0011 16xv 2d 1i
+PASS: 6b, 0x0011 1xs 4d 1i
+PASS: 6b, 0x0011 16xs 4d 1i
+PASS: 6b, 0x0011 1xv 4d 1i
+PASS: 6b, 0x0011 16xv 4d 1i
+PASS: 6b, 0x0011 1xs 1d 2i
+PASS: 6b, 0x0011 16xs 1d 2i
+PASS: 6b, 0x0011 1xv 1d 2i
+PASS: 6b, 0x0011 16xv 1d 2i
+PASS: 6b, 0x0011 1xs 2d 2i
+PASS: 6b, 0x0011 16xs 2d 2i
+PASS: 6b, 0x0011 1xv 2d 2i
+PASS: 6b, 0x0011 16xv 2d 2i
+PASS: 6b, 0x0011 1xs 4d 2i
+PASS: 6b, 0x0011 16xs 4d 2i
+PASS: 6b, 0x0011 1xv 4d 2i
+PASS: 6b, 0x0011 16xv 4d 2i
+PASS: 6b, 0x0011 1xs 1d 4i
+PASS: 6b, 0x0011 16xs 1d 4i
+PASS: 6b, 0x0011 1xv 1d 4i
+PASS: 6b, 0x0011 16xv 1d 4i
+PASS: 6b, 0x0011 1xs 2d 4i
+PASS: 6b, 0x0011 16xs 2d 4i
+PASS: 6b, 0x0011 1xv 2d 4i
+PASS: 6b, 0x0011 16xv 2d 4i
+PASS: 6b, 0x0011 1xs 4d 4i
+PASS: 6b, 0x0011 16xs 4d 4i
+PASS: 6b, 0x0011 1xv 4d 4i
+PASS: 6b, 0x0011 16xv 4d 4i
+Timer count-up test: 6b, 0x0012
+PASS: 6b, 0x0012 1xs 1d 1i
+PASS: 6b, 0x0012 16xs 1d 1i
+PASS: 6b, 0x0012 1xv 1d 1i
+PASS: 6b, 0x0012 16xv 1d 1i
+PASS: 6b, 0x0012 1xs 2d 1i
+PASS: 6b, 0x0012 16xs 2d 1i
+PASS: 6b, 0x0012 1xv 2d 1i
+PASS: 6b, 0x0012 16xv 2d 1i
+PASS: 6b, 0x0012 1xs 4d 1i
+PASS: 6b, 0x0012 16xs 4d 1i
+PASS: 6b, 0x0012 1xv 4d 1i
+PASS: 6b, 0x0012 16xv 4d 1i
+PASS: 6b, 0x0012 1xs 1d 2i
+PASS: 6b, 0x0012 16xs 1d 2i
+PASS: 6b, 0x0012 1xv 1d 2i
+PASS: 6b, 0x0012 16xv 1d 2i
+PASS: 6b, 0x0012 1xs 2d 2i
+PASS: 6b, 0x0012 16xs 2d 2i
+PASS: 6b, 0x0012 1xv 2d 2i
+PASS: 6b, 0x0012 16xv 2d 2i
+PASS: 6b, 0x0012 1xs 4d 2i
+PASS: 6b, 0x0012 16xs 4d 2i
+PASS: 6b, 0x0012 1xv 4d 2i
+PASS: 6b, 0x0012 16xv 4d 2i
+PASS: 6b, 0x0012 1xs 1d 4i
+PASS: 6b, 0x0012 16xs 1d 4i
+PASS: 6b, 0x0012 1xv 1d 4i
+PASS: 6b, 0x0012 16xv 1d 4i
+PASS: 6b, 0x0012 1xs 2d 4i
+PASS: 6b, 0x0012 16xs 2d 4i
+PASS: 6b, 0x0012 1xv 2d 4i
+PASS: 6b, 0x0012 16xv 2d 4i
+PASS: 6b, 0x0012 1xs 4d 4i
+PASS: 6b, 0x0012 16xs 4d 4i
+PASS: 6b, 0x0012 1xv 4d 4i
+PASS: 6b, 0x0012 16xv 4d 4i
+Timer count-up test: 6b, 0x0013
+PASS: 6b, 0x0013 1xs 1d 1i
+PASS: 6b, 0x0013 16xs 1d 1i
+PASS: 6b, 0x0013 1xv 1d 1i
+PASS: 6b, 0x0013 16xv 1d 1i
+PASS: 6b, 0x0013 1xs 2d 1i
+PASS: 6b, 0x0013 16xs 2d 1i
+PASS: 6b, 0x0013 1xv 2d 1i
+PASS: 6b, 0x0013 16xv 2d 1i
+PASS: 6b, 0x0013 1xs 4d 1i
+PASS: 6b, 0x0013 16xs 4d 1i
+PASS: 6b, 0x0013 1xv 4d 1i
+PASS: 6b, 0x0013 16xv 4d 1i
+PASS: 6b, 0x0013 1xs 1d 2i
+PASS: 6b, 0x0013 16xs 1d 2i
+PASS: 6b, 0x0013 1xv 1d 2i
+PASS: 6b, 0x0013 16xv 1d 2i
+PASS: 6b, 0x0013 1xs 2d 2i
+PASS: 6b, 0x0013 16xs 2d 2i
+PASS: 6b, 0x0013 1xv 2d 2i
+PASS: 6b, 0x0013 16xv 2d 2i
+PASS: 6b, 0x0013 1xs 4d 2i
+PASS: 6b, 0x0013 16xs 4d 2i
+PASS: 6b, 0x0013 1xv 4d 2i
+PASS: 6b, 0x0013 16xv 4d 2i
+PASS: 6b, 0x0013 1xs 1d 4i
+PASS: 6b, 0x0013 16xs 1d 4i
+PASS: 6b, 0x0013 1xv 1d 4i
+PASS: 6b, 0x0013 16xv 1d 4i
+PASS: 6b, 0x0013 1xs 2d 4i
+PASS: 6b, 0x0013 16xs 2d 4i
+PASS: 6b, 0x0013 1xv 2d 4i
+PASS: 6b, 0x0013 16xv 2d 4i
+PASS: 6b, 0x0013 1xs 4d 4i
+PASS: 6b, 0x0013 16xs 4d 4i
+PASS: 6b, 0x0013 1xv 4d 4i
+PASS: 6b, 0x0013 16xv 4d 4i
+Timer count-up test: 8b, 0x0010
+PASS: 8b, 0x0010 1xs 1d 1i
+PASS: 8b, 0x0010 16xs 1d 1i
+PASS: 8b, 0x0010 1xv 1d 1i
+PASS: 8b, 0x0010 16xv 1d 1i
+PASS: 8b, 0x0010 1xs 2d 1i
+PASS: 8b, 0x0010 16xs 2d 1i
+PASS: 8b, 0x0010 1xv 2d 1i
+PASS: 8b, 0x0010 16xv 2d 1i
+PASS: 8b, 0x0010 1xs 4d 1i
+PASS: 8b, 0x0010 16xs 4d 1i
+PASS: 8b, 0x0010 1xv 4d 1i
+PASS: 8b, 0x0010 16xv 4d 1i
+PASS: 8b, 0x0010 1xs 1d 2i
+PASS: 8b, 0x0010 16xs 1d 2i
+PASS: 8b, 0x0010 1xv 1d 2i
+PASS: 8b, 0x0010 16xv 1d 2i
+PASS: 8b, 0x0010 1xs 2d 2i
+PASS: 8b, 0x0010 16xs 2d 2i
+PASS: 8b, 0x0010 1xv 2d 2i
+PASS: 8b, 0x0010 16xv 2d 2i
+PASS: 8b, 0x0010 1xs 4d 2i
+PASS: 8b, 0x0010 16xs 4d 2i
+PASS: 8b, 0x0010 1xv 4d 2i
+PASS: 8b, 0x0010 16xv 4d 2i
+PASS: 8b, 0x0010 1xs 1d 4i
+PASS: 8b, 0x0010 16xs 1d 4i
+PASS: 8b, 0x0010 1xv 1d 4i
+PASS: 8b, 0x0010 16xv 1d 4i
+PASS: 8b, 0x0010 1xs 2d 4i
+PASS: 8b, 0x0010 16xs 2d 4i
+PASS: 8b, 0x0010 1xv 2d 4i
+PASS: 8b, 0x0010 16xv 2d 4i
+PASS: 8b, 0x0010 1xs 4d 4i
+PASS: 8b, 0x0010 16xs 4d 4i
+PASS: 8b, 0x0010 1xv 4d 4i
+PASS: 8b, 0x0010 16xv 4d 4i
+Timer count-up test: 8b, 0x0011
+PASS: 8b, 0x0011 1xs 1d 1i
+PASS: 8b, 0x0011 16xs 1d 1i
+PASS: 8b, 0x0011 1xv 1d 1i
+PASS: 8b, 0x0011 16xv 1d 1i
+PASS: 8b, 0x0011 1xs 2d 1i
+PASS: 8b, 0x0011 16xs 2d 1i
+PASS: 8b, 0x0011 1xv 2d 1i
+PASS: 8b, 0x0011 16xv 2d 1i
+PASS: 8b, 0x0011 1xs 4d 1i
+PASS: 8b, 0x0011 16xs 4d 1i
+PASS: 8b, 0x0011 1xv 4d 1i
+PASS: 8b, 0x0011 16xv 4d 1i
+PASS: 8b, 0x0011 1xs 1d 2i
+PASS: 8b, 0x0011 16xs 1d 2i
+PASS: 8b, 0x0011 1xv 1d 2i
+PASS: 8b, 0x0011 16xv 1d 2i
+PASS: 8b, 0x0011 1xs 2d 2i
+PASS: 8b, 0x0011 16xs 2d 2i
+PASS: 8b, 0x0011 1xv 2d 2i
+PASS: 8b, 0x0011 16xv 2d 2i
+PASS: 8b, 0x0011 1xs 4d 2i
+PASS: 8b, 0x0011 16xs 4d 2i
+PASS: 8b, 0x0011 1xv 4d 2i
+PASS: 8b, 0x0011 16xv 4d 2i
+PASS: 8b, 0x0011 1xs 1d 4i
+PASS: 8b, 0x0011 16xs 1d 4i
+PASS: 8b, 0x0011 1xv 1d 4i
+PASS: 8b, 0x0011 16xv 1d 4i
+PASS: 8b, 0x0011 1xs 2d 4i
+PASS: 8b, 0x0011 16xs 2d 4i
+PASS: 8b, 0x0011 1xv 2d 4i
+PASS: 8b, 0x0011 16xv 2d 4i
+PASS: 8b, 0x0011 1xs 4d 4i
+PASS: 8b, 0x0011 16xs 4d 4i
+PASS: 8b, 0x0011 1xv 4d 4i
+PASS: 8b, 0x0011 16xv 4d 4i
+Timer count-up test: 8b, 0x0012
+PASS: 8b, 0x0012 1xs 1d 1i
+PASS: 8b, 0x0012 16xs 1d 1i
+PASS: 8b, 0x0012 1xv 1d 1i
+PASS: 8b, 0x0012 16xv 1d 1i
+PASS: 8b, 0x0012 1xs 2d 1i
+PASS: 8b, 0x0012 16xs 2d 1i
+PASS: 8b, 0x0012 1xv 2d 1i
+PASS: 8b, 0x0012 16xv 2d 1i
+PASS: 8b, 0x0012 1xs 4d 1i
+PASS: 8b, 0x0012 16xs 4d 1i
+PASS: 8b, 0x0012 1xv 4d 1i
+PASS: 8b, 0x0012 16xv 4d 1i
+PASS: 8b, 0x0012 1xs 1d 2i
+PASS: 8b, 0x0012 16xs 1d 2i
+PASS: 8b, 0x0012 1xv 1d 2i
+PASS: 8b, 0x0012 16xv 1d 2i
+PASS: 8b, 0x0012 1xs 2d 2i
+PASS: 8b, 0x0012 16xs 2d 2i
+PASS: 8b, 0x0012 1xv 2d 2i
+PASS: 8b, 0x0012 16xv 2d 2i
+PASS: 8b, 0x0012 1xs 4d 2i
+PASS: 8b, 0x0012 16xs 4d 2i
+PASS: 8b, 0x0012 1xv 4d 2i
+PASS: 8b, 0x0012 16xv 4d 2i
+PASS: 8b, 0x0012 1xs 1d 4i
+PASS: 8b, 0x0012 16xs 1d 4i
+PASS: 8b, 0x0012 1xv 1d 4i
+PASS: 8b, 0x0012 16xv 1d 4i
+PASS: 8b, 0x0012 1xs 2d 4i
+PASS: 8b, 0x0012 16xs 2d 4i
+PASS: 8b, 0x0012 1xv 2d 4i
+PASS: 8b, 0x0012 16xv 2d 4i
+PASS: 8b, 0x0012 1xs 4d 4i
+PASS: 8b, 0x0012 16xs 4d 4i
+PASS: 8b, 0x0012 1xv 4d 4i
+PASS: 8b, 0x0012 16xv 4d 4i
+Timer count-up test: 8b, 0x0013
+PASS: 8b, 0x0013 1xs 1d 1i
+PASS: 8b, 0x0013 16xs 1d 1i
+PASS: 8b, 0x0013 1xv 1d 1i
+PASS: 8b, 0x0013 16xv 1d 1i
+PASS: 8b, 0x0013 1xs 2d 1i
+PASS: 8b, 0x0013 16xs 2d 1i
+PASS: 8b, 0x0013 1xv 2d 1i
+PASS: 8b, 0x0013 16xv 2d 1i
+PASS: 8b, 0x0013 1xs 4d 1i
+PASS: 8b, 0x0013 16xs 4d 1i
+PASS: 8b, 0x0013 1xv 4d 1i
+PASS: 8b, 0x0013 16xv 4d 1i
+PASS: 8b, 0x0013 1xs 1d 2i
+PASS: 8b, 0x0013 16xs 1d 2i
+PASS: 8b, 0x0013 1xv 1d 2i
+PASS: 8b, 0x0013 16xv 1d 2i
+PASS: 8b, 0x0013 1xs 2d 2i
+PASS: 8b, 0x0013 16xs 2d 2i
+PASS: 8b, 0x0013 1xv 2d 2i
+PASS: 8b, 0x0013 16xv 2d 2i
+PASS: 8b, 0x0013 1xs 4d 2i
+PASS: 8b, 0x0013 16xs 4d 2i
+PASS: 8b, 0x0013 1xv 4d 2i
+PASS: 8b, 0x0013 16xv 4d 2i
+PASS: 8b, 0x0013 1xs 1d 4i
+PASS: 8b, 0x0013 16xs 1d 4i
+PASS: 8b, 0x0013 1xv 1d 4i
+PASS: 8b, 0x0013 16xv 1d 4i
+PASS: 8b, 0x0013 1xs 2d 4i
+PASS: 8b, 0x0013 16xs 2d 4i
+PASS: 8b, 0x0013 1xv 2d 4i
+PASS: 8b, 0x0013 16xv 2d 4i
+PASS: 8b, 0x0013 1xs 4d 4i
+PASS: 8b, 0x0013 16xs 4d 4i
+PASS: 8b, 0x0013 1xv 4d 4i
+PASS: 8b, 0x0013 16xv 4d 4i
+Timer count-up test: 10b, 0x0010
+PASS: 10b, 0x0010 1xs 1d 1i
+PASS: 10b, 0x0010 16xs 1d 1i
+PASS: 10b, 0x0010 1xv 1d 1i
+PASS: 10b, 0x0010 16xv 1d 1i
+PASS: 10b, 0x0010 1xs 2d 1i
+PASS: 10b, 0x0010 16xs 2d 1i
+PASS: 10b, 0x0010 1xv 2d 1i
+PASS: 10b, 0x0010 16xv 2d 1i
+PASS: 10b, 0x0010 1xs 4d 1i
+PASS: 10b, 0x0010 16xs 4d 1i
+PASS: 10b, 0x0010 1xv 4d 1i
+PASS: 10b, 0x0010 16xv 4d 1i
+PASS: 10b, 0x0010 1xs 1d 2i
+PASS: 10b, 0x0010 16xs 1d 2i
+PASS: 10b, 0x0010 1xv 1d 2i
+PASS: 10b, 0x0010 16xv 1d 2i
+PASS: 10b, 0x0010 1xs 2d 2i
+PASS: 10b, 0x0010 16xs 2d 2i
+PASS: 10b, 0x0010 1xv 2d 2i
+PASS: 10b, 0x0010 16xv 2d 2i
+PASS: 10b, 0x0010 1xs 4d 2i
+PASS: 10b, 0x0010 16xs 4d 2i
+PASS: 10b, 0x0010 1xv 4d 2i
+PASS: 10b, 0x0010 16xv 4d 2i
+PASS: 10b, 0x0010 1xs 1d 4i
+PASS: 10b, 0x0010 16xs 1d 4i
+PASS: 10b, 0x0010 1xv 1d 4i
+PASS: 10b, 0x0010 16xv 1d 4i
+PASS: 10b, 0x0010 1xs 2d 4i
+PASS: 10b, 0x0010 16xs 2d 4i
+PASS: 10b, 0x0010 1xv 2d 4i
+PASS: 10b, 0x0010 16xv 2d 4i
+PASS: 10b, 0x0010 1xs 4d 4i
+PASS: 10b, 0x0010 16xs 4d 4i
+PASS: 10b, 0x0010 1xv 4d 4i
+PASS: 10b, 0x0010 16xv 4d 4i
+Timer count-up test: 10b, 0x0011
+PASS: 10b, 0x0011 1xs 1d 1i
+PASS: 10b, 0x0011 16xs 1d 1i
+PASS: 10b, 0x0011 1xv 1d 1i
+PASS: 10b, 0x0011 16xv 1d 1i
+PASS: 10b, 0x0011 1xs 2d 1i
+PASS: 10b, 0x0011 16xs 2d 1i
+PASS: 10b, 0x0011 1xv 2d 1i
+PASS: 10b, 0x0011 16xv 2d 1i
+PASS: 10b, 0x0011 1xs 4d 1i
+PASS: 10b, 0x0011 16xs 4d 1i
+PASS: 10b, 0x0011 1xv 4d 1i
+PASS: 10b, 0x0011 16xv 4d 1i
+PASS: 10b, 0x0011 1xs 1d 2i
+PASS: 10b, 0x0011 16xs 1d 2i
+PASS: 10b, 0x0011 1xv 1d 2i
+PASS: 10b, 0x0011 16xv 1d 2i
+PASS: 10b, 0x0011 1xs 2d 2i
+PASS: 10b, 0x0011 16xs 2d 2i
+PASS: 10b, 0x0011 1xv 2d 2i
+PASS: 10b, 0x0011 16xv 2d 2i
+PASS: 10b, 0x0011 1xs 4d 2i
+PASS: 10b, 0x0011 16xs 4d 2i
+PASS: 10b, 0x0011 1xv 4d 2i
+PASS: 10b, 0x0011 16xv 4d 2i
+PASS: 10b, 0x0011 1xs 1d 4i
+PASS: 10b, 0x0011 16xs 1d 4i
+PASS: 10b, 0x0011 1xv 1d 4i
+PASS: 10b, 0x0011 16xv 1d 4i
+PASS: 10b, 0x0011 1xs 2d 4i
+PASS: 10b, 0x0011 16xs 2d 4i
+PASS: 10b, 0x0011 1xv 2d 4i
+PASS: 10b, 0x0011 16xv 2d 4i
+PASS: 10b, 0x0011 1xs 4d 4i
+PASS: 10b, 0x0011 16xs 4d 4i
+PASS: 10b, 0x0011 1xv 4d 4i
+PASS: 10b, 0x0011 16xv 4d 4i
+Timer count-up test: 10b, 0x0012
+PASS: 10b, 0x0012 1xs 1d 1i
+PASS: 10b, 0x0012 16xs 1d 1i
+PASS: 10b, 0x0012 1xv 1d 1i
+PASS: 10b, 0x0012 16xv 1d 1i
+PASS: 10b, 0x0012 1xs 2d 1i
+PASS: 10b, 0x0012 16xs 2d 1i
+PASS: 10b, 0x0012 1xv 2d 1i
+PASS: 10b, 0x0012 16xv 2d 1i
+PASS: 10b, 0x0012 1xs 4d 1i
+PASS: 10b, 0x0012 16xs 4d 1i
+PASS: 10b, 0x0012 1xv 4d 1i
+PASS: 10b, 0x0012 16xv 4d 1i
+PASS: 10b, 0x0012 1xs 1d 2i
+PASS: 10b, 0x0012 16xs 1d 2i
+PASS: 10b, 0x0012 1xv 1d 2i
+PASS: 10b, 0x0012 16xv 1d 2i
+PASS: 10b, 0x0012 1xs 2d 2i
+PASS: 10b, 0x0012 16xs 2d 2i
+PASS: 10b, 0x0012 1xv 2d 2i
+PASS: 10b, 0x0012 16xv 2d 2i
+PASS: 10b, 0x0012 1xs 4d 2i
+PASS: 10b, 0x0012 16xs 4d 2i
+PASS: 10b, 0x0012 1xv 4d 2i
+PASS: 10b, 0x0012 16xv 4d 2i
+PASS: 10b, 0x0012 1xs 1d 4i
+PASS: 10b, 0x0012 16xs 1d 4i
+PASS: 10b, 0x0012 1xv 1d 4i
+PASS: 10b, 0x0012 16xv 1d 4i
+PASS: 10b, 0x0012 1xs 2d 4i
+PASS: 10b, 0x0012 16xs 2d 4i
+PASS: 10b, 0x0012 1xv 2d 4i
+PASS: 10b, 0x0012 16xv 2d 4i
+PASS: 10b, 0x0012 1xs 4d 4i
+PASS: 10b, 0x0012 16xs 4d 4i
+PASS: 10b, 0x0012 1xv 4d 4i
+PASS: 10b, 0x0012 16xv 4d 4i
+Timer count-up test: 10b, 0x0013
+PASS: 10b, 0x0013 1xs 1d 1i
+PASS: 10b, 0x0013 16xs 1d 1i
+PASS: 10b, 0x0013 1xv 1d 1i
+PASS: 10b, 0x0013 16xv 1d 1i
+PASS: 10b, 0x0013 1xs 2d 1i
+PASS: 10b, 0x0013 16xs 2d 1i
+PASS: 10b, 0x0013 1xv 2d 1i
+PASS: 10b, 0x0013 16xv 2d 1i
+PASS: 10b, 0x0013 1xs 4d 1i
+PASS: 10b, 0x0013 16xs 4d 1i
+PASS: 10b, 0x0013 1xv 4d 1i
+PASS: 10b, 0x0013 16xv 4d 1i
+PASS: 10b, 0x0013 1xs 1d 2i
+PASS: 10b, 0x0013 16xs 1d 2i
+PASS: 10b, 0x0013 1xv 1d 2i
+PASS: 10b, 0x0013 16xv 1d 2i
+PASS: 10b, 0x0013 1xs 2d 2i
+PASS: 10b, 0x0013 16xs 2d 2i
+PASS: 10b, 0x0013 1xv 2d 2i
+PASS: 10b, 0x0013 16xv 2d 2i
+PASS: 10b, 0x0013 1xs 4d 2i
+PASS: 10b, 0x0013 16xs 4d 2i
+PASS: 10b, 0x0013 1xv 4d 2i
+PASS: 10b, 0x0013 16xv 4d 2i
+PASS: 10b, 0x0013 1xs 1d 4i
+PASS: 10b, 0x0013 16xs 1d 4i
+PASS: 10b, 0x0013 1xv 1d 4i
+PASS: 10b, 0x0013 16xv 1d 4i
+PASS: 10b, 0x0013 1xs 2d 4i
+PASS: 10b, 0x0013 16xs 2d 4i
+PASS: 10b, 0x0013 1xv 2d 4i
+PASS: 10b, 0x0013 16xv 2d 4i
+PASS: 10b, 0x0013 1xs 4d 4i
+PASS: 10b, 0x0013 16xs 4d 4i
+PASS: 10b, 0x0013 1xv 4d 4i
+PASS: 10b, 0x0013 16xv 4d 4i
+[sram]
+Game Boy Advance Test Suite
+===
+Timer count-up test: 0b, 0x0001
+Timer count-up test: 0b, 0x0005
+Timer count-up test: 0b, 0x000C
+Timer count-up test: 0b, 0x000D
+Timer count-up test: 0b, 0x0010
+Timer count-up test: 0b, 0x0014
+Timer count-up test: 0b, 0x0015
+Timer count-up test: 0b, 0x0020
+Timer count-up test: 0b, 0x0024
+Timer count-up test: 0b, 0x0025
+Timer count-up test: 0b, 0x0040
+Timer count-up test: 0b, 0x0080
+Timer count-up test: 0b, 0x0800
+Timer count-up test: 0b, 0x8000
+Timer count-up test: 6b, 0x0010
+Timer count-up test: 6b, 0x0011
+Timer count-up test: 6b, 0x0012
+Timer count-up test: 6b, 0x0013
+Timer count-up test: 8b, 0x0010
+Timer count-up test: 8b, 0x0011
+Timer count-up test: 8b, 0x0012
+Timer count-up test: 8b, 0x0013
+Timer count-up test: 10b, 0x0010
+Timer count-up test: 10b, 0x0011
+Timer count-up test: 10b, 0x0012
+Timer count-up test: 10b, 0x0013
+
+=== Summary ===
+No END: summaries were emitted yet; use the per-suite SRAM output above.

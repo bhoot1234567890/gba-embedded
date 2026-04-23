@@ -1,0 +1,53 @@
+$ cmake --build /Users/chaitanyamalhotra/development/gba embedded/build-trace -j4
+build_exit_code=0
+
+=== Suite 04 ===
+command: /Users/chaitanyamalhotra/development/gba embedded/build-trace/gba_suite_runner --suite 3
+log: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite04_phase103trace_bias.log
+parsed_json: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite04_phase103trace_bias.parsed.json
+exit_code: 0
+fail_lines: 90
+Run: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite04_phase103trace_bias.log
+  ROM: tests/assets/roms/suite.gba
+  BIOS: tests/assets/roms/gba_bios.bin
+  Boot: frames=60 pc=0x00000348 cpsr=0x6000005F halted=1 cycle=16769984
+  Suites parsed: 1
+  Overall: 918/936 passed
+  Suite 04 Timer count-up: 918/936 passed via mgba (frames=176, pc=0x0802BAC2, halted=0, cycle=169015617)
+    Examples: sram:16xs 1d 1i | sram:16xs 2d 1i | sram:16xs 4d 1i
+tail:
+  Timer count-up test: 6b, 0x0011
+  Timer count-up test: 6b, 0x0012
+  16xs 2d 1i: Got 00000300 vs 00000310: FAIL
+  Timer count-up test: 6b, 0x0013
+  16xs 1d 1i: Got 00000330 vs 00000340: FAIL
+  Timer count-up test: 8b, 0x0010
+  16xs 4d 1i: Got 00000AA0 vs 00000AB0: FAIL
+  Timer count-up test: 8b, 0x0011
+  16xs 4d 4i: Got 00002DD0 vs 00002DE0: FAIL
+  Timer count-up test: 8b, 0x0012
+  16xs 1d 2i: Got 00001840 vs 00001850: FAIL
+  Timer count-up test: 8b, 0x0013
+  Timer count-up test: 10b, 0x0010
+  16xs 1d 2i: Got 00005840 vs 00005850: FAIL
+  Timer count-up test: 10b, 0x0011
+  Timer count-up test: 10b, 0x0012
+  Timer count-up test: 10b, 0x0013
+  
+  === Summary ===
+  No END: summaries were emitted yet; use the per-suite SRAM output above.
+fail buckets by preface:
+  16xs 4d 4i: 6
+  16xs 1d 1i: 4
+  16xs 2d 1i: 4
+  16xs 4d 1i: 4
+  16xs 1d 4i: 4
+  16xs 2d 4i: 4
+  16xs 1d 2i: 4
+  1xs 1d 2i: 2
+  1xs 2d 2i: 2
+  1xs 4d 2i: 2
+fail deltas:
+  16xs delta +16: 18
+  16xs delta -16: 12
+  1xs delta +1: 6

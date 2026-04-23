@@ -372,22 +372,29 @@ static void print_suite_result(const SuiteResult& result) {
     std::fflush(stdout);
 }
 
-static void accumulate_totals(const SuiteResult& result, int& total_pass, int& total_tests,
-                              int& suites_with_results) {
+struct SuiteScore {
+    int pass = 0;
+    int total = 0;
+};
+
+static SuiteScore score_suite(const SuiteResult& result) {
+    SuiteScore score;
     for (const auto& line : result.debug_lines) {
         if (line.compare(0, 4, "END:") == 0) {
             const auto slash = line.find('/');
-            if (slash == std::string::npos) {
-                continue;
-            }
+            if (slash == std::string::npos) continue;
             try {
-                total_pass += std::stoi(line.substr(4, slash - 4));
-                total_tests += std::stoi(line.substr(slash + 1));
-                ++suites_with_results;
-            } catch (...) {
-            }
+                score.pass += std::stoi(line.substr(4, slash - 4));
+                score.total += std::stoi(line.substr(slash + 1));
+            } catch (...) {}
+        } else if (line.compare(0, 5, "PASS:") == 0) {
+            ++score.pass;
+            ++score.total;
+        } else if (line.compare(0, 5, "FAIL:") == 0) {
+            ++score.total;
         }
     }
+    return score;
 }
 
 int main(int argc, char** argv) {
@@ -445,6 +452,7 @@ int main(int argc, char** argv) {
     int total_pass = 0;
     int total_tests = 0;
     int suites_with_results = 0;
+    int total_suites = 0;
     const int first_suite = single_suite >= 0 ? single_suite : 0;
     const int last_suite = single_suite >= 0 ? single_suite + 1 : kNumSuites;
     if (first_suite < 0 || last_suite > kNumSuites) {
@@ -455,14 +463,23 @@ int main(int argc, char** argv) {
     for (int suite = first_suite; suite < last_suite; ++suite) {
         const auto result = run_suite(config, suite, suite_names[suite]);
         print_suite_result(result);
-        accumulate_totals(result, total_pass, total_tests, suites_with_results);
+        const auto score = score_suite(result);
+        if (score.total > 0) {
+            const auto mark = score.pass == score.total ? "PASS" : "FAIL";
+            std::printf("[score] %s: %d/%d %s\n", suite_names[suite], score.pass, score.total, mark);
+            total_pass += score.pass;
+            total_tests += score.total;
+            if (score.pass == score.total) ++suites_with_results;
+            ++total_suites;
+        }
     }
 
     std::printf("\n=== Summary ===\n");
-    if (suites_with_results > 0 || total_tests > 0) {
-        std::printf("Total: %d/%d passed\n", total_pass, total_tests);
+    if (total_tests > 0) {
+        std::printf("Suites: %d/%d passed  Tests: %d/%d passed\n",
+                    suites_with_results, total_suites, total_pass, total_tests);
     } else {
-        std::printf("No END: summaries were emitted yet; use the per-suite SRAM output above.\n");
+        std::printf("No test results found.\n");
     }
     return 0;
 }

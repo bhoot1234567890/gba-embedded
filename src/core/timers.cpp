@@ -19,6 +19,7 @@ namespace {
 
 constexpr std::array<u8, 4> kTimerShift{0, 6, 8, 10};
 constexpr std::array<u16, 4> kTimerMask{0, 0x003Fu, 0x00FFu, 0x03FFu};
+constexpr u64 kPrescaledStopReadLatchCycles = 40;
 
 #if GBA_TRACE_TIMERS
 std::array<u64, 4> g_last_disable_cycle{
@@ -150,8 +151,20 @@ u32 Timers::read_register(u32 address, BusWidth width, u64 cycle_now) {
     }
 
     const auto& channel = channels_[timer];
+    const auto visible_control = [&](u64 sample_cycle) -> u16 {
+        if (!channel.pending_control_valid) {
+            return channel.control;
+        }
+        auto visible_cycle = channel.control_apply_cycle;
+        if (timer_enabled(channel) && !test_bit(channel.pending_control, 7) &&
+            visible_cycle != std::numeric_limits<u64>::max()) {
+            visible_cycle = visible_cycle == 0 ? 0 : (visible_cycle - 1u);
+        }
+        return sample_cycle >= visible_cycle ? channel.pending_control : channel.control;
+    };
     const auto read_half = [&](u32 half_address) -> u16 {
-        return ((half_address - kTm0CntL) & 0x2u) == 0 ? read_counter(channel, cycle_now) : channel.control;
+        return ((half_address - kTm0CntL) & 0x2u) == 0 ? read_counter(channel, cycle_now)
+                                                       : visible_control(cycle_now);
     };
 
     if (width == BusWidth::Byte) {
@@ -171,15 +184,29 @@ u32 Timers::read_word_register_split(u32 address, u64 lo_cycle, u64 hi_cycle) {
         return 0;
     }
 
-    const auto& channel = channels_[timer];
-    (void)hi_cycle;
-    // Timer word reads behave like one latched MMIO snapshot rather than a
-    // low-half sample followed by a separately advancing control-half sample.
-    const auto sample_cycle = lo_cycle;
-    const auto lo = static_cast<u16>(channel.counter + counter_delta_since_last_update(channel, sample_cycle));
-    const auto hi = channel.pending_control_valid && sample_cycle >= channel.control_apply_cycle
-        ? channel.pending_control
-        : channel.control;
+    auto& channel = channels_[timer];
+    const auto visible_control = [&](u64 sample_cycle) -> u16 {
+        if (!channel.pending_control_valid) {
+            return channel.control;
+        }
+        auto visible_cycle = channel.control_apply_cycle;
+        if (timer_enabled(channel) && !test_bit(channel.pending_control, 7) &&
+            visible_cycle != std::numeric_limits<u64>::max()) {
+            visible_cycle = visible_cycle == 0 ? 0 : (visible_cycle - 1u);
+        }
+        return sample_cycle >= visible_cycle ? channel.pending_control : channel.control;
+    };
+    const auto lo = static_cast<u16>(channel.counter + counter_delta_since_last_update(channel, lo_cycle));
+    auto hi = visible_control(hi_cycle);
+    if (channel.stop_read_bias && !channel.running) {
+        const auto cycles_since_stop = hi_cycle - static_cast<u64>(channel.timestamp_started);
+        if (cycles_since_stop <= kPrescaledStopReadLatchCycles) {
+            // Prescaled timers keep the readable enable bit latched briefly
+            // after a stop, while the counter itself is already frozen.
+            hi = static_cast<u16>(hi | 0x0080u);
+        }
+        channel.stop_read_bias = false;
+    }
 #if GBA_TRACE_TIMERS
     if (timer == 0 && g_last_disable_cycle[timer] != std::numeric_limits<u64>::max() &&
         g_post_disable_word_reads[timer] < 6) {
@@ -187,8 +214,8 @@ u32 Timers::read_word_register_split(u32 address, u64 lo_cycle, u64 hi_cycle) {
                      "TMR read32 after disable suite=%d test=%d sub=%d info=%08X t=%llu delta=%llu lo=%04X hi=%04X ctrl=%04X pending=%04X pending_valid=%d apply=%llu running=%d\n",
                      trace_context_.suite_id, trace_context_.test_id, trace_context_.subtest_id,
                      trace_context_.info_address,
-                     static_cast<unsigned long long>(sample_cycle),
-                     static_cast<unsigned long long>(sample_cycle - g_last_disable_cycle[timer]), lo, hi,
+                     static_cast<unsigned long long>(hi_cycle),
+                     static_cast<unsigned long long>(hi_cycle - g_last_disable_cycle[timer]), lo, hi,
                      channel.control, channel.pending_control, channel.pending_control_valid ? 1 : 0,
                      static_cast<unsigned long long>(channel.control_apply_cycle), channel.running ? 1 : 0);
         ++g_post_disable_word_reads[timer];
@@ -233,25 +260,19 @@ void Timers::write_register(u32 address, u32 value, BusWidth width, u64 cycle_no
             channel.pending_control = static_cast<u16>(channel.pending_control & ~0x0004u);
         }
         const auto disable_running = !test_bit(channel.pending_control, 7) && timer_enabled(channel) && channel.running;
-        if (disable_running) {
-            if (stop_channel(channel, cycle_now)) {
-                overflow(static_cast<int>(timer), irq, apu, cycle_now);
-            }
+        const auto apply_cycle = cycle_now + (disable_running ? 2u : 1u);
 #if GBA_TRACE_TIMERS
-            g_last_disable_cycle[timer] = cycle_now;
-            g_post_disable_word_reads[timer] = 0;
+        if (disable_running) {
             if (timer == 0) {
                 std::fprintf(stderr,
                              "TMR disable write suite=%d test=%d sub=%d info=%08X t=%llu counter=%04X ctrl=%04X pending=%04X apply=%llu\n",
                              trace_context_.suite_id, trace_context_.test_id, trace_context_.subtest_id,
                              trace_context_.info_address,
-                             static_cast<unsigned long long>(cycle_now), channel.counter, channel.control,
-                             channel.pending_control, static_cast<unsigned long long>(cycle_now + 1u));
+                             static_cast<unsigned long long>(cycle_now), read_counter(channel, cycle_now),
+                             channel.control, channel.pending_control,
+                             static_cast<unsigned long long>(apply_cycle));
             }
-#endif
         }
-        const auto apply_cycle = cycle_now + (disable_running ? 2u : 1u);
-#if GBA_TRACE_TIMERS
         if (timer == 0) {
             std::fprintf(stderr, "TMR write control t=%llu val=%04X apply=%llu width=%u addr=%08X\n",
                          static_cast<unsigned long long>(cycle_now), channel.pending_control,
@@ -323,8 +344,11 @@ void Timers::advance_to(u64 cycle_now, IrqController& irq, Apu& apu) {
             channel.mask = kTimerMask[channel.control & 0x0003u];
 
             if (!timer_enabled(channel)) {
+                channel.stop_read_bias = false;
                 channel.next_event_cycle = std::numeric_limits<u64>::max();
 #if GBA_TRACE_TIMERS
+                g_last_disable_cycle[pending.index] = pending.cycle;
+                g_post_disable_word_reads[pending.index] = 0;
                 if (pending.index == 0) {
                     std::fprintf(stderr, "TMR disabled t=%llu counter=%04X\n",
                                  static_cast<unsigned long long>(pending.cycle), channel.counter);
@@ -334,6 +358,7 @@ void Timers::advance_to(u64 cycle_now, IrqController& irq, Apu& apu) {
             }
 
             if (timer_count_up(channel)) {
+                channel.stop_read_bias = false;
                 if (!enable_previous) {
                     channel.counter = channel.reload;
                 }
@@ -351,6 +376,7 @@ void Timers::advance_to(u64 cycle_now, IrqController& irq, Apu& apu) {
 
             const auto prescaler_offset = static_cast<int>(pending.cycle & channel.mask);
             if (enable_previous) {
+                channel.stop_read_bias = false;
                 start_channel(channel, pending.cycle, prescaler_offset);
 #if GBA_TRACE_TIMERS
                 if (pending.index == 0) {
@@ -364,8 +390,10 @@ void Timers::advance_to(u64 cycle_now, IrqController& irq, Apu& apu) {
             }
 
             if (channel.counter == 0xFFFFu && prescaler_offset == 0) {
+                channel.stop_read_bias = false;
                 start_channel(channel, pending.cycle, 0);
             } else {
+                channel.stop_read_bias = false;
                 channel.counter = channel.reload;
                 start_channel(channel, pending.cycle, prescaler_offset - 1);
             }

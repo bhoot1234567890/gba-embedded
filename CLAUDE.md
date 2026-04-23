@@ -72,11 +72,11 @@ Guarded by `GBA_PLATFORM_ESP32`:
 - Dual-core: Core 1 runs CPU + downscale, Core 0 runs SPI display (ST7735 128x128)
 - ESP-IDF project at `platform/esp32s3/`, component at `platform/esp32s3/components/gba_core/`
 
-### Test Suite Status (2026-04-22)
+### Test Suite Status (2026-04-23)
 
-7/14 suites pass 100%: Memory, I/O read, Timer IRQ, Shifter, Carry, Multiply long, BIOS math.
+8/13 suites pass 100%: Memory, I/O read, Timing, Timer IRQ, Shifter, Carry, Multiply long, BIOS math.
 
-Remaining failures are all timing/prefetch: Thumb ROM prefetch (Suite 03, -26), timer cascade (Suite 04, -309), ROM-source DMA word transfers (Suite 10, -36), DMA prefetch break + HBlank timing (Suite 13, -10).
+Failing suites: Timer count-up (653/936), DMA (1220/1256), SIO register R/W (53/90), SIO timing (0/8), Misc. edge case (0/20). Video suite not scored (runner exits early — boot debug output triggers stability timeout).
 
 Reference emulator: NanoBoyAdvance at `/Users/chaitanyamalhotra/development/NanoBoyAdvance/` — passes all timing suites.
 

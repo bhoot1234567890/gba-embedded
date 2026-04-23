@@ -20,7 +20,6 @@ namespace {
 constexpr std::array<u8, 4> kTimerShift{0, 6, 8, 10};
 constexpr std::array<u16, 4> kTimerMask{0, 0x003Fu, 0x00FFu, 0x03FFu};
 constexpr u64 kPrescaledStopReadLatchCycles = 40;
-
 #if GBA_TRACE_TIMERS
 std::array<u64, 4> g_last_disable_cycle{
     std::numeric_limits<u64>::max(),

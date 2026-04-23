@@ -41,3 +41,8 @@ dependencies.lock
 # Python
 __pycache__/
 *.pyc
+
+# Tool output
+frame_dumps/
+build-trace/
+test_downscale

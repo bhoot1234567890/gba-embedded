@@ -96,7 +96,7 @@ void Ppu::reset() {
     if (framebuffer_) {
         std::fill_n(framebuffer_.get(), kFramebufferPixels, u16{0x7FFF});
     }
-    next_event_cycle_ = 960;
+    next_event_cycle_ = 1007;
     hblank_ = false;
     vblank_ = false;
     frame_ready_ = false;
@@ -328,10 +328,10 @@ void Ppu::advance_to(u64 cycle_now, IrqController& irq) {
     while (next_event_cycle_ <= cycle_now) {
         if (!hblank_) {
             enter_hblank(irq);
-            next_event_cycle_ += 272;
+            next_event_cycle_ += 225;
         } else {
             leave_hblank(irq);
-            next_event_cycle_ += 960;
+            next_event_cycle_ += 1007;
         }
     }
 }

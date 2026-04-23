@@ -80,7 +80,7 @@ private:
 
     /* Heap-allocated framebuffer — use PSRAM on ESP32 when available */
     std::unique_ptr<u16, void (*)(u16*)> framebuffer_;
-    u64 next_event_cycle_ = 960;
+    u64 next_event_cycle_ = 1007;
     bool hblank_ = false;
     bool vblank_ = false;
     bool frame_ready_ = false;

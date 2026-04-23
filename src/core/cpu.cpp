@@ -247,6 +247,7 @@ u32 Arm7tdmi::step() {
     const auto start_cycle = current_cycle_;
     bus_.service_timers(current_cycle_);
     current_cycle_ += bus_.service_dma(current_cycle_);
+    irq_.advance(current_cycle_);
 
     if (state_.halted || bus_.halted()) {
         state_.halted = true;
@@ -755,6 +756,14 @@ u32 IRAM_ATTR Arm7tdmi::execute_arm(u32 instruction) {
             }
             ++current_cycle_;
         } else if (sh == 1u) {
+#if GBA_TRACE_TIMERS
+            if ((address & ~0x3u) == 0x030000B0u) {
+                std::fprintf(stderr,
+                             "CPU STRH instr=%08X rd=%u rn=%u base=%08X addr=%08X val=%08X pre=%d up=%d imm=%d wb=%d\n",
+                             instruction, rd, rn, base, address, read_reg(rd), pre ? 1 : 0, up ? 1 : 0,
+                             immediate ? 1 : 0, write_back ? 1 : 0);
+            }
+#endif
             write16(address, read_reg(rd));
         }
 

@@ -169,7 +169,8 @@ int main(int argc, char** argv) {
 
         Emulator emu;
         if (!use_stub_bios && !bios_path.empty()) {
-            emu.load_bios_from_file(bios_path);
+            const auto loaded_bios = emu.load_bios_from_file(bios_path);
+            (void)loaded_bios;
         } else {
             emu.load_bios(make_bios_stub());
         }

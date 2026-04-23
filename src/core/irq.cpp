@@ -113,16 +113,20 @@ void IrqController::request(u16 mask) {
 }
 
 void IrqController::raise_delayed(u16 mask, u64 cycle_when) {
+    const auto fresh_mask = static_cast<u16>(mask & static_cast<u16>(~(if_ | delayed_.mask)));
+    if (fresh_mask == 0) {
+        return;
+    }
 #if GBA_TRACE_TIMERS
-    if ((mask & static_cast<u16>(IrqTimer0 | IrqTimer1 | IrqTimer2 | IrqTimer3)) != 0) {
-        std::fprintf(stderr, "IRQ delay mask=%04X at=%llu fire=%llu\n", mask,
+    if ((fresh_mask & static_cast<u16>(IrqTimer0 | IrqTimer1 | IrqTimer2 | IrqTimer3)) != 0) {
+        std::fprintf(stderr, "IRQ delay mask=%04X at=%llu fire=%llu\n", fresh_mask,
                      static_cast<unsigned long long>(cycle_when),
                      static_cast<unsigned long long>(cycle_when + 4));
     }
 #endif
     const auto fire_cycle = cycle_when + 4;
     const auto previous_mask = delayed_.mask;
-    delayed_.mask |= mask;
+    delayed_.mask = static_cast<u16>(delayed_.mask | fresh_mask);
     delayed_.fire_cycle = previous_mask == 0 ? fire_cycle : std::min(delayed_.fire_cycle, fire_cycle);
 }
 

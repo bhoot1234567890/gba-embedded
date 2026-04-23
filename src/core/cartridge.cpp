@@ -61,6 +61,12 @@ void Cartridge::set_bios(std::vector<u8> bios) {
 void Cartridge::set_save_type(SaveType save_type) {
     save_type_ = save_type;
     resize_save_storage();
+    flash_phase_ = 0;
+    flash_chip_id_ = false;
+    flash_erase_enable_ = false;
+    flash_write_enable_ = false;
+    flash_bank_select_ = false;
+    flash_bank_ = 0;
 }
 
 std::string Cartridge::title() const {
@@ -100,15 +106,30 @@ u32 Cartridge::read_save(u32 address, BusWidth width) const {
         return 0xFFFFFFFFu;
     }
 
-    const auto offset = address % static_cast<u32>(save_.size());
-    if (width == BusWidth::Byte) {
-        return save_[offset];
+    const auto masked = address & 0xFFFFu;
+
+    if (save_type_ == SaveType::Flash64K || save_type_ == SaveType::Flash128K) {
+        if (flash_chip_id_ && masked < 2u) {
+            const auto id_byte = save_type_ == SaveType::Flash128K
+                ? (masked == 0u ? 0xC2u : 0x09u)   // Macronix 128K
+                : (masked == 0u ? 0xBFu : 0xD4u);   // SST 64K
+            if (width == BusWidth::Byte) return id_byte;
+            if (width == BusWidth::Half) return id_byte | (id_byte << 8u);
+            return id_byte * 0x01010101u;
+        }
     }
 
-    const auto byte = save_[offset];
-    if (width == BusWidth::Half) {
-        return static_cast<u32>(byte) * 0x0101u;
+    if (save_type_ == SaveType::Sram) {
+        const auto offset = address & 0x7FFFu;
+        return width == BusWidth::Byte ? save_[offset]
+            : width == BusWidth::Half ? static_cast<u32>(save_[offset]) * 0x0101u
+            : static_cast<u32>(save_[offset]) * 0x01010101u;
     }
+
+    const auto offset = flash_physical(masked);
+    if (width == BusWidth::Byte) return save_[offset];
+    const auto byte = save_[offset];
+    if (width == BusWidth::Half) return static_cast<u32>(byte) * 0x0101u;
     return static_cast<u32>(byte) * 0x01010101u;
 }
 
@@ -117,16 +138,99 @@ void Cartridge::write_save(u32 address, u32 value, BusWidth width) {
         return;
     }
 
-    const auto offset = address % static_cast<u32>(save_.size());
-    switch (width) {
-    case BusWidth::Byte:
-        save_[offset] = static_cast<u8>(value);
+    const auto byte_val = static_cast<u8>(value & 0xFFu);
+
+    if (save_type_ == SaveType::Sram) {
+        save_[address & 0x7FFFu] = byte_val;
+        return;
+    }
+
+    flash_write(address, byte_val);
+}
+
+void Cartridge::flash_write(u32 address, u8 value) {
+    switch (flash_phase_) {
+    case 0:
+        if (address == 0x005555u && value == 0xAAu) {
+            flash_phase_ = 1;
+        }
         break;
-    case BusWidth::Half:
-    case BusWidth::Word:
-        save_[offset] = static_cast<u8>(value & 0xFFu);
+    case 1:
+        if (address == 0x002AAAu && value == 0x55u) {
+            flash_phase_ = 2;
+        } else {
+            flash_phase_ = 0;
+        }
+        break;
+    case 2:
+        flash_handle_command(address, value);
+        break;
+    case 3:
+        flash_handle_extended(address, value);
         break;
     }
+}
+
+void Cartridge::flash_handle_command(u32 address, u8 command) {
+    flash_phase_ = 0;
+    switch (command) {
+    case 0x90u:  // Enter autoselect/chip ID mode
+        flash_chip_id_ = true;
+        break;
+    case 0xF0u:  // Exit chip ID mode
+        flash_chip_id_ = false;
+        break;
+    case 0x80u:  // Enable erase (next command sequence will be erase type)
+        flash_erase_enable_ = true;
+        break;
+    case 0xA0u:  // Enable write
+        flash_write_enable_ = true;
+        flash_phase_ = 3;
+        break;
+    case 0xB0u:  // Bank select (128K only)
+        if (save_type_ == SaveType::Flash128K) {
+            flash_bank_select_ = true;
+            flash_phase_ = 3;
+        }
+        break;
+    case 0x10u:  // Chip erase
+        if (flash_erase_enable_) {
+            std::fill(save_.begin(), save_.end(), 0xFFu);
+            flash_erase_enable_ = false;
+        }
+        break;
+    case 0x30u:  // Sector erase (address determines sector)
+        if (flash_erase_enable_) {
+            const auto sector_base = flash_physical(address & 0xF000u);
+            const auto sector_end = std::min(sector_base + 4096u, static_cast<u32>(save_.size()));
+            std::fill(save_.begin() + sector_base, save_.begin() + sector_end, 0xFFu);
+            flash_erase_enable_ = false;
+        }
+        break;
+    default:
+        break;
+    }
+}
+
+void Cartridge::flash_handle_extended(u32 address, u8 value) {
+    flash_phase_ = 0;
+    if (flash_write_enable_) {
+        flash_write_enable_ = false;
+        const auto offset = flash_physical(address & 0xFFFFu);
+        if (offset < save_.size()) {
+            save_[offset] = value;
+        }
+    } else if (flash_bank_select_) {
+        flash_bank_select_ = false;
+        flash_bank_ = value & 1;
+    }
+}
+
+u32 Cartridge::flash_physical(u32 address) const {
+    if (save_type_ == SaveType::Flash128K) {
+        return static_cast<u32>(flash_bank_) * 65536u + address;
+    }
+    return address;
 }
 
 std::span<const u8> Cartridge::bios() const {

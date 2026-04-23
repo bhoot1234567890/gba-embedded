@@ -45,10 +45,24 @@ private:
     [[nodiscard]] u32 read_vector(std::span<const u8> bytes, u32 address, BusWidth width) const;
     void write_vector(std::vector<u8>& bytes, u32 address, u32 value, BusWidth width);
 
+    // Flash command state machine
+    void flash_write(u32 address, u8 value);
+    void flash_handle_command(u32 address, u8 command);
+    void flash_handle_extended(u32 address, u8 value);
+    [[nodiscard]] u32 flash_physical(u32 address) const;
+
     std::vector<u8> bios_;
     std::vector<u8> rom_;
     std::vector<u8> save_;
     SaveType save_type_ = SaveType::None;
+
+    // Flash state
+    int flash_phase_ = 0;
+    bool flash_chip_id_ = false;
+    bool flash_erase_enable_ = false;
+    bool flash_write_enable_ = false;
+    bool flash_bank_select_ = false;
+    int flash_bank_ = 0;
 };
 
 }  // namespace gba

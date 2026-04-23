@@ -66,6 +66,7 @@ u32 IrqController::read_register(u32 address, BusWidth width) const {
 }
 
 void IrqController::write_register(u32 address, u32 value, BusWidth width, u64 cycle_now) {
+    (void)cycle_now;
     auto write_half = [&](u32 half_address, u16 half_value) {
         switch (half_address) {
         case kIe:

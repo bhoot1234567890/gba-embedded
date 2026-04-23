@@ -56,6 +56,7 @@ u8* alloc_memory(size_t size, bool prefer_internal) {
     }
     return nullptr;
 #else
+    (void)prefer_internal;
     return new u8[size]();
 #endif
 }
@@ -260,6 +261,7 @@ BusAccessResult Bus::read(u32 address, BusWidth width, AccessType access, u64 cy
             (has_access_flag(last_access_, AccessType::Dma) && !has_access_flag(access, AccessType::Dma))) {
             sequential = false;
         }
+        const auto seq_index = static_cast<std::size_t>(sequential ? 1u : 0u);
 
         const auto stop_prefetch_penalty = [&]() -> u32 {
             if (!prefetch_.active) {
@@ -299,8 +301,7 @@ BusAccessResult Bus::read(u32 address, BusWidth width, AccessType access, u64 cy
             prefetch_.count = 0;
         } else {
             const auto penalty = stop_prefetch_penalty();
-            result.cycles = width == BusWidth::Word ? wait32_[static_cast<int>(sequential)][page]
-                                                    : wait16_[static_cast<int>(sequential)][page];
+            result.cycles = width == BusWidth::Word ? wait32_[seq_index][page] : wait16_[seq_index][page];
             prefetch_stop();
 
             if (is_code_fetch && prefetch_.was_disabled) {
@@ -423,9 +424,9 @@ BusAccessResult Bus::write(u32 address, u32 value, BusWidth width, AccessType ac
             (has_access_flag(last_access_, AccessType::Dma) && !has_access_flag(access, AccessType::Dma))) {
             sequential = false;
         }
+        const auto seq_index = static_cast<std::size_t>(sequential ? 1u : 0u);
 
-        result.cycles = width == BusWidth::Word ? wait32_[static_cast<int>(sequential)][page]
-                                                : wait16_[static_cast<int>(sequential)][page];
+        result.cycles = width == BusWidth::Word ? wait32_[seq_index][page] : wait16_[seq_index][page];
         if (prefetch_.active) {
             const auto half_duty_plus_one = (prefetch_.duty >> 1) + 1;
             if (prefetch_.countdown == 1 ||
@@ -882,8 +883,8 @@ u32 Bus::region_cycles(u32 address, BusWidth width, AccessType access, u64 cycle
             sequential = false;
         }
         const auto page = static_cast<std::size_t>(address >> 24u);
-        return width == BusWidth::Word ? wait32_[static_cast<int>(sequential)][page]
-                                       : wait16_[static_cast<int>(sequential)][page];
+        const auto seq_index = static_cast<std::size_t>(sequential ? 1u : 0u);
+        return width == BusWidth::Word ? wait32_[seq_index][page] : wait16_[seq_index][page];
     }
     if (address >= 0x0E000000u && address < 0x10000000u) {
         return wait16_[0][0xEu];

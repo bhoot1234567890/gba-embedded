@@ -91,6 +91,8 @@ private:
     TraceLogger* logger_;
     CpuState state_{};
     u64 current_cycle_ = 0;
+    u64 last_fetch_cycle_ = 0;
+    bool last_fetch_gamepak_ = false;
     bool hle_swi_enabled_ = false;
 };
 

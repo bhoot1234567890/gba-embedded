@@ -72,8 +72,9 @@ void IrqController::write_register(u32 address, u32 value, BusWidth width, u64 c
             ie_ = static_cast<u16>(half_value & 0x3FFFu);
             break;
         case kIf:
-            pending_if_ = static_cast<u16>(pending_if_ & ~half_value);
-            write_apply_cycle_ = cycle_now + 1u;
+            if_ = static_cast<u16>(if_ & ~half_value);
+            pending_if_ = if_;
+            write_apply_cycle_ = std::numeric_limits<u64>::max();
             break;
         case kIme:
             ime_ = static_cast<u16>(half_value & 1u);

@@ -1,0 +1,142 @@
+$ cmake --build /Users/chaitanyamalhotra/development/gba embedded/build -j4
+build_exit_code=0
+
+=== Suite 03 ===
+command: /Users/chaitanyamalhotra/development/gba embedded/build/gba_suite_runner --suite 2
+log: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite03_phase214_irq_entry_2.log
+parsed_json: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite03_phase214_irq_entry_2.parsed.json
+exit_code: 0
+fail_lines: 0
+Run: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite03_phase214_irq_entry_2.log
+  ROM: tests/assets/roms/suite.gba
+  BIOS: tests/assets/roms/gba_bios.bin
+  Boot: frames=60 pc=0x00000348 cpsr=0x6000005F halted=1 cycle=16769984
+  Suites parsed: 1
+  Overall: 2020/2020 passed
+  Suite 03 Timing: 2020/2020 passed via mgba (frames=287, pc=0x0802BACC, halted=0, cycle=190082816)
+tail:
+  Timing test: Short DMA (32)
+  Timing test: Short DMA (32/from ROM)
+  Timing test: Short DMA (32/to ROM)
+  Timing test: Short DMA (32/ROM to ROM)
+  [score] Timing: 2020/2020 PASS
+  
+  === Summary ===
+  Suites: 1/1 passed  Tests: 2020/2020 passed
+compare_latest: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite03_phase213_disable_apply_plus1.log
+Comparison:
+  Suite 03
+    suite03_phase213_disable_apply_plus1: Timing -> 2020/2020 passed, 0 failed (mgba); frames=287 pc=0x0802BAC2 halted=0
+    suite03_phase214_irq_entry_2: Timing -> 2020/2020 passed, 0 failed (mgba); frames=287 pc=0x0802BACC halted=0
+
+=== Suite 04 ===
+command: /Users/chaitanyamalhotra/development/gba embedded/build/gba_suite_runner --suite 3
+log: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite04_phase214_irq_entry_2.log
+parsed_json: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite04_phase214_irq_entry_2.parsed.json
+exit_code: 0
+fail_lines: 1761
+Run: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite04_phase214_irq_entry_2.log
+  ROM: tests/assets/roms/suite.gba
+  BIOS: tests/assets/roms/gba_bios.bin
+  Boot: frames=60 pc=0x00000348 cpsr=0x6000005F halted=1 cycle=16769984
+  Suites parsed: 1
+  Overall: 584/936 passed
+  Suite 04 Timer count-up: 584/936 passed via mgba (frames=224, pc=0x0802BAC0, halted=0, cycle=182498631)
+    Examples: sram:1xv 1d 1i | sram:16xv 1d 1i | sram:1xv 2d 1i | sram:16xv 2d 1i | sram:1xv 4d 1i | mgba:0b, 0x0005 1xv 1d 1i
+tail:
+  1xs 1d 4i: Got 000025BF vs 000025BE: FAIL
+  1xs 2d 4i: Got 000025BE vs 000025BD: FAIL
+  1xs 4d 4i: Got 000025BD vs 000025BC: FAIL
+  16xs 4d 4i: Got 0000D210 vs 0000D200: FAIL
+  [score] Timer count-up: 584/936 FAIL
+  
+  === Summary ===
+  Suites: 0/1 passed  Tests: 584/936 passed
+fail buckets by preface:
+  1xv 1d 1i: 26
+  16xv 1d 1i: 26
+  1xv 2d 1i: 26
+  16xv 2d 1i: 26
+  1xv 4d 1i: 26
+  16xv 4d 1i: 26
+  1xv 1d 2i: 26
+  16xv 1d 2i: 26
+  1xv 2d 2i: 26
+  16xv 2d 2i: 26
+  1xv 4d 2i: 26
+  16xv 4d 2i: 26
+fail deltas:
+  1xs delta +1: 192
+  16xv delta -1: 114
+  1xv delta -1: 102
+  16xv delta -2: 54
+  1xv delta -2: 48
+  16xs delta +16: 44
+  1xv delta -4: 42
+  16xv delta -4: 36
+  1xv delta -3: 24
+  16xv delta +1: 12
+  1xv delta +3: 6
+  1xv delta +1: 6
+compare_latest: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite04_phase213_disable_apply_plus1.log
+Comparison:
+  Suite 04
+    suite04_phase213_disable_apply_plus1: Timer count-up -> 669/936 passed, 267 failed (mgba); frames=213 pc=0x0802BAC8 halted=0
+    suite04_phase214_irq_entry_2: Timer count-up -> 584/936 passed, 352 failed (mgba); frames=224 pc=0x0802BAC0 halted=0
+
+=== Suite 05 ===
+command: /Users/chaitanyamalhotra/development/gba embedded/build/gba_suite_runner --suite 4
+log: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite05_phase214_irq_entry_2.log
+parsed_json: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite05_phase214_irq_entry_2.parsed.json
+exit_code: 0
+fail_lines: 106
+Run: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite05_phase214_irq_entry_2.log
+  ROM: tests/assets/roms/suite.gba
+  BIOS: tests/assets/roms/gba_bios.bin
+  Boot: frames=60 pc=0x00000348 cpsr=0x6000005F halted=1 cycle=16769984
+  Suites parsed: 1
+  Overall: 69/90 passed
+  Suite 05 Timer IRQ: 69/90 passed via mgba (frames=93, pc=0x0802BABA, halted=0, cycle=155813504)
+    Examples: mgba:FFFF 4 nops | mgba:FFFF 5 nops | mgba:FFFF 6 nops | mgba:FFFF 7 nops | mgba:FFFF 8 nops
+tail:
+  Got 0051 != 0052: FAIL
+  Timer IRQ test: FFF9
+  Timer IRQ test: FFF8
+  Timer IRQ test: FFF7
+  [score] Timer IRQ: 69/90 FAIL
+  
+  === Summary ===
+  Suites: 0/1 passed  Tests: 69/90 passed
+compare_latest: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite05_phase213_disable_apply_plus1.log
+Comparison:
+  Suite 05
+    suite05_phase213_disable_apply_plus1: Timer IRQ -> 69/90 passed, 21 failed (mgba); frames=93 pc=0x0802BAC0 halted=0
+    suite05_phase214_irq_entry_2: Timer IRQ -> 69/90 passed, 21 failed (mgba); frames=93 pc=0x0802BABA halted=0
+
+=== Suite 10 ===
+command: /Users/chaitanyamalhotra/development/gba embedded/build/gba_suite_runner --suite 9
+log: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite10_phase214_irq_entry_2.log
+parsed_json: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite10_phase214_irq_entry_2.parsed.json
+exit_code: 0
+fail_lines: 0
+Run: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite10_phase214_irq_entry_2.log
+  ROM: tests/assets/roms/suite.gba
+  BIOS: tests/assets/roms/gba_bios.bin
+  Boot: frames=60 pc=0x00000348 cpsr=0x6000005F halted=1 cycle=16769984
+  Suites parsed: 1
+  Overall: 1256/1256 passed
+  Suite 10 DMA: 1256/1256 passed via mgba (frames=264, pc=0x0802BAB0, halted=0, cycle=254408001)
+tail:
+  DMA test: 0 Imm H V+BIOS/+VRAM
+  DMA test: 1 Imm H V+BIOS/+VRAM
+  DMA test: 2 Imm H V+BIOS/+VRAM
+  DMA test: 3 Imm H V+BIOS/+VRAM
+  [score] DMA: 1256/1256 PASS
+  
+  === Summary ===
+  Suites: 1/1 passed  Tests: 1256/1256 passed
+compare_latest: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite10_phase213_disable_apply_plus1.log
+Comparison:
+  Suite 10
+    suite10_phase213_disable_apply_plus1: DMA -> 1256/1256 passed, 0 failed (mgba); frames=264 pc=0x0802BAC0 halted=0
+    suite10_phase214_irq_entry_2: DMA -> 1256/1256 passed, 0 failed (mgba); frames=264 pc=0x0802BAB0 halted=0

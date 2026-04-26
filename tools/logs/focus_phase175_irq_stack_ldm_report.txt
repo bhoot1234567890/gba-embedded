@@ -1,0 +1,110 @@
+$ cmake --build /Users/chaitanyamalhotra/development/gba embedded/build -j4
+build_exit_code=0
+
+=== Suite 03 ===
+command: /Users/chaitanyamalhotra/development/gba embedded/build/gba_suite_runner --suite 2
+log: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite03_phase175_irq_stack_ldm.log
+parsed_json: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite03_phase175_irq_stack_ldm.parsed.json
+exit_code: 0
+fail_lines: 0
+Run: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite03_phase175_irq_stack_ldm.log
+  ROM: tests/assets/roms/suite.gba
+  BIOS: tests/assets/roms/gba_bios.bin
+  Boot: frames=60 pc=0x00000348 cpsr=0x6000005F halted=1 cycle=16769984
+  Suites parsed: 1
+  Overall: 2020/2020 passed
+  Suite 03 Timing: 2020/2020 passed via mgba (frames=287, pc=0x0802BAAA, halted=0, cycle=190082818)
+tail:
+  Timing test: Short DMA (16)
+  Timing test: Short DMA (16/from ROM)
+  Timing test: Short DMA (16/to ROM)
+  Timing test: Short DMA (16/ROM to ROM)
+  Timing test: Short DMA (32)
+  Timing test: Short DMA (32/from ROM)
+  Timing test: Short DMA (32/to ROM)
+  Timing test: Short DMA (32/ROM to ROM)
+  [score] Timing: 2020/2020 PASS
+  
+  === Summary ===
+  Suites: 1/1 passed  Tests: 2020/2020 passed
+
+=== Suite 04 ===
+command: /Users/chaitanyamalhotra/development/gba embedded/build/gba_suite_runner --suite 3
+log: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite04_phase175_irq_stack_ldm.log
+parsed_json: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite04_phase175_irq_stack_ldm.parsed.json
+exit_code: 0
+fail_lines: 1356
+Run: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite04_phase175_irq_stack_ldm.log
+  ROM: tests/assets/roms/suite.gba
+  BIOS: tests/assets/roms/gba_bios.bin
+  Boot: frames=60 pc=0x00000348 cpsr=0x6000005F halted=1 cycle=16769984
+  Suites parsed: 1
+  Overall: 665/936 passed
+  Suite 04 Timer count-up: 665/936 passed via mgba (frames=214, pc=0x0802BAF2, halted=0, cycle=179689664)
+    Examples: sram:1xv 1d 2i | sram:16xv 1d 2i | sram:1xv 2d 2i | sram:16xv 2d 2i | sram:1xv 4d 2i | mgba:0b, 0x0005 1xv 1d 2i
+tail:
+  1xs 1d 2i: Got 000012DD vs 000012DC: FAIL
+  1xs 2d 2i: Got 000012DC vs 000012DB: FAIL
+  16xs 2d 2i: Got 00006900 vs 000068F0: FAIL
+  1xs 4d 2i: Got 000012DB vs 000012DA: FAIL
+  1xs 1d 4i: Got 000025BF vs 000025BE: FAIL
+  1xs 2d 4i: Got 000025BE vs 000025BD: FAIL
+  1xs 4d 4i: Got 000025BD vs 000025BC: FAIL
+  16xs 4d 4i: Got 0000D210 vs 0000D200: FAIL
+  [score] Timer count-up: 665/936 FAIL
+  
+  === Summary ===
+  Suites: 0/1 passed  Tests: 665/936 passed
+fail buckets by preface:
+  1xv 1d 2i: 26
+  1xv 2d 2i: 26
+  1xv 4d 2i: 26
+  1xv 1d 4i: 26
+  1xv 2d 4i: 26
+  1xv 4d 4i: 26
+  1xs 1d 1i: 24
+  1xs 4d 1i: 24
+  1xs 1d 2i: 24
+  1xs 2d 2i: 24
+  1xs 4d 2i: 24
+  1xs 1d 4i: 24
+fail deltas:
+  1xs delta +1: 192
+  16xs delta +16: 74
+  1xv delta -2: 72
+  16xv delta -2: 60
+  1xv delta -6: 42
+  16xv delta -6: 36
+  1xv delta +2: 24
+  1xv delta +3: 6
+  1xv delta -1: 6
+  16xv delta +4: 6
+  16xv delta +6: 6
+  1xv delta +7: 6
+
+=== Suite 05 ===
+command: /Users/chaitanyamalhotra/development/gba embedded/build/gba_suite_runner --suite 4
+log: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite05_phase175_irq_stack_ldm.log
+parsed_json: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite05_phase175_irq_stack_ldm.parsed.json
+exit_code: 0
+fail_lines: 0
+Run: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite05_phase175_irq_stack_ldm.log
+  ROM: tests/assets/roms/suite.gba
+  BIOS: tests/assets/roms/gba_bios.bin
+  Boot: frames=60 pc=0x00000348 cpsr=0x6000005F halted=1 cycle=16769984
+  Suites parsed: 1
+  Overall: 90/90 passed
+  Suite 05 Timer IRQ: 90/90 passed via mgba (frames=91, pc=0x0802BACA, halted=0, cycle=155251714)
+tail:
+  Timer IRQ test: FFFE
+  Timer IRQ test: FFFD
+  Timer IRQ test: FFFC
+  Timer IRQ test: FFFB
+  Timer IRQ test: FFFA
+  Timer IRQ test: FFF9
+  Timer IRQ test: FFF8
+  Timer IRQ test: FFF7
+  [score] Timer IRQ: 90/90 PASS
+  
+  === Summary ===
+  Suites: 1/1 passed  Tests: 90/90 passed

@@ -1,0 +1,301 @@
+=== GBA Test Suite Runner ===
+ROM:  tests/assets/roms/suite.gba
+BIOS: tests/assets/roms/gba_bios.bin
+Booting...
+After 60 frames: PC=0x00000348 CPSR=0x6000005F halted=1 cycle=16769984
+[DBG] Game Boy Advance Test Suite
+===
+[DBG] BEGIN: Carry tests
+[DBG] Carry test: 0, 0 (.)
+[DBG] PASS: 0, 0 (.) adcs
+[DBG] PASS: 0, 0 (.) sbcs
+[DBG] PASS: 0, 0 (.) rscs
+[DBG] Carry test: 0, 0 (C)
+[DBG] PASS: 0, 0 (C) adcs
+[DBG] PASS: 0, 0 (C) sbcs
+[DBG] PASS: 0, 0 (C) rscs
+[DBG] Carry test: 0, 0x7FFFFFFF (.)
+[DBG] PASS: 0, 0x7FFFFFFF (.) adcs
+[DBG] PASS: 0, 0x7FFFFFFF (.) sbcs
+[DBG] PASS: 0, 0x7FFFFFFF (.) rscs
+[DBG] Carry test: 0, 0x7FFFFFFF (C)
+[DBG] PASS: 0, 0x7FFFFFFF (C) adcs
+[DBG] PASS: 0, 0x7FFFFFFF (C) sbcs
+[DBG] PASS: 0, 0x7FFFFFFF (C) rscs
+[DBG] Carry test: 0, 0x80000000 (.)
+[DBG] PASS: 0, 0x80000000 (.) adcs
+[DBG] PASS: 0, 0x80000000 (.) sbcs
+[DBG] PASS: 0, 0x80000000 (.) rscs
+[DBG] Carry test: 0, 0x80000000 (C)
+[DBG] PASS: 0, 0x80000000 (C) adcs
+[DBG] PASS: 0, 0x80000000 (C) sbcs
+[DBG] PASS: 0, 0x80000000 (C) rscs
+[DBG] Carry test: 0, 0xFFFFFFFF (.)
+[DBG] PASS: 0, 0xFFFFFFFF (.) adcs
+[DBG] PASS: 0, 0xFFFFFFFF (.) sbcs
+[DBG] PASS: 0, 0xFFFFFFFF (.) rscs
+[DBG] Carry test: 0, 0xFFFFFFFF (C)
+[DBG] PASS: 0, 0xFFFFFFFF (C) adcs
+[DBG] PASS: 0, 0xFFFFFFFF (C) sbcs
+[DBG] PASS: 0, 0xFFFFFFFF (C) rscs
+[DBG] Carry test: 0x7FFFFFFF, 0 (.)
+[DBG] PASS: 0x7FFFFFFF, 0 (.) adcs
+[DBG] PASS: 0x7FFFFFFF, 0 (.) sbcs
+[DBG] PASS: 0x7FFFFFFF, 0 (.) rscs
+[DBG] Carry test: 0x7FFFFFFF, 0 (C)
+[DBG] PASS: 0x7FFFFFFF, 0 (C) adcs
+[DBG] PASS: 0x7FFFFFFF, 0 (C) sbcs
+[DBG] PASS: 0x7FFFFFFF, 0 (C) rscs
+[DBG] Carry test: 0x7FFFFFFF, 0x7FFFFFFF (.)
+[DBG] PASS: 0x7FFFFFFF, 0x7FFFFFFF (.) adcs
+[DBG] PASS: 0x7FFFFFFF, 0x7FFFFFFF (.) sbcs
+[DBG] PASS: 0x7FFFFFFF, 0x7FFFFFFF (.) rscs
+[DBG] Carry test: 0x7FFFFFFF, 0x7FFFFFFF (C)
+[DBG] PASS: 0x7FFFFFFF, 0x7FFFFFFF (C) adcs
+[DBG] PASS: 0x7FFFFFFF, 0x7FFFFFFF (C) sbcs
+[DBG] PASS: 0x7FFFFFFF, 0x7FFFFFFF (C) rscs
+[DBG] Carry test: 0x7FFFFFFF, 0x80000000 (.)
+[DBG] PASS: 0x7FFFFFFF, 0x80000000 (.) adcs
+[DBG] PASS: 0x7FFFFFFF, 0x80000000 (.) sbcs
+[DBG] PASS: 0x7FFFFFFF, 0x80000000 (.) rscs
+[DBG] Carry test: 0x7FFFFFFF, 0x80000000 (C)
+[DBG] PASS: 0x7FFFFFFF, 0x80000000 (C) adcs
+[DBG] PASS: 0x7FFFFFFF, 0x80000000 (C) sbcs
+[DBG] PASS: 0x7FFFFFFF, 0x80000000 (C) rscs
+[DBG] Carry test: 0x7FFFFFFF, 0xFFFFFFFF (.)
+[DBG] PASS: 0x7FFFFFFF, 0xFFFFFFFF (.) adcs
+[DBG] PASS: 0x7FFFFFFF, 0xFFFFFFFF (.) sbcs
+[DBG] PASS: 0x7FFFFFFF, 0xFFFFFFFF (.) rscs
+[DBG] Carry test: 0x80000000, 0 (.)
+[DBG] PASS: 0x80000000, 0 (.) adcs
+[DBG] PASS: 0x80000000, 0 (.) sbcs
+[DBG] PASS: 0x80000000, 0 (.) rscs
+[DBG] Carry test: 0x80000000, 0 (C)
+[DBG] PASS: 0x80000000, 0 (C) adcs
+[DBG] PASS: 0x80000000, 0 (C) sbcs
+[DBG] PASS: 0x80000000, 0 (C) rscs
+[DBG] Carry test: 0x80000000, 0x7FFFFFFF (.)
+[DBG] PASS: 0x80000000, 0x7FFFFFFF (.) adcs
+[DBG] PASS: 0x80000000, 0x7FFFFFFF (.) sbcs
+[DBG] PASS: 0x80000000, 0x7FFFFFFF (.) rscs
+[DBG] Carry test: 0x80000000, 0x7FFFFFFF (C)
+[DBG] PASS: 0x80000000, 0x7FFFFFFF (C) adcs
+[DBG] PASS: 0x80000000, 0x7FFFFFFF (C) sbcs
+[DBG] PASS: 0x80000000, 0x7FFFFFFF (C) rscs
+[DBG] Carry test: 0x80000000, 0x80000000 (.)
+[DBG] PASS: 0x80000000, 0x80000000 (.) adcs
+[DBG] PASS: 0x80000000, 0x80000000 (.) sbcs
+[DBG] PASS: 0x80000000, 0x80000000 (.) rscs
+[DBG] Carry test: 0x80000000, 0x80000000 (C)
+[DBG] PASS: 0x80000000, 0x80000000 (C) adcs
+[DBG] PASS: 0x80000000, 0x80000000 (C) sbcs
+[DBG] PASS: 0x80000000, 0x80000000 (C) rscs
+[DBG] Carry test: 0x80000000, 0xFFFFFFFF (.)
+[DBG] PASS: 0x80000000, 0xFFFFFFFF (.) adcs
+[DBG] PASS: 0x80000000, 0xFFFFFFFF (.) sbcs
+[DBG] PASS: 0x80000000, 0xFFFFFFFF (.) rscs
+[DBG] Carry test: 0x80000000, 0xFFFFFFFF (C)
+[DBG] PASS: 0x80000000, 0xFFFFFFFF (C) adcs
+[DBG] PASS: 0x80000000, 0xFFFFFFFF (C) sbcs
+[DBG] PASS: 0x80000000, 0xFFFFFFFF (C) rscs
+[DBG] Carry test: 0xFFFFFFFF, 0 (.)
+[DBG] PASS: 0xFFFFFFFF, 0 (.) adcs
+[DBG] PASS: 0xFFFFFFFF, 0 (.) sbcs
+[DBG] PASS: 0xFFFFFFFF, 0 (.) rscs
+[DBG] Carry test: 0xFFFFFFFF, 0 (C)
+[DBG] PASS: 0xFFFFFFFF, 0 (C) adcs
+[DBG] PASS: 0xFFFFFFFF, 0 (C) sbcs
+[DBG] PASS: 0xFFFFFFFF, 0 (C) rscs
+[DBG] Carry test: 0xFFFFFFFF, 0x7FFFFFFF (.)
+[DBG] PASS: 0xFFFFFFFF, 0x7FFFFFFF (.) adcs
+[DBG] PASS: 0xFFFFFFFF, 0x7FFFFFFF (.) sbcs
+[DBG] PASS: 0xFFFFFFFF, 0x7FFFFFFF (.) rscs
+[DBG] Carry test: 0xFFFFFFFF, 0x7FFFFFFF (C)
+[DBG] PASS: 0xFFFFFFFF, 0x7FFFFFFF (C) adcs
+[DBG] PASS: 0xFFFFFFFF, 0x7FFFFFFF (C) sbcs
+[DBG] PASS: 0xFFFFFFFF, 0x7FFFFFFF (C) rscs
+[DBG] Carry test: 0xFFFFFFFF, 0x80000000 (.)
+[DBG] PASS: 0xFFFFFFFF, 0x80000000 (.) adcs
+[DBG] PASS: 0xFFFFFFFF, 0x80000000 (.) sbcs
+[DBG] PASS: 0xFFFFFFFF, 0x80000000 (.) rscs
+[DBG] Carry test: 0xFFFFFFFF, 0x80000000 (C)
+[DBG] PASS: 0xFFFFFFFF, 0x80000000 (C) adcs
+[DBG] PASS: 0xFFFFFFFF, 0x80000000 (C) sbcs
+[DBG] PASS: 0xFFFFFFFF, 0x80000000 (C) rscs
+[DBG] Carry test: 0xFFFFFFFF, 0xFFFFFFFF (.)
+[DBG] PASS: 0xFFFFFFFF, 0xFFFFFFFF (.) adcs
+[DBG] PASS: 0xFFFFFFFF, 0xFFFFFFFF (.) sbcs
+[DBG] PASS: 0xFFFFFFFF, 0xFFFFFFFF (.) rscs
+[DBG] Carry test: 0xFFFFFFFF, 0xFFFFFFFF (C)
+[DBG] PASS: 0xFFFFFFFF, 0xFFFFFFFF (C) adcs
+[DBG] PASS: 0xFFFFFFFF, 0xFFFFFFFF (C) sbcs
+[DBG] PASS: 0xFFFFFFFF, 0xFFFFFFFF (C) rscs
+
+--- Suite 07: Carry ---
+Frames: 93  PC=0x0802BAC2  CPSR=0x2000003F  halted=0  cycle=176038017
+[debug]
+Game Boy Advance Test Suite
+===
+BEGIN: Carry tests
+Carry test: 0, 0 (.)
+PASS: 0, 0 (.) adcs
+PASS: 0, 0 (.) sbcs
+PASS: 0, 0 (.) rscs
+Carry test: 0, 0 (C)
+PASS: 0, 0 (C) adcs
+PASS: 0, 0 (C) sbcs
+PASS: 0, 0 (C) rscs
+Carry test: 0, 0x7FFFFFFF (.)
+PASS: 0, 0x7FFFFFFF (.) adcs
+PASS: 0, 0x7FFFFFFF (.) sbcs
+PASS: 0, 0x7FFFFFFF (.) rscs
+Carry test: 0, 0x7FFFFFFF (C)
+PASS: 0, 0x7FFFFFFF (C) adcs
+PASS: 0, 0x7FFFFFFF (C) sbcs
+PASS: 0, 0x7FFFFFFF (C) rscs
+Carry test: 0, 0x80000000 (.)
+PASS: 0, 0x80000000 (.) adcs
+PASS: 0, 0x80000000 (.) sbcs
+PASS: 0, 0x80000000 (.) rscs
+Carry test: 0, 0x80000000 (C)
+PASS: 0, 0x80000000 (C) adcs
+PASS: 0, 0x80000000 (C) sbcs
+PASS: 0, 0x80000000 (C) rscs
+Carry test: 0, 0xFFFFFFFF (.)
+PASS: 0, 0xFFFFFFFF (.) adcs
+PASS: 0, 0xFFFFFFFF (.) sbcs
+PASS: 0, 0xFFFFFFFF (.) rscs
+Carry test: 0, 0xFFFFFFFF (C)
+PASS: 0, 0xFFFFFFFF (C) adcs
+PASS: 0, 0xFFFFFFFF (C) sbcs
+PASS: 0, 0xFFFFFFFF (C) rscs
+Carry test: 0x7FFFFFFF, 0 (.)
+PASS: 0x7FFFFFFF, 0 (.) adcs
+PASS: 0x7FFFFFFF, 0 (.) sbcs
+PASS: 0x7FFFFFFF, 0 (.) rscs
+Carry test: 0x7FFFFFFF, 0 (C)
+PASS: 0x7FFFFFFF, 0 (C) adcs
+PASS: 0x7FFFFFFF, 0 (C) sbcs
+PASS: 0x7FFFFFFF, 0 (C) rscs
+Carry test: 0x7FFFFFFF, 0x7FFFFFFF (.)
+PASS: 0x7FFFFFFF, 0x7FFFFFFF (.) adcs
+PASS: 0x7FFFFFFF, 0x7FFFFFFF (.) sbcs
+PASS: 0x7FFFFFFF, 0x7FFFFFFF (.) rscs
+Carry test: 0x7FFFFFFF, 0x7FFFFFFF (C)
+PASS: 0x7FFFFFFF, 0x7FFFFFFF (C) adcs
+PASS: 0x7FFFFFFF, 0x7FFFFFFF (C) sbcs
+PASS: 0x7FFFFFFF, 0x7FFFFFFF (C) rscs
+Carry test: 0x7FFFFFFF, 0x80000000 (.)
+PASS: 0x7FFFFFFF, 0x80000000 (.) adcs
+PASS: 0x7FFFFFFF, 0x80000000 (.) sbcs
+PASS: 0x7FFFFFFF, 0x80000000 (.) rscs
+Carry test: 0x7FFFFFFF, 0x80000000 (C)
+PASS: 0x7FFFFFFF, 0x80000000 (C) adcs
+PASS: 0x7FFFFFFF, 0x80000000 (C) sbcs
+PASS: 0x7FFFFFFF, 0x80000000 (C) rscs
+Carry test: 0x7FFFFFFF, 0xFFFFFFFF (.)
+PASS: 0x7FFFFFFF, 0xFFFFFFFF (.) adcs
+PASS: 0x7FFFFFFF, 0xFFFFFFFF (.) sbcs
+PASS: 0x7FFFFFFF, 0xFFFFFFFF (.) rscs
+Carry test: 0x80000000, 0 (.)
+PASS: 0x80000000, 0 (.) adcs
+PASS: 0x80000000, 0 (.) sbcs
+PASS: 0x80000000, 0 (.) rscs
+Carry test: 0x80000000, 0 (C)
+PASS: 0x80000000, 0 (C) adcs
+PASS: 0x80000000, 0 (C) sbcs
+PASS: 0x80000000, 0 (C) rscs
+Carry test: 0x80000000, 0x7FFFFFFF (.)
+PASS: 0x80000000, 0x7FFFFFFF (.) adcs
+PASS: 0x80000000, 0x7FFFFFFF (.) sbcs
+PASS: 0x80000000, 0x7FFFFFFF (.) rscs
+Carry test: 0x80000000, 0x7FFFFFFF (C)
+PASS: 0x80000000, 0x7FFFFFFF (C) adcs
+PASS: 0x80000000, 0x7FFFFFFF (C) sbcs
+PASS: 0x80000000, 0x7FFFFFFF (C) rscs
+Carry test: 0x80000000, 0x80000000 (.)
+PASS: 0x80000000, 0x80000000 (.) adcs
+PASS: 0x80000000, 0x80000000 (.) sbcs
+PASS: 0x80000000, 0x80000000 (.) rscs
+Carry test: 0x80000000, 0x80000000 (C)
+PASS: 0x80000000, 0x80000000 (C) adcs
+PASS: 0x80000000, 0x80000000 (C) sbcs
+PASS: 0x80000000, 0x80000000 (C) rscs
+Carry test: 0x80000000, 0xFFFFFFFF (.)
+PASS: 0x80000000, 0xFFFFFFFF (.) adcs
+PASS: 0x80000000, 0xFFFFFFFF (.) sbcs
+PASS: 0x80000000, 0xFFFFFFFF (.) rscs
+Carry test: 0x80000000, 0xFFFFFFFF (C)
+PASS: 0x80000000, 0xFFFFFFFF (C) adcs
+PASS: 0x80000000, 0xFFFFFFFF (C) sbcs
+PASS: 0x80000000, 0xFFFFFFFF (C) rscs
+Carry test: 0xFFFFFFFF, 0 (.)
+PASS: 0xFFFFFFFF, 0 (.) adcs
+PASS: 0xFFFFFFFF, 0 (.) sbcs
+PASS: 0xFFFFFFFF, 0 (.) rscs
+Carry test: 0xFFFFFFFF, 0 (C)
+PASS: 0xFFFFFFFF, 0 (C) adcs
+PASS: 0xFFFFFFFF, 0 (C) sbcs
+PASS: 0xFFFFFFFF, 0 (C) rscs
+Carry test: 0xFFFFFFFF, 0x7FFFFFFF (.)
+PASS: 0xFFFFFFFF, 0x7FFFFFFF (.) adcs
+PASS: 0xFFFFFFFF, 0x7FFFFFFF (.) sbcs
+PASS: 0xFFFFFFFF, 0x7FFFFFFF (.) rscs
+Carry test: 0xFFFFFFFF, 0x7FFFFFFF (C)
+PASS: 0xFFFFFFFF, 0x7FFFFFFF (C) adcs
+PASS: 0xFFFFFFFF, 0x7FFFFFFF (C) sbcs
+PASS: 0xFFFFFFFF, 0x7FFFFFFF (C) rscs
+Carry test: 0xFFFFFFFF, 0x80000000 (.)
+PASS: 0xFFFFFFFF, 0x80000000 (.) adcs
+PASS: 0xFFFFFFFF, 0x80000000 (.) sbcs
+PASS: 0xFFFFFFFF, 0x80000000 (.) rscs
+Carry test: 0xFFFFFFFF, 0x80000000 (C)
+PASS: 0xFFFFFFFF, 0x80000000 (C) adcs
+PASS: 0xFFFFFFFF, 0x80000000 (C) sbcs
+PASS: 0xFFFFFFFF, 0x80000000 (C) rscs
+Carry test: 0xFFFFFFFF, 0xFFFFFFFF (.)
+PASS: 0xFFFFFFFF, 0xFFFFFFFF (.) adcs
+PASS: 0xFFFFFFFF, 0xFFFFFFFF (.) sbcs
+PASS: 0xFFFFFFFF, 0xFFFFFFFF (.) rscs
+Carry test: 0xFFFFFFFF, 0xFFFFFFFF (C)
+PASS: 0xFFFFFFFF, 0xFFFFFFFF (C) adcs
+PASS: 0xFFFFFFFF, 0xFFFFFFFF (C) sbcs
+PASS: 0xFFFFFFFF, 0xFFFFFFFF (C) rscs
+[sram]
+Game Boy Advance Test Suite
+===
+Carry test: 0, 0 (.)
+Carry test: 0, 0 (C)
+Carry test: 0, 0x7FFFFFFF (.)
+Carry test: 0, 0x7FFFFFFF (C)
+Carry test: 0, 0x80000000 (.)
+Carry test: 0, 0x80000000 (C)
+Carry test: 0, 0xFFFFFFFF (.)
+Carry test: 0, 0xFFFFFFFF (C)
+Carry test: 0x7FFFFFFF, 0 (.)
+Carry test: 0x7FFFFFFF, 0 (C)
+Carry test: 0x7FFFFFFF, 0x7FFFFFFF (.)
+Carry test: 0x7FFFFFFF, 0x7FFFFFFF (C)
+Carry test: 0x7FFFFFFF, 0x80000000 (.)
+Carry test: 0x7FFFFFFF, 0x80000000 (C)
+Carry test: 0x7FFFFFFF, 0xFFFFFFFF (.)
+Carry test: 0x80000000, 0 (.)
+Carry test: 0x80000000, 0 (C)
+Carry test: 0x80000000, 0x7FFFFFFF (.)
+Carry test: 0x80000000, 0x7FFFFFFF (C)
+Carry test: 0x80000000, 0x80000000 (.)
+Carry test: 0x80000000, 0x80000000 (C)
+Carry test: 0x80000000, 0xFFFFFFFF (.)
+Carry test: 0x80000000, 0xFFFFFFFF (C)
+Carry test: 0xFFFFFFFF, 0 (.)
+Carry test: 0xFFFFFFFF, 0 (C)
+Carry test: 0xFFFFFFFF, 0x7FFFFFFF (.)
+Carry test: 0xFFFFFFFF, 0x7FFFFFFF (C)
+Carry test: 0xFFFFFFFF, 0x80000000 (.)
+Carry test: 0xFFFFFFFF, 0x80000000 (C)
+Carry test: 0xFFFFFFFF, 0xFFFFFFFF (.)
+Carry test: 0xFFFFFFFF, 0xFFFFFFFF (C)
+[score] Carry: 93/93 PASS
+
+=== Summary ===
+Suites: 1/1 passed  Tests: 93/93 passed

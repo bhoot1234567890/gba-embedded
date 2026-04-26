@@ -1,0 +1,93 @@
+$ cmake --build /Users/chaitanyamalhotra/development/gba embedded/build -j4
+build_exit_code=0
+
+=== Suite 03 ===
+command: /Users/chaitanyamalhotra/development/gba embedded/build/gba_suite_runner --suite 2
+log: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite03_phase191_timer_word_load_replay.log
+parsed_json: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite03_phase191_timer_word_load_replay.parsed.json
+exit_code: 0
+fail_lines: 0
+Run: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite03_phase191_timer_word_load_replay.log
+  ROM: tests/assets/roms/suite.gba
+  BIOS: tests/assets/roms/gba_bios.bin
+  Boot: frames=60 pc=0x00000348 cpsr=0x6000005F halted=1 cycle=16769984
+  Suites parsed: 1
+  Overall: 2020/2020 passed
+  Suite 03 Timing: 2020/2020 passed via mgba (frames=287, pc=0x0802BAC2, halted=0, cycle=190082817)
+tail:
+  Timing test: Short DMA (32)
+  Timing test: Short DMA (32/from ROM)
+  Timing test: Short DMA (32/to ROM)
+  Timing test: Short DMA (32/ROM to ROM)
+  [score] Timing: 2020/2020 PASS
+  
+  === Summary ===
+  Suites: 1/1 passed  Tests: 2020/2020 passed
+
+=== Suite 04 ===
+command: /Users/chaitanyamalhotra/development/gba embedded/build/gba_suite_runner --suite 3
+log: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite04_phase191_timer_word_load_replay.log
+parsed_json: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite04_phase191_timer_word_load_replay.parsed.json
+exit_code: 0
+fail_lines: 791
+Run: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite04_phase191_timer_word_load_replay.log
+  ROM: tests/assets/roms/suite.gba
+  BIOS: tests/assets/roms/gba_bios.bin
+  Boot: frames=60 pc=0x00000348 cpsr=0x6000005F halted=1 cycle=16769984
+  Suites parsed: 1
+  Overall: 778/936 passed
+  Suite 04 Timer count-up: 778/936 passed via mgba (frames=200, pc=0x0802BBA4, halted=0, cycle=175757121)
+    Examples: sram:1xs 1d 1i | sram:1xv 1d 1i | sram:1xs 2d 1i | sram:1xv 2d 1i
+tail:
+  16xs 1d 2i: Got 00005840 vs 00005850: FAIL
+  Timer count-up test: 10b, 0x0011
+  Timer count-up test: 10b, 0x0012
+  Timer count-up test: 10b, 0x0013
+  [score] Timer count-up: 778/936 FAIL
+  
+  === Summary ===
+  Suites: 0/1 passed  Tests: 778/936 passed
+fail buckets by preface:
+  1xs 1d 4i: 16
+  1xv 1d 4i: 16
+  1xs 2d 4i: 16
+  1xv 2d 4i: 16
+  1xs 4d 4i: 16
+  1xv 4d 4i: 16
+  16xs 1d 2i: 10
+  1xs 1d 1i: 8
+  1xv 1d 1i: 8
+  1xs 2d 1i: 8
+  1xv 2d 1i: 8
+  1xs 4d 1i: 8
+fail deltas:
+  1xs delta -1: 96
+  1xv delta -2: 90
+  16xs delta -16: 64
+  16xv delta -2: 48
+  1xv delta +3: 6
+  16xv delta +10: 6
+  16xv delta +11: 6
+
+=== Suite 05 ===
+command: /Users/chaitanyamalhotra/development/gba embedded/build/gba_suite_runner --suite 4
+log: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite05_phase191_timer_word_load_replay.log
+parsed_json: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite05_phase191_timer_word_load_replay.parsed.json
+exit_code: 0
+fail_lines: 0
+Run: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite05_phase191_timer_word_load_replay.log
+  ROM: tests/assets/roms/suite.gba
+  BIOS: tests/assets/roms/gba_bios.bin
+  Boot: frames=60 pc=0x00000348 cpsr=0x6000005F halted=1 cycle=16769984
+  Suites parsed: 1
+  Overall: 90/90 passed
+  Suite 05 Timer IRQ: 90/90 passed via mgba (frames=91, pc=0x0802BABA, halted=0, cycle=155251713)
+tail:
+  Timer IRQ test: FFFA
+  Timer IRQ test: FFF9
+  Timer IRQ test: FFF8
+  Timer IRQ test: FFF7
+  [score] Timer IRQ: 90/90 PASS
+  
+  === Summary ===
+  Suites: 1/1 passed  Tests: 90/90 passed

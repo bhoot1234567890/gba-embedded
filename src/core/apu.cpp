@@ -25,7 +25,7 @@ void Apu::reset() {
     fifo_latch_.fill(0);
     fifo_[0].clear();
     fifo_[1].clear();
-    mix_buffer_.clear();
+    mix_buffer_count_ = 0;
     fifo_request_a_ = false;
     fifo_request_b_ = false;
 }
@@ -192,10 +192,9 @@ void Apu::write_register(u32 address, u32 value, BusWidth width, u64 cycle_now) 
 void Apu::push_fifo(int fifo_index, u32 word) {
     auto& fifo = fifo_[static_cast<std::size_t>(fifo_index)];
     for (int byte = 0; byte < 4; ++byte) {
-        fifo.push_back(static_cast<s8>((word >> (byte * 8)) & 0xFFu));
-    }
-    while (fifo.size() > 32u) {
-        fifo.pop_front();
+        if (fifo.size() < 32u) {
+            fifo.push(static_cast<s8>((word >> (byte * 8)) & 0xFFu));
+        }
     }
 }
 
@@ -214,8 +213,7 @@ void Apu::on_timer_overflow(int timer_index) {
         auto& fifo = fifo_[static_cast<std::size_t>(fifo_index)];
         int sample = 0;
         if (!fifo.empty()) {
-            sample = fifo.front();
-            fifo.pop_front();
+            sample = fifo.pop();
         }
         if (fifo.size() <= 16u) {
             fifo_request_a_ = fifo_request_a_ || fifo_index == 0;
@@ -258,12 +256,12 @@ u64 Apu::next_event_cycle() const {
 }
 
 bool Apu::audio_chunk_ready() const {
-    return mix_buffer_.size() >= 1024u;
+    return mix_buffer_count_ >= 1024u;
 }
 
-std::vector<s16> Apu::consume_audio_chunk() {
-    std::vector<s16> chunk;
-    chunk.swap(mix_buffer_);
+std::span<const s16> Apu::consume_audio_chunk() {
+    std::span<const s16> chunk{mix_buffer_.data(), mix_buffer_count_};
+    mix_buffer_count_ = 0;
     return chunk;
 }
 
@@ -280,8 +278,10 @@ bool Apu::take_fifo_request_b() {
 }
 
 void Apu::append_sample_pair(s16 left, s16 right) {
-    mix_buffer_.push_back(left);
-    mix_buffer_.push_back(right);
+    if (mix_buffer_count_ + 2 <= mix_buffer_.size()) {
+        mix_buffer_[mix_buffer_count_++] = left;
+        mix_buffer_[mix_buffer_count_++] = right;
+    }
 }
 
 s16 Apu::clamp_audio_sample(int sample) {

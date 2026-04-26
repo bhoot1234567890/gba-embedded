@@ -49,11 +49,11 @@ private:
     void render_text_bg(int line, std::span<const u8> vram, std::span<const u8> palette, int bg, u16* row);
     void render_affine_bg(int line, std::span<const u8> vram, std::span<const u8> palette, int bg, u16* row);
     void update_dispstat_flags();
-    void enter_hblank(IrqController& irq);
-    void leave_hblank(IrqController& irq);
-    void enter_vblank(IrqController& irq);
+    void enter_hblank(IrqController& irq, u64 cycle_now);
+    void leave_hblank(IrqController& irq, u64 cycle_now);
+    void enter_vblank(IrqController& irq, u64 cycle_now);
     void leave_vblank();
-    void handle_vcount_compare(IrqController& irq);
+    void handle_vcount_compare(IrqController& irq, u64 cycle_now);
 
     u16 dispcnt_ = 0x0080;
     u16 greenswp_ = 0;

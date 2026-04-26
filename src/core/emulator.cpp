@@ -130,7 +130,7 @@ void Emulator::service_due_hardware() {
         }
 
         ppu_.advance_to(stable_cycle, irq_);
-        if (!was_hblank && ppu_.is_hblank()) {
+        if (!was_hblank && ppu_.is_hblank() && !ppu_.is_vblank()) {
             dma_.request_hblank(stable_cycle);
         }
         if (!was_vblank && ppu_.is_vblank()) {

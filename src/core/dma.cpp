@@ -274,6 +274,10 @@ u32 DmaEngine::service_due(u64 cycle_now, Bus& bus, IrqController& irq) {
                     ? (read_result.value << 16u) | (read_result.value & 0xFFFFu)
                     : read_result.value;
                 read_value = read_result.value;
+#if GBA_TRACE_DMA
+                std::fprintf(stderr, "DMA read ch=%zu src=%08X value=%08X cycles=%u\n",
+                             index, source, read_value, read_cycles);
+#endif
             } else {
                 // Low memory (BIOS/SRAM): use bus latch, selected by destination bit 1 for halfword
                 if (unit_bytes == 2u) {

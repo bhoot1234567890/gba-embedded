@@ -94,6 +94,13 @@ u8* alloc_memory(size_t size, bool prefer_internal) {
     return 0xFFFFFFFFu;
 }
 
+[[nodiscard]] u32 sio_mode(u16 siocnt, u16 rcnt) {
+    if ((rcnt & 0xC000u) != 0) {
+        return 0;
+    }
+    return siocnt & 0x3000u;
+}
+
 #if GBA_TRACE_TIMERS
 struct ActiveTestInfoSnapshot {
     bool valid = false;
@@ -151,6 +158,12 @@ void Bus::reset() {
     keyinput_ = 0x03FF;
     keycnt_ = 0;
     waitcnt_ = 0;
+    siocnt_ = 0;
+    siodata32_l_ = 0;
+    siodata32_h_ = 0;
+    siomlt_send_ = 0;
+    rcnt_ = 0;
+    joycnt_ = 0;
     postflg_ = 0;
     mgba_log_enable_ = 0;
     halted_ = false;
@@ -159,7 +172,10 @@ void Bus::reset() {
     last_access_ = AccessType::NonSequential;
     bios_latch_ = 0;
     rom_latch_ = 0;
+    rom_address_latch_ = 0;
     open_bus_ = 0;
+    sio_event_cycle_ = std::numeric_limits<u64>::max();
+    sio_active_ = false;
     prefetch_ = {};
 #if GBA_TRACE_TIMERS
     trace_active_info_offset_ = kIwramSize;
@@ -251,7 +267,7 @@ BusAccessResult Bus::read(u32 address, BusWidth width, AccessType access, u64 cy
         result.value = read_array(oam_span, address - 0x07000000u, width);
     } else if (address >= 0x08000000u && address < 0x0E000000u) {
         const auto is_code_fetch = has_access_flag(access, AccessType::CodeFetch);
-        const auto offset = address - 0x08000000u;
+        const auto offset = address & 0x01FFFFFFu;
         const auto rom = cartridge_.rom();
         const auto aligned = align_down(offset, static_cast<u32>(width));
         const auto width_bytes = static_cast<u32>(width);
@@ -292,11 +308,9 @@ BusAccessResult Bus::read(u32 address, BusWidth width, AccessType access, u64 cy
         if (is_code_fetch && prefetch_.active && prefetch_.count != 0 &&
             address == prefetch_.head_address && prefetch_.opcode_width == static_cast<int>(width_bytes)) {
             result.cycles = 1;
-            if (aligned + width_bytes <= rom.size()) {
-                result.value = cartridge_.read_rom(offset, width);
-            } else {
-                result.value = gamepak_open_bus_value(address, width);
-            }
+            result.value = aligned + width_bytes <= rom.size()
+                ? cartridge_.read_rom(offset, width)
+                : gamepak_open_bus_value(address, width);
             prefetch_.count--;
             prefetch_.head_address += width_bytes;
             prefetch_advance(1);
@@ -304,11 +318,9 @@ BusAccessResult Bus::read(u32 address, BusWidth width, AccessType access, u64 cy
                    address == prefetch_.last_address &&
                    prefetch_.opcode_width == static_cast<int>(width_bytes)) {
             result.cycles = static_cast<u32>(prefetch_.countdown);
-            if (aligned + width_bytes <= rom.size()) {
-                result.value = cartridge_.read_rom(offset, width);
-            } else {
-                result.value = gamepak_open_bus_value(address, width);
-            }
+            result.value = aligned + width_bytes <= rom.size()
+                ? cartridge_.read_rom(offset, width)
+                : gamepak_open_bus_value(address, width);
             prefetch_advance(prefetch_.countdown);
             prefetch_.head_address = prefetch_.last_address;
             prefetch_.count = 0;
@@ -323,7 +335,13 @@ BusAccessResult Bus::read(u32 address, BusWidth width, AccessType access, u64 cy
             }
             result.cycles += penalty;
 
-            if (aligned + width_bytes <= rom.size()) {
+            if (has_access_flag(access, AccessType::Dma)) {
+                result.value = read_gamepak_rom(address, width, sequential);
+                if (!is_code_fetch) {
+                    rom_latch_ = expand_bus_latch(result.value, width);
+                    rom_latch_valid_ = true;
+                }
+            } else if (aligned + width_bytes <= rom.size()) {
                 result.value = cartridge_.read_rom(offset, width);
                 if (!is_code_fetch) {
                     const auto word_base = align_down(aligned, 4u);
@@ -363,6 +381,7 @@ BusAccessResult Bus::read(u32 address, BusWidth width, AccessType access, u64 cy
     } else {
         result.value = open_bus_;
         result.open_bus = true;
+        result.dma_open_bus = has_access_flag(last_access_, AccessType::Dma);
     }
 
     record_open_bus_read(result.value, width);
@@ -370,7 +389,7 @@ BusAccessResult Bus::read(u32 address, BusWidth width, AccessType access, u64 cy
     return result;
 }
 
-BusAccessResult Bus::write(u32 address, u32 value, BusWidth width, AccessType access, u64 cycle_now) {
+BusAccessResult IRAM_ATTR Bus::write(u32 address, u32 value, BusWidth width, AccessType access, u64 cycle_now) {
     BusAccessResult result{};
     result.value = value;
     result.cycles = region_cycles(address, width, access, cycle_now);
@@ -531,6 +550,14 @@ void Bus::clear_halt() {
 
 void Bus::service_timers(u64 cycle_now) {
     timers_.advance_to(cycle_now, irq_, apu_);
+    if (sio_active_ && cycle_now >= sio_event_cycle_) {
+        sio_active_ = false;
+        sio_event_cycle_ = std::numeric_limits<u64>::max();
+        siocnt_ = static_cast<u16>(siocnt_ & ~0x0080u);
+        if (test_bit(siocnt_, 14u)) {
+            irq_.request(IrqSerial);
+        }
+    }
     if (apu_.take_fifo_request_a()) {
         dma_.request_fifo_a(cycle_now);
     }
@@ -559,6 +586,33 @@ void Bus::prefetch_advance(int cycles) {
             break;
         }
     }
+}
+
+u32 Bus::read_gamepak_rom(u32 address, BusWidth width, bool sequential) {
+    const auto step = width == BusWidth::Word ? 4u : 2u;
+    const auto align_mask = step - 1u;
+    if (!sequential) {
+        rom_address_latch_ = (address & 0x01FFFFFFu) & ~align_mask;
+    }
+
+    const auto read_offset = rom_address_latch_;
+    const auto full_latch_address = 0x08000000u + read_offset;
+    const auto rom = cartridge_.rom();
+
+    u32 value = 0;
+    if (width == BusWidth::Word) {
+        value = read_offset + 4u <= rom.size()
+            ? cartridge_.read_rom(read_offset, BusWidth::Word)
+            : gamepak_open_bus_value(full_latch_address, BusWidth::Word);
+    } else {
+        const auto half = read_offset + 2u <= rom.size()
+            ? cartridge_.read_rom(read_offset, BusWidth::Half)
+            : gamepak_open_bus_value(full_latch_address, BusWidth::Half);
+        value = width == BusWidth::Byte ? ((half >> ((address & 1u) * 8u)) & 0xFFu) : half;
+    }
+
+    rom_address_latch_ = (rom_address_latch_ + step) & 0x01FFFFFFu;
+    return value;
 }
 
 u32 Bus::service_dma(u64 cycle_now) {
@@ -713,7 +767,7 @@ u32 Bus::peek_word(u32 address) const {
             return static_cast<u8>(read_array(oam_span, byte_address - 0x07000000u, BusWidth::Byte) & 0xFFu);
         }
         if (byte_address >= 0x08000000u && byte_address < 0x0E000000u) {
-            return static_cast<u8>(cartridge_.read_rom(byte_address - 0x08000000u, BusWidth::Byte) & 0xFFu);
+            return static_cast<u8>(cartridge_.read_rom(byte_address & 0x01FFFFFFu, BusWidth::Byte) & 0xFFu);
         }
         return 0;
     };
@@ -929,6 +983,7 @@ BusAccessResult Bus::read_io(u32 address, BusWidth width, AccessType access, u64
     if (width == BusWidth::Half && is_open_bus_io_halfword(io_address)) {
         result.value = narrow_open_bus(open_bus_, width, io_address);
         result.open_bus = true;
+        result.dma_open_bus = has_access_flag(last_access_, AccessType::Dma);
         record_open_bus_read(result.value, width);
         return result;
     }
@@ -968,15 +1023,51 @@ BusAccessResult Bus::read_io(u32 address, BusWidth width, AccessType access, u64
         }
     } else if (io_address == kIe || io_address == kIf || io_address == kIme) {
         result.value = irq_.read_register(io_address, width);
-    } else if (io_address == kSioCnt) {
-        result.value = siocnt_;
-    } else if (io_address == kRcnt) {
-        result.value = rcnt_;
-    } else if (io_address >= kSioMulti0 && io_address < kSioMulti0 + 8u) {
-        result.value = 0;
-    } else if (io_address == kSioMltSend || io_address == kJoyCnt || io_address == kJoyRecv ||
-               io_address == kJoyTrans || io_address == kJoyStat) {
-        result.value = 0;
+    } else if (io_address >= kSioMulti0 && io_address <= kJoyStat + 2u) {
+        const auto read_sio_half = [&](u32 half_address) -> u16 {
+            const auto serial_mode = sio_mode(siocnt_, rcnt_);
+            switch (half_address) {
+            case kSioMulti0:
+                return serial_mode == 0x1000u ? siodata32_l_ : 0;
+            case kSioMulti0 + 2u:
+                return serial_mode == 0x1000u ? siodata32_h_ : 0;
+            case kSioMulti0 + 4u:
+            case kSioMulti0 + 6u:
+                return 0;
+            case kSioCnt:
+                return static_cast<u16>(siocnt_ & ((serial_mode == 0x3000u) ? 0x7FAFu : 0x7F8Fu));
+            case kSioMltSend:
+                return serial_mode == 0x3000u ? 0 : siomlt_send_;
+            case kRcnt: {
+                const auto rcnt_mode = rcnt_ & 0xC000u;
+                if (rcnt_mode == 0x8000u) return static_cast<u16>(rcnt_mode | 0x01FFu);
+                if (rcnt_mode == 0xC000u) return static_cast<u16>(rcnt_mode | 0x01FCu);
+                return serial_mode == 0x0000u || serial_mode == 0x1000u ? 0x01F5u : 0x01FFu;
+            }
+            case kJoyCnt:
+                return static_cast<u16>(joycnt_ & 0x0040u);
+            case kJoyRecv:
+            case kJoyRecv + 2u:
+            case kJoyTrans:
+            case kJoyTrans + 2u:
+            case kJoyStat:
+            case kJoyStat + 2u:
+                return 0;
+            default:
+                return 0;
+            }
+        };
+
+        if (width == BusWidth::Byte) {
+            const auto aligned = align_down(address, 2u);
+            const auto shift = (address & 1u) * 8u;
+            result.value = (read_sio_half(aligned) >> shift) & 0xFFu;
+        } else if (width == BusWidth::Half) {
+            result.value = read_sio_half(io_address);
+        } else {
+            result.value = static_cast<u32>(read_sio_half(io_address)) |
+                           (static_cast<u32>(read_sio_half(io_address + 2u)) << 16u);
+        }
     } else if (io_address == kWaitCnt) {
         result.value = waitcnt_;
     } else if (io_address == kPostFlg) {
@@ -997,6 +1088,7 @@ BusAccessResult Bus::read_io(u32 address, BusWidth width, AccessType access, u64
     } else {
         result.value = open_bus_;
         result.open_bus = true;
+        result.dma_open_bus = has_access_flag(last_access_, AccessType::Dma);
     }
 
     record_open_bus_read(result.value, width);
@@ -1027,10 +1119,57 @@ BusAccessResult Bus::write_io(u32 address, u32 value, BusWidth width, u64 cycle_
         update_keypad_irq();
     } else if (io_address == kIe || io_address == kIf || io_address == kIme) {
         irq_.write_register(io_address, value, width, cycle_now);
-    } else if (io_address == kSioCnt) {
-        siocnt_ = static_cast<u16>(value & 0xFFFFu);
-    } else if (io_address == kRcnt) {
-        rcnt_ = static_cast<u16>(value & 0xFFFFu);
+    } else if (io_address >= kSioMulti0 && io_address <= kJoyStat + 2u) {
+        const auto write_sio_half = [&](u32 half_address, u16 half_value) {
+            switch (half_address) {
+            case kSioMulti0:
+                siodata32_l_ = half_value;
+                break;
+            case kSioMulti0 + 2u:
+                siodata32_h_ = half_value;
+                break;
+            case kSioCnt:
+                siocnt_ = static_cast<u16>(half_value & 0x7FAFu);
+                if (test_bit(siocnt_, 7u)) {
+                    const auto serial_mode = sio_mode(siocnt_, rcnt_);
+                    const auto speed = siocnt_ & 0x0003u;
+                    if ((serial_mode == 0x0000u || serial_mode == 0x1000u) && (speed == 1u || speed == 3u)) {
+                        const auto bits = serial_mode == 0x1000u ? 32u : 8u;
+                        const auto bit_cycles = speed == 3u ? 8u : 64u;
+                        sio_active_ = true;
+                        sio_event_cycle_ = cycle_now + (bits * bit_cycles) + 11u;
+                    }
+                } else {
+                    sio_active_ = false;
+                    sio_event_cycle_ = std::numeric_limits<u64>::max();
+                }
+                break;
+            case kSioMltSend:
+                siomlt_send_ = half_value;
+                break;
+            case kRcnt:
+                rcnt_ = static_cast<u16>(half_value & 0xC3FFu);
+                break;
+            case kJoyCnt:
+                joycnt_ = static_cast<u16>(half_value & 0x0040u);
+                break;
+            default:
+                break;
+            }
+        };
+
+        if (width == BusWidth::Byte) {
+            const auto aligned = align_down(address, 2u);
+            const auto shift = (address & 1u) * 8u;
+            const auto existing = static_cast<u16>(read_io(aligned, BusWidth::Half, AccessType::Io, cycle_now).value);
+            const auto merged = static_cast<u16>((existing & ~(0xFFu << shift)) | ((value & 0xFFu) << shift));
+            write_sio_half(aligned, merged);
+        } else if (width == BusWidth::Half) {
+            write_sio_half(io_address, static_cast<u16>(value));
+        } else {
+            write_sio_half(io_address, static_cast<u16>(value & 0xFFFFu));
+            write_sio_half(io_address + 2u, static_cast<u16>((value >> 16u) & 0xFFFFu));
+        }
     } else if (io_address == kWaitCnt) {
         const auto prefetch_was_enabled = test_bit(waitcnt_, 14u);
         waitcnt_ = static_cast<u16>(value & 0xFFFFu);

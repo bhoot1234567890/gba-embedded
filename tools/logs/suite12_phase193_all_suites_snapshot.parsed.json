@@ -1,0 +1,89 @@
+{
+  "path": "/Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite12_phase193_all_suites_snapshot.log",
+  "rom": "tests/assets/roms/suite.gba",
+  "bios": "tests/assets/roms/gba_bios.bin",
+  "boot_frames": 60,
+  "boot_pc": "0x00000348",
+  "boot_cpsr": "0x6000005F",
+  "boot_halted": true,
+  "boot_cycle": 16769984,
+  "summary_lines": [
+    "Suites: 0/1 passed  Tests: 0/8 passed"
+  ],
+  "suites": [
+    {
+      "index": 12,
+      "name": "SIO timing",
+      "frames": 2,
+      "pc": "0x00000348",
+      "cpsr": "0x6000001F",
+      "halted": true,
+      "cycle": 201037760,
+      "mgba_begin": "SIO timing tests",
+      "mgba_end_passed": 0,
+      "mgba_end_total": 4,
+      "mgba_pass_count": 0,
+      "mgba_fail_count": 4,
+      "sram_pass_count": 0,
+      "sram_fail_count": 0,
+      "mgba_fail_examples": [
+        "Normal8/256k",
+        "Normal8/2M",
+        "Normal32/256k",
+        "Normal32/2M"
+      ],
+      "sram_fail_examples": [],
+      "sram_lines": [
+        "Game Boy Advance Test Suite",
+        "===",
+        "SIO timing test: Multi/9.6k",
+        "SIO timing test: Multi/38.4k",
+        "SIO timing test: Multi/57.6k",
+        "SIO timing test: Multi/115.2k",
+        "SIO timing test: Normal8/256k",
+        "Normal8/256k: Timed out: FAIL",
+        "SIO timing test: Normal8/2M",
+        "Normal8/2M: Timed out: FAIL",
+        "SIO timing test: Normal32/256k",
+        "Normal32/256k: Timed out: FAIL",
+        "SIO timing test: Normal32/2M",
+        "Normal32/2M: Timed out: FAIL",
+        "[score] SIO timing: 0/8 FAIL",
+        ""
+      ],
+      "mgba_lines": [
+        "Game Boy Advance Test Suite",
+        "BEGIN: SIO timing tests",
+        "SIO timing test: Multi/9.6k",
+        "SKIPPED: Multi/9.6k",
+        "SIO timing test: Multi/38.4k",
+        "SKIPPED: Multi/38.4k",
+        "SIO timing test: Multi/57.6k",
+        "SKIPPED: Multi/57.6k",
+        "SIO timing test: Multi/115.2k",
+        "SKIPPED: Multi/115.2k",
+        "SIO timing test: Normal8/256k",
+        "FAIL: Normal8/256k",
+        "Normal8/256k: Timed out: FAIL",
+        "SIO timing test: Normal8/2M",
+        "FAIL: Normal8/2M",
+        "Normal8/2M: Timed out: FAIL",
+        "SIO timing test: Normal32/256k",
+        "FAIL: Normal32/256k",
+        "Normal32/256k: Timed out: FAIL",
+        "SIO timing test: Normal32/2M",
+        "FAIL: Normal32/2M",
+        "Normal32/2M: Timed out: FAIL",
+        "END: 0/4"
+      ],
+      "normalized": {
+        "passed": 0,
+        "total": 4,
+        "source": "mgba_end"
+      }
+    }
+  ],
+  "total_passed": 0,
+  "total_tests": 4,
+  "completed": false
+}

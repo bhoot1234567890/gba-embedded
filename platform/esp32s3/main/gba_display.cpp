@@ -160,34 +160,29 @@ esp_err_t display_init(void) {
     ESP_ERROR_CHECK(gpio_config(&io_conf));
 
     /* Initialize SPI bus with DMA */
-    spi_bus_config_t buscfg = {
-        .mosi_io_num = DISPLAY_PIN_MOSI,
-        .miso_io_num = -1,
-        .sclk_io_num = DISPLAY_PIN_SCLK,
-        .quadwp_io_num = -1,
-        .quadhd_io_num = -1,
-        .max_transfer_sz = DISPLAY_WIDTH * DISPLAY_HEIGHT * sizeof(uint16_t),
-    };
+    spi_bus_config_t buscfg = {};
+    buscfg.mosi_io_num = DISPLAY_PIN_MOSI;
+    buscfg.miso_io_num = -1;
+    buscfg.sclk_io_num = DISPLAY_PIN_SCLK;
+    buscfg.quadwp_io_num = -1;
+    buscfg.quadhd_io_num = -1;
+    buscfg.max_transfer_sz = DISPLAY_WIDTH * DISPLAY_HEIGHT * sizeof(uint16_t);
     ESP_ERROR_CHECK(spi_bus_initialize(DISPLAY_SPI_HOST, &buscfg, SPI_DMA_CH_AUTO));
 
     /* Create LCD panel IO (SPI transport) */
-    esp_lcd_panel_io_spi_config_t io_config = {
-        .dc_gpio_num = DISPLAY_PIN_DC,
-        .cs_gpio_num = DISPLAY_PIN_CS,
-        .pclk_hz = DISPLAY_SPI_CLK_HZ,
-        .lcd_cmd_bits = 8,
-        .lcd_param_bits = 8,
-        .spi_mode = 0,
-        .trans_queue_depth = 10,
-        .on_color_trans_done = nullptr,
-        .user_ctx = nullptr,
-        .flags = {
-            .dc_as_cmd_phase = 0,
-            .dc_low_on_data = 0,
-            .octal_mode = 0,
-            .lsb_first = 0,
-        },
-    };
+    esp_lcd_panel_io_spi_config_t io_config = {};
+    io_config.cs_gpio_num = DISPLAY_PIN_CS;
+    io_config.dc_gpio_num = DISPLAY_PIN_DC;
+    io_config.spi_mode = 0;
+    io_config.pclk_hz = DISPLAY_SPI_CLK_HZ;
+    io_config.trans_queue_depth = 10;
+    io_config.on_color_trans_done = nullptr;
+    io_config.user_ctx = nullptr;
+    io_config.lcd_cmd_bits = 8;
+    io_config.lcd_param_bits = 8;
+    io_config.flags.dc_low_on_data = 0;
+    io_config.flags.octal_mode = 0;
+    io_config.flags.lsb_first = 0;
     ESP_ERROR_CHECK(esp_lcd_new_panel_io_spi(
         (esp_lcd_spi_bus_handle_t)DISPLAY_SPI_HOST, &io_config, &s_io));
 

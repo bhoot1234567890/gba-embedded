@@ -1,0 +1,84 @@
+$ cmake --build /Users/chaitanyamalhotra/development/gba embedded/build -j4
+build_exit_code=0
+
+=== Suite 04 ===
+command: /Users/chaitanyamalhotra/development/gba embedded/build/gba_suite_runner --suite 3
+log: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite04_20260426_165212.log
+parsed_json: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite04_20260426_165212.parsed.json
+exit_code: 0
+fail_lines: 166
+Run: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite04_20260426_165212.log
+  ROM: tests/assets/roms/suite.gba
+  BIOS: tests/assets/roms/gba_bios.bin
+  Boot: frames=60 pc=0x00000348 cpsr=0x6000005F halted=1 cycle=16769984
+  Suites parsed: 1
+  Overall: 903/936 passed
+  Suite 04 Timer count-up: 903/936 passed via mgba (frames=185, pc=0x0802BAB0, halted=0, cycle=171543682)
+    Examples: sram:1xs 4d 1i | sram:16xs 1d 2i | sram:1xs 2d 2i
+tail:
+  Timer count-up test: 10b, 0x0010
+  16xs 1d 1i: Got 00002C20 vs 00002C10: FAIL
+  1xs 4d 1i: Got 000007EA vs 000007E9: FAIL
+  1xs 2d 2i: Got 00000FDC vs 00000FDB: FAIL
+  16xs 2d 4i: Got 0000B0B0 vs 0000B0A0: FAIL
+  Timer count-up test: 10b, 0x0011
+  1xs 4d 1i: Got 0000086A vs 00000869: FAIL
+  1xs 2d 2i: Got 000010DC vs 000010DB: FAIL
+  Timer count-up test: 10b, 0x0012
+  16xs 1d 1i: Got 000031B0 vs 000031A0: FAIL
+  1xs 4d 1i: Got 000008EA vs 000008E9: FAIL
+  1xs 2d 2i: Got 000011DC vs 000011DB: FAIL
+  Timer count-up test: 10b, 0x0013
+  1xs 4d 1i: Got 0000096A vs 00000969: FAIL
+  1xs 2d 2i: Got 000012DC vs 000012DB: FAIL
+  16xs 2d 2i: Got 00006900 vs 000068F0: FAIL
+  [score] Timer count-up: 903/936 FAIL
+  
+  === Summary ===
+  Suites: 0/1 passed  Tests: 903/936 passed
+fail buckets by preface:
+  1xs 4d 1i: 24
+  1xs 2d 2i: 24
+  16xs 2d 4i: 6
+  16xs 1d 1i: 6
+  16xs 1d 2i: 2
+  16xs 4d 4i: 2
+  16xs 2d 2i: 2
+fail deltas:
+  1xs delta +1: 48
+  16xs delta +16: 18
+
+=== Suite 05 ===
+command: /Users/chaitanyamalhotra/development/gba embedded/build/gba_suite_runner --suite 4
+log: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite05_20260426_165212.log
+parsed_json: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite05_20260426_165212.parsed.json
+exit_code: 0
+fail_lines: 0
+Run: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite05_20260426_165212.log
+  ROM: tests/assets/roms/suite.gba
+  BIOS: tests/assets/roms/gba_bios.bin
+  Boot: frames=60 pc=0x00000348 cpsr=0x6000005F halted=1 cycle=16769984
+  Suites parsed: 1
+  Overall: 90/90 passed
+  Suite 05 Timer IRQ: 90/90 passed via mgba (frames=91, pc=0x0802BABA, halted=0, cycle=155251713)
+tail:
+  PASS: FFF7 6 nops
+  PASS: FFF7 7 nops
+  PASS: FFF7 8 nops
+  PASS: FFF7 9 nops
+  [sram]
+  Game Boy Advance Test Suite
+  ===
+  Timer IRQ test: FFFF
+  Timer IRQ test: FFFE
+  Timer IRQ test: FFFD
+  Timer IRQ test: FFFC
+  Timer IRQ test: FFFB
+  Timer IRQ test: FFFA
+  Timer IRQ test: FFF9
+  Timer IRQ test: FFF8
+  Timer IRQ test: FFF7
+  [score] Timer IRQ: 90/90 PASS
+  
+  === Summary ===
+  Suites: 1/1 passed  Tests: 90/90 passed

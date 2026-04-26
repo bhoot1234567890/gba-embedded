@@ -1,0 +1,311 @@
+$ cmake --build /Users/chaitanyamalhotra/development/gba embedded/build -j4
+build_exit_code=0
+
+=== Suite 01 ===
+command: /Users/chaitanyamalhotra/development/gba embedded/build/gba_suite_runner --suite 0
+log: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite01_phase202_full_current.log
+parsed_json: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite01_phase202_full_current.parsed.json
+exit_code: 0
+fail_lines: 0
+Run: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite01_phase202_full_current.log
+  ROM: tests/assets/roms/suite.gba
+  BIOS: tests/assets/roms/gba_bios.bin
+  Boot: frames=60 pc=0x00000348 cpsr=0x6000005F halted=1 cycle=16769984
+  Suites parsed: 1
+  Overall: 1552/1552 passed
+  Suite 01 Memory: 1552/1552 passed via mgba (frames=230, pc=0x0802B9AC, halted=0, cycle=153847247)
+tail:
+  Memory test: BIOS out-of-bounds load
+  Memory test: Out-of-bounds load
+  [score] Memory: 1552/1552 PASS
+  
+  === Summary ===
+  Suites: 1/1 passed  Tests: 1552/1552 passed
+
+=== Suite 02 ===
+command: /Users/chaitanyamalhotra/development/gba embedded/build/gba_suite_runner --suite 1
+log: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite02_phase202_full_current.log
+parsed_json: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite02_phase202_full_current.parsed.json
+exit_code: 0
+fail_lines: 0
+Run: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite02_phase202_full_current.log
+  ROM: tests/assets/roms/suite.gba
+  BIOS: tests/assets/roms/gba_bios.bin
+  Boot: frames=60 pc=0x00000348 cpsr=0x6000005F halted=1 cycle=16769984
+  Suites parsed: 1
+  Overall: 130/130 passed
+  Suite 02 I/O read: 130/130 passed via mgba (frames=91, pc=0x0802BAC0, halted=0, cycle=124914946)
+tail:
+  Game Boy Advance Test Suite
+  ===
+  [score] I/O read: 130/130 PASS
+  
+  === Summary ===
+  Suites: 1/1 passed  Tests: 130/130 passed
+
+=== Suite 03 ===
+command: /Users/chaitanyamalhotra/development/gba embedded/build/gba_suite_runner --suite 2
+log: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite03_phase202_full_current.log
+parsed_json: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite03_phase202_full_current.parsed.json
+exit_code: 0
+fail_lines: 0
+Run: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite03_phase202_full_current.log
+  ROM: tests/assets/roms/suite.gba
+  BIOS: tests/assets/roms/gba_bios.bin
+  Boot: frames=60 pc=0x00000348 cpsr=0x6000005F halted=1 cycle=16769984
+  Suites parsed: 1
+  Overall: 2020/2020 passed
+  Suite 03 Timing: 2020/2020 passed via mgba (frames=287, pc=0x0802BAC2, halted=0, cycle=190082817)
+tail:
+  Timing test: Short DMA (32/to ROM)
+  Timing test: Short DMA (32/ROM to ROM)
+  [score] Timing: 2020/2020 PASS
+  
+  === Summary ===
+  Suites: 1/1 passed  Tests: 2020/2020 passed
+
+=== Suite 04 ===
+command: /Users/chaitanyamalhotra/development/gba embedded/build/gba_suite_runner --suite 3
+log: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite04_phase202_full_current.log
+parsed_json: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite04_phase202_full_current.parsed.json
+exit_code: 0
+fail_lines: 166
+Run: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite04_phase202_full_current.log
+  ROM: tests/assets/roms/suite.gba
+  BIOS: tests/assets/roms/gba_bios.bin
+  Boot: frames=60 pc=0x00000348 cpsr=0x6000005F halted=1 cycle=16769984
+  Suites parsed: 1
+  Overall: 903/936 passed
+  Suite 04 Timer count-up: 903/936 passed via mgba (frames=185, pc=0x0802BAB0, halted=0, cycle=171543682)
+    Examples: sram:1xs 4d 1i | sram:16xs 1d 2i | sram:1xs 2d 2i | sram:1xs 4d 1i
+tail:
+  1xs 2d 2i: Got 000012DC vs 000012DB: FAIL
+  16xs 2d 2i: Got 00006900 vs 000068F0: FAIL
+  [score] Timer count-up: 903/936 FAIL
+  
+  === Summary ===
+  Suites: 0/1 passed  Tests: 903/936 passed
+fail buckets by preface:
+  1xs 4d 1i: 24
+  1xs 2d 2i: 24
+  16xs 2d 4i: 6
+  16xs 1d 1i: 6
+  16xs 1d 2i: 2
+  16xs 4d 4i: 2
+  16xs 2d 2i: 2
+fail deltas:
+  1xs delta +1: 48
+  16xs delta +16: 18
+
+=== Suite 05 ===
+command: /Users/chaitanyamalhotra/development/gba embedded/build/gba_suite_runner --suite 4
+log: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite05_phase202_full_current.log
+parsed_json: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite05_phase202_full_current.parsed.json
+exit_code: 0
+fail_lines: 0
+Run: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite05_phase202_full_current.log
+  ROM: tests/assets/roms/suite.gba
+  BIOS: tests/assets/roms/gba_bios.bin
+  Boot: frames=60 pc=0x00000348 cpsr=0x6000005F halted=1 cycle=16769984
+  Suites parsed: 1
+  Overall: 90/90 passed
+  Suite 05 Timer IRQ: 90/90 passed via mgba (frames=91, pc=0x0802BABA, halted=0, cycle=155251713)
+tail:
+  Timer IRQ test: FFF8
+  Timer IRQ test: FFF7
+  [score] Timer IRQ: 90/90 PASS
+  
+  === Summary ===
+  Suites: 1/1 passed  Tests: 90/90 passed
+
+=== Suite 06 ===
+command: /Users/chaitanyamalhotra/development/gba embedded/build/gba_suite_runner --suite 5
+log: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite06_phase202_full_current.log
+parsed_json: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite06_phase202_full_current.parsed.json
+exit_code: 0
+fail_lines: 0
+Run: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite06_phase202_full_current.log
+  ROM: tests/assets/roms/suite.gba
+  BIOS: tests/assets/roms/gba_bios.bin
+  Boot: frames=60 pc=0x00000348 cpsr=0x6000005F halted=1 cycle=16769984
+  Suites parsed: 1
+  Overall: 140/140 passed
+  Suite 06 Shifter: 140/140 passed via mgba (frames=99, pc=0x0802BAB0, halted=0, cycle=167611138)
+tail:
+  Shifter test: add r0, pc, r1, ror r0 (0)
+  Shifter test: add r0, pc, r1, ror r0 (1)
+  [score] Shifter: 140/140 PASS
+  
+  === Summary ===
+  Suites: 1/1 passed  Tests: 140/140 passed
+
+=== Suite 07 ===
+command: /Users/chaitanyamalhotra/development/gba embedded/build/gba_suite_runner --suite 6
+log: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite07_phase202_full_current.log
+parsed_json: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite07_phase202_full_current.parsed.json
+exit_code: 0
+fail_lines: 0
+Run: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite07_phase202_full_current.log
+  ROM: tests/assets/roms/suite.gba
+  BIOS: tests/assets/roms/gba_bios.bin
+  Boot: frames=60 pc=0x00000348 cpsr=0x6000005F halted=1 cycle=16769984
+  Suites parsed: 1
+  Overall: 93/93 passed
+  Suite 07 Carry: 93/93 passed via mgba (frames=93, pc=0x0802BAC2, halted=0, cycle=176038017)
+tail:
+  Carry test: 0xFFFFFFFF, 0xFFFFFFFF (.)
+  Carry test: 0xFFFFFFFF, 0xFFFFFFFF (C)
+  [score] Carry: 93/93 PASS
+  
+  === Summary ===
+  Suites: 1/1 passed  Tests: 93/93 passed
+
+=== Suite 08 ===
+command: /Users/chaitanyamalhotra/development/gba embedded/build/gba_suite_runner --suite 7
+log: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite08_phase202_full_current.log
+parsed_json: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite08_phase202_full_current.parsed.json
+exit_code: 0
+fail_lines: 0
+Run: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite08_phase202_full_current.log
+  ROM: tests/assets/roms/suite.gba
+  BIOS: tests/assets/roms/gba_bios.bin
+  Boot: frames=60 pc=0x00000348 cpsr=0x6000005F halted=1 cycle=16769984
+  Suites parsed: 1
+  Overall: 72/72 passed
+  Suite 08 Multiply long: 72/72 passed via mgba (frames=93, pc=0x0802BAB4, halted=0, cycle=186150272)
+tail:
+  Multiply Long test: $80 * $81
+  Multiply Long test: $81 * $81
+  [score] Multiply long: 72/72 PASS
+  
+  === Summary ===
+  Suites: 1/1 passed  Tests: 72/72 passed
+
+=== Suite 09 ===
+command: /Users/chaitanyamalhotra/development/gba embedded/build/gba_suite_runner --suite 8
+log: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite09_phase202_full_current.log
+parsed_json: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite09_phase202_full_current.parsed.json
+exit_code: 0
+fail_lines: 0
+Run: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite09_phase202_full_current.log
+  ROM: tests/assets/roms/suite.gba
+  BIOS: tests/assets/roms/gba_bios.bin
+  Boot: frames=60 pc=0x00000348 cpsr=0x6000005F halted=1 cycle=16769984
+  Suites parsed: 1
+  Overall: 615/615 passed
+  Suite 09 BIOS math: 615/615 passed via mgba (frames=135, pc=0x0802BAAE, halted=0, cycle=208060161)
+tail:
+  Math test: Div FFFFFFFF/00000000
+  Math test: Div 80000000/FFFFFFFF
+  [score] BIOS math: 615/615 PASS
+  
+  === Summary ===
+  Suites: 1/1 passed  Tests: 615/615 passed
+
+=== Suite 10 ===
+command: /Users/chaitanyamalhotra/development/gba embedded/build/gba_suite_runner --suite 9
+log: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite10_phase202_full_current.log
+parsed_json: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite10_phase202_full_current.parsed.json
+exit_code: 0
+fail_lines: 0
+Run: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite10_phase202_full_current.log
+  ROM: tests/assets/roms/suite.gba
+  BIOS: tests/assets/roms/gba_bios.bin
+  Boot: frames=60 pc=0x00000348 cpsr=0x6000005F halted=1 cycle=16769984
+  Suites parsed: 1
+  Overall: 1256/1256 passed
+  Suite 10 DMA: 1256/1256 passed via mgba (frames=264, pc=0x0802BAC0, halted=0, cycle=254408001)
+tail:
+  DMA test: 2 Imm H V+BIOS/+VRAM
+  DMA test: 3 Imm H V+BIOS/+VRAM
+  [score] DMA: 1256/1256 PASS
+  
+  === Summary ===
+  Suites: 1/1 passed  Tests: 1256/1256 passed
+
+=== Suite 11 ===
+command: /Users/chaitanyamalhotra/development/gba embedded/build/gba_suite_runner --suite 10
+log: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite11_phase202_full_current.log
+parsed_json: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite11_phase202_full_current.parsed.json
+exit_code: 0
+fail_lines: 186
+Run: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite11_phase202_full_current.log
+  ROM: tests/assets/roms/suite.gba
+  BIOS: tests/assets/roms/gba_bios.bin
+  Boot: frames=60 pc=0x00000348 cpsr=0x6000005F halted=1 cycle=16769984
+  Suites parsed: 1
+  Overall: 53/90 passed
+  Suite 11 SIO register R/W: 53/90 passed via mgba (frames=5, pc=0x0802BAC0, halted=0, cycle=191768198)
+    Examples: sram:M: SIOCNT | sram:M: SIOMLT_SEND | sram:M: RCNT | sram:M: JOYCNT
+tail:
+  J: JOY_RECV_H: Got 0xDEAD vs 0x0000: FAIL
+  J: JOY_TRANS_H: Got 0xDEAD vs 0x0000: FAIL
+  [score] SIO register R/W: 53/90 FAIL
+  
+  === Summary ===
+  Suites: 0/1 passed  Tests: 53/90 passed
+
+=== Suite 12 ===
+command: /Users/chaitanyamalhotra/development/gba embedded/build/gba_suite_runner --suite 11
+log: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite12_phase202_full_current.log
+parsed_json: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite12_phase202_full_current.parsed.json
+exit_code: 0
+fail_lines: 21
+Run: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite12_phase202_full_current.log
+  ROM: tests/assets/roms/suite.gba
+  BIOS: tests/assets/roms/gba_bios.bin
+  Boot: frames=60 pc=0x00000348 cpsr=0x6000005F halted=1 cycle=16769984
+  Suites parsed: 1
+  Overall: 0/4 passed
+  Suite 12 SIO timing: 0/4 passed via mgba_end (frames=2, pc=0x00000348, halted=1, cycle=201037760)
+    Examples: mgba:Normal8/256k | mgba:Normal8/2M | mgba:Normal32/256k | mgba:Normal32/2M
+tail:
+  SIO timing test: Normal32/2M
+  Normal32/2M: Timed out: FAIL
+  [score] SIO timing: 0/8 FAIL
+  
+  === Summary ===
+  Suites: 0/1 passed  Tests: 0/8 passed
+
+=== Suite 13 ===
+command: /Users/chaitanyamalhotra/development/gba embedded/build/gba_suite_runner --suite 12
+log: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite13_phase202_full_current.log
+parsed_json: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite13_phase202_full_current.parsed.json
+exit_code: 0
+fail_lines: 46
+Run: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite13_phase202_full_current.log
+  ROM: tests/assets/roms/suite.gba
+  BIOS: tests/assets/roms/gba_bios.bin
+  Boot: frames=60 pc=0x00000348 cpsr=0x6000005F halted=1 cycle=16769984
+  Suites parsed: 1
+  Overall: 1/10 passed
+  Suite 13 Misc. edge case: 1/10 passed via mgba_end (frames=2, pc=0x00000348, halted=1, cycle=211150016)
+    Examples: sram:Break | sram:Read | sram:Start | sram:Hblank
+tail:
+  Flip 5: Got 0x000000E4 vs 0x000000E3: FAIL
+  Flip 6: Got 0x000003F5 vs 0x000003F3: FAIL
+  [score] Misc. edge case: 2/20 FAIL
+  
+  === Summary ===
+  Suites: 0/1 passed  Tests: 2/20 passed
+
+=== Suite 14 ===
+command: /Users/chaitanyamalhotra/development/gba embedded/build/gba_suite_runner --suite 13
+log: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite14_phase202_full_current.log
+parsed_json: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite14_phase202_full_current.parsed.json
+exit_code: 0
+fail_lines: 0
+Run: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite14_phase202_full_current.log
+  ROM: tests/assets/roms/suite.gba
+  BIOS: tests/assets/roms/gba_bios.bin
+  Boot: frames=60 pc=0x00000348 cpsr=0x6000005F halted=1 cycle=16769984
+  Suites parsed: 1
+  Summary: No test results found.
+  Suite 14 Video: unknown (frames=91, pc=0x00000348, halted=1, cycle=246262016)
+tail:
+  [sram]
+  Game Boy Advance Test Suite
+  ===
+  
+  === Summary ===
+  No test results found.

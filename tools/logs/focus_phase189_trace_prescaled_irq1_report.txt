@@ -1,0 +1,32 @@
+$ cmake --build /Users/chaitanyamalhotra/development/gba embedded/build-trace -j4
+build_exit_code=0
+
+=== Suite 04 ===
+command: /Users/chaitanyamalhotra/development/gba embedded/build-trace/gba_suite_runner --suite 3
+log: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite04_phase189_trace_prescaled_irq1.log
+parsed_json: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite04_phase189_trace_prescaled_irq1.parsed.json
+exit_code: 0
+fail_lines: 166
+Run: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite04_phase189_trace_prescaled_irq1.log
+  ROM: tests/assets/roms/suite.gba
+  BIOS: tests/assets/roms/gba_bios.bin
+  Boot: frames=60 pc=0x00000348 cpsr=0x6000005F halted=1 cycle=16769984
+  Suites parsed: 1
+  Overall: 901/934 passed
+  Suite 04 Timer count-up: 901/934 passed via mgba (frames=185, pc=0x0802BAB6, halted=0, cycle=171543680)
+    Examples: sram:1xs 4d 1i
+tail:
+  
+  === Summary ===
+  Suites: 0/1 passed  Tests: 903/936 passed
+fail buckets by preface:
+  1xs 4d 1i: 24
+  1xs 2d 2i: 24
+  16xs 2d 4i: 6
+  16xs 1d 1i: 6
+  16xs 1d 2i: 2
+  16xs 4d 4i: 2
+  16xs 2d 2i: 2
+fail deltas:
+  1xs delta +1: 48
+  16xs delta +16: 18

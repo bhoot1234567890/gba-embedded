@@ -327,10 +327,10 @@ void Ppu::write_register(u32 address, u32 value, BusWidth width) {
 void Ppu::advance_to(u64 cycle_now, IrqController& irq) {
     while (next_event_cycle_ <= cycle_now) {
         if (!hblank_) {
-            enter_hblank(irq);
+            enter_hblank(irq, next_event_cycle_);
             next_event_cycle_ += 225;
         } else {
-            leave_hblank(irq);
+            leave_hblank(irq, next_event_cycle_);
             next_event_cycle_ += 1007;
         }
     }
@@ -614,35 +614,35 @@ void Ppu::update_dispstat_flags() {
     }
 }
 
-void Ppu::enter_hblank(IrqController& irq) {
+void Ppu::enter_hblank(IrqController& irq, u64 cycle_now) {
     hblank_ = true;
     update_dispstat_flags();
     if (!vblank_) {
         scanline_ready_ = static_cast<int>(vcount_);
-        if (test_bit(dispstat_, 4)) {
-            irq.request(IrqHBlank);
-        }
+    }
+    if (test_bit(dispstat_, 4)) {
+        irq.raise_delayed(IrqHBlank, cycle_now, 1);
     }
 }
 
-void Ppu::leave_hblank(IrqController& irq) {
+void Ppu::leave_hblank(IrqController& irq, u64 cycle_now) {
     hblank_ = false;
     vcount_ = static_cast<u16>((vcount_ + 1u) % kScanlinesPerFrame);
     if (vcount_ == kVisibleScanlines) {
-        enter_vblank(irq);
+        enter_vblank(irq, cycle_now);
     } else if (vcount_ == 0) {
         leave_vblank();
     }
     update_dispstat_flags();
-    handle_vcount_compare(irq);
+    handle_vcount_compare(irq, cycle_now);
 }
 
-void Ppu::enter_vblank(IrqController& irq) {
+void Ppu::enter_vblank(IrqController& irq, u64 cycle_now) {
     vblank_ = true;
     frame_ready_ = true;
     update_dispstat_flags();
     if (test_bit(dispstat_, 3)) {
-        irq.request(IrqVBlank);
+        irq.raise_delayed(IrqVBlank, cycle_now, 1);
     }
 }
 
@@ -651,11 +651,11 @@ void Ppu::leave_vblank() {
     update_dispstat_flags();
 }
 
-void Ppu::handle_vcount_compare(IrqController& irq) {
+void Ppu::handle_vcount_compare(IrqController& irq, u64 cycle_now) {
     if (((dispstat_ >> 8u) & 0x00FFu) == vcount_) {
         dispstat_ |= 0x0004u;
         if (test_bit(dispstat_, 5)) {
-            irq.request(IrqVCount);
+            irq.raise_delayed(IrqVCount, cycle_now, 1);
         }
     } else {
         dispstat_ = static_cast<u16>(dispstat_ & ~0x0004u);

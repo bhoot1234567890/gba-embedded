@@ -59,6 +59,7 @@ private:
     void update_wait_state_table();
     [[nodiscard]] u32 region_cycles(u32 address, BusWidth width, AccessType access, u64 cycle_now) const;
     [[nodiscard]] u32 prefetch_region_cycles(u32 address, BusWidth width) const;
+    [[nodiscard]] u32 read_gamepak_rom(u32 address, BusWidth width, bool sequential);
     [[nodiscard]] BusAccessResult read_io(u32 address, BusWidth width, AccessType access, u64 cycle_now);
     [[nodiscard]] BusAccessResult write_io(u32 address, u32 value, BusWidth width, u64 cycle_now);
 #if GBA_TRACE_TIMERS
@@ -98,7 +99,11 @@ private:
     u16 keycnt_ = 0;
     u16 waitcnt_ = 0;
     u16 siocnt_ = 0;
+    u16 siodata32_l_ = 0;
+    u16 siodata32_h_ = 0;
+    u16 siomlt_send_ = 0;
     u16 rcnt_ = 0;
+    u16 joycnt_ = 0;
     u16 mgba_log_enable_ = 0;
     u8 postflg_ = 0;
     bool halted_ = false;
@@ -107,7 +112,10 @@ private:
     AccessType last_access_ = AccessType::NonSequential;
     u32 bios_latch_ = 0;
     u32 rom_latch_ = 0;
+    u32 rom_address_latch_ = 0;
     u32 open_bus_ = 0;
+    u64 sio_event_cycle_ = std::numeric_limits<u64>::max();
+    bool sio_active_ = false;
     std::array<std::array<u8, 16>, 2> wait16_{};
     std::array<std::array<u8, 16>, 2> wait32_{};
 #if GBA_TRACE_TIMERS

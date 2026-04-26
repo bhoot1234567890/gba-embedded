@@ -28,7 +28,7 @@ struct TimerChannel {
     u16 pending_reload = 0;
     u16 control = 0;
     u16 pending_control = 0;
-    u16 counter = 0;
+    u32 counter = 0;
     bool running = false;
     bool stop_read_bias = false;
     bool pending_reload_valid = false;

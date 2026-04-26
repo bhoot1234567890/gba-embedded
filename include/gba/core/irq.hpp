@@ -34,8 +34,11 @@ public:
     void write_register(u32 address, u32 value, BusWidth width, u64 cycle_now);
 
     void request(u16 mask);
-    void raise_delayed(u16 mask, u64 cycle_when);
+    void raise_delayed(u16 mask, u64 cycle_when, u64 delay_cycles);
     void advance(u64 cycle_now);
+    [[nodiscard]] bool delayed_due(u64 cycle_now) const {
+        return delayed_.mask != 0 && cycle_now >= delayed_.fire_cycle;
+    }
     void acknowledge(u16 mask);
 
 private:

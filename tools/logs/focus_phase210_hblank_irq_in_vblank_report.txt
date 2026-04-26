@@ -1,0 +1,47 @@
+$ cmake --build /Users/chaitanyamalhotra/development/gba embedded/build -j4
+build_exit_code=0
+
+=== Suite 13 ===
+command: /Users/chaitanyamalhotra/development/gba embedded/build/gba_suite_runner --suite 12
+log: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite13_phase210_hblank_irq_in_vblank.log
+parsed_json: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite13_phase210_hblank_irq_in_vblank.parsed.json
+exit_code: 0
+fail_lines: 41
+Run: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite13_phase210_hblank_irq_in_vblank.log
+  ROM: tests/assets/roms/suite.gba
+  BIOS: tests/assets/roms/gba_bios.bin
+  Boot: frames=60 pc=0x00000348 cpsr=0x6000005F halted=1 cycle=16769984
+  Suites parsed: 1
+  Overall: 2/10 passed
+  Suite 13 Misc. edge case: 2/10 passed via mgba_end (frames=2, pc=0x00000348, halted=1, cycle=211150016)
+    Examples: sram:Break | sram:Read | sram:Hblank | sram:Flip 1 | sram:Flip 3 | mgba:DMA Prefetch Break | mgba:DMA Prefetch Read | mgba:H-blank bit start Hblank | mgba:H-blank bit start Flip 1 | mgba:H-blank bit start Flip 3
+tail:
+  FAIL: H-blank bit start Flip 3
+  Flip 3: Got 0x000000E4 vs 0x000000E5: FAIL
+  FAIL: H-blank bit start Flip 4
+  Flip 4: Got 0x000003EC vs 0x000003EB: FAIL
+  FAIL: H-blank bit start Flip 5
+  Flip 5: Got 0x000000E4 vs 0x000000E3: FAIL
+  FAIL: H-blank bit start Flip 6
+  Flip 6: Got 0x000003F5 vs 0x000003F3: FAIL
+  END: 2/10
+  [sram]
+  Game Boy Advance Test Suite
+  ===
+  Break: Got 0x10002A64 vs 0x100029D0: FAIL
+  Read: Got 0xDEAD0000 vs 0x00000000: FAIL
+  Hblank: Got 0x000004D1 vs 0x000004D0: FAIL
+  Flip 1: Got 0x00000085 vs 0x0000008F: FAIL
+  Flip 3: Got 0x000000E4 vs 0x000000E5: FAIL
+  Flip 4: Got 0x000003EC vs 0x000003EB: FAIL
+  Flip 5: Got 0x000000E4 vs 0x000000E3: FAIL
+  Flip 6: Got 0x000003F5 vs 0x000003F3: FAIL
+  [score] Misc. edge case: 4/20 FAIL
+  
+  === Summary ===
+  Suites: 0/1 passed  Tests: 4/20 passed
+compare_latest: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite13_phase209_intrwait_ack.log
+Comparison:
+  Suite 13
+    suite13_phase209_intrwait_ack: Misc. edge case -> 1/10 passed, 9 failed (mgba_end); frames=2 pc=0x00000348 halted=1
+    suite13_phase210_hblank_irq_in_vblank: Misc. edge case -> 2/10 passed, 8 failed (mgba_end); frames=2 pc=0x00000348 halted=1

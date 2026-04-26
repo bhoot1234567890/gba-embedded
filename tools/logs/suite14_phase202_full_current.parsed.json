@@ -1,0 +1,49 @@
+{
+  "path": "/Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite14_phase202_full_current.log",
+  "rom": "tests/assets/roms/suite.gba",
+  "bios": "tests/assets/roms/gba_bios.bin",
+  "boot_frames": 60,
+  "boot_pc": "0x00000348",
+  "boot_cpsr": "0x6000005F",
+  "boot_halted": true,
+  "boot_cycle": 16769984,
+  "summary_lines": [
+    "No test results found."
+  ],
+  "suites": [
+    {
+      "index": 14,
+      "name": "Video",
+      "frames": 91,
+      "pc": "0x00000348",
+      "cpsr": "0x6000001F",
+      "halted": true,
+      "cycle": 246262016,
+      "mgba_begin": null,
+      "mgba_end_passed": null,
+      "mgba_end_total": null,
+      "mgba_pass_count": 0,
+      "mgba_fail_count": 0,
+      "sram_pass_count": 0,
+      "sram_fail_count": 0,
+      "mgba_fail_examples": [],
+      "sram_fail_examples": [],
+      "sram_lines": [
+        "Game Boy Advance Test Suite",
+        "===",
+        ""
+      ],
+      "mgba_lines": [
+        "Game Boy Advance Test Suite"
+      ],
+      "normalized": {
+        "passed": null,
+        "total": null,
+        "source": null
+      }
+    }
+  ],
+  "total_passed": null,
+  "total_tests": null,
+  "completed": false
+}

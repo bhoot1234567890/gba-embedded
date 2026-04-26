@@ -1,0 +1,74 @@
+$ cmake --build /Users/chaitanyamalhotra/development/gba embedded/build -j4
+build_exit_code=0
+
+=== Suite 11 ===
+command: /Users/chaitanyamalhotra/development/gba embedded/build/gba_suite_runner --suite 10
+log: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite11_phase205_sio_timing_offset.log
+parsed_json: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite11_phase205_sio_timing_offset.parsed.json
+exit_code: 0
+fail_lines: 0
+Run: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite11_phase205_sio_timing_offset.log
+  ROM: tests/assets/roms/suite.gba
+  BIOS: tests/assets/roms/gba_bios.bin
+  Boot: frames=60 pc=0x00000348 cpsr=0x6000005F halted=1 cycle=16769984
+  Suites parsed: 1
+  Overall: 90/90 passed
+  Suite 11 SIO register R/W: 90/90 passed via mgba (frames=91, pc=0x0802BAC2, halted=0, cycle=215925249)
+tail:
+  PASS: J: RCNT
+  PASS: J: INVALID (136)
+  PASS: J: JOYCNT
+  PASS: J: INVALID (142)
+  PASS: J: JOY_RECV_L
+  PASS: J: JOY_RECV_H
+  PASS: J: JOY_TRANS_L
+  PASS: J: JOY_TRANS_H
+  PASS: J: JOYSTAT
+  [sram]
+  Game Boy Advance Test Suite
+  ===
+  [score] SIO register R/W: 90/90 PASS
+  
+  === Summary ===
+  Suites: 1/1 passed  Tests: 90/90 passed
+compare_latest: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite11_phase204_sio_transfer.log
+Comparison:
+  Suite 11
+    suite11_phase204_sio_transfer: SIO register R/W -> 90/90 passed, 0 failed (mgba); frames=91 pc=0x0802BAC2 halted=0
+    suite11_phase205_sio_timing_offset: SIO register R/W -> 90/90 passed, 0 failed (mgba); frames=91 pc=0x0802BAC2 halted=0
+
+=== Suite 12 ===
+command: /Users/chaitanyamalhotra/development/gba embedded/build/gba_suite_runner --suite 11
+log: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite12_phase205_sio_timing_offset.log
+parsed_json: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite12_phase205_sio_timing_offset.parsed.json
+exit_code: 0
+fail_lines: 0
+Run: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite12_phase205_sio_timing_offset.log
+  ROM: tests/assets/roms/suite.gba
+  BIOS: tests/assets/roms/gba_bios.bin
+  Boot: frames=60 pc=0x00000348 cpsr=0x6000005F halted=1 cycle=16769984
+  Suites parsed: 1
+  Overall: 4/4 passed
+  Suite 12 SIO timing: 4/4 passed via mgba_end (frames=2, pc=0x00000348, halted=1, cycle=201037760)
+tail:
+  END: 4/4
+  [sram]
+  Game Boy Advance Test Suite
+  ===
+  SIO timing test: Multi/9.6k
+  SIO timing test: Multi/38.4k
+  SIO timing test: Multi/57.6k
+  SIO timing test: Multi/115.2k
+  SIO timing test: Normal8/256k
+  SIO timing test: Normal8/2M
+  SIO timing test: Normal32/256k
+  SIO timing test: Normal32/2M
+  [score] SIO timing: 8/8 PASS
+  
+  === Summary ===
+  Suites: 1/1 passed  Tests: 8/8 passed
+compare_latest: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite12_phase204_sio_transfer.log
+Comparison:
+  Suite 12
+    suite12_phase204_sio_transfer: SIO timing -> 0/4 passed, 4 failed (mgba_end); frames=2 pc=0x00000348 halted=1
+    suite12_phase205_sio_timing_offset: SIO timing -> 4/4 passed, 0 failed (mgba_end); frames=2 pc=0x00000348 halted=1

@@ -1,0 +1,99 @@
+$ cmake --build /Users/chaitanyamalhotra/development/gba embedded/build -j4
+build_exit_code=0
+
+=== Suite 03 ===
+command: /Users/chaitanyamalhotra/development/gba embedded/build/gba_suite_runner --suite 2
+log: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite03_phase183_postfetch_irq_retry.log
+parsed_json: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite03_phase183_postfetch_irq_retry.parsed.json
+exit_code: 0
+fail_lines: 0
+Run: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite03_phase183_postfetch_irq_retry.log
+  ROM: tests/assets/roms/suite.gba
+  BIOS: tests/assets/roms/gba_bios.bin
+  Boot: frames=60 pc=0x00000348 cpsr=0x6000005F halted=1 cycle=16769984
+  Suites parsed: 1
+  Overall: 2020/2020 passed
+  Suite 03 Timing: 2020/2020 passed via mgba (frames=287, pc=0x0802BAC2, halted=0, cycle=190082817)
+tail:
+  Timing test: Short DMA (32)
+  Timing test: Short DMA (32/from ROM)
+  Timing test: Short DMA (32/to ROM)
+  Timing test: Short DMA (32/ROM to ROM)
+  [score] Timing: 2020/2020 PASS
+  
+  === Summary ===
+  Suites: 1/1 passed  Tests: 2020/2020 passed
+
+=== Suite 04 ===
+command: /Users/chaitanyamalhotra/development/gba embedded/build/gba_suite_runner --suite 3
+log: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite04_phase183_postfetch_irq_retry.log
+parsed_json: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite04_phase183_postfetch_irq_retry.parsed.json
+exit_code: 0
+fail_lines: 1311
+Run: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite04_phase183_postfetch_irq_retry.log
+  ROM: tests/assets/roms/suite.gba
+  BIOS: tests/assets/roms/gba_bios.bin
+  Boot: frames=60 pc=0x00000348 cpsr=0x6000005F halted=1 cycle=16769984
+  Suites parsed: 1
+  Overall: 674/936 passed
+  Suite 04 Timer count-up: 674/936 passed via mgba (frames=213, pc=0x0802BACA, halted=0, cycle=179408768)
+    Examples: sram:1xs 1d 1i | sram:1xv 1d 1i | sram:16xv 1d 1i | sram:1xs 2d 1i
+tail:
+  16xs 1d 1i: Got 000031B0 vs 000031A0: FAIL
+  1xs 2d 2i: Got 000011DC vs 000011DB: FAIL
+  Timer count-up test: 10b, 0x0013
+  1xs 2d 2i: Got 000012DC vs 000012DB: FAIL
+  [score] Timer count-up: 674/936 FAIL
+  
+  === Summary ===
+  Suites: 0/1 passed  Tests: 674/936 passed
+fail buckets by preface:
+  1xs 2d 2i: 32
+  1xv 1d 1i: 26
+  1xv 2d 1i: 26
+  1xv 4d 1i: 26
+  1xv 1d 4i: 26
+  1xv 2d 4i: 26
+  1xv 4d 4i: 26
+  16xv 1d 2i: 20
+  16xv 2d 2i: 20
+  16xv 4d 2i: 20
+  16xv 1d 4i: 20
+  16xv 2d 4i: 20
+fail deltas:
+  16xv delta -1: 114
+  1xv delta -1: 114
+  1xs delta -1: 96
+  1xv delta -3: 78
+  16xv delta -3: 42
+  1xs delta +1: 24
+  16xs delta -16: 18
+  1xv delta +2: 12
+  16xs delta +16: 8
+  16xv delta +4: 6
+  16xv delta +9: 6
+  1xv delta +10: 6
+
+=== Suite 05 ===
+command: /Users/chaitanyamalhotra/development/gba embedded/build/gba_suite_runner --suite 4
+log: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite05_phase183_postfetch_irq_retry.log
+parsed_json: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite05_phase183_postfetch_irq_retry.parsed.json
+exit_code: 0
+fail_lines: 141
+Run: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite05_phase183_postfetch_irq_retry.log
+  ROM: tests/assets/roms/suite.gba
+  BIOS: tests/assets/roms/gba_bios.bin
+  Boot: frames=60 pc=0x00000348 cpsr=0x6000005F halted=1 cycle=16769984
+  Suites parsed: 1
+  Overall: 62/90 passed
+  Suite 05 Timer IRQ: 62/90 passed via mgba (frames=94, pc=0x0802BA18, halted=0, cycle=156094405)
+    Examples: mgba:FFFF 3 nops | mgba:FFFF 4 nops | mgba:FFFF 5 nops | mgba:FFFF 6 nops
+tail:
+  Timer IRQ test: FFF9
+  Got 0051 != 0004: FAIL
+  Timer IRQ test: FFF8
+  Timer IRQ test: FFF7
+  [score] Timer IRQ: 62/90 FAIL
+  
+  === Summary ===
+  Suites: 0/1 passed  Tests: 62/90 passed

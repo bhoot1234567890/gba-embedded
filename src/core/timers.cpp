@@ -197,15 +197,6 @@ u32 Timers::read_word_register_split(u32 address, u64 lo_cycle, u64 hi_cycle) {
     };
     const auto lo = static_cast<u16>(channel.counter + counter_delta_since_last_update(channel, lo_cycle));
     auto hi = visible_control(hi_cycle);
-    if (channel.stop_read_bias && !channel.running) {
-        const auto cycles_since_stop = hi_cycle - static_cast<u64>(channel.timestamp_started);
-        if (cycles_since_stop <= kPrescaledStopReadLatchCycles) {
-            // Prescaled timers keep the readable enable bit latched briefly
-            // after a stop, while the counter itself is already frozen.
-            hi = static_cast<u16>(hi | 0x0080u);
-        }
-        channel.stop_read_bias = false;
-    }
 #if GBA_TRACE_TIMERS
     if (timer == 0 && g_last_disable_cycle[timer] != std::numeric_limits<u64>::max() &&
         g_post_disable_word_reads[timer] < 6) {
@@ -343,7 +334,6 @@ void Timers::advance_to(u64 cycle_now, IrqController& irq, Apu& apu) {
             channel.mask = kTimerMask[channel.control & 0x0003u];
 
             if (!timer_enabled(channel)) {
-                channel.stop_read_bias = false;
                 channel.next_event_cycle = std::numeric_limits<u64>::max();
 #if GBA_TRACE_TIMERS
                 g_last_disable_cycle[pending.index] = pending.cycle;
@@ -357,7 +347,6 @@ void Timers::advance_to(u64 cycle_now, IrqController& irq, Apu& apu) {
             }
 
             if (timer_count_up(channel)) {
-                channel.stop_read_bias = false;
                 if (!enable_previous) {
                     channel.counter = channel.reload;
                 }
@@ -375,7 +364,6 @@ void Timers::advance_to(u64 cycle_now, IrqController& irq, Apu& apu) {
 
             const auto prescaler_offset = static_cast<int>(pending.cycle & channel.mask);
             if (enable_previous) {
-                channel.stop_read_bias = false;
                 start_channel(channel, pending.cycle, prescaler_offset);
 #if GBA_TRACE_TIMERS
                 if (pending.index == 0) {
@@ -389,10 +377,8 @@ void Timers::advance_to(u64 cycle_now, IrqController& irq, Apu& apu) {
             }
 
             if (channel.counter == 0xFFFFu && prescaler_offset == 0) {
-                channel.stop_read_bias = false;
                 start_channel(channel, pending.cycle, 0);
             } else {
-                channel.stop_read_bias = false;
                 channel.counter = channel.reload;
                 start_channel(channel, pending.cycle, prescaler_offset - 1);
             }
@@ -468,7 +454,7 @@ void Timers::overflow(int index, IrqController& irq, Apu& apu, u64 cycle_now) {
     channel.timestamp_started = static_cast<s64>(cycle_now);
 
     if (timer_irq_enabled(channel)) {
-        irq.raise_delayed(timer_irq_mask(index), cycle_now);
+        irq.raise_delayed(timer_irq_mask(index), cycle_now, 4);
     }
 
     apu.on_timer_overflow(index);

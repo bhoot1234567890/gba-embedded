@@ -1,0 +1,19 @@
+=== GBA Test Suite Runner ===
+ROM:  tests/assets/roms/suite.gba
+BIOS: tests/assets/roms/gba_bios.bin
+Booting...
+After 60 frames: PC=0x00000348 CPSR=0x6000005F halted=1 cycle=16769984
+[DBG] Game Boy Advance Test Suite
+===
+
+--- Suite 14: Video ---
+Frames: 91  PC=0x00000348  CPSR=0x6000001F  halted=1  cycle=246262016
+[debug]
+Game Boy Advance Test Suite
+===
+[sram]
+Game Boy Advance Test Suite
+===
+
+=== Summary ===
+No test results found.

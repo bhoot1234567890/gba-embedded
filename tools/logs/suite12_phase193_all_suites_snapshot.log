@@ -1,0 +1,76 @@
+=== GBA Test Suite Runner ===
+ROM:  tests/assets/roms/suite.gba
+BIOS: tests/assets/roms/gba_bios.bin
+Booting...
+After 60 frames: PC=0x00000348 CPSR=0x6000005F halted=1 cycle=16769984
+[DBG] Game Boy Advance Test Suite
+===
+[DBG] BEGIN: SIO timing tests
+[DBG] SIO timing test: Multi/9.6k
+[DBG] SKIPPED: Multi/9.6k
+[DBG] SIO timing test: Multi/38.4k
+[DBG] SKIPPED: Multi/38.4k
+[DBG] SIO timing test: Multi/57.6k
+[DBG] SKIPPED: Multi/57.6k
+[DBG] SIO timing test: Multi/115.2k
+[DBG] SKIPPED: Multi/115.2k
+[DBG] SIO timing test: Normal8/256k
+[DBG] FAIL: Normal8/256k
+[DBG] Normal8/256k: Timed out: FAIL
+[DBG] SIO timing test: Normal8/2M
+[DBG] FAIL: Normal8/2M
+[DBG] Normal8/2M: Timed out: FAIL
+[DBG] SIO timing test: Normal32/256k
+[DBG] FAIL: Normal32/256k
+[DBG] Normal32/256k: Timed out: FAIL
+[DBG] SIO timing test: Normal32/2M
+[DBG] FAIL: Normal32/2M
+[DBG] Normal32/2M: Timed out: FAIL
+[DBG] END: 0/4
+
+--- Suite 12: SIO timing ---
+Frames: 2  PC=0x00000348  CPSR=0x6000001F  halted=1  cycle=201037760
+[debug]
+Game Boy Advance Test Suite
+===
+BEGIN: SIO timing tests
+SIO timing test: Multi/9.6k
+SKIPPED: Multi/9.6k
+SIO timing test: Multi/38.4k
+SKIPPED: Multi/38.4k
+SIO timing test: Multi/57.6k
+SKIPPED: Multi/57.6k
+SIO timing test: Multi/115.2k
+SKIPPED: Multi/115.2k
+SIO timing test: Normal8/256k
+FAIL: Normal8/256k
+Normal8/256k: Timed out: FAIL
+SIO timing test: Normal8/2M
+FAIL: Normal8/2M
+Normal8/2M: Timed out: FAIL
+SIO timing test: Normal32/256k
+FAIL: Normal32/256k
+Normal32/256k: Timed out: FAIL
+SIO timing test: Normal32/2M
+FAIL: Normal32/2M
+Normal32/2M: Timed out: FAIL
+END: 0/4
+[sram]
+Game Boy Advance Test Suite
+===
+SIO timing test: Multi/9.6k
+SIO timing test: Multi/38.4k
+SIO timing test: Multi/57.6k
+SIO timing test: Multi/115.2k
+SIO timing test: Normal8/256k
+Normal8/256k: Timed out: FAIL
+SIO timing test: Normal8/2M
+Normal8/2M: Timed out: FAIL
+SIO timing test: Normal32/256k
+Normal32/256k: Timed out: FAIL
+SIO timing test: Normal32/2M
+Normal32/2M: Timed out: FAIL
+[score] SIO timing: 0/8 FAIL
+
+=== Summary ===
+Suites: 0/1 passed  Tests: 0/8 passed

@@ -1,0 +1,58 @@
+$ cmake --build /Users/chaitanyamalhotra/development/gba embedded/build -j4
+build_exit_code=0
+
+=== Suite 04 ===
+command: /Users/chaitanyamalhotra/development/gba embedded/build/gba_suite_runner --suite 3
+log: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite04_20260426_171441.log
+parsed_json: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite04_20260426_171441.parsed.json
+exit_code: 0
+fail_lines: 1336
+Run: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite04_20260426_171441.log
+  ROM: tests/assets/roms/suite.gba
+  BIOS: tests/assets/roms/gba_bios.bin
+  Boot: frames=60 pc=0x00000348 cpsr=0x6000005F halted=1 cycle=16769984
+  Suites parsed: 1
+  Overall: 669/936 passed
+  Suite 04 Timer count-up: 669/936 passed via mgba (frames=213, pc=0x0802BAC8, halted=0, cycle=179408769)
+    Examples: sram:1xv 1d 1i | sram:16xv 1d 1i | sram:1xv 2d 1i
+tail:
+  Timer count-up test: 10b, 0x0010
+  16xs 1d 1i: Got 00002C20 vs 00002C10: FAIL
+  1xs 4d 1i: Got 000007EA vs 000007E9: FAIL
+  1xs 2d 2i: Got 00000FDC vs 00000FDB: FAIL
+  16xs 2d 4i: Got 0000B0B0 vs 0000B0A0: FAIL
+  Timer count-up test: 10b, 0x0011
+  1xs 4d 1i: Got 0000086A vs 00000869: FAIL
+  1xs 2d 2i: Got 000010DC vs 000010DB: FAIL
+  Timer count-up test: 10b, 0x0012
+  16xs 1d 1i: Got 000031B0 vs 000031A0: FAIL
+  1xs 4d 1i: Got 000008EA vs 000008E9: FAIL
+  1xs 2d 2i: Got 000011DC vs 000011DB: FAIL
+  Timer count-up test: 10b, 0x0013
+  1xs 4d 1i: Got 0000096A vs 00000969: FAIL
+  1xs 2d 2i: Got 000012DC vs 000012DB: FAIL
+  16xs 2d 2i: Got 00006900 vs 000068F0: FAIL
+  [score] Timer count-up: 669/936 FAIL
+  
+  === Summary ===
+  Suites: 0/1 passed  Tests: 669/936 passed
+fail buckets by preface:
+  1xv 1d 1i: 26
+  16xv 1d 1i: 26
+  1xv 2d 1i: 26
+  16xv 2d 1i: 26
+  1xv 4d 1i: 26
+  16xv 4d 1i: 26
+  1xv 1d 2i: 26
+  16xv 1d 2i: 26
+  1xv 2d 2i: 26
+  16xv 2d 2i: 26
+  1xv 4d 2i: 26
+  16xv 4d 2i: 26
+fail deltas:
+  1xv delta -1: 228
+  16xv delta -1: 228
+  1xs delta +1: 48
+  16xs delta +16: 18
+  1xv delta +4: 6
+  16xv delta +4: 6

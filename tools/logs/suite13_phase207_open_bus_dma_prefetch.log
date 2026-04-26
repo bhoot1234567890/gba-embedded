@@ -1,0 +1,71 @@
+=== GBA Test Suite Runner ===
+ROM:  tests/assets/roms/suite.gba
+BIOS: tests/assets/roms/gba_bios.bin
+Booting...
+After 60 frames: PC=0x00000348 CPSR=0x6000005F halted=1 cycle=16769984
+[DBG] Game Boy Advance Test Suite
+===
+[DBG] BEGIN: Misc. edge case tests
+[DBG] FAIL: DMA Prefetch Break
+[DBG] Break: Got 0x10002A64 vs 0x100000FC: FAIL
+[DBG] FAIL: DMA Prefetch Read
+[DBG] Read: Got 0xDEAD0000 vs 0x00000000: FAIL
+[DBG] FAIL: H-blank bit start Start
+[DBG] Start: Got 0x0000001B vs 0x0000001A: FAIL
+[DBG] FAIL: H-blank bit start Hblank
+[DBG] Hblank: Got 0x000004D1 vs 0x000004D0: FAIL
+[DBG] FAIL: H-blank bit start Flip 1
+[DBG] Flip 1: Got 0x00000085 vs 0x0000008F: FAIL
+[DBG] PASS: H-blank bit start Flip 2
+[DBG] FAIL: H-blank bit start Flip 3
+[DBG] Flip 3: Got 0x000000E4 vs 0x000000E5: FAIL
+[DBG] FAIL: H-blank bit start Flip 4
+[DBG] Flip 4: Got 0x000003EC vs 0x000003EB: FAIL
+[DBG] FAIL: H-blank bit start Flip 5
+[DBG] Flip 5: Got 0x000000E4 vs 0x000000E3: FAIL
+[DBG] FAIL: H-blank bit start Flip 6
+[DBG] Flip 6: Got 0x000003F5 vs 0x000003F3: FAIL
+[DBG] END: 1/10
+
+--- Suite 13: Misc. edge case ---
+Frames: 2  PC=0x00000348  CPSR=0x6000001F  halted=1  cycle=211150016
+[debug]
+Game Boy Advance Test Suite
+===
+BEGIN: Misc. edge case tests
+FAIL: DMA Prefetch Break
+Break: Got 0x10002A64 vs 0x100000FC: FAIL
+FAIL: DMA Prefetch Read
+Read: Got 0xDEAD0000 vs 0x00000000: FAIL
+FAIL: H-blank bit start Start
+Start: Got 0x0000001B vs 0x0000001A: FAIL
+FAIL: H-blank bit start Hblank
+Hblank: Got 0x000004D1 vs 0x000004D0: FAIL
+FAIL: H-blank bit start Flip 1
+Flip 1: Got 0x00000085 vs 0x0000008F: FAIL
+PASS: H-blank bit start Flip 2
+FAIL: H-blank bit start Flip 3
+Flip 3: Got 0x000000E4 vs 0x000000E5: FAIL
+FAIL: H-blank bit start Flip 4
+Flip 4: Got 0x000003EC vs 0x000003EB: FAIL
+FAIL: H-blank bit start Flip 5
+Flip 5: Got 0x000000E4 vs 0x000000E3: FAIL
+FAIL: H-blank bit start Flip 6
+Flip 6: Got 0x000003F5 vs 0x000003F3: FAIL
+END: 1/10
+[sram]
+Game Boy Advance Test Suite
+===
+Break: Got 0x10002A64 vs 0x100000FC: FAIL
+Read: Got 0xDEAD0000 vs 0x00000000: FAIL
+Start: Got 0x0000001B vs 0x0000001A: FAIL
+Hblank: Got 0x000004D1 vs 0x000004D0: FAIL
+Flip 1: Got 0x00000085 vs 0x0000008F: FAIL
+Flip 3: Got 0x000000E4 vs 0x000000E5: FAIL
+Flip 4: Got 0x000003EC vs 0x000003EB: FAIL
+Flip 5: Got 0x000000E4 vs 0x000000E3: FAIL
+Flip 6: Got 0x000003F5 vs 0x000003F3: FAIL
+[score] Misc. edge case: 2/20 FAIL
+
+=== Summary ===
+Suites: 0/1 passed  Tests: 2/20 passed

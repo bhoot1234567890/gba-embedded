@@ -1,0 +1,137 @@
+{
+  "tag": "phase209_intrwait_ack",
+  "repo_root": "/Users/chaitanyamalhotra/development/gba embedded",
+  "runner": "/Users/chaitanyamalhotra/development/gba embedded/build/gba_suite_runner",
+  "build_dir": "/Users/chaitanyamalhotra/development/gba embedded/build",
+  "logs": [
+    {
+      "suite_number": 13,
+      "runner_index": 12,
+      "log_path": "/Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite13_phase209_intrwait_ack.log",
+      "parsed_json_path": "/Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite13_phase209_intrwait_ack.parsed.json",
+      "exit_code": 0,
+      "fail_lines": 46,
+      "tail": [
+        "Flip 3: Got 0x000000E4 vs 0x000000E5: FAIL",
+        "FAIL: H-blank bit start Flip 4",
+        "Flip 4: Got 0x000003EC vs 0x000003EB: FAIL",
+        "FAIL: H-blank bit start Flip 5",
+        "Flip 5: Got 0x000000E4 vs 0x000000E3: FAIL",
+        "FAIL: H-blank bit start Flip 6",
+        "Flip 6: Got 0x000003F5 vs 0x000003F3: FAIL",
+        "END: 1/10",
+        "[sram]",
+        "Game Boy Advance Test Suite",
+        "===",
+        "Break: Got 0x10002A64 vs 0x100029D0: FAIL",
+        "Read: Got 0xDEAD0000 vs 0x00000000: FAIL",
+        "Start: Got 0x0000001B vs 0x0000001A: FAIL",
+        "Hblank: Got 0x000004D1 vs 0x000004D0: FAIL",
+        "Flip 1: Got 0x00000085 vs 0x0000008F: FAIL",
+        "Flip 3: Got 0x000000E4 vs 0x000000E5: FAIL",
+        "Flip 4: Got 0x000003EC vs 0x000003EB: FAIL",
+        "Flip 5: Got 0x000000E4 vs 0x000000E3: FAIL",
+        "Flip 6: Got 0x000003F5 vs 0x000003F3: FAIL",
+        "[score] Misc. edge case: 2/20 FAIL",
+        "",
+        "=== Summary ===",
+        "Suites: 0/1 passed  Tests: 2/20 passed"
+      ],
+      "preface_counts": [],
+      "delta_counts": [],
+      "compare_path": "/Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite13_dma_trace_stdout.log",
+      "summary": {
+        "path": "/Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite13_phase209_intrwait_ack.log",
+        "rom": "tests/assets/roms/suite.gba",
+        "bios": "tests/assets/roms/gba_bios.bin",
+        "boot_frames": 60,
+        "boot_pc": "0x00000348",
+        "boot_cpsr": "0x6000005F",
+        "boot_halted": true,
+        "boot_cycle": 16769984,
+        "summary_lines": [
+          "Suites: 0/1 passed  Tests: 2/20 passed"
+        ],
+        "suites": [
+          {
+            "index": 13,
+            "name": "Misc. edge case",
+            "frames": 2,
+            "pc": "0x00000348",
+            "cpsr": "0x6000001F",
+            "halted": true,
+            "cycle": 211150016,
+            "mgba_begin": "Misc. edge case tests",
+            "mgba_end_passed": 1,
+            "mgba_end_total": 10,
+            "mgba_pass_count": 1,
+            "mgba_fail_count": 9,
+            "sram_pass_count": 0,
+            "sram_fail_count": 9,
+            "mgba_fail_examples": [
+              "DMA Prefetch Break",
+              "DMA Prefetch Read",
+              "H-blank bit start Start",
+              "H-blank bit start Hblank",
+              "H-blank bit start Flip 1"
+            ],
+            "sram_fail_examples": [
+              "Break",
+              "Read",
+              "Start",
+              "Hblank",
+              "Flip 1"
+            ],
+            "sram_lines": [
+              "Game Boy Advance Test Suite",
+              "===",
+              "Break: Got 0x10002A64 vs 0x100029D0: FAIL",
+              "Read: Got 0xDEAD0000 vs 0x00000000: FAIL",
+              "Start: Got 0x0000001B vs 0x0000001A: FAIL",
+              "Hblank: Got 0x000004D1 vs 0x000004D0: FAIL",
+              "Flip 1: Got 0x00000085 vs 0x0000008F: FAIL",
+              "Flip 3: Got 0x000000E4 vs 0x000000E5: FAIL",
+              "Flip 4: Got 0x000003EC vs 0x000003EB: FAIL",
+              "Flip 5: Got 0x000000E4 vs 0x000000E3: FAIL",
+              "Flip 6: Got 0x000003F5 vs 0x000003F3: FAIL",
+              "[score] Misc. edge case: 2/20 FAIL",
+              ""
+            ],
+            "mgba_lines": [
+              "Game Boy Advance Test Suite",
+              "BEGIN: Misc. edge case tests",
+              "FAIL: DMA Prefetch Break",
+              "Break: Got 0x10002A64 vs 0x100029D0: FAIL",
+              "FAIL: DMA Prefetch Read",
+              "Read: Got 0xDEAD0000 vs 0x00000000: FAIL",
+              "FAIL: H-blank bit start Start",
+              "Start: Got 0x0000001B vs 0x0000001A: FAIL",
+              "FAIL: H-blank bit start Hblank",
+              "Hblank: Got 0x000004D1 vs 0x000004D0: FAIL",
+              "FAIL: H-blank bit start Flip 1",
+              "Flip 1: Got 0x00000085 vs 0x0000008F: FAIL",
+              "PASS: H-blank bit start Flip 2",
+              "FAIL: H-blank bit start Flip 3",
+              "Flip 3: Got 0x000000E4 vs 0x000000E5: FAIL",
+              "FAIL: H-blank bit start Flip 4",
+              "Flip 4: Got 0x000003EC vs 0x000003EB: FAIL",
+              "FAIL: H-blank bit start Flip 5",
+              "Flip 5: Got 0x000000E4 vs 0x000000E3: FAIL",
+              "FAIL: H-blank bit start Flip 6",
+              "Flip 6: Got 0x000003F5 vs 0x000003F3: FAIL",
+              "END: 1/10"
+            ],
+            "normalized": {
+              "passed": 1,
+              "total": 10,
+              "source": "mgba_end"
+            }
+          }
+        ],
+        "total_passed": 1,
+        "total_tests": 10,
+        "completed": false
+      }
+    }
+  ]
+}

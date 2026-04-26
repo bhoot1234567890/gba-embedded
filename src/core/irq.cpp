@@ -112,7 +112,7 @@ void IrqController::request(u16 mask) {
     recompute_line();
 }
 
-void IrqController::raise_delayed(u16 mask, u64 cycle_when) {
+void IrqController::raise_delayed(u16 mask, u64 cycle_when, u64 delay_cycles) {
     const auto fresh_mask = static_cast<u16>(mask & static_cast<u16>(~(if_ | delayed_.mask)));
     if (fresh_mask == 0) {
         return;
@@ -121,10 +121,10 @@ void IrqController::raise_delayed(u16 mask, u64 cycle_when) {
     if ((fresh_mask & static_cast<u16>(IrqTimer0 | IrqTimer1 | IrqTimer2 | IrqTimer3)) != 0) {
         std::fprintf(stderr, "IRQ delay mask=%04X at=%llu fire=%llu\n", fresh_mask,
                      static_cast<unsigned long long>(cycle_when),
-                     static_cast<unsigned long long>(cycle_when + 4));
+                     static_cast<unsigned long long>(cycle_when + delay_cycles));
     }
 #endif
-    const auto fire_cycle = cycle_when + 4;
+    const auto fire_cycle = cycle_when + delay_cycles;
     const auto previous_mask = delayed_.mask;
     delayed_.mask = static_cast<u16>(delayed_.mask | fresh_mask);
     delayed_.fire_cycle = previous_mask == 0 ? fire_cycle : std::min(delayed_.fire_cycle, fire_cycle);

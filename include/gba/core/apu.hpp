@@ -1,12 +1,24 @@
 #pragma once
 
 #include <array>
-#include <deque>
+#include <span>
 #include <vector>
 
 #include "gba/core/types.hpp"
 
 namespace gba {
+
+template<typename T, size_t N>
+class Fifo {
+    std::array<T, N> buf_{};
+    size_t head_ = 0, tail_ = 0, count_ = 0;
+public:
+    void push(T val) { buf_[tail_] = val; tail_ = (tail_+1) % N; ++count_; }
+    T pop() { T v = buf_[head_]; head_ = (head_+1) % N; --count_; return v; }
+    void clear() { head_ = tail_ = count_ = 0; }
+    bool empty() const { return count_ == 0; }
+    size_t size() const { return count_; }
+};
 
 class Apu {
 public:
@@ -21,7 +33,7 @@ public:
 
     [[nodiscard]] u64 next_event_cycle() const;
     [[nodiscard]] bool audio_chunk_ready() const;
-    std::vector<s16> consume_audio_chunk();
+    std::span<const s16> consume_audio_chunk();
     bool take_fifo_request_a();
     bool take_fifo_request_b();
 
@@ -45,8 +57,9 @@ private:
     u16 soundbias_ = 0x0200;
     std::array<u16, 8> wave_ram_{};
     std::array<u32, 2> fifo_latch_{};
-    std::array<std::deque<s8>, 2> fifo_{};
-    std::vector<s16> mix_buffer_{};
+    std::array<Fifo<s8, 32>, 2> fifo_{};
+    std::array<s16, 4096> mix_buffer_{};
+    size_t mix_buffer_count_ = 0;
     bool fifo_request_a_ = false;
     bool fifo_request_b_ = false;
 };

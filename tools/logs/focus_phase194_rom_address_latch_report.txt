@@ -1,0 +1,27 @@
+$ cmake --build /Users/chaitanyamalhotra/development/gba embedded/build -j4
+build_exit_code=0
+
+=== Suite 10 ===
+command: /Users/chaitanyamalhotra/development/gba embedded/build/gba_suite_runner --suite 9
+log: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite10_phase194_rom_address_latch.log
+parsed_json: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite10_phase194_rom_address_latch.parsed.json
+exit_code: 0
+fail_lines: 0
+Run: /Users/chaitanyamalhotra/development/gba embedded/tools/logs/suite10_phase194_rom_address_latch.log
+  ROM: tests/assets/roms/suite.gba
+  BIOS: tests/assets/roms/gba_bios.bin
+  Boot: frames=60 pc=0x00000348 cpsr=0x6000005F halted=1 cycle=16769984
+  Suites parsed: 1
+  Overall: 1256/1256 passed
+  Suite 10 DMA: 1256/1256 passed via mgba (frames=264, pc=0x0802BAC0, halted=0, cycle=254408001)
+tail:
+  DMA test: 2 Imm W R+0x10/+EWRAM
+  DMA test: 3 Imm W R+0x10/+EWRAM
+  DMA test: 0 Imm H V+BIOS/+VRAM
+  DMA test: 1 Imm H V+BIOS/+VRAM
+  DMA test: 2 Imm H V+BIOS/+VRAM
+  DMA test: 3 Imm H V+BIOS/+VRAM
+  [score] DMA: 1256/1256 PASS
+  
+  === Summary ===
+  Suites: 1/1 passed  Tests: 1256/1256 passed

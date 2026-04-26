@@ -56,6 +56,7 @@ struct BusAccessResult {
     u32 value = 0;
     u32 cycles = 0;
     bool open_bus = false;
+    bool dma_open_bus = false;
     bool breaks_fetch_burst = false;
 };
 

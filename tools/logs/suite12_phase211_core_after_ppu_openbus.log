@@ -1,0 +1,64 @@
+=== GBA Test Suite Runner ===
+ROM:  tests/assets/roms/suite.gba
+BIOS: tests/assets/roms/gba_bios.bin
+Booting...
+After 60 frames: PC=0x00000348 CPSR=0x6000005F halted=1 cycle=16769984
+[DBG] Game Boy Advance Test Suite
+===
+[DBG] BEGIN: SIO timing tests
+[DBG] SIO timing test: Multi/9.6k
+[DBG] SKIPPED: Multi/9.6k
+[DBG] SIO timing test: Multi/38.4k
+[DBG] SKIPPED: Multi/38.4k
+[DBG] SIO timing test: Multi/57.6k
+[DBG] SKIPPED: Multi/57.6k
+[DBG] SIO timing test: Multi/115.2k
+[DBG] SKIPPED: Multi/115.2k
+[DBG] SIO timing test: Normal8/256k
+[DBG] PASS: Normal8/256k
+[DBG] SIO timing test: Normal8/2M
+[DBG] PASS: Normal8/2M
+[DBG] SIO timing test: Normal32/256k
+[DBG] PASS: Normal32/256k
+[DBG] SIO timing test: Normal32/2M
+[DBG] PASS: Normal32/2M
+[DBG] END: 4/4
+
+--- Suite 12: SIO timing ---
+Frames: 2  PC=0x00000348  CPSR=0x6000001F  halted=1  cycle=201037760
+[debug]
+Game Boy Advance Test Suite
+===
+BEGIN: SIO timing tests
+SIO timing test: Multi/9.6k
+SKIPPED: Multi/9.6k
+SIO timing test: Multi/38.4k
+SKIPPED: Multi/38.4k
+SIO timing test: Multi/57.6k
+SKIPPED: Multi/57.6k
+SIO timing test: Multi/115.2k
+SKIPPED: Multi/115.2k
+SIO timing test: Normal8/256k
+PASS: Normal8/256k
+SIO timing test: Normal8/2M
+PASS: Normal8/2M
+SIO timing test: Normal32/256k
+PASS: Normal32/256k
+SIO timing test: Normal32/2M
+PASS: Normal32/2M
+END: 4/4
+[sram]
+Game Boy Advance Test Suite
+===
+SIO timing test: Multi/9.6k
+SIO timing test: Multi/38.4k
+SIO timing test: Multi/57.6k
+SIO timing test: Multi/115.2k
+SIO timing test: Normal8/256k
+SIO timing test: Normal8/2M
+SIO timing test: Normal32/256k
+SIO timing test: Normal32/2M
+[score] SIO timing: 8/8 PASS
+
+=== Summary ===
+Suites: 1/1 passed  Tests: 8/8 passed

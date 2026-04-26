@@ -134,6 +134,7 @@ u32 Cartridge::read_save(u32 address, BusWidth width) const {
 }
 
 void Cartridge::write_save(u32 address, u32 value, BusWidth width) {
+    (void)width;
     if (save_type_ == SaveType::None || save_.empty()) {
         return;
     }

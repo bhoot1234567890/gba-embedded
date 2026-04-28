@@ -1,6 +1,5 @@
 #include "gba/core/cpu.hpp"
 
-#include <cmath>
 #include <cstdio>
 #include <limits>
 
@@ -293,12 +292,65 @@ template<bool sign_extend>
     return static_cast<u32>(cycles + exception_prefetch_adjust(waitcnt, address));
 }
 
+[[nodiscard]] u32 integer_sqrt(u32 value) {
+    u32 result = 0;
+    u32 bit = 1u << 30u;
+    while (bit > value) {
+        bit >>= 2u;
+    }
+    while (bit != 0u) {
+        if (value >= result + bit) {
+            value -= result + bit;
+            result = (result >> 1u) + bit;
+        } else {
+            result >>= 1u;
+        }
+        bit >>= 2u;
+    }
+    return result;
+}
+
+[[nodiscard]] u32 bios_atan2_units(s32 y, s32 x) {
+    if (x == 0 && y == 0) {
+        return 0;
+    }
+
+    static constexpr std::array<s32, 16> kCordicAngles{
+        8192, 4836, 2555, 1297, 651, 326, 163, 81,
+        41, 20, 10, 5, 3, 1, 1, 0,
+    };
+
+    s64 x_acc = x;
+    s64 y_acc = y;
+    s32 angle = 0;
+    if (x_acc < 0) {
+        x_acc = -x_acc;
+        y_acc = -y_acc;
+        angle = 0x8000;
+    }
+
+    for (std::size_t i = 0; i < kCordicAngles.size(); ++i) {
+        const auto x_shift = x_acc >> i;
+        const auto y_shift = y_acc >> i;
+        if (y_acc > 0) {
+            x_acc += y_shift;
+            y_acc -= x_shift;
+            angle += kCordicAngles[i];
+        } else {
+            x_acc -= y_shift;
+            y_acc += x_shift;
+            angle -= kCordicAngles[i];
+        }
+    }
+    return static_cast<u32>(angle) & 0xFFFFu;
+}
+
 }  // namespace
 
 Arm7tdmi::Arm7tdmi(Bus& bus, IrqController& irq, TraceLogger* logger)
     : bus_(bus), irq_(irq), logger_(logger) {}
 
-void Arm7tdmi::reset() {
+void Arm7tdmi::reset(bool skip_bios) {
     state_ = {};
     state_.cpsr = static_cast<u32>(CpuMode::Supervisor) | kFlagI | kFlagF;
     state_.next_fetch_access = AccessType::CodeFetch;
@@ -307,11 +359,18 @@ void Arm7tdmi::reset() {
     last_fetch_gamepak_ = false;
 
     hle_swi_enabled_ = true;
-    if (bus_.has_bios()) {
+    if (!skip_bios && bus_.has_bios()) {
         const auto swi_vector = bus_.read(0x00000008u, BusWidth::Word, AccessType::CodeFetch, 0).value;
         std::fprintf(stderr, "BIOS SWI vector at 0x08: 0x%08X (stub=0xEAFFFFFE, match=%d)\n", swi_vector, swi_vector == 0xEAFFFFFEu);
         hle_swi_enabled_ = swi_vector == 0xEAFFFFFEu;
+        return;
     }
+
+    state_.cpsr = static_cast<u32>(CpuMode::System) | kFlagI | kFlagF;
+    state_.regs[13] = 0x03007F00u;
+    state_.regs[15] = 0x08000000u;
+    state_.banked_svc_r13_r14[0] = 0x03007FE0u;
+    state_.banked_irq_r13_r14[0] = 0x03007FA0u;
 }
 
 CpuState& Arm7tdmi::state() {
@@ -722,14 +781,14 @@ bool Arm7tdmi::handle_hle_swi(u32 comment) {
     }
     case 0x08u: {
         // BIOS Sqrt: sqrt(r0) -> r0
-        state_.regs[0] = static_cast<u32>(std::sqrt(static_cast<float>(state_.regs[0])));
+        state_.regs[0] = integer_sqrt(state_.regs[0]);
         current_cycle_ += 13;
         return true;
     }
     case 0x09u: {
         // BIOS ArcTan: atan(r0) -> r0 (result in 0.015873.. units)
         const auto x = static_cast<s16>(state_.regs[0]);
-        state_.regs[0] = static_cast<u32>(std::atan2(static_cast<float>(x), 16384.0f) * 65536.0f / (3.14159265f * 2.0f));
+        state_.regs[0] = bios_atan2_units(x, 16384);
         current_cycle_ += 30;
         return true;
     }
@@ -737,7 +796,7 @@ bool Arm7tdmi::handle_hle_swi(u32 comment) {
         // BIOS ArcTan2: atan2(r1, r0) -> r0
         const auto y = static_cast<s16>(state_.regs[1]);
         const auto x = static_cast<s16>(state_.regs[0]);
-        state_.regs[0] = static_cast<u32>(std::atan2(static_cast<float>(y), static_cast<float>(x)) * 65536.0f / (3.14159265f * 2.0f));
+        state_.regs[0] = bios_atan2_units(y, x);
         current_cycle_ += 38;
         return true;
     }

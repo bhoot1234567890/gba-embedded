@@ -8,6 +8,14 @@
 #include "gba/core/constants.hpp"
 #include "gba/core/irq.hpp"
 
+#ifdef GBA_PLATFORM_ESP32
+#include "esp_attr.h"
+#endif
+
+#ifndef IRAM_ATTR
+#define IRAM_ATTR
+#endif
+
 namespace gba {
 
 namespace {
@@ -216,7 +224,7 @@ u64 DmaEngine::next_event_cycle() const {
     return next_event_cycle_;
 }
 
-u32 DmaEngine::service_due(u64 cycle_now, Bus& bus, IrqController& irq) {
+u32 IRAM_ATTR DmaEngine::service_due(u64 cycle_now, Bus& bus, IrqController& irq) {
     if (next_event_cycle_ > cycle_now) {
         return 0;
     }

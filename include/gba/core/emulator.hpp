@@ -33,7 +33,7 @@ public:
     void load_bios(std::vector<u8> bios);
     void set_save_type(SaveType save_type);
 
-    void reset();
+    void reset(bool skip_bios = false);
     void run_until(u64 target_cycle);
     void run_frame();
 

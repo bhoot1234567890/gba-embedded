@@ -9,6 +9,14 @@
 #include "gba/core/constants.hpp"
 #include "gba/core/irq.hpp"
 
+#ifdef GBA_PLATFORM_ESP32
+#include "esp_attr.h"
+#endif
+
+#ifndef IRAM_ATTR
+#define IRAM_ATTR
+#endif
+
 namespace gba {
 
 namespace {
@@ -288,7 +296,7 @@ void Timers::write_register(u32 address, u32 value, BusWidth width, u64 cycle_no
     }
 }
 
-void Timers::advance_to(u64 cycle_now, IrqController& irq, Apu& apu) {
+void IRAM_ATTR Timers::advance_to(u64 cycle_now, IrqController& irq, Apu& apu) {
     while (true) {
         const auto pending = next_pending_event(channels_, cycle_now);
         if (pending.type == PendingTimerEventType::None) {

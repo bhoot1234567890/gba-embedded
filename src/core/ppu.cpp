@@ -271,7 +271,7 @@ void Ppu::write_register(u32 address, u32 value, BusWidth width) {
     mark_all_dirty();
 }
 
-void Ppu::advance_to(u64 cycle_now, IrqController& irq) {
+void IRAM_ATTR Ppu::advance_to(u64 cycle_now, IrqController& irq) {
     while (next_event_cycle_ <= cycle_now) {
         if (!hblank_) {
             enter_hblank(irq, next_event_cycle_);

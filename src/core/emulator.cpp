@@ -29,14 +29,14 @@ void Emulator::set_save_type(SaveType save_type) {
     cartridge_.set_save_type(save_type);
 }
 
-void Emulator::reset() {
+void Emulator::reset(bool skip_bios) {
     irq_.reset();
     ppu_.reset();
     apu_.reset();
     timers_.reset();
     dma_.reset();
     bus_.reset();
-    cpu_.reset();
+    cpu_.reset(skip_bios);
     scheduler_.reset(0);
     refresh_schedule();
 }

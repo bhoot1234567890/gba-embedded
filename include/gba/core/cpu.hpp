@@ -53,7 +53,7 @@ class Arm7tdmi {
 public:
     Arm7tdmi(Bus& bus, IrqController& irq, TraceLogger* logger = nullptr);
 
-    void reset();
+    void reset(bool skip_bios = false);
     [[nodiscard]] CpuState& state();
     [[nodiscard]] const CpuState& state() const;
     [[nodiscard]] u64 current_cycle() const;

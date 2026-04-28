@@ -111,8 +111,14 @@ void rtc_clock_bit(Cartridge& cartridge, bool bit) {
 
 void rtc_begin_command(Cartridge& cartridge) {
     rtc_write_gpio(cartridge, 0xC6u, 0x07u);
-    rtc_set_pins(cartridge, 0x00u);
-    rtc_set_pins(cartridge, 0x04u);
+    rtc_set_pins(cartridge, 0x01u);
+    rtc_set_pins(cartridge, 0x05u);
+}
+
+void rtc_begin_unbound_command(Cartridge& cartridge) {
+    rtc_set_pins(cartridge, 0x01u);
+    rtc_set_pins(cartridge, 0x05u);
+    rtc_write_gpio(cartridge, 0xC6u, 0x07u);
 }
 
 void rtc_send_command_msb_first(Cartridge& cartridge, u8 command) {
@@ -302,7 +308,7 @@ void test_cartridge_rtc_gpio_control_and_datetime() {
 
     rtc_write_gpio(cartridge, 0xC8u, 1u);
 
-    rtc_begin_command(cartridge);
+    rtc_begin_unbound_command(cartridge);
     rtc_send_command_msb_first(cartridge, 0x63u);  // Reversed S-3511 control-register read.
     auto control = rtc_read_bytes(cartridge, 1);
     expect(control[0] == 0x40u, "RTC control register should default to 24-hour mode");
@@ -1014,6 +1020,40 @@ void test_ppu_text_bg_fine_horizontal_scroll_crosses_tile_boundary() {
     expect(row[5] == 9u && row[6] == 10u, "fine HOFS should advance into the next source tile mid-block");
 }
 
+void test_ppu_direct_128_crop_uses_screen_x_scratch_slots() {
+    Ppu ppu;
+    ppu.reset();
+    ppu.set_direct_128x128(true);
+
+    std::array<u8, kVramSize> vram{};
+    std::array<u8, kPaletteSize> palette{};
+    std::array<u8, kOamSize> oam{};
+
+    constexpr u32 crop_x = (kScreenWidth - kOutW) / 2u;
+    constexpr u32 crop_y = (kScreenHeight - kOutH) / 2u;
+    constexpr u32 tile_col = crop_x / 8u;
+    constexpr u32 tile_row = crop_y / 8u;
+
+    write16(palette, 2u, 0x001Fu);
+    write16(palette, 0x200u + 4u, 0x03E0u);
+    write_4bpp_tile_row(vram, 0x00000u, std::array<u8, 8>{1, 1, 1, 1, 1, 1, 1, 1});
+    write_4bpp_tile_row(vram, 0x10000u, std::array<u8, 8>{2, 2, 2, 2, 2, 2, 2, 2});
+    write16(vram, 0x0800u + tile_row * 64u + tile_col * 2u, 0x0000u);
+
+    write16(oam, 0u, static_cast<u16>(crop_y));
+    write16(oam, 2u, static_cast<u16>(crop_x));
+    write16(oam, 4u, 0x0000u);
+
+    ppu.write_register(kDispcnt, 0x1100u, BusWidth::Half);
+    ppu.write_register(kBg0Cnt, 0x0100u, BusWidth::Half);
+    ppu.render_scanline(static_cast<int>(crop_y), vram, palette, oam);
+
+    const auto framebuffer = ppu.framebuffer();
+    expect(framebuffer.size() == kOutputPixels, "direct 128 mode should expose 128x128 output");
+    expect(framebuffer[0] == 0x03E0u,
+           "direct 128 crop should composite BG/OBJ pixels from the cropped screen-x scratch slot");
+}
+
 void test_video_memory_writes_invalidate_ppu_cache() {
     TestBusContext context;
     context.reset();
@@ -1342,6 +1382,26 @@ void test_cpu_thumb_add() {
     expect(state.regs[0] == 3u, "Thumb interpreter should execute MOVS/ADDS immediate");
 }
 
+void test_cpu_thumb_sub_immediate_carry() {
+    Emulator emulator;
+    emulator.reset();
+
+    auto& cpu = emulator.cpu();
+    auto& state = cpu.state();
+    state.cpsr = static_cast<u32>(CpuMode::System) | (1u << 5);
+    state.regs[15] = 0x03000000u;
+
+    auto iwram = emulator.bus().iwram();
+    write16(iwram, 0, 0x2207u);  // MOVS r2, #7
+    write16(iwram, 2, 0x3A01u);  // SUBS r2, #1
+
+    cpu.step();
+    cpu.step();
+
+    expect(state.regs[2] == 6u, "Thumb SUBS immediate should update the destination register");
+    expect_nzcv(state.cpsr, false, false, true, false, "Thumb SUBS immediate should set carry when no borrow occurs");
+}
+
 }  // namespace
 
 int main() {
@@ -1381,6 +1441,7 @@ int main() {
     run_test("ppu_mode4", test_ppu_mode4_render_hash);
     run_test("ppu_mode5_bounds", test_ppu_mode5_fullpath_visible_bounds);
     run_test("ppu_text_fine_hscroll", test_ppu_text_bg_fine_horizontal_scroll_crosses_tile_boundary);
+    run_test("ppu_direct_128_crop", test_ppu_direct_128_crop_uses_screen_x_scratch_slots);
     run_test("ppu_video_dirty", test_video_memory_writes_invalidate_ppu_cache);
     run_test("timer_overflow_irq", test_timer_overflow_irq);
     run_test("dma_immediate", test_dma_immediate_copy);
@@ -1394,6 +1455,7 @@ int main() {
     run_test("halt_wakeup", test_halt_wakeup_edge_cases);
     run_test("arm_add", test_cpu_arm_add);
     run_test("thumb_add", test_cpu_thumb_add);
+    run_test("thumb_sub_carry", test_cpu_thumb_sub_immediate_carry);
     if (failures == 0) {
         std::cout << "All tests passed\n";
     }

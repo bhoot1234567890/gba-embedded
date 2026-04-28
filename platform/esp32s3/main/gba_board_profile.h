@@ -104,13 +104,13 @@
 #define GBA_INPUT_PIN_L GPIO_NUM_21
 #endif
 
-/* Audio: default to disabled until codec wiring is finalized */
+/* Audio: MAX98357A I2S mono Class-D amplifier */
 #ifndef GBA_AUDIO_PIN_BCK
-#define GBA_AUDIO_PIN_BCK GPIO_NUM_NC
+#define GBA_AUDIO_PIN_BCK GPIO_NUM_35
 #endif
 #ifndef GBA_AUDIO_PIN_WS
-#define GBA_AUDIO_PIN_WS GPIO_NUM_NC
+#define GBA_AUDIO_PIN_WS GPIO_NUM_36
 #endif
 #ifndef GBA_AUDIO_PIN_DOUT
-#define GBA_AUDIO_PIN_DOUT GPIO_NUM_NC
+#define GBA_AUDIO_PIN_DOUT GPIO_NUM_37
 #endif

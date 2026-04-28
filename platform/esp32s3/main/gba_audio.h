@@ -6,13 +6,13 @@
 #include "esp_err.h"
 
 /*
- * Hardware-agnostic I2S audio output for ESP32-S3.
+ * Lightweight I2S audio output for ESP32-S3.
  *
- * Uses I2S standard (Philips) mode — compatible with:
- *   MAX98357A, PCM5102A, UDA1334A, PT8211, CS4344, etc.
+ * Default target: MAX98357A I2S mono Class-D amplifier.
+ * The MAX98357A does not need MCLK, so the ESP32-S3 only drives:
+ *   BCLK, LRCLK/WS, and DOUT.
  *
- * Wire your codec's BCK/BCLK, WS/LRCK, and DIN/DOUT to the GPIOs below.
- * Set AUDIO_PIN_* to GPIO_NUM_NC to disable audio output entirely.
+ * Set any AUDIO_PIN_* to GPIO_NUM_NC to disable audio output entirely.
  */
 
 /* ── GPIO pins (fill in your wiring) ── */
@@ -31,10 +31,14 @@
 #define AUDIO_SAMPLE_RATE  32768      /* GBA native (~32.768 kHz) */
 #endif
 #ifndef AUDIO_DMA_BUF_COUNT
-#define AUDIO_DMA_BUF_COUNT  4        /* Number of DMA buffers */
+#define AUDIO_DMA_BUF_COUNT  3        /* Small DMA footprint, enough for frame jitter */
 #endif
 #ifndef AUDIO_DMA_BUF_LEN
-#define AUDIO_DMA_BUF_LEN   512       /* Samples per DMA buffer */
+#define AUDIO_DMA_BUF_LEN   256       /* Stereo frames per DMA buffer */
+#endif
+
+#ifndef AUDIO_AMP_NAME
+#define AUDIO_AMP_NAME "MAX98357A"
 #endif
 
 #ifdef __cplusplus

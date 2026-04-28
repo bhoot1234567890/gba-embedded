@@ -2,7 +2,7 @@
  * I2S audio output for ESP32-S3 (ESP-IDF 5.x new driver API).
  *
  * Uses i2s_std (standard / Philips mode), 16-bit stereo.
- * If AUDIO_PIN_BCK is GPIO_NUM_NC, all functions become no-ops.
+ * Tuned for MAX98357A: no MCLK, just BCLK/LRCLK/DOUT.
  */
 
 #include "gba_audio.h"
@@ -17,8 +17,9 @@ static i2s_chan_handle_t s_tx_handle = NULL;
 static bool s_initialized = false;
 
 esp_err_t audio_init(void) {
-    if (AUDIO_PIN_BCK == GPIO_NUM_NC) {
-        ESP_LOGW(kTag, "Audio disabled (AUDIO_PIN_BCK = GPIO_NUM_NC)");
+    if (AUDIO_PIN_BCK == GPIO_NUM_NC || AUDIO_PIN_WS == GPIO_NUM_NC || AUDIO_PIN_DOUT == GPIO_NUM_NC) {
+        ESP_LOGW(kTag, "Audio disabled (%s pins BCK=%d WS=%d DOUT=%d)",
+                 AUDIO_AMP_NAME, AUDIO_PIN_BCK, AUDIO_PIN_WS, AUDIO_PIN_DOUT);
         return ESP_ERR_NOT_SUPPORTED;
     }
 
@@ -34,7 +35,7 @@ esp_err_t audio_init(void) {
         return ret;
     }
 
-    /* Configure standard (Philips) mode, 16-bit stereo */
+    /* Configure standard Philips I2S. MAX98357A derives its clock from BCLK/LRCLK. */
     i2s_std_config_t std_cfg = {
         .clk_cfg = I2S_STD_CLK_DEFAULT_CONFIG(AUDIO_SAMPLE_RATE),
         .slot_cfg = I2S_STD_PHILIPS_SLOT_DEFAULT_CONFIG(I2S_DATA_BIT_WIDTH_16BIT, I2S_SLOT_MODE_STEREO),
@@ -69,8 +70,9 @@ esp_err_t audio_init(void) {
     }
 
     s_initialized = true;
-    ESP_LOGI(kTag, "I2S audio initialized: %d Hz, 16-bit stereo, BCK=%d WS=%d DOUT=%d",
-             AUDIO_SAMPLE_RATE, AUDIO_PIN_BCK, AUDIO_PIN_WS, AUDIO_PIN_DOUT);
+    ESP_LOGI(kTag, "%s I2S audio initialized: %d Hz, 16-bit stereo, DMA=%dx%d, BCK=%d WS=%d DOUT=%d",
+             AUDIO_AMP_NAME, AUDIO_SAMPLE_RATE, AUDIO_DMA_BUF_COUNT, AUDIO_DMA_BUF_LEN,
+             AUDIO_PIN_BCK, AUDIO_PIN_WS, AUDIO_PIN_DOUT);
     return ESP_OK;
 }
 

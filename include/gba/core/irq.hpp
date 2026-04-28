@@ -39,6 +39,7 @@ public:
     [[nodiscard]] bool delayed_due(u64 cycle_now) const {
         return delayed_.mask != 0 && cycle_now >= delayed_.fire_cycle;
     }
+    [[nodiscard]] u64 next_event_cycle() const;
     void acknowledge(u16 mask);
 
 private:

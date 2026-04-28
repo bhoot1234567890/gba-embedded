@@ -12,7 +12,9 @@ enum class SchedulerSlot : std::size_t {
     Timers = 1,
     Dma = 2,
     Apu = 3,
-    Count = 4,
+    Serial = 4,
+    Irq = 5,
+    Count = 6,
 };
 
 class Scheduler {
@@ -26,6 +28,8 @@ public:
 private:
     u64 current_cycle_ = 0;
     std::array<u64, static_cast<std::size_t>(SchedulerSlot::Count)> events_{
+        std::numeric_limits<u64>::max(),
+        std::numeric_limits<u64>::max(),
         std::numeric_limits<u64>::max(),
         std::numeric_limits<u64>::max(),
         std::numeric_limits<u64>::max(),

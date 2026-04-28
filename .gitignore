@@ -46,3 +46,10 @@ __pycache__/
 frame_dumps/
 build-trace/
 test_downscale
+frame_runner
+harness_out/
+suite_out.txt
+build-dma-trace/gba_*
+
+# Test assets (large submodule)
+tests/assets/gba-tests/

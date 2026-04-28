@@ -253,52 +253,80 @@ u32 DmaEngine::service_due(u64 cycle_now, Bus& bus, IrqController& irq) {
                      index, source, destination, units, unit_bytes, channel.control, fifo_mode ? 1 : 0);
 #endif
 
+        const bool rom_to_vram = source >= 0x08000000u && source < 0x0E000000u &&
+                                 destination >= 0x06000000u && destination < 0x06018000u &&
+                                 !fifo_mode && unit_bytes == 2u;
+        if (rom_to_vram) {
+            bus.mark_video_dirty();
+        }
+
         bool did_access_rom = false;
 
         for (u32 unit = 0; unit < units; ++unit) {
             const auto transfer_cycle = cycle_now + cycles_consumed;
             const auto width = unit_bytes == 4u ? BusWidth::Word : BusWidth::Half;
 
-            auto src_access = AccessType::Dma;
-            if (source >= 0x08000000u) {
-                src_access = did_access_rom ? (AccessType::Dma | AccessType::Sequential) : AccessType::Dma;
-                did_access_rom = true;
-            }
-
             u32 read_value;
             u32 read_cycles = 0;
-            if (source >= 0x02000000u) {
-                const auto read_result = bus.read(source, width, src_access, transfer_cycle);
-                read_cycles = read_result.cycles;
-                channel.bus_latch = unit_bytes == 2u
-                    ? (read_result.value << 16u) | (read_result.value & 0xFFFFu)
-                    : read_result.value;
-                read_value = read_result.value;
-#if GBA_TRACE_DMA
-                std::fprintf(stderr, "DMA read ch=%zu src=%08X value=%08X cycles=%u\n",
-                             index, source, read_value, read_cycles);
-#endif
-            } else {
-                // Low memory (BIOS/SRAM): use bus latch, selected by destination bit 1 for halfword
-                if (unit_bytes == 2u) {
-                    read_value = (destination & 2u) ? (channel.bus_latch >> 16) : channel.bus_latch;
-                } else {
-                    read_value = channel.bus_latch;
-                }
-                read_cycles = 1;  // bus.Step(1) in NBA
-            }
-            cycles_consumed += read_cycles;
 
-            auto dst_access = AccessType::Dma;
-            if (destination >= 0x08000000u) {
-                if (did_access_rom) {
-                    dst_access |= AccessType::Sequential;
-                }
+            if (rom_to_vram) {
+                const auto rom = bus.rom();
+                const auto rom_offset = source & 0x01FFFFFFu;
+                const auto seq = did_access_rom;
                 did_access_rom = true;
-            }
+                read_cycles = bus.dma_rom_cycles(source, false, seq);
+                if (rom_offset + 2u <= rom.size()) {
+                    read_value = static_cast<u32>(rom[rom_offset]) |
+                                 (static_cast<u32>(rom[rom_offset + 1u]) << 8u);
+                } else {
+                    read_value = 0;
+                }
+                channel.bus_latch = (read_value << 16u) | (read_value & 0xFFFFu);
 
-            const auto write_result = bus.write(destination, read_value, width, dst_access, transfer_cycle + read_cycles);
-            cycles_consumed += write_result.cycles;
+                auto vram = bus.vram_write();
+                auto vram_offset = (destination - 0x06000000u) & 0x1FFFFu;
+                vram[vram_offset] = static_cast<u8>(read_value);
+                vram[vram_offset + 1u] = static_cast<u8>(read_value >> 8u);
+                cycles_consumed += read_cycles + 1u;  // +1 for VRAM write
+            } else {
+                auto src_access = AccessType::Dma;
+                if (source >= 0x08000000u) {
+                    src_access = did_access_rom ? (AccessType::Dma | AccessType::Sequential) : AccessType::Dma;
+                    did_access_rom = true;
+                }
+
+                if (source >= 0x02000000u) {
+                    const auto read_result = bus.read(source, width, src_access, transfer_cycle);
+                    read_cycles = read_result.cycles;
+                    channel.bus_latch = unit_bytes == 2u
+                        ? (read_result.value << 16u) | (read_result.value & 0xFFFFu)
+                        : read_result.value;
+                    read_value = read_result.value;
+#if GBA_TRACE_DMA
+                    std::fprintf(stderr, "DMA read ch=%zu src=%08X value=%08X cycles=%u\n",
+                                 index, source, read_value, read_cycles);
+#endif
+                } else {
+                    if (unit_bytes == 2u) {
+                        read_value = (destination & 2u) ? (channel.bus_latch >> 16) : channel.bus_latch;
+                    } else {
+                        read_value = channel.bus_latch;
+                    }
+                    read_cycles = 1;
+                }
+                cycles_consumed += read_cycles;
+
+                auto dst_access = AccessType::Dma;
+                if (destination >= 0x08000000u) {
+                    if (did_access_rom) {
+                        dst_access |= AccessType::Sequential;
+                    }
+                    did_access_rom = true;
+                }
+
+                const auto write_result = bus.write(destination, read_value, width, dst_access, transfer_cycle + read_cycles);
+                cycles_consumed += write_result.cycles;
+            }
 
             source = apply_src_mode(source, unit_bytes, src_mode);
             destination = fifo_mode ? destination : apply_dst_mode(destination, unit_bytes, dest_mode);

@@ -57,6 +57,92 @@ private:
     u16 soundbias_ = 0x0200;
     std::array<u16, 8> wave_ram_{};
     std::array<u32, 2> fifo_latch_{};
+    struct SquareChannel {
+        bool active = false;
+        u8 duty = 0;
+        u8 phase = 0;
+        int timer = 0;
+        int period = 0;
+        u8 length = 0;
+        u8 vol = 0;
+        u8 env_step = 0;
+        int env_timer = 0;
+        bool env_dir = false;
+        
+        void clock_length(bool length_enable) {
+            if (length_enable && length > 0) {
+                --length;
+                if (length == 0) active = false;
+            }
+        }
+        
+        void clock_env() {
+            if (env_step == 0) return;
+            if (env_timer > 0) {
+                --env_timer;
+                if (env_timer == 0) {
+                    env_timer = env_step;
+                    if (env_dir && vol < 15) ++vol;
+                    else if (!env_dir && vol > 0) --vol;
+                }
+            }
+        }
+    };
+    
+    struct WaveChannel {
+        bool active = false;
+        u8 phase = 0;
+        int timer = 0;
+        int period = 0;
+        int length = 0;
+        
+        void clock_length(bool length_enable) {
+            if (length_enable && length > 0) {
+                --length;
+                if (length == 0) active = false;
+            }
+        }
+    };
+    
+    struct NoiseChannel {
+        bool active = false;
+        u16 lfsr = 0x7FFF;
+        int timer = 0;
+        int period = 0;
+        u8 length = 0;
+        u8 vol = 0;
+        u8 env_step = 0;
+        int env_timer = 0;
+        bool env_dir = false;
+        
+        void clock_length(bool length_enable) {
+            if (length_enable && length > 0) {
+                --length;
+                if (length == 0) active = false;
+            }
+        }
+        
+        void clock_env() {
+            if (env_step == 0) return;
+            if (env_timer > 0) {
+                --env_timer;
+                if (env_timer == 0) {
+                    env_timer = env_step;
+                    if (env_dir && vol < 15) ++vol;
+                    else if (!env_dir && vol > 0) --vol;
+                }
+            }
+        }
+    };
+    
+    SquareChannel ch1_, ch2_;
+    WaveChannel ch3_;
+    NoiseChannel ch4_;
+
+    u64 next_sample_cycle_ = 0;
+    u64 frame_seq_cycle_ = 0;
+    int frame_seq_step_ = 0;
+
     std::array<Fifo<s8, 32>, 2> fifo_{};
     std::array<s16, 4096> mix_buffer_{};
     size_t mix_buffer_count_ = 0;

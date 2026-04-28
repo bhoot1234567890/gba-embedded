@@ -1,18 +1,20 @@
+set(GBA_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/../../../..)
+
 idf_component_register(
     SRCS
-        ${CMAKE_CURRENT_SOURCE_DIR}/../../../../src/core/apu.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/../../../../src/core/bus.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/../../../../src/core/cartridge.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/../../../../src/core/cpu.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/../../../../src/core/dma.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/../../../../src/core/emulator.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/../../../../src/core/irq.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/../../../../src/core/log.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/../../../../src/core/ppu.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/../../../../src/core/scheduler.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/../../../../src/core/timers.cpp
+        ${GBA_ROOT}/src/core/apu.cpp
+        ${GBA_ROOT}/src/core/bus.cpp
+        ${GBA_ROOT}/src/core/cartridge.cpp
+        ${GBA_ROOT}/src/core/cpu.cpp
+        ${GBA_ROOT}/src/core/dma.cpp
+        ${GBA_ROOT}/src/core/emulator.cpp
+        ${GBA_ROOT}/src/core/irq.cpp
+        ${GBA_ROOT}/src/core/log.cpp
+        ${GBA_ROOT}/src/core/ppu.cpp
+        ${GBA_ROOT}/src/core/scheduler.cpp
+        ${GBA_ROOT}/src/core/timers.cpp
     INCLUDE_DIRS
-        ${CMAKE_CURRENT_SOURCE_DIR}/../../../../include
+        ${GBA_ROOT}/include
     REQUIRES esp_timer
 )
 

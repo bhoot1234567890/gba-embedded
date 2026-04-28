@@ -1,6 +1,10 @@
 #include "gba/core/cartridge.hpp"
 
 #include <algorithm>
+#include <array>
+#include <ctime>
+#include <string_view>
+#include <time.h>
 
 #ifndef GBA_PLATFORM_ESP32
 #include <fstream>
@@ -11,9 +15,62 @@
 
 namespace gba {
 
-#ifndef GBA_PLATFORM_ESP32
 namespace {
 
+constexpr u32 kGpioData = 0xC4u;
+constexpr u32 kGpioDirection = 0xC6u;
+constexpr u32 kGpioControl = 0xC8u;
+constexpr u8 kRtcPinSck = 1u << 0u;
+constexpr u8 kRtcPinSio = 1u << 1u;
+constexpr u8 kRtcPinCs = 1u << 2u;
+constexpr std::array<int, 8> kRtcRegisterLengths = {
+    0,  // Force reset
+    0,  // Unused
+    7,  // Datetime
+    0,  // Force IRQ
+    1,  // Control
+    0,  // Unused
+    3,  // Time
+    0,  // Free
+};
+
+[[nodiscard]] bool rom_contains(std::span<const u8> rom, std::string_view needle) {
+    const auto it = std::search(rom.begin(), rom.end(), needle.begin(), needle.end(), [](u8 lhs, char rhs) {
+        return lhs == static_cast<u8>(rhs);
+    });
+    return it != rom.end();
+}
+
+[[nodiscard]] u8 decimal_to_bcd(int value) {
+    value %= 100;
+    if (value < 0) {
+        value += 100;
+    }
+    const auto ones = value % 10;
+    const auto tens = value / 10;
+    return static_cast<u8>((tens << 4) | ones);
+}
+
+[[nodiscard]] u8 reverse_bits(u8 value) {
+    value = static_cast<u8>(((value & 0x33u) << 2u) | ((value & 0xCCu) >> 2u));
+    value = static_cast<u8>(((value & 0x55u) << 1u) | ((value & 0xAAu) >> 1u));
+    return value;
+}
+
+[[nodiscard]] std::tm local_time_now() {
+    std::tm result{};
+    const auto timestamp = std::time(nullptr);
+#if defined(_WIN32)
+    localtime_s(&result, &timestamp);
+#else
+    if (localtime_r(&timestamp, &result) == nullptr) {
+        result = {};
+    }
+#endif
+    return result;
+}
+
+#ifndef GBA_PLATFORM_ESP32
 [[nodiscard]] std::vector<u8> read_file(const std::filesystem::path& path) {
     std::ifstream input(path, std::ios::binary);
     if (!input) {
@@ -22,9 +79,11 @@ namespace {
 
     return std::vector<u8>(std::istreambuf_iterator<char>(input), std::istreambuf_iterator<char>());
 }
+#endif
 
 }  // namespace
 
+#ifndef GBA_PLATFORM_ESP32
 bool Cartridge::load_rom_from_file(const std::filesystem::path& path) {
     auto rom = read_file(path);
     if (rom.empty()) {
@@ -49,6 +108,8 @@ void Cartridge::set_rom(std::vector<u8> rom) {
     if (rom_.size() > kMaxRomSize) {
         rom_.resize(kMaxRomSize);
     }
+    auto_detect_rtc();
+    reset_gpio_state();
 }
 
 void Cartridge::set_bios(std::vector<u8> bios) {
@@ -56,6 +117,56 @@ void Cartridge::set_bios(std::vector<u8> bios) {
     if (bios_.size() > kBiosSize) {
         bios_.resize(kBiosSize);
     }
+}
+
+void Cartridge::auto_detect_save_type() {
+    save_type_ = SaveType::None;
+    if (rom_.empty()) return;
+    auto_detect_rtc();
+
+    if (rom_contains(rom_, "SRAM_V")) {
+        set_save_type(SaveType::Sram);
+    } else if (rom_contains(rom_, "EEPROM_V")) {
+        set_save_type(SaveType::Eeprom);
+    } else if (rom_contains(rom_, "FLASH1M_V")) {
+        set_save_type(SaveType::Flash128K);
+    } else if (rom_contains(rom_, "FLASH512_V") || rom_contains(rom_, "FLASH_V")) {
+        set_save_type(SaveType::Flash64K);
+    } else {
+        // Default to SRAM if nothing found (common fallback)
+        set_save_type(SaveType::Sram);
+    }
+}
+
+void Cartridge::set_rtc_enabled(bool enabled) {
+    gpio_rtc_present_ = enabled;
+    reset_gpio_state();
+}
+
+void Cartridge::load_save(std::vector<u8> save_data) {
+    if (save_data.empty()) return;
+    
+    // If we haven't set a save type but we have a save file, try to infer from size
+    if (save_type_ == SaveType::None) {
+        if (save_data.size() == 128 * 1024) set_save_type(SaveType::Flash128K);
+        else if (save_data.size() == 64 * 1024) set_save_type(SaveType::Flash64K);
+        else if (save_data.size() <= 8 * 1024) set_save_type(SaveType::Eeprom);
+        else set_save_type(SaveType::Sram);
+    }
+    
+    save_ = std::move(save_data);
+    if (save_.size() != 64*1024 && save_.size() != 128*1024 && save_.size() != 8*1024) {
+        resize_save_storage(); // ensure exact size
+    }
+    save_dirty_ = false;
+}
+
+bool Cartridge::is_save_dirty() const {
+    return save_dirty_;
+}
+
+void Cartridge::clear_save_dirty() {
+    save_dirty_ = false;
 }
 
 void Cartridge::set_save_type(SaveType save_type) {
@@ -89,6 +200,10 @@ SaveType Cartridge::save_type() const {
     return save_type_;
 }
 
+bool Cartridge::rtc_enabled() const {
+    return gpio_rtc_present_;
+}
+
 bool Cartridge::has_bios() const {
     return !bios_.empty();
 }
@@ -98,7 +213,74 @@ u32 Cartridge::read_bios(u32 address, BusWidth width) const {
 }
 
 u32 Cartridge::read_rom(u32 address, BusWidth width) const {
-    return read_vector(rom_, address, width);
+    if (rom_.empty()) {
+        return 0xFFFFFFFFu;
+    }
+
+    const auto read_byte = [&](u32 byte_address) -> u32 {
+        u8 gpio_value = 0;
+        if (read_gpio_byte(byte_address, gpio_value)) {
+            return gpio_value;
+        }
+        return byte_address < rom_.size() ? rom_[byte_address] : 0xFFu;
+    };
+
+    const auto has_gpio_byte = [&](u32 start, u32 count) -> bool {
+        for (u32 i = 0; i < count; ++i) {
+            u8 gpio_value = 0;
+            if (read_gpio_byte(start + i, gpio_value)) {
+                return true;
+            }
+        }
+        return false;
+    };
+
+    switch (width) {
+    case BusWidth::Byte:
+        if (address >= rom_.size() && !has_gpio_byte(address, 1u)) {
+            return 0xFFFFFFFFu;
+        }
+        return read_byte(address);
+    case BusWidth::Half: {
+        const auto aligned = align_down(address, 2u);
+        if (aligned + 2u > rom_.size() && !has_gpio_byte(aligned, 2u)) {
+            return 0xFFFFFFFFu;
+        }
+        return read_byte(aligned) | (read_byte(aligned + 1u) << 8u);
+    }
+    case BusWidth::Word: {
+        const auto aligned = align_down(address, 4u);
+        if (aligned + 4u > rom_.size() && !has_gpio_byte(aligned, 4u)) {
+            return 0xFFFFFFFFu;
+        }
+        return read_byte(aligned) | (read_byte(aligned + 1u) << 8u) | (read_byte(aligned + 2u) << 16u) |
+               (read_byte(aligned + 3u) << 24u);
+    }
+    }
+    return 0xFFFFFFFFu;
+}
+
+void Cartridge::write_rom(u32 address, u32 value, BusWidth width) {
+    if (!gpio_rtc_present_) {
+        return;
+    }
+
+    switch (width) {
+    case BusWidth::Byte:
+        write_gpio_byte(address, static_cast<u8>(value & 0xFFu));
+        break;
+    case BusWidth::Half: {
+        const auto aligned = align_down(address, 2u);
+        write_gpio_byte(aligned, static_cast<u8>(value & 0xFFu));
+        break;
+    }
+    case BusWidth::Word: {
+        const auto aligned = align_down(address, 4u);
+        write_gpio_byte(aligned, static_cast<u8>(value & 0xFFu));
+        write_gpio_byte(aligned + 2u, static_cast<u8>((value >> 16u) & 0xFFu));
+        break;
+    }
+    }
 }
 
 u32 Cartridge::read_save(u32 address, BusWidth width) const {
@@ -143,6 +325,7 @@ void Cartridge::write_save(u32 address, u32 value, BusWidth width) {
 
     if (save_type_ == SaveType::Sram) {
         save_[address & 0x7FFFu] = byte_val;
+        save_dirty_ = true;
         return;
     }
 
@@ -197,6 +380,7 @@ void Cartridge::flash_handle_command(u32 address, u8 command) {
     case 0x10u:  // Chip erase
         if (flash_erase_enable_) {
             std::fill(save_.begin(), save_.end(), 0xFFu);
+            save_dirty_ = true;
             flash_erase_enable_ = false;
         }
         break;
@@ -205,6 +389,7 @@ void Cartridge::flash_handle_command(u32 address, u8 command) {
             const auto sector_base = flash_physical(address & 0xF000u);
             const auto sector_end = std::min(sector_base + 4096u, static_cast<u32>(save_.size()));
             std::fill(save_.begin() + sector_base, save_.begin() + sector_end, 0xFFu);
+            save_dirty_ = true;
             flash_erase_enable_ = false;
         }
         break;
@@ -220,6 +405,7 @@ void Cartridge::flash_handle_extended(u32 address, u8 value) {
         const auto offset = flash_physical(address & 0xFFFFu);
         if (offset < save_.size()) {
             save_[offset] = value;
+            save_dirty_ = true;
         }
     } else if (flash_bank_select_) {
         flash_bank_select_ = false;
@@ -262,6 +448,274 @@ void Cartridge::resize_save_storage() {
         save_.assign(8u * 1024u, 0xFF);
         break;
     }
+}
+
+void Cartridge::auto_detect_rtc() {
+    if (rom_.empty()) {
+        gpio_rtc_present_ = false;
+        return;
+    }
+
+    gpio_rtc_present_ = rom_contains(rom_, "RTC_V") || rom_contains(rom_, "SIIRTC") || rom_contains(rom_, "IRTC_V");
+}
+
+void Cartridge::reset_gpio_state() {
+    gpio_data_ = 0;
+    gpio_direction_ = 0;
+    gpio_control_ = 0;
+    rtc_state_ = RtcState::Complete;
+    rtc_control_ = 0x40u;
+    rtc_register_ = 0;
+    rtc_data_ = 0;
+    rtc_buffer_.fill(0);
+    rtc_current_bit_ = 0;
+    rtc_current_byte_ = 0;
+    rtc_port_sck_ = 0;
+    rtc_port_sio_ = 0;
+    rtc_port_cs_ = 0;
+}
+
+bool Cartridge::read_gpio_byte(u32 address, u8& value) const {
+    if (!gpio_rtc_present_ || (gpio_control_ & 1u) == 0u) {
+        return false;
+    }
+
+    switch (address & 0x01FFFFFFu) {
+    case kGpioData:
+        value = gpio_data_read();
+        return true;
+    case kGpioData + 1u:
+        value = 0;
+        return true;
+    case kGpioDirection:
+        value = static_cast<u8>(gpio_direction_ & 0x0Fu);
+        return true;
+    case kGpioDirection + 1u:
+        value = 0;
+        return true;
+    case kGpioControl:
+        value = static_cast<u8>(gpio_control_ & 1u);
+        return true;
+    case kGpioControl + 1u:
+        value = 0;
+        return true;
+    default:
+        return false;
+    }
+}
+
+void Cartridge::write_gpio_byte(u32 address, u8 value) {
+    if (!gpio_rtc_present_) {
+        return;
+    }
+
+    switch (address & 0x01FFFFFFu) {
+    case kGpioData:
+        gpio_data_ = static_cast<u8>((gpio_data_ & static_cast<u8>(~gpio_direction_)) | (value & gpio_direction_));
+        rtc_gpio_write(gpio_data_);
+        break;
+    case kGpioDirection:
+        gpio_direction_ = static_cast<u8>(value & 0x0Fu);
+        rtc_gpio_write(gpio_data_);
+        break;
+    case kGpioControl:
+        gpio_control_ = static_cast<u8>(value & 1u);
+        break;
+    default:
+        break;
+    }
+}
+
+u8 Cartridge::gpio_data_read() const {
+    const auto external = rtc_gpio_read();
+    return static_cast<u8>(((gpio_data_ & gpio_direction_) | (external & static_cast<u8>(~gpio_direction_))) & 0x0Fu);
+}
+
+u8 Cartridge::rtc_gpio_read() const {
+    return static_cast<u8>((rtc_port_sio_ != 0u && rtc_port_cs_ != 0u) ? kRtcPinSio : 0u);
+}
+
+void Cartridge::rtc_gpio_write(u8 value) {
+    const auto old_sck = rtc_port_sck_;
+    const auto old_cs = rtc_port_cs_;
+
+    if ((gpio_direction_ & kRtcPinCs) != 0u) {
+        rtc_port_cs_ = static_cast<u8>((value & kRtcPinCs) != 0u ? 1u : 0u);
+    }
+    if ((gpio_direction_ & kRtcPinSck) != 0u) {
+        rtc_port_sck_ = static_cast<u8>((value & kRtcPinSck) != 0u ? 1u : 0u);
+    }
+    if ((gpio_direction_ & kRtcPinSio) != 0u) {
+        rtc_port_sio_ = static_cast<u8>((value & kRtcPinSio) != 0u ? 1u : 0u);
+    }
+
+    if (rtc_port_cs_ == 0u) {
+        return;
+    }
+
+    if (old_cs == 0u) {
+        rtc_state_ = RtcState::Command;
+        rtc_current_bit_ = 0;
+        rtc_current_byte_ = 0;
+        rtc_data_ = 0;
+        return;
+    }
+
+    if (old_sck == 0u && rtc_port_sck_ != 0u) {
+        switch (rtc_state_) {
+        case RtcState::Command:
+            rtc_receive_command();
+            break;
+        case RtcState::Receiving:
+            rtc_receive_buffer();
+            break;
+        case RtcState::Sending:
+            rtc_transmit_buffer();
+            break;
+        case RtcState::Complete:
+            break;
+        }
+    }
+}
+
+bool Cartridge::rtc_read_sio_bit() {
+    const auto mask = static_cast<u8>(1u << static_cast<unsigned>(rtc_current_bit_));
+    rtc_data_ = static_cast<u8>(rtc_data_ & static_cast<u8>(~mask));
+    if (rtc_port_sio_ != 0u) {
+        rtc_data_ = static_cast<u8>(rtc_data_ | mask);
+    }
+
+    ++rtc_current_bit_;
+    if (rtc_current_bit_ == 8) {
+        rtc_current_bit_ = 0;
+        return true;
+    }
+    return false;
+}
+
+void Cartridge::rtc_receive_command() {
+    if (!rtc_read_sio_bit()) {
+        return;
+    }
+
+    auto command = rtc_data_;
+    if ((command >> 4u) == 6u) {
+        command = reverse_bits(command);
+    } else if ((command & 0x0Fu) != 6u) {
+        rtc_state_ = RtcState::Complete;
+        return;
+    }
+
+    rtc_register_ = static_cast<u8>((command >> 4u) & 7u);
+    rtc_current_bit_ = 0;
+    rtc_current_byte_ = 0;
+    rtc_data_ = 0;
+
+    if ((command & 0x80u) != 0u) {
+        rtc_read_register();
+        rtc_state_ = rtc_register_length() > 0 ? RtcState::Sending : RtcState::Complete;
+    } else if (rtc_register_length() > 0) {
+        rtc_buffer_.fill(0);
+        rtc_state_ = RtcState::Receiving;
+    } else {
+        rtc_write_register();
+        rtc_state_ = RtcState::Complete;
+    }
+}
+
+void Cartridge::rtc_receive_buffer() {
+    if (rtc_current_byte_ >= rtc_register_length()) {
+        rtc_state_ = RtcState::Complete;
+        return;
+    }
+
+    if (!rtc_read_sio_bit()) {
+        return;
+    }
+
+    rtc_buffer_[static_cast<std::size_t>(rtc_current_byte_)] = rtc_data_;
+    ++rtc_current_byte_;
+    rtc_data_ = 0;
+    if (rtc_current_byte_ == rtc_register_length()) {
+        rtc_write_register();
+        rtc_state_ = RtcState::Complete;
+    }
+}
+
+void Cartridge::rtc_transmit_buffer() {
+    if (rtc_current_byte_ >= rtc_register_length()) {
+        rtc_state_ = RtcState::Complete;
+        return;
+    }
+
+    auto& byte = rtc_buffer_[static_cast<std::size_t>(rtc_current_byte_)];
+    rtc_port_sio_ = static_cast<u8>(byte & 1u);
+    byte = static_cast<u8>(byte >> 1u);
+
+    ++rtc_current_bit_;
+    if (rtc_current_bit_ == 8) {
+        rtc_current_bit_ = 0;
+        ++rtc_current_byte_;
+        if (rtc_current_byte_ == rtc_register_length()) {
+            rtc_state_ = RtcState::Complete;
+        }
+    }
+}
+
+void Cartridge::rtc_read_register() {
+    switch (rtc_register_) {
+    case 2u: {
+        auto now = local_time_now();
+        auto hour = now.tm_hour;
+        if ((rtc_control_ & 0x40u) == 0u && hour >= 12) {
+            hour = (hour - 12) | 0x80;
+        }
+        rtc_buffer_[0] = decimal_to_bcd(now.tm_year);
+        rtc_buffer_[1] = decimal_to_bcd(now.tm_mon + 1);
+        rtc_buffer_[2] = decimal_to_bcd(now.tm_mday);
+        rtc_buffer_[3] = decimal_to_bcd(now.tm_wday);
+        rtc_buffer_[4] = decimal_to_bcd(hour);
+        rtc_buffer_[5] = decimal_to_bcd(now.tm_min);
+        rtc_buffer_[6] = decimal_to_bcd(now.tm_sec);
+        break;
+    }
+    case 4u:
+        rtc_buffer_[0] = static_cast<u8>(rtc_control_ & 0xEAu);
+        rtc_control_ = static_cast<u8>(rtc_control_ & ~0x80u);
+        break;
+    case 6u: {
+        auto now = local_time_now();
+        auto hour = now.tm_hour;
+        if ((rtc_control_ & 0x40u) == 0u && hour >= 12) {
+            hour = (hour - 12) | 0x80;
+        }
+        rtc_buffer_[0] = decimal_to_bcd(hour);
+        rtc_buffer_[1] = decimal_to_bcd(now.tm_min);
+        rtc_buffer_[2] = decimal_to_bcd(now.tm_sec);
+        break;
+    }
+    default:
+        rtc_buffer_.fill(0xFFu);
+        break;
+    }
+}
+
+void Cartridge::rtc_write_register() {
+    switch (rtc_register_) {
+    case 0u:
+        rtc_control_ = 0;
+        rtc_buffer_.fill(0);
+        break;
+    case 4u:
+        rtc_control_ = static_cast<u8>(rtc_buffer_[0] & 0x6Au);
+        break;
+    default:
+        break;
+    }
+}
+
+int Cartridge::rtc_register_length() const {
+    return kRtcRegisterLengths[static_cast<std::size_t>(rtc_register_ & 7u)];
 }
 
 u32 Cartridge::read_vector(std::span<const u8> bytes, u32 address, BusWidth width) const {

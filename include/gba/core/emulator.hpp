@@ -4,6 +4,10 @@
 #include <filesystem>
 #endif
 
+#include <memory>
+#include <span>
+#include <vector>
+
 #include "gba/core/apu.hpp"
 #include "gba/core/bus.hpp"
 #include "gba/core/cartridge.hpp"
@@ -13,6 +17,7 @@
 #include "gba/core/ppu.hpp"
 #include "gba/core/scheduler.hpp"
 #include "gba/core/timers.hpp"
+#include "gba/core/types.hpp"
 
 namespace gba {
 
@@ -33,11 +38,15 @@ public:
     void run_frame();
 
     void set_keys(u16 key_mask);
+    void set_skip_render(bool skip) { skip_render_ = skip; }
 
     [[nodiscard]] Bus& bus();
+    [[nodiscard]] Cartridge& cartridge() { return cartridge_; }
     [[nodiscard]] Arm7tdmi& cpu();
     [[nodiscard]] const IrqController& irq() const;
     [[nodiscard]] const Ppu& ppu() const;
+    [[nodiscard]] Ppu& ppu();
+    [[nodiscard]] Apu& apu() { return apu_; }
     [[nodiscard]] std::span<const u16> framebuffer() const;
 
     void step_scheduler_event();
@@ -55,6 +64,7 @@ private:
     Bus bus_;
     Arm7tdmi cpu_;
     Scheduler scheduler_{};
+    bool skip_render_ = false;
 };
 
 }  // namespace gba

@@ -29,6 +29,40 @@ namespace {
 constexpr u32 kFlagI = 1u << 7;
 constexpr u32 kFlagF = 1u << 6;
 
+// Precomputed condition-check LUT: index = (condition << 4) | NZCV flags
+constexpr auto kCondLut = [] {
+    std::array<bool, 256> lut{};
+    for (u32 cond = 0; cond < 16; ++cond) {
+        for (u32 flags = 0; flags < 16; ++flags) {
+            const bool n = (flags >> 3) & 1;
+            const bool z = (flags >> 2) & 1;
+            const bool c = (flags >> 1) & 1;
+            const bool v = flags & 1;
+            bool pass = false;
+            switch (cond) {
+            case 0x0: pass = z; break;
+            case 0x1: pass = !z; break;
+            case 0x2: pass = c; break;
+            case 0x3: pass = !c; break;
+            case 0x4: pass = n; break;
+            case 0x5: pass = !n; break;
+            case 0x6: pass = v; break;
+            case 0x7: pass = !v; break;
+            case 0x8: pass = c && !z; break;
+            case 0x9: pass = !c || z; break;
+            case 0xA: pass = n == v; break;
+            case 0xB: pass = n != v; break;
+            case 0xC: pass = !z && (n == v); break;
+            case 0xD: pass = z || (n != v); break;
+            case 0xE: pass = true; break;
+            default: pass = false; break;
+            }
+            lut[(cond << 4) | flags] = pass;
+        }
+    }
+    return lut;
+}();
+
 [[nodiscard]] bool privileged_mode(CpuMode mode) {
     return mode != CpuMode::User;
 }
@@ -275,6 +309,7 @@ void Arm7tdmi::reset() {
     hle_swi_enabled_ = true;
     if (bus_.has_bios()) {
         const auto swi_vector = bus_.read(0x00000008u, BusWidth::Word, AccessType::CodeFetch, 0).value;
+        std::fprintf(stderr, "BIOS SWI vector at 0x08: 0x%08X (stub=0xEAFFFFFE, match=%d)\n", swi_vector, swi_vector == 0xEAFFFFFEu);
         hle_swi_enabled_ = swi_vector == 0xEAFFFFFEu;
     }
 }
@@ -298,11 +333,21 @@ void Arm7tdmi::set_current_cycle(u64 cycle) {
 }
 
 u64 IRAM_ATTR Arm7tdmi::cpu_run_until(u64 target_cycle) {
+    int _sc = 0;
     while (current_cycle_ < target_cycle) {
-        /* Inline step() to avoid per-instruction function call overhead */
-        bus_.service_timers(current_cycle_);
-        current_cycle_ += bus_.service_dma(current_cycle_);
-        irq_.advance(current_cycle_);
+        if (_sc <= 0) { _sc = 0; bus_.service_timers(current_cycle_); current_cycle_ += bus_.service_dma(current_cycle_); irq_.advance(current_cycle_); }
+        --_sc;
+
+        if (last_fetch_cycle_ > current_cycle_) {
+            last_fetch_cycle_ = current_cycle_;
+        }
+        const auto since_fetch = static_cast<int>(current_cycle_ - last_fetch_cycle_);
+        if (since_fetch > 0) {
+            if (last_fetch_gamepak_) {
+                bus_.prefetch_advance(since_fetch);
+            }
+            last_fetch_cycle_ = current_cycle_;
+        }
 
         if (state_.halted || bus_.halted()) {
             state_.halted = true;
@@ -316,8 +361,8 @@ u64 IRAM_ATTR Arm7tdmi::cpu_run_until(u64 target_cycle) {
                     ++pc_trace_pos_;
                 }
             } else {
-                ++current_cycle_;
-                continue;
+                current_cycle_ = target_cycle;
+                return current_cycle_;
             }
         }
 
@@ -326,18 +371,6 @@ u64 IRAM_ATTR Arm7tdmi::cpu_run_until(u64 target_cycle) {
                             state_.regs[15] + 4u);
             current_cycle_ += 3;
             continue;
-        }
-
-        /* Advance prefetch during internal/data cycles since last fetch */
-        if (last_fetch_cycle_ > current_cycle_) {
-            last_fetch_cycle_ = current_cycle_;
-        }
-        const auto since_fetch = static_cast<int>(current_cycle_ - last_fetch_cycle_);
-        if (since_fetch > 0) {
-            if (last_fetch_gamepak_) {
-                bus_.prefetch_advance(since_fetch);
-            }
-            last_fetch_cycle_ = current_cycle_;
         }
 
         if (thumb_state()) {
@@ -373,39 +406,23 @@ u32 Arm7tdmi::step() {
         }
     }
 
-    if (irq_.line_asserted() && !test_bit(state_.cpsr, 7)) {
-        enter_exception(ExceptionType::Irq, CpuMode::Irq, 0x18u, true, false,
-                        state_.regs[15] + 4u);
-        current_cycle_ += 3;
-        return static_cast<u32>(current_cycle_ - start_cycle);
+    if (last_fetch_cycle_ > current_cycle_) {
+        last_fetch_cycle_ = current_cycle_;
+    }
+    const auto since_fetch = static_cast<int>(current_cycle_ - last_fetch_cycle_);
+    if (since_fetch > 0) {
+        if (last_fetch_gamepak_) {
+            bus_.prefetch_advance(since_fetch);
+        }
+        last_fetch_cycle_ = current_cycle_;
     }
 
     if (thumb_state()) {
-        if (last_fetch_cycle_ > current_cycle_) {
-            last_fetch_cycle_ = current_cycle_;
-        }
-        const auto since_fetch = static_cast<int>(current_cycle_ - last_fetch_cycle_);
-        if (since_fetch > 0) {
-            if (last_fetch_gamepak_) {
-                bus_.prefetch_advance(since_fetch);
-            }
-            last_fetch_cycle_ = current_cycle_;
-        }
         const auto instruction = fetch_thumb();
         last_fetch_cycle_ = current_cycle_;
         current_cycle_ += bus_.service_dma(current_cycle_);
         execute_thumb(instruction);
     } else {
-        if (last_fetch_cycle_ > current_cycle_) {
-            last_fetch_cycle_ = current_cycle_;
-        }
-        const auto since_fetch = static_cast<int>(current_cycle_ - last_fetch_cycle_);
-        if (since_fetch > 0) {
-            if (last_fetch_gamepak_) {
-                bus_.prefetch_advance(since_fetch);
-            }
-            last_fetch_cycle_ = current_cycle_;
-        }
         const auto instruction = fetch_arm();
         last_fetch_cycle_ = current_cycle_;
         current_cycle_ += bus_.service_dma(current_cycle_);
@@ -451,45 +468,7 @@ CpuMode Arm7tdmi::mode() const {
 }
 
 bool Arm7tdmi::condition_passed(u32 condition) const {
-    const auto n = test_bit(state_.cpsr, 31);
-    const auto z = test_bit(state_.cpsr, 30);
-    const auto c = test_bit(state_.cpsr, 29);
-    const auto v = test_bit(state_.cpsr, 28);
-
-    switch (condition) {
-    case 0x0:
-        return z;
-    case 0x1:
-        return !z;
-    case 0x2:
-        return c;
-    case 0x3:
-        return !c;
-    case 0x4:
-        return n;
-    case 0x5:
-        return !n;
-    case 0x6:
-        return v;
-    case 0x7:
-        return !v;
-    case 0x8:
-        return c && !z;
-    case 0x9:
-        return !c || z;
-    case 0xA:
-        return n == v;
-    case 0xB:
-        return n != v;
-    case 0xC:
-        return !z && (n == v);
-    case 0xD:
-        return z || (n != v);
-    case 0xE:
-        return true;
-    default:
-        return false;
-    }
+    return kCondLut[(condition << 4) | ((state_.cpsr >> 28u) & 0xFu)];
 }
 
 u32 Arm7tdmi::fetch_arm() {
@@ -523,43 +502,75 @@ bool Arm7tdmi::handle_hle_swi(u32 comment) {
 
     switch (comment) {
     case 0x00u: {
-        // SoftReset - jump to 0x02000000 (EWRAM clear/init stub)
-        // For HLE, just do nothing meaningful - games call this during init
-        current_cycle_ += 50;
+        // SoftReset: read reset flag from IWRAM[0x7FFA], clear 0x7E00-0x7FFF,
+        // jump to entry point (0x08000000 or 0x02000000)
+        const auto iwram = bus_.iwram();
+        const auto reset_flag = iwram.size() > 0x7FFAu ? iwram[0x7FFAu] : static_cast<u8>(0);
+        if (iwram.size() >= 0x8000u) {
+            std::memset(iwram.data() + 0x7E00u, 0, 0x200u);
+        }
+        state_.cpsr = static_cast<u32>(CpuMode::System) | kFlagI | kFlagF;
+        state_.halted = false;
+        bus_.clear_halt();
+        branch_to(reset_flag ? 0x02000000u : 0x08000000u, false);
         return true;
     }
     case 0x01u: {
-        // RegisterRamReset - clear specified subsystems
-        // r0 bitmask: bit0=palette, bit1=VRAM, bit2=OAM, bits3-5=audio, bit6=SIO, bit7=timers
-        // We just acknowledge and do nothing since our reset already clears state
+        // RegisterRamReset: clear specified subsystems based on r0 flags
+        const auto flags = state_.regs[0];
+        if (test_bit(flags, 0u)) {
+            auto ewram = bus_.ewram();
+            std::memset(ewram.data(), 0, std::min(ewram.size(), static_cast<std::size_t>(kEwramSize)));
+        }
+        if (test_bit(flags, 1u)) {
+            auto iwram = bus_.iwram();
+            const auto clear_end = std::min(iwram.size(), static_cast<std::size_t>(0x7E00u));
+            std::memset(iwram.data(), 0, clear_end);
+        }
+        if (test_bit(flags, 2u)) {
+            std::memset(const_cast<u8*>(bus_.palette().data()), 0, bus_.palette().size());
+        }
+        if (test_bit(flags, 3u)) {
+            std::memset(bus_.vram_write().data(), 0, bus_.vram_write().size());
+        }
+        if (test_bit(flags, 4u)) {
+            std::memset(const_cast<u8*>(bus_.oam().data()), 0, bus_.oam().size());
+        }
         current_cycle_ += 50;
         return true;
     }
-    case 0x03u: {
-        // Stop - same as halt basically for our purposes
-        auto halt_result = bus_.write(kHaltCnt, 0, BusWidth::Byte, AccessType::Io, current_cycle_);
-        current_cycle_ += halt_result.cycles;
-        return true;
-    }
-    case 0x04u: {
-        // IntrWait - wait for interrupt
+     case 0x03u: {
+         // Stop - same as halt basically for our purposes
+         auto halt_result = bus_.write(kHaltCnt, 0, BusWidth::Byte, AccessType::Io, current_cycle_);
+         current_cycle_ += halt_result.cycles;
+         return true;
+     }
+     case 0x02u: {
+         const auto halt_result = bus_.write(kHaltCnt, 0, BusWidth::Byte, AccessType::Io, current_cycle_);
+         current_cycle_ += halt_result.cycles;
+         return true;
+     }
+     case 0x04u: {
+        // IntrWait - halt and wait for matching interrupt
         const auto mask = static_cast<u16>(state_.regs[1] & 0x3FFFu);
-        if ((state_.regs[0] & 1u) != 0u) {
+        const auto discard = (state_.regs[0] & 1u) != 0u;
+        if (discard) {
             irq_.acknowledge(mask);
         }
         if ((irq_.ie() & irq_.iflags() & mask) != 0u) {
+            state_.regs[0] = 1;
+            state_.regs[1] = 1;  
+            irq_.acknowledge(mask);
             return true;
         }
         auto halt_result = bus_.write(kHaltCnt, 0, BusWidth::Byte, AccessType::Io, current_cycle_);
-        current_cycle_ += halt_result.cycles;
-        return true;
-    }
-    case 0x02u: {
-        const auto halt_result = bus_.write(kHaltCnt, 0, BusWidth::Byte, AccessType::Io, current_cycle_);
+        state_.regs[0] = 1;
+        state_.regs[1] = 1;
         current_cycle_ += halt_result.cycles;
         return true;
     }
     case 0x05u: {
+        // VBlankIntrWait: enable VBlank in IE, then call IntrWait
         auto ie_result = bus_.read(kIe, BusWidth::Half, AccessType::Io, current_cycle_);
         current_cycle_ += ie_result.cycles;
         auto ie = static_cast<u16>(ie_result.value & 0xFFFFu);
@@ -573,14 +584,25 @@ bool Arm7tdmi::handle_hle_swi(u32 comment) {
             auto write_ime = bus_.write(kIme, 1, BusWidth::Half, AccessType::Io, current_cycle_);
             current_cycle_ += write_ime.cycles;
         }
-        irq_.acknowledge(IrqVBlank);
+        // Forward to IntrWait logic with VBlank mask
+        const auto discard = (state_.regs[0] & 1u) != 0u;
+        const auto mask = static_cast<u16>(IrqVBlank);
+        if (discard) {
+            irq_.acknowledge(mask);
+        }
+        if ((irq_.ie() & irq_.iflags() & mask) != 0u) {
+            state_.regs[0] = 1;
+            state_.regs[1] = 1;
+            irq_.acknowledge(mask);
+            return true;
+        }
         auto halt_result = bus_.write(kHaltCnt, 0, BusWidth::Byte, AccessType::Io, current_cycle_);
         current_cycle_ += halt_result.cycles;
         state_.regs[0] = 1;
         state_.regs[1] = 1;
         return true;
-    }
-    case 0x0Bu: {
+     }
+     case 0x0Bu: {
         auto src = state_.regs[0];
         auto dst = state_.regs[1];
         auto ctrl = state_.regs[2];
@@ -719,6 +741,57 @@ bool Arm7tdmi::handle_hle_swi(u32 comment) {
         current_cycle_ += 38;
         return true;
     }
+    case 0x0Du: {
+        // GetBiosChecksum - returns fixed checksum
+        state_.regs[0] = 0xBAAE187Fu;
+        current_cycle_ += 10;
+        return true;
+    }
+    case 0x0Eu: {
+        // BgAffineSet - stub (games rarely call during init)
+        current_cycle_ += 50;
+        return true;
+    }
+    case 0x0Fu: {
+        // ObjAffineSet - stub  
+        current_cycle_ += 50;
+        return true;
+    }
+    case 0x10u: {
+        // BitUnPack - stub
+        current_cycle_ += 100;
+        return true;
+    }
+    case 0x11u: case 0x12u: {
+        // LZ77UnComp - stub (LZ77 decompression, games use heavily)
+        current_cycle_ += 200;
+        return true;
+    }
+    case 0x13u: {
+        // HuffUnComp - stub
+        current_cycle_ += 200;
+        return true;
+    }
+    case 0x14u: case 0x15u: {
+        // RLUnComp - stub
+        current_cycle_ += 200;
+        return true;
+    }
+    case 0x16u: case 0x17u: case 0x18u: {
+        // Diff8bitUnFilter / Diff16bitUnFilter - stubs
+        current_cycle_ += 100;
+        return true;
+    }
+    case 0x19u: {
+        // SoundBias - stub
+        current_cycle_ += 10;
+        return true;
+    }
+    case 0x1Fu: {
+        // MidiKey2Freq - stub
+        current_cycle_ += 10;
+        return true;
+    }
     default:
         return false;
     }
@@ -803,202 +876,230 @@ u32 IRAM_ATTR Arm7tdmi::execute_arm(u32 instruction) {
         current_cycle_ += bus_.service_dma(current_cycle_);
     };
 
-    if ((instruction & 0x0FFFFFF0u) == 0x012FFF10u) {
-        const auto current_instruction = state_.regs[15] - 4u;
-        const auto target = read_reg(instruction & 0xFu);
-        branch_to(target, test_bit(target, 0));
-        current_cycle_ += 2u * sequential_code_cycles(bus_.waitcnt(), current_instruction, BusWidth::Word);
-        return 0;
-    }
+    // Jump-table dispatch on bits 27:25 of ARM instruction
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpedantic"
+    // Jump-table dispatch on bits 27:25 of ARM instruction
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpedantic"
+    switch ((instruction >> 25u) & 0x7u) {
 
-    if ((instruction & 0x0FC000F0u) == 0x00000090u) {
-        const auto accumulate = test_bit(instruction, 21);
-        const auto set_flags = test_bit(instruction, 20);
-        const auto rd = (instruction >> 16u) & 0xFu;
-        const auto rn = (instruction >> 12u) & 0xFu;
-        const auto rs = (instruction >> 8u) & 0xFu;
-        const auto rm = instruction & 0xFu;
-        const auto multiplier = read_reg(rs);
-        const auto product = read_reg(rm) * multiplier;
-        const auto result = accumulate ? product + read_reg(rn) : product;
-        if (rd == 15u) {
-            write_pc(result);
-        } else {
-            state_.regs[rd] = result;
-        }
-        if (set_flags) {
-            update_nz(result);
-        }
-        current_cycle_ += signed_multiply_cycles(multiplier) + (accumulate ? 1u : 0u);
-        break_fetch_burst_for_internal();
-        return 0;
-    }
-
-    if ((instruction & 0x0F8000F0u) == 0x00800090u) {
-        const auto accumulate = test_bit(instruction, 21);
-        const auto set_flags = test_bit(instruction, 20);
-        const auto sign_extend_mul = test_bit(instruction, 22);
-        const auto rd_hi = (instruction >> 16u) & 0xFu;
-        const auto rd_lo = (instruction >> 12u) & 0xFu;
-        const auto rs = (instruction >> 8u) & 0xFu;
-        const auto rm = instruction & 0xFu;
-
-        const auto lhs = read_reg(rm);
-        const auto rhs = read_reg(rs);
-
-        u64 product;
-        if (sign_extend_mul) {
-            const auto signed_product =
-                static_cast<s64>(sign_extend<32>(lhs)) * static_cast<s64>(sign_extend<32>(rhs));
-            product = static_cast<u64>(signed_product);
-        } else {
-            product = static_cast<u64>(lhs) * static_cast<u64>(rhs);
+    // Case 0: Data Processing (register) / BX / MUL / MULL / Halfword-Signed / MRS / MSR(reg)
+    case 0: {
+        // BX
+        if ((instruction & 0x0FFFFFF0u) == 0x012FFF10u) {
+            const auto current_instruction = state_.regs[15] - 4u;
+            const auto target = read_reg(instruction & 0xFu);
+            branch_to(target, test_bit(target, 0));
+            current_cycle_ += 2u * sequential_code_cycles(bus_.waitcnt(), current_instruction, BusWidth::Word);
+            return 0;
         }
 
-        u32 accum_lo = 0;
-        u32 accum_hi = 0;
-        u64 result;
-        if (accumulate) {
-            accum_lo = state_.regs[rd_lo];
-            accum_hi = state_.regs[rd_hi];
-            result = product + ((static_cast<u64>(accum_hi) << 32u) | static_cast<u64>(accum_lo));
-        } else {
-            result = product;
-        }
-
-        state_.regs[rd_lo] = static_cast<u32>(result);
-        state_.regs[rd_hi] = static_cast<u32>(result >> 32u);
-
-        if (set_flags) {
-            assign_bit(state_.cpsr, 31, (result >> 63u) != 0);
-            assign_bit(state_.cpsr, 30, result == 0u);
-            // Booth-encoding carry calculation (from NanoBoyAdvance / zaydlang, calc84maniac)
-            const auto carry = sign_extend_mul
-                ? multiply_carry_hi<true>(lhs, rhs, accum_hi)
-                : multiply_carry_hi<false>(lhs, rhs, accum_hi);
-            assign_bit(state_.cpsr, 29, carry);
-        }
-
-        const auto multiply_cycles = sign_extend_mul ? signed_multiply_cycles(rhs) : unsigned_multiply_cycles(rhs);
-        current_cycle_ += multiply_cycles + (accumulate ? 2u : 1u);
-        break_fetch_burst_for_internal();
-        return 0;
-    }
-
-    if ((instruction & 0x0E000090u) == 0x00000090u) {
-        const auto pre = test_bit(instruction, 24);
-        const auto up = test_bit(instruction, 23);
-        const auto immediate = test_bit(instruction, 22);
-        const auto write_back = test_bit(instruction, 21);
-        const auto load = test_bit(instruction, 20);
-        const auto rn = (instruction >> 16u) & 0xFu;
-        const auto rd = (instruction >> 12u) & 0xFu;
-        const auto sh = (instruction >> 5u) & 0x3u;
-        const auto offset = immediate ? (((instruction >> 8u) & 0xFu) << 4u) | (instruction & 0xFu)
-                                      : read_reg(instruction & 0xFu);
-
-        const auto base = read_reg(rn);
-        auto address = pre ? (up ? base + offset : base - offset) : base;
-
-        if (load) {
-            u32 value = 0;
-            if (sh == 1u) {
-                value = read16(address);
-            } else if (sh == 2u) {
-                value = static_cast<u32>(sign_extend<8>(read8(address)));
-            } else {
-                value = (address & 1u) != 0 ? static_cast<u32>(sign_extend<8>(read8(address)))
-                                            : static_cast<u32>(sign_extend<16>(read16(address)));
-            }
-
+        // MUL
+        if ((instruction & 0x0FC000F0u) == 0x00000090u) {
+            const auto accumulate = test_bit(instruction, 21);
+            const auto set_flags = test_bit(instruction, 20);
+            const auto rd = (instruction >> 16u) & 0xFu;
+            const auto rn = (instruction >> 12u) & 0xFu;
+            const auto rs = (instruction >> 8u) & 0xFu;
+            const auto rm = instruction & 0xFu;
+            const auto multiplier = read_reg(rs);
+            const auto product = read_reg(rm) * multiplier;
+            const auto result = accumulate ? product + read_reg(rn) : product;
             if (rd == 15u) {
-                write_pc(value);
-                ++current_cycle_;
+                write_pc(result);
             } else {
-                state_.regs[rd] = value;
+                state_.regs[rd] = result;
             }
-            ++current_cycle_;
-        } else if (sh == 1u) {
+            if (set_flags) {
+                update_nz(result);
+            }
+            current_cycle_ += signed_multiply_cycles(multiplier) + (accumulate ? 1u : 0u);
+            break_fetch_burst_for_internal();
+            return 0;
+        }
+
+        // MULL
+        if ((instruction & 0x0F8000F0u) == 0x00800090u) {
+            const auto accumulate = test_bit(instruction, 21);
+            const auto set_flags = test_bit(instruction, 20);
+            const auto sign_extend_mul = test_bit(instruction, 22);
+            const auto rd_hi = (instruction >> 16u) & 0xFu;
+            const auto rd_lo = (instruction >> 12u) & 0xFu;
+            const auto rs = (instruction >> 8u) & 0xFu;
+            const auto rm = instruction & 0xFu;
+
+            const auto lhs = read_reg(rm);
+            const auto rhs = read_reg(rs);
+
+            u64 product;
+            if (sign_extend_mul) {
+                const auto signed_product =
+                    static_cast<s64>(sign_extend<32>(lhs)) * static_cast<s64>(sign_extend<32>(rhs));
+                product = static_cast<u64>(signed_product);
+            } else {
+                product = static_cast<u64>(lhs) * static_cast<u64>(rhs);
+            }
+
+            u32 accum_lo = 0;
+            u32 accum_hi = 0;
+            u64 result;
+            if (accumulate) {
+                accum_lo = state_.regs[rd_lo];
+                accum_hi = state_.regs[rd_hi];
+                result = product + ((static_cast<u64>(accum_hi) << 32u) | static_cast<u64>(accum_lo));
+            } else {
+                result = product;
+            }
+
+            state_.regs[rd_lo] = static_cast<u32>(result);
+            state_.regs[rd_hi] = static_cast<u32>(result >> 32u);
+
+            if (set_flags) {
+                assign_bit(state_.cpsr, 31, (result >> 63u) != 0);
+                assign_bit(state_.cpsr, 30, result == 0u);
+                const auto carry = sign_extend_mul
+                    ? multiply_carry_hi<true>(lhs, rhs, accum_hi)
+                    : multiply_carry_hi<false>(lhs, rhs, accum_hi);
+                assign_bit(state_.cpsr, 29, carry);
+            }
+
+            const auto multiply_cycles = sign_extend_mul ? signed_multiply_cycles(rhs) : unsigned_multiply_cycles(rhs);
+            current_cycle_ += multiply_cycles + (accumulate ? 2u : 1u);
+            break_fetch_burst_for_internal();
+            return 0;
+        }
+
+        // Halfword/signed transfer / SWP
+        if ((instruction & 0x0E000090u) == 0x00000090u) {
+            const auto pre = test_bit(instruction, 24);
+            const auto up = test_bit(instruction, 23);
+            const auto immediate = test_bit(instruction, 22);
+            const auto write_back = test_bit(instruction, 21);
+            const auto load = test_bit(instruction, 20);
+            const auto rn = (instruction >> 16u) & 0xFu;
+            const auto rd = (instruction >> 12u) & 0xFu;
+            const auto sh = (instruction >> 5u) & 0x3u;
+            const auto offset = immediate ? (((instruction >> 8u) & 0xFu) << 4u) | (instruction & 0xFu)
+                                          : read_reg(instruction & 0xFu);
+
+            const auto base = read_reg(rn);
+            auto address = pre ? (up ? base + offset : base - offset) : base;
+
+            if (load) {
+                u32 value = 0;
+                if (sh == 1u) {
+                    value = read16(address);
+                } else if (sh == 2u) {
+                    value = static_cast<u32>(sign_extend<8>(read8(address)));
+                } else {
+                    value = (address & 1u) != 0 ? static_cast<u32>(sign_extend<8>(read8(address)))
+                                                : static_cast<u32>(sign_extend<16>(read16(address)));
+                }
+
+                if (rd == 15u) {
+                    write_pc(value);
+                    ++current_cycle_;
+                } else {
+                    state_.regs[rd] = value;
+                }
+                ++current_cycle_;
+            } else if (sh == 1u) {
 #if GBA_TRACE_TIMERS
-            if ((address & ~0x3u) == 0x030000B0u) {
-                std::fprintf(stderr,
-                             "CPU STRH instr=%08X rd=%u rn=%u base=%08X addr=%08X val=%08X pre=%d up=%d imm=%d wb=%d\n",
-                             instruction, rd, rn, base, address, read_reg(rd), pre ? 1 : 0, up ? 1 : 0,
-                             immediate ? 1 : 0, write_back ? 1 : 0);
-            }
+                if ((address & ~0x3u) == 0x030000B0u) {
+                    std::fprintf(stderr,
+                                 "CPU STRH instr=%08X rd=%u rn=%u base=%08X addr=%08X val=%08X pre=%d up=%d imm=%d wb=%d\n",
+                                 instruction, rd, rn, base, address, read_reg(rd), pre ? 1 : 0, up ? 1 : 0,
+                                 immediate ? 1 : 0, write_back ? 1 : 0);
+                }
 #endif
-            write16(address, read_reg(rd));
+                write16(address, read_reg(rd));
+            }
+
+            if (!pre) {
+                address = up ? base + offset : base - offset;
+            }
+            if (write_back || !pre) {
+                state_.regs[rn] = address;
+            }
+            return 0;
         }
 
-        if (!pre) {
-            address = up ? base + offset : base - offset;
+        // MRS
+        if ((instruction & 0x0FBF0FFFu) == 0x010F0000u) {
+            const auto rd = (instruction >> 12u) & 0xFu;
+            state_.regs[rd] = test_bit(instruction, 22) ? spsr_for_mode(state_, mode()) : state_.cpsr;
+            return 0;
         }
-        if (write_back || !pre) {
-            state_.regs[rn] = address;
+
+        // MSR (register operand)
+        if ((instruction & 0x0DB0F000u) == 0x0120F000u) {
+            const auto field_mask = (instruction >> 16u) & 0xFu;
+            const auto value = read_reg(instruction & 0xFu);
+
+            u32 mask = 0;
+            if (test_bit(field_mask, 0)) mask |= 0x000000FFu;
+            if (test_bit(field_mask, 1)) mask |= 0x0000FF00u;
+            if (test_bit(field_mask, 2)) mask |= 0x00FF0000u;
+            if (test_bit(field_mask, 3)) mask |= 0xFF000000u;
+
+            if (test_bit(instruction, 22) && privileged_mode(mode())) {
+                auto& spsr = spsr_for_mode(state_, mode());
+                spsr = (spsr & ~mask) | (value & mask);
+            } else if (privileged_mode(mode())) {
+                const auto old_mode = mode();
+                const auto new_cpsr = (state_.cpsr & ~mask) | (value & mask);
+                const auto new_mode_val = static_cast<CpuMode>(new_cpsr & 0x1Fu);
+                if (new_mode_val != old_mode) {
+                    state_.cpsr = (state_.cpsr & ~0x1Fu) | static_cast<u32>(old_mode);
+                    switch_mode(new_mode_val);
+                }
+                state_.cpsr = new_cpsr;
+            }
+            return 0;
         }
-        return 0;
+
+        // Data Processing (register operand, bit 25=0)
+        goto arm_data_processing;
     }
 
-    if ((instruction & 0x0FBF0FFFu) == 0x010F0000u) {
-        const auto rd = (instruction >> 12u) & 0xFu;
-        state_.regs[rd] = test_bit(instruction, 22) ? spsr_for_mode(state_, mode()) : state_.cpsr;
-        return 0;
-    }
-
-    if ((instruction & 0x0DB0F000u) == 0x0120F000u || (instruction & 0x0FB0F000u) == 0x0320F000u) {
-        const auto use_imm = test_bit(instruction, 25);
-        const auto field_mask = (instruction >> 16u) & 0xFu;
-        u32 value = 0;
-        if (use_imm) {
+    // Case 1: Data Processing (immediate) / MSR(imm)
+    case 1: {
+        // MSR (immediate operand)
+        if ((instruction & 0x0DB0F000u) == 0x0120F000u) {
+            const auto field_mask = (instruction >> 16u) & 0xFu;
             const auto imm = instruction & 0xFFu;
             const auto rotate = ((instruction >> 8u) & 0xFu) * 2u;
-            value = rotate_right(imm, rotate);
-        } else {
-            value = read_reg(instruction & 0xFu);
-        }
+            const auto value = rotate_right(imm, rotate);
 
-        u32 mask = 0;
-        if (test_bit(field_mask, 0)) {
-            mask |= 0x000000FFu;
-        }
-        if (test_bit(field_mask, 1)) {
-            mask |= 0x0000FF00u;
-        }
-        if (test_bit(field_mask, 2)) {
-            mask |= 0x00FF0000u;
-        }
-        if (test_bit(field_mask, 3)) {
-            mask |= 0xFF000000u;
-        }
+            u32 mask = 0;
+            if (test_bit(field_mask, 0)) mask |= 0x000000FFu;
+            if (test_bit(field_mask, 1)) mask |= 0x0000FF00u;
+            if (test_bit(field_mask, 2)) mask |= 0x00FF0000u;
+            if (test_bit(field_mask, 3)) mask |= 0xFF000000u;
 
-        if (test_bit(instruction, 22) && privileged_mode(mode())) {
-            auto& spsr = spsr_for_mode(state_, mode());
-            spsr = (spsr & ~mask) | (value & mask);
-        } else if (privileged_mode(mode())) {
-            const auto old_mode = mode();
-            const auto new_cpsr = (state_.cpsr & ~mask) | (value & mask);
-            const auto new_mode_val = static_cast<CpuMode>(new_cpsr & 0x1Fu);
-            if (new_mode_val != old_mode) {
-                state_.cpsr = (state_.cpsr & ~0x1Fu) | static_cast<u32>(old_mode);
-                switch_mode(new_mode_val);
+            if (test_bit(instruction, 22) && privileged_mode(mode())) {
+                auto& spsr = spsr_for_mode(state_, mode());
+                spsr = (spsr & ~mask) | (value & mask);
+            } else if (privileged_mode(mode())) {
+                const auto old_mode = mode();
+                const auto new_cpsr = (state_.cpsr & ~mask) | (value & mask);
+                const auto new_mode_val = static_cast<CpuMode>(new_cpsr & 0x1Fu);
+                if (new_mode_val != old_mode) {
+                    state_.cpsr = (state_.cpsr & ~0x1Fu) | static_cast<u32>(old_mode);
+                    switch_mode(new_mode_val);
+                }
+                state_.cpsr = new_cpsr;
             }
-            state_.cpsr = new_cpsr;
+            return 0;
         }
-        return 0;
+
+        // Data Processing (immediate operand, bit 25=1)
+        goto arm_data_processing;
     }
 
-    if (((instruction >> 25u) & 0x7u) == 0x5u) {
-        const auto offset = sign_extend<26>((instruction & 0x00FFFFFFu) << 2u);
-        if (test_bit(instruction, 24)) {
-            state_.regs[14] = state_.regs[15];
-        }
-        const auto current_instruction = state_.regs[15] - 4u;
-        branch_to(pc_visible() + static_cast<u32>(offset), false);
-        current_cycle_ += 2u * sequential_code_cycles(bus_.waitcnt(), current_instruction, BusWidth::Word);
-        return 0;
-    }
-
-    if (((instruction >> 26u) & 0x3u) == 0x1u) {
+    // Case 2-3: LDR/STR
+    case 2: case 3: {
         const auto immediate = test_bit(instruction, 25);
         const auto pre = test_bit(instruction, 24);
         const auto up = test_bit(instruction, 23);
@@ -1048,7 +1149,8 @@ u32 IRAM_ATTR Arm7tdmi::execute_arm(u32 instruction) {
         return 0;
     }
 
-    if (((instruction >> 25u) & 0x7u) == 0x4u) {
+    // Case 4: LDM/STM
+    case 4: {
         const auto pre = test_bit(instruction, 24);
         const auto up = test_bit(instruction, 23);
         const auto write_back = test_bit(instruction, 21);
@@ -1070,35 +1172,15 @@ u32 IRAM_ATTR Arm7tdmi::execute_arm(u32 instruction) {
 
         const auto is_user_bank = s_bit && !load;
         const auto is_user_bank_ldm = s_bit && load && !test_bit(register_list, 15);
-        auto pending_prefetch_cycles = 0u;
-        const auto gamepak_access = [](u32 transfer_address) {
-            return transfer_address >= 0x08000000u && transfer_address < 0x10000000u;
-        };
-        const auto advance_prefetch_before_gamepak = [&]() {
-            if (pending_prefetch_cycles != 0u) {
-                if (last_fetch_gamepak_) {
-                    bus_.prefetch_advance(static_cast<int>(pending_prefetch_cycles));
-                }
-                pending_prefetch_cycles = 0;
-            }
-        };
-
         for (u32 reg = 0; reg < 16u; ++reg) {
             if (!test_bit(register_list, reg)) {
                 continue;
-            }
-
-            if (gamepak_access(address)) {
-                // Earlier non-GamePak beats in the same LDM/STM can feed the
-                // prefetcher before a later Game Pak data beat stops it.
-                advance_prefetch_before_gamepak();
             }
 
             u32 transfer_cycles = 0;
             if (load) {
                 const auto result = bus_.read(address, BusWidth::Word, access, current_cycle_);
                 current_cycle_ += result.cycles;
-                transfer_cycles = result.cycles;
                 break_fetch_burst(result);
                 const auto value = result.open_bus ? resolve_arm_open_bus_word(result) : result.value;
                 if (reg == 15u) {
@@ -1126,13 +1208,7 @@ u32 IRAM_ATTR Arm7tdmi::execute_arm(u32 instruction) {
                 }
                 const auto result = bus_.write(address, val, BusWidth::Word, access, current_cycle_);
                 current_cycle_ += result.cycles;
-                transfer_cycles = result.cycles;
                 break_fetch_burst(result);
-            }
-            if (gamepak_access(address)) {
-                pending_prefetch_cycles = 0;
-            } else {
-                pending_prefetch_cycles += transfer_cycles;
             }
             access = AccessType::Sequential;
             address += 4u;
@@ -1152,20 +1228,50 @@ u32 IRAM_ATTR Arm7tdmi::execute_arm(u32 instruction) {
         return 0;
     }
 
-    if ((instruction & 0x0F000000u) == 0x0F000000u) {
+    // Case 5: Branch / Branch with link
+    case 5: {
+        const auto offset = sign_extend<26>((instruction & 0x00FFFFFFu) << 2u);
+        if (test_bit(instruction, 24)) {
+            state_.regs[14] = state_.regs[15];
+        }
         const auto current_instruction = state_.regs[15] - 4u;
-        if (handle_hle_swi(instruction & 0x00FFFFFFu)) {
+        branch_to(pc_visible() + static_cast<u32>(offset), false);
+        current_cycle_ += 2u * sequential_code_cycles(bus_.waitcnt(), current_instruction, BusWidth::Word);
+        return 0;
+    }
+
+    // Case 6: Coprocessor (undefined on GBA)
+    case 6: {
+        break;  // fall to undefined
+    }
+
+    // Case 7: SWI / Coprocessor
+    case 7: {
+        if ((instruction & 0x0F000000u) == 0x0F000000u) {
+            const auto current_instruction = state_.regs[15] - 4u;
+            if (handle_hle_swi(instruction & 0x00FFFFFFu)) {
+                current_cycle_ += arm_exception_refill_cycles(bus_.waitcnt(), current_instruction);
+                last_fetch_cycle_ = current_cycle_;
+                return 0;
+            }
+            raise_exception(ExceptionType::SoftwareInterrupt);
             current_cycle_ += arm_exception_refill_cycles(bus_.waitcnt(), current_instruction);
             last_fetch_cycle_ = current_cycle_;
             return 0;
         }
-        raise_exception(ExceptionType::SoftwareInterrupt);
-        current_cycle_ += arm_exception_refill_cycles(bus_.waitcnt(), current_instruction);
-        last_fetch_cycle_ = current_cycle_;
-        return 0;
+        break;  // coprocessor → undefined
     }
 
-    if (((instruction >> 26u) & 0x3u) == 0x0u) {
+    default:
+        break;
+    }
+#pragma GCC diagnostic pop
+
+    // Fall-through: undefined ARM instruction
+    goto arm_undefined;
+
+    // Data processing shared between case 0 and case 1
+    arm_data_processing: {
         const auto opcode = (instruction >> 21u) & 0xFu;
         const auto set_flags = test_bit(instruction, 20);
         const auto immediate = test_bit(instruction, 25);
@@ -1325,6 +1431,8 @@ u32 IRAM_ATTR Arm7tdmi::execute_arm(u32 instruction) {
         return 0;
     }
 
+    arm_undefined:
+    raise_exception(ExceptionType::Undefined);
     if (logger_ != nullptr) {
 #ifndef GBA_PLATFORM_ESP32
         std::ostringstream message;
@@ -1335,13 +1443,14 @@ u32 IRAM_ATTR Arm7tdmi::execute_arm(u32 instruction) {
     raise_exception(ExceptionType::Undefined);
     current_cycle_ += 3;
     return 0;
+
 }
 
 u32 IRAM_ATTR Arm7tdmi::execute_thumb(u16 instruction) {
     const auto carry_in = test_bit(state_.cpsr, 29);
     const auto thumb_pc = [&]() -> u32 { return pc_visible() & ~0x2u; };
     const auto data_access = [&](AccessType access = AccessType::NonSequential) -> AccessType {
-        const auto current_instruction = state_.regs[15] - 2u;
+        const auto current_instruction = state_.regs[15] - 4u;
         if (current_instruction >= kBiosSize) {
             access |= AccessType::CpuOutsideBios;
         }
@@ -1417,7 +1526,13 @@ u32 IRAM_ATTR Arm7tdmi::execute_thumb(u16 instruction) {
     };
     const auto reg = [&](u32 index) -> u32& { return state_.regs[index]; };
 
-    if ((instruction & 0xF800u) == 0x1800u || (instruction & 0xE000u) == 0x0000u) {
+    // Jump-table dispatch on top byte of Thumb instruction
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpedantic"
+    switch (instruction >> 8) {
+
+    // Format 1: Move shifted register / Format 2: ADD/SUB
+    case 0x00 ... 0x1F: {
         const auto subcode = (instruction >> 11u) & 0x3u;
         if (subcode != 0x3u) {
             const auto offset = (instruction >> 6u) & 0x1Fu;
@@ -1447,7 +1562,8 @@ u32 IRAM_ATTR Arm7tdmi::execute_thumb(u16 instruction) {
         return 0;
     }
 
-    if ((instruction & 0xE000u) == 0x2000u) {
+    // Format 3: MOV/CMP/ADD/SUB immediate
+    case 0x20 ... 0x3F: {
         const auto op = (instruction >> 11u) & 0x3u;
         const auto rd = (instruction >> 8u) & 0x7u;
         const auto imm = instruction & 0xFFu;
@@ -1477,7 +1593,8 @@ u32 IRAM_ATTR Arm7tdmi::execute_thumb(u16 instruction) {
         return 0;
     }
 
-    if ((instruction & 0xFC00u) == 0x4000u) {
+    // Format 4: ALU operations
+    case 0x40 ... 0x43: {
         const auto alu_op = (instruction >> 6u) & 0xFu;
         const auto rs = (instruction >> 3u) & 0x7u;
         const auto rd = instruction & 0x7u;
@@ -1589,7 +1706,8 @@ u32 IRAM_ATTR Arm7tdmi::execute_thumb(u16 instruction) {
         return 0;
     }
 
-    if ((instruction & 0xFC00u) == 0x4400u) {
+    // Format 5: Hi-register operations / BX
+    case 0x44 ... 0x47: {
         const auto op = (instruction >> 8u) & 0x3u;
         const auto h1 = test_bit(instruction, 7);
         const auto h2 = test_bit(instruction, 6);
@@ -1642,7 +1760,8 @@ u32 IRAM_ATTR Arm7tdmi::execute_thumb(u16 instruction) {
         return 0;
     }
 
-    if ((instruction & 0xF800u) == 0x4800u) {
+    // Format 6: PC-relative load
+    case 0x48 ... 0x4F: {
         const auto rd = (instruction >> 8u) & 0x7u;
         const auto word = instruction & 0xFFu;
         reg(rd) = read32((thumb_pc() & ~0x3u) + (word * 4u));
@@ -1650,7 +1769,8 @@ u32 IRAM_ATTR Arm7tdmi::execute_thumb(u16 instruction) {
         return 0;
     }
 
-    if ((instruction & 0xF000u) == 0x5000u) {
+    // Format 7/8: LDR/STR register offset
+    case 0x50 ... 0x5F: {
         const auto op = (instruction >> 9u) & 0x7u;
         const auto rm = (instruction >> 6u) & 0x7u;
         const auto rn = (instruction >> 3u) & 0x7u;
@@ -1691,7 +1811,8 @@ u32 IRAM_ATTR Arm7tdmi::execute_thumb(u16 instruction) {
        return 0;
     }
 
-    if ((instruction & 0xE000u) == 0x6000u) {
+    // Format 9: LDR/STR word/byte immediate offset
+    case 0x60 ... 0x7F: {
         const auto byte = test_bit(instruction, 12);
         const auto load = test_bit(instruction, 11);
         const auto offset = (instruction >> 6u) & 0x1Fu;
@@ -1709,7 +1830,8 @@ u32 IRAM_ATTR Arm7tdmi::execute_thumb(u16 instruction) {
         return 0;
     }
 
-    if ((instruction & 0xF000u) == 0x8000u) {
+    // Format 10: LDRH/STRH immediate offset
+    case 0x80 ... 0x8F: {
         const auto load = test_bit(instruction, 11);
         const auto offset = ((instruction >> 6u) & 0x1Fu) * 2u;
         const auto rn = (instruction >> 3u) & 0x7u;
@@ -1724,7 +1846,8 @@ u32 IRAM_ATTR Arm7tdmi::execute_thumb(u16 instruction) {
         return 0;
     }
 
-    if ((instruction & 0xF000u) == 0x9000u) {
+    // Format 11: SP-relative LDR/STR
+    case 0x90 ... 0x9F: {
         const auto load = test_bit(instruction, 11);
         const auto rd = (instruction >> 8u) & 0x7u;
         const auto offset = (instruction & 0xFFu) * 4u;
@@ -1738,7 +1861,8 @@ u32 IRAM_ATTR Arm7tdmi::execute_thumb(u16 instruction) {
         return 0;
     }
 
-    if ((instruction & 0xF000u) == 0xA000u) {
+    // Format 12: Load address (PC/SP + immediate)
+    case 0xA0 ... 0xAF: {
         const auto sp = test_bit(instruction, 11);
         const auto rd = (instruction >> 8u) & 0x7u;
         const auto offset = (instruction & 0xFFu) * 4u;
@@ -1746,14 +1870,17 @@ u32 IRAM_ATTR Arm7tdmi::execute_thumb(u16 instruction) {
         return 0;
     }
 
-    if ((instruction & 0xFF00u) == 0xB000u) {
+    // Format 13: Adjust stack pointer
+    case 0xB0: {
         const auto subtract = test_bit(instruction, 7);
         const auto offset = (instruction & 0x7Fu) * 4u;
         reg(13) = subtract ? reg(13) - offset : reg(13) + offset;
         return 0;
     }
 
-    if ((instruction & 0xF600u) == 0xB400u) {
+    // Format 14: PUSH/POP
+    case 0xB4: case 0xB5:
+    case 0xBC: case 0xBD: {
         const auto load = test_bit(instruction, 11);
         const auto include_pc_lr = test_bit(instruction, 8);
         auto address = reg(13);
@@ -1807,49 +1934,27 @@ u32 IRAM_ATTR Arm7tdmi::execute_thumb(u16 instruction) {
         return 0;
     }
 
-    if ((instruction & 0xF000u) == 0xC000u) {
+    // Format 15: STMIA/LDMIA
+    case 0xC0 ... 0xCF: {
         const auto load = test_bit(instruction, 11);
         const auto rn = (instruction >> 8u) & 0x7u;
         const auto register_list = instruction & 0xFFu;
         auto address = reg(rn);
         auto access = AccessType::NonSequential;
-        auto pending_prefetch_cycles = 0u;
-        const auto gamepak_access = [](u32 transfer_address) {
-            return transfer_address >= 0x08000000u && transfer_address < 0x10000000u;
-        };
-        const auto advance_prefetch_before_gamepak = [&]() {
-            if (pending_prefetch_cycles != 0u) {
-                if (last_fetch_gamepak_) {
-                    bus_.prefetch_advance(static_cast<int>(pending_prefetch_cycles));
-                }
-                pending_prefetch_cycles = 0;
-            }
-        };
-
         for (u32 r = 0; r < 8u; ++r) {
             if (!test_bit(register_list, r)) {
                 continue;
-            }
-            if (gamepak_access(address)) {
-                advance_prefetch_before_gamepak();
             }
             u32 transfer_cycles = 0;
             if (load) {
                 const auto result = bus_.read(address, BusWidth::Word, access, current_cycle_);
                 current_cycle_ += result.cycles;
-                transfer_cycles = result.cycles;
                 break_fetch_burst(result);
                 reg(r) = result.open_bus ? resolve_thumb_open_bus_word(result) : result.value;
             } else {
                 const auto result = bus_.write(address, reg(r), BusWidth::Word, access, current_cycle_);
                 current_cycle_ += result.cycles;
-                transfer_cycles = result.cycles;
                 break_fetch_burst(result);
-            }
-            if (gamepak_access(address)) {
-                pending_prefetch_cycles = 0;
-            } else {
-                pending_prefetch_cycles += transfer_cycles;
             }
             address += 4u;
             access = AccessType::Sequential;
@@ -1861,20 +1966,8 @@ u32 IRAM_ATTR Arm7tdmi::execute_thumb(u16 instruction) {
         return 0;
     }
 
-    if ((instruction & 0xF000u) == 0xD000u) {
-        if ((instruction & 0x0F00u) == 0x0F00u) {
-            const auto current_instruction = state_.regs[15] - 2u;
-            if (handle_hle_swi(instruction & 0x00FFu)) {
-                current_cycle_ += thumb_exception_refill_cycles(bus_.waitcnt(), current_instruction);
-                last_fetch_cycle_ = current_cycle_;
-                return 0;
-            }
-            raise_exception(ExceptionType::SoftwareInterrupt);
-            current_cycle_ += thumb_exception_refill_cycles(bus_.waitcnt(), current_instruction);
-            last_fetch_cycle_ = current_cycle_;
-            return 0;
-        }
-
+    // Format 16: Conditional branch (B{cond})
+    case 0xD0 ... 0xDE: {
         const auto condition = (instruction >> 8u) & 0xFu;
         if (condition_passed(condition)) {
             const auto offset = sign_extend<9>((instruction & 0xFFu) << 1u);
@@ -1886,7 +1979,22 @@ u32 IRAM_ATTR Arm7tdmi::execute_thumb(u16 instruction) {
         return 0;
     }
 
-    if ((instruction & 0xF800u) == 0xE000u) {
+    // Format 17: SWI
+    case 0xDF: {
+        const auto current_instruction = state_.regs[15] - 2u;
+        if (handle_hle_swi(instruction & 0x00FFu)) {
+            current_cycle_ += thumb_exception_refill_cycles(bus_.waitcnt(), current_instruction);
+            last_fetch_cycle_ = current_cycle_;
+            return 0;
+        }
+        raise_exception(ExceptionType::SoftwareInterrupt);
+        current_cycle_ += thumb_exception_refill_cycles(bus_.waitcnt(), current_instruction);
+        last_fetch_cycle_ = current_cycle_;
+        return 0;
+    }
+
+    // Format 18: Unconditional branch
+    case 0xE0 ... 0xE7: {
         const auto offset = sign_extend<12>((instruction & 0x7FFu) << 1u);
         const auto current_instruction = state_.regs[15] - 2u;
         branch_to(state_.regs[15] + 2u + static_cast<u32>(offset), true);
@@ -1895,13 +2003,15 @@ u32 IRAM_ATTR Arm7tdmi::execute_thumb(u16 instruction) {
         return 0;
     }
 
-    if ((instruction & 0xF800u) == 0xF000u) {
+    // Format 19: Long branch with link (first instruction)
+    case 0xF0 ... 0xF7: {
         const auto offset = sign_extend<23>((instruction & 0x7FFu) << 12u);
         reg(14) = pc_visible() + static_cast<u32>(offset);
         return 0;
     }
 
-    if ((instruction & 0xF800u) == 0xF800u) {
+    // Format 19: Long branch with link (second instruction)
+    case 0xF8 ... 0xFF: {
         const auto target = reg(14) + ((instruction & 0x7FFu) << 1u);
         reg(14) = (state_.regs[15]) | 1u;
         branch_to(target, true);
@@ -1909,6 +2019,13 @@ u32 IRAM_ATTR Arm7tdmi::execute_thumb(u16 instruction) {
         return 0;
     }
 
+    default:
+        break;
+    }
+#pragma GCC diagnostic pop
+
+    // Undefined Thumb instruction
+    raise_exception(ExceptionType::Undefined);
     if (logger_ != nullptr) {
 #ifndef GBA_PLATFORM_ESP32
         std::ostringstream message;
@@ -1919,6 +2036,7 @@ u32 IRAM_ATTR Arm7tdmi::execute_thumb(u16 instruction) {
     raise_exception(ExceptionType::Undefined);
     current_cycle_ += 3;
     return 0;
+
 }
 
 u32 Arm7tdmi::read_user_reg(u32 reg) {

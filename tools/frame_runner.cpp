@@ -129,11 +129,11 @@ std::vector<u8> make_bios_stub() {
 
     put(0x40, 0xE92D500F);
     put(0x44, 0xE59FC01C);
-    put(0x48, 0xE59CF000);
+    put(0x48, 0xE59CC000);
     put(0x4C, 0xE35C0000);
     put(0x50, 0x0A000002);
     put(0x54, 0xE1A0E00F);
-    put(0x58, 0xE1A0F00C);
+    put(0x58, 0xE12FFF1C);
     put(0x5C, 0xE89D500F);
     put(0x60, 0xE25EF004);
     put(0x64, 0xEAFFFFFE);
@@ -220,6 +220,7 @@ int main(int argc, char** argv) {
 
     emulator.set_save_type(SaveType::Flash128K);
     emulator.reset();
+    emulator.cpu().pc_trace_enabled_ = true;
     std::filesystem::create_directories(options.output_dir);
 
     const auto rom_prefix = sanitize_stem(options.rom_path);
@@ -235,6 +236,14 @@ int main(int argc, char** argv) {
     for (u32 frame = 1; frame <= options.frames; ++frame) {
         emulator.run_frame();
 
+        if (emulator.cpu().state().regs[15] == 0x00000004u) {
+            std::printf("CRASHED AT PC=0x04\nPC Trace:\n");
+            for (u32 i = 0; i < emulator.cpu().kPcTraceSize; ++i) {
+                std::printf("  [%2u] 0x%08X\n", i, emulator.cpu().pc_trace_[(emulator.cpu().pc_trace_pos_ + i) % emulator.cpu().kPcTraceSize]);
+            }
+            return EXIT_FAILURE;
+        }
+
         if (frame % capture_every != 0 && frame != options.frames) {
             continue;
         }
@@ -247,7 +256,7 @@ int main(int argc, char** argv) {
         const auto& state = cpu.state();
         const auto& irq = emulator.irq();
         std::printf(
-            "frame=%u file=%s pc=0x%08X cpsr=0x%08X halted=%d IE=0x%04X IF=0x%04X cycle=%llu\n",
+            "frame=%u file=%s pc=0x%08X cpsr=0x%08X halted=%d IE=0x%04X IF=0x%04X DISPSTAT=0x%04X IME=%d cycle=%llu\n",
             frame,
             output_path.c_str(),
             state.regs[15],
@@ -255,6 +264,8 @@ int main(int argc, char** argv) {
             state.halted ? 1 : 0,
             irq.ie(),
             irq.iflags(),
+            emulator.ppu().dispstat(),
+            irq.ime(),
             static_cast<unsigned long long>(cpu.current_cycle())
         );
     }

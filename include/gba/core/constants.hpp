@@ -14,10 +14,16 @@ constexpr u32 kVisibleScanlines = 160;
 constexpr u32 kVblankScanlines = 68;
 constexpr u32 kScanlinesPerFrame = 228;
 constexpr u32 kCyclesPerFrame = 280896;
+constexpr u32 kHDrawCycles = kVisibleDots * kCyclesPerDot + 47;  // 1007: visible scanline draw
+constexpr u32 kHBlankCycles = kCyclesPerScanline - kHDrawCycles;  // 225: horizontal blanking
 
 constexpr u32 kScreenWidth = 240;
 constexpr u32 kScreenHeight = 160;
 constexpr u32 kFramebufferPixels = kScreenWidth * kScreenHeight;
+
+constexpr u32 kOutW = 128;
+constexpr u32 kOutH = 128;
+constexpr u32 kOutputPixels = kOutW * kOutH;
 
 constexpr u32 kBiosSize = 0x4000;
 constexpr u32 kEwramSize = 0x40000;

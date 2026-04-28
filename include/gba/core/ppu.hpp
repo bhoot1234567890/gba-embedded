@@ -21,7 +21,8 @@ public:
     void write_register(u32 address, u32 value, BusWidth width);
 
     void advance_to(u64 cycle_now, IrqController& irq);
-    void render_scanline(int line, std::span<const u8> vram, std::span<const u8> palette);
+    void render_scanline(int line, std::span<const u8> vram, std::span<const u8> palette,
+                         std::span<const u8> oam, u16* out_row = nullptr);
 
     [[nodiscard]] u64 next_event_cycle() const;
     [[nodiscard]] bool is_hblank() const;
@@ -32,6 +33,10 @@ public:
     bool consume_frame_ready();
 
     [[nodiscard]] std::span<const u16> framebuffer() const;
+
+    void set_direct_128x128(bool active) { direct_128x128_ = active; }
+    [[nodiscard]] bool direct_128x128() const { return direct_128x128_; }
+    void set_external_fb(u16* buf) { external_fb_ = buf; }
 
     [[nodiscard]] u16 dispcnt() const;
     [[nodiscard]] u16 dispstat() const;
@@ -46,8 +51,13 @@ public:
     void clear_dirty(int line);
 
 private:
-    void render_text_bg(int line, std::span<const u8> vram, std::span<const u8> palette, int bg, u16* row);
-    void render_affine_bg(int line, std::span<const u8> vram, std::span<const u8> palette, int bg, u16* row);
+    void render_text_bg(int line, std::span<const u8> vram, std::span<const u8> palette,
+                        int bg, u16* row, u32 x_start = 0, u32 out_width = kScreenWidth);
+    void render_affine_bg(int line, std::span<const u8> vram, std::span<const u8> palette,
+                          int bg, u16* row, u32 x_start = 0, u32 out_width = kScreenWidth);
+    void render_objects(int line, std::span<const u8> vram, std::span<const u8> palette,
+                        std::span<const u8> oam, u16* obj_line, u8* obj_priority,
+                        bool* obj_trans, bool* obj_win, u32 x_start = 0, u32 out_width = kScreenWidth);
     void update_dispstat_flags();
     void enter_hblank(IrqController& irq, u64 cycle_now);
     void leave_hblank(IrqController& irq, u64 cycle_now);
@@ -80,7 +90,7 @@ private:
 
     /* Heap-allocated framebuffer — use PSRAM on ESP32 when available */
     std::unique_ptr<u16, void (*)(u16*)> framebuffer_;
-    u64 next_event_cycle_ = 1007;
+    u64 next_event_cycle_ = kHDrawCycles;
     bool hblank_ = false;
     bool vblank_ = false;
     bool frame_ready_ = false;
@@ -89,6 +99,26 @@ private:
     /* Dirty tracking — which scanlines need re-render */
     std::array<bool, kScreenHeight> scanline_dirty_{};
     bool all_dirty_ = true;
+
+    /* Tile row cache */
+    static constexpr size_t kTileCacheEntries = 2048;
+    struct TileCacheEntry {
+        u32 key = ~0u;
+        u8 pixels[8];
+    };
+    std::array<TileCacheEntry, kTileCacheEntries> tile_cache_4bpp_{};
+    std::array<TileCacheEntry, kTileCacheEntries> tile_cache_8bpp_{};
+    u32 tile_cache_epoch_ = 0;
+
+    /* Persistent scratch buffers to avoid per-scanline stack pressure. */
+    std::array<std::array<u16, kScreenWidth>, 4> bg_line_buf_{};
+    std::array<u16, kScreenWidth> obj_line_buf_{};
+    std::array<u8, kScreenWidth> obj_priority_buf_{};
+    std::array<bool, kScreenWidth> obj_trans_buf_{};
+    std::array<bool, kScreenWidth> obj_win_buf_{};
+
+    bool direct_128x128_ = false;
+    u16* external_fb_ = nullptr;
 };
 
 }  // namespace gba

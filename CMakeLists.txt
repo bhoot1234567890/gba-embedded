@@ -29,7 +29,6 @@ add_library(
     src/core/ppu.cpp
     src/core/scheduler.cpp
     src/core/timers.cpp
-    src/platform/rt1170/rt1170_platform.cpp
 )
 
 target_include_directories(gba_core PUBLIC include)
@@ -81,6 +80,56 @@ if(GBA_BUILD_TOOLS)
     )
 
     target_link_libraries(gba_frame_runner PRIVATE gba_core)
+
+    add_executable(
+        gba_bug_harness
+        tools/bug_harness.cpp
+    )
+
+    target_link_libraries(gba_bug_harness PRIVATE gba_core)
+
+    find_package(PkgConfig QUIET)
+    if(PkgConfig_FOUND)
+        pkg_check_modules(SDL2 QUIET sdl2)
+    endif()
+
+    if(SDL2_FOUND)
+        add_executable(
+            gba_sdl_frontend
+            tools/sdl_frontend.cpp
+        )
+
+        target_include_directories(gba_sdl_frontend PRIVATE ${SDL2_INCLUDE_DIRS})
+        target_compile_options(gba_sdl_frontend PRIVATE ${SDL2_CFLAGS_OTHER})
+        target_link_directories(gba_sdl_frontend PRIVATE ${SDL2_LIBRARY_DIRS})
+        target_link_libraries(gba_sdl_frontend PRIVATE gba_core ${SDL2_LIBRARIES})
+    else()
+        message(STATUS "SDL2 not found via pkg-config; skipping gba_sdl_frontend")
+    endif()
+
+    find_path(MGBA_INCLUDE_DIR mgba/core/core.h
+        PATHS
+            /opt/homebrew/include
+            /opt/homebrew/Cellar/mgba/0.10.5_2/include
+            /usr/local/include
+    )
+    find_library(MGBA_LIBRARY NAMES mgba libmgba
+        PATHS
+            /opt/homebrew/lib
+            /opt/homebrew/Cellar/mgba/0.10.5_2/lib
+            /usr/local/lib
+    )
+    if(MGBA_INCLUDE_DIR AND MGBA_LIBRARY)
+        add_executable(
+            gba_mgba_ref_harness
+            tools/mgba_ref_harness.cpp
+        )
+
+        target_include_directories(gba_mgba_ref_harness PRIVATE ${MGBA_INCLUDE_DIR})
+        target_link_libraries(gba_mgba_ref_harness PRIVATE ${MGBA_LIBRARY})
+    else()
+        message(STATUS "mGBA development files not found; skipping gba_mgba_ref_harness")
+    endif()
 endif()
 
 if(GBA_WARNINGS_AS_ERRORS)

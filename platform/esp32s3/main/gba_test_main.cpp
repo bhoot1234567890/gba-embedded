@@ -73,11 +73,11 @@ void test_scheduler() {
 void test_irq_controller() {
     IrqController irq;
     irq.reset();
-    irq.write_register(kIe, IrqVBlank, BusWidth::Half);
-    irq.write_register(kIme, 1, BusWidth::Half);
+    irq.write_register(kIe, IrqVBlank, BusWidth::Half, 0);
+    irq.write_register(kIme, 1, BusWidth::Half, 0);
     irq.request(IrqVBlank);
     expect(irq.line_asserted(), "irq line should assert when IME and IE allow a pending interrupt");
-    irq.write_register(kIf, IrqVBlank, BusWidth::Half);
+    irq.write_register(kIf, IrqVBlank, BusWidth::Half, 0);
     expect(!irq.line_asserted(), "writing IF should acknowledge the interrupt");
     ESP_LOGI(kTag, "  irq_controller: OK");
 }
@@ -90,8 +90,8 @@ void test_timer_overflow_irq() {
     irq.reset();
     apu.reset();
 
-    timers.write_register(kTm0CntL, 0xFFFEu, BusWidth::Half, 0);
-    timers.write_register(kTm0CntH, 0x00C0u, BusWidth::Half, 0);
+    timers.write_register(kTm0CntL, 0xFFFEu, BusWidth::Half, 0, irq, apu);
+    timers.write_register(kTm0CntH, 0x00C0u, BusWidth::Half, 0, irq, apu);
     timers.advance_to(1, irq, apu);
     expect((irq.iflags() & IrqTimer0) == 0u, "timer 0 should not overflow before its exact cycle");
     timers.advance_to(2, irq, apu);
@@ -111,8 +111,8 @@ void test_audio_fifo_timer_cadence() {
     apu.write_register(kSoundCntH, 0x0300u, BusWidth::Half, 0);
     apu.write_register(kFifoA, 0x04030201u, BusWidth::Word, 0);
 
-    timers.write_register(kTm0CntL, 0xFFFFu, BusWidth::Half, 0);
-    timers.write_register(kTm0CntH, 0x0080u, BusWidth::Half, 0);
+    timers.write_register(kTm0CntL, 0xFFFFu, BusWidth::Half, 0, irq, apu);
+    timers.write_register(kTm0CntH, 0x0080u, BusWidth::Half, 0, irq, apu);
     timers.advance_to(1, irq, apu);
 
     const auto chunk = apu.consume_audio_chunk();

@@ -102,11 +102,6 @@ void IrqController::write_register(u32 address, u32 value, BusWidth width, u64 c
 }
 
 void IrqController::request(u16 mask) {
-#if GBA_TRACE_TIMERS
-    if ((mask & static_cast<u16>(IrqTimer0 | IrqTimer1 | IrqTimer2 | IrqTimer3)) != 0) {
-        std::fprintf(stderr, "IRQ request mask=%04X if=%04X ie=%04X ime=%04X\n", mask, if_, ie_, ime_);
-    }
-#endif
     if_ = static_cast<u16>(if_ | mask);
     pending_if_ = if_;
     recompute_line();
@@ -117,13 +112,6 @@ void IrqController::raise_delayed(u16 mask, u64 cycle_when, u64 delay_cycles) {
     if (fresh_mask == 0) {
         return;
     }
-#if GBA_TRACE_TIMERS
-    if ((fresh_mask & static_cast<u16>(IrqTimer0 | IrqTimer1 | IrqTimer2 | IrqTimer3)) != 0) {
-        std::fprintf(stderr, "IRQ delay mask=%04X at=%llu fire=%llu\n", fresh_mask,
-                     static_cast<unsigned long long>(cycle_when),
-                     static_cast<unsigned long long>(cycle_when + delay_cycles));
-    }
-#endif
     const auto fire_cycle = cycle_when + delay_cycles;
     const auto previous_mask = delayed_.mask;
     delayed_.mask = static_cast<u16>(delayed_.mask | fresh_mask);
@@ -132,12 +120,6 @@ void IrqController::raise_delayed(u16 mask, u64 cycle_when, u64 delay_cycles) {
 
 void IrqController::advance(u64 cycle_now) {
     if (delayed_.mask != 0 && cycle_now >= delayed_.fire_cycle) {
-#if GBA_TRACE_TIMERS
-        if ((delayed_.mask & static_cast<u16>(IrqTimer0 | IrqTimer1 | IrqTimer2 | IrqTimer3)) != 0) {
-            std::fprintf(stderr, "IRQ fire mask=%04X cyc=%llu ie=%04X ime=%04X\n", delayed_.mask,
-                         static_cast<unsigned long long>(cycle_now), ie_, ime_);
-        }
-#endif
         if_ = static_cast<u16>(if_ | delayed_.mask);
         pending_if_ = if_;
         delayed_ = {};
@@ -149,6 +131,11 @@ void IrqController::advance(u64 cycle_now) {
         write_apply_cycle_ = std::numeric_limits<u64>::max();
         recompute_line();
     }
+}
+
+u64 IrqController::next_event_cycle() const {
+    const auto next_delayed = delayed_.mask != 0 ? delayed_.fire_cycle : std::numeric_limits<u64>::max();
+    return std::min(next_delayed, write_apply_cycle_);
 }
 
 void IrqController::acknowledge(u16 mask) {

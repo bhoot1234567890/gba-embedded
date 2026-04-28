@@ -3,6 +3,7 @@
 #include <array>
 #include <functional>
 #include <memory>
+#include <span>
 
 #include "gba/core/cartridge.hpp"
 #include "gba/core/constants.hpp"
@@ -30,25 +31,34 @@ public:
 
     [[nodiscard]] BusAccessResult read(u32 address, BusWidth width, AccessType access, u64 cycle_now);
     [[nodiscard]] BusAccessResult write(u32 address, u32 value, BusWidth width, AccessType access, u64 cycle_now);
-    [[nodiscard]] u32 peek_word(u32 address) const;
 
-    [[nodiscard]] std::span<const u8> vram() const;
-    [[nodiscard]] std::span<const u8> palette() const;
-    [[nodiscard]] std::span<const u8> oam() const;
     [[nodiscard]] std::span<u8> ewram();
     [[nodiscard]] std::span<u8> iwram();
+    [[nodiscard]] std::span<const u8> vram() const;
+    [[nodiscard]] std::span<u8> vram_write();
+    [[nodiscard]] std::span<const u8> palette() const;
+    [[nodiscard]] std::span<const u8> oam() const;
+
+    void set_rom(std::span<const u8> rom);
+    [[nodiscard]] std::span<const u8> rom() const;
 
     void set_keyinput(u16 value);
     void set_debug_output(DebugOutputCallback callback);
     [[nodiscard]] u16 keyinput() const;
     [[nodiscard]] u16 keycnt() const;
     [[nodiscard]] u16 waitcnt() const;
+    void mark_video_dirty();
+
+    [[nodiscard]] u32 peek_word(u32 address) const;
+
     [[nodiscard]] bool has_bios() const;
     [[nodiscard]] bool halted() const;
     void clear_halt();
     void service_timers(u64 cycle_now);
     [[nodiscard]] u32 service_dma(u64 cycle_now);
     void prefetch_advance(int cycles);
+    [[nodiscard]] u32 dma_rom_cycles(u32 address, bool is_word, bool sequential) const;
+    [[nodiscard]] u64 next_event_cycle() const;
 
 private:
     [[nodiscard]] static u32 read_array(std::span<const u8> bytes, u32 address, BusWidth width);
@@ -66,12 +76,13 @@ private:
     void update_timer_trace_context();
 #endif
 
-    Cartridge& cartridge_;
+    IrqController& irq_;
     Ppu& ppu_;
+    Apu& apu_;
     Timers& timers_;
     DmaEngine& dma_;
-    Apu& apu_;
-    IrqController& irq_;
+
+    Cartridge& cartridge_;
 
     /* Heap-allocated memory arrays — use PSRAM on ESP32 when available */
     std::unique_ptr<u8, void (*)(u8*)> ewram_;
@@ -80,7 +91,6 @@ private:
     std::unique_ptr<u8, void (*)(u8*)> vram_;
     std::unique_ptr<u8, void (*)(u8*)> oam_;
 
-    /* GamePak prefetch buffer — 8 halfwords deep */
     struct PrefetchState {
         bool active = false;
         u32 head_address = 0;
@@ -97,25 +107,33 @@ private:
 
     u16 keyinput_ = 0x03FF;
     u16 keycnt_ = 0;
+    std::array<u16, 4> sio_multi_{{0u, 0u, 0u, 0u}};
+    u16 sio_data8_ = 0xFFFFu;
+    u16 sio_data32_lo_ = 0u;
+    u16 sio_data32_hi_ = 0u;
+    u16 sio_cnt_ = 0u;
+    u64 sio_event_cycle_ = 0;
+    bool sio_active_ = false;
+    u16 sio_mlt_send_ = 0xFFFFu;
+    u16 rcnt_ = 0u;
+    u16 joycnt_ = 0x0040u;
+    u16 joyrecv_lo_ = 0u;
+    u16 joyrecv_hi_ = 0u;
+    u16 joytrans_lo_ = 0u;
+    u16 joytrans_hi_ = 0u;
+    u16 joystat_ = 0u;
     u16 waitcnt_ = 0;
-    u16 siocnt_ = 0;
-    u16 siodata32_l_ = 0;
-    u16 siodata32_h_ = 0;
-    u16 siomlt_send_ = 0;
-    u16 rcnt_ = 0;
-    u16 joycnt_ = 0;
     u16 mgba_log_enable_ = 0;
     u8 postflg_ = 0;
     bool halted_ = false;
     bool bios_latch_valid_ = false;
-    bool rom_latch_valid_ = false;
+
     AccessType last_access_ = AccessType::NonSequential;
-    u32 bios_latch_ = 0;
-    u32 rom_latch_ = 0;
     u32 rom_address_latch_ = 0;
+    u32 rom_latch_ = 0;
+    bool rom_latch_valid_ = false;
+    u32 bios_latch_ = 0;
     u32 open_bus_ = 0;
-    u64 sio_event_cycle_ = std::numeric_limits<u64>::max();
-    bool sio_active_ = false;
     std::array<std::array<u8, 16>, 2> wait16_{};
     std::array<std::array<u8, 16>, 2> wait32_{};
 #if GBA_TRACE_TIMERS

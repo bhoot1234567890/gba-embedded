@@ -6,6 +6,11 @@
 
 #ifdef GBA_PLATFORM_ESP32
 #include "esp_heap_caps.h"
+#include "esp_attr.h"
+#else
+#ifndef IRAM_ATTR
+#define IRAM_ATTR
+#endif
 #endif
 
 #include "gba/core/apu.hpp"
@@ -62,18 +67,6 @@ u8* alloc_memory(size_t size, bool prefer_internal) {
 #endif
 }
 
-[[nodiscard]] u32 narrow_latch(u32 latch, BusWidth width, u32 address) {
-    switch (width) {
-    case BusWidth::Byte:
-        return (latch >> ((address & 3u) * 8u)) & 0xFFu;
-    case BusWidth::Half:
-        return (latch >> ((address & 2u) * 8u)) & 0xFFFFu;
-    case BusWidth::Word:
-        return latch;
-    }
-    return latch;
-}
-
 [[nodiscard]] u32 gamepak_open_bus_value(u32 address, BusWidth width) {
     const auto half_at = [](u32 half_address) -> u32 {
         return (align_down(half_address, 2u) >> 1u) & 0xFFFFu;
@@ -94,11 +87,23 @@ u8* alloc_memory(size_t size, bool prefer_internal) {
     return 0xFFFFFFFFu;
 }
 
-[[nodiscard]] u32 sio_mode(u16 siocnt, u16 rcnt) {
-    if ((rcnt & 0xC000u) != 0) {
-        return 0;
+[[nodiscard]] u32 narrow_latch(u32 latch, BusWidth width, u32 address) {
+    switch (width) {
+    case BusWidth::Byte:
+        return (latch >> ((address & 3u) * 8u)) & 0xFFu;
+    case BusWidth::Half:
+        return (latch >> ((address & 2u) * 8u)) & 0xFFFFu;
+    case BusWidth::Word:
+        return latch;
     }
-    return siocnt & 0x3000u;
+    return latch;
+}
+
+[[nodiscard]] u32 sio_mode(u16 sio_cnt, u16 rcnt) {
+    if ((rcnt & 0xC000u) != 0u) {
+        return 0u;
+    }
+    return static_cast<u32>(sio_cnt & 0x3000u);
 }
 
 #if GBA_TRACE_TIMERS
@@ -142,7 +147,8 @@ struct ActiveTestInfoSnapshot {
 }  // namespace
 
 Bus::Bus(Cartridge& cartridge, Ppu& ppu, Timers& timers, DmaEngine& dma, Apu& apu, IrqController& irq)
-    : cartridge_(cartridge), ppu_(ppu), timers_(timers), dma_(dma), apu_(apu), irq_(irq),
+    : irq_(irq), ppu_(ppu), apu_(apu), timers_(timers), dma_(dma),
+      cartridge_(cartridge),
       ewram_(alloc_memory(kEwramSize, false), free_memory),
       iwram_(alloc_memory(kIwramSize, true), free_memory),
       palette_(alloc_memory(kPaletteSize, true), free_memory),
@@ -157,26 +163,31 @@ void Bus::reset() {
     if (oam_) std::memset(oam_.get(), 0, kOamSize);
     keyinput_ = 0x03FF;
     keycnt_ = 0;
+    sio_multi_ = {{0u, 0u, 0u, 0u}};
+    sio_data8_ = 0xFFFFu;
+    sio_data32_lo_ = 0xFFFFu;
+    sio_data32_hi_ = 0xFFFFu;
+    sio_cnt_ = 0u;
+    sio_event_cycle_ = std::numeric_limits<u64>::max();
+    sio_active_ = false;
+    sio_mlt_send_ = 0xFFFFu;
+    rcnt_ = 0u;
+    joycnt_ = 0x0040u;
+    joyrecv_lo_ = 0u;
+    joyrecv_hi_ = 0u;
+    joytrans_lo_ = 0u;
+    joytrans_hi_ = 0u;
+    joystat_ = 0u;
     waitcnt_ = 0;
-    siocnt_ = 0;
-    siodata32_l_ = 0;
-    siodata32_h_ = 0;
-    siomlt_send_ = 0;
-    rcnt_ = 0;
-    joycnt_ = 0;
     postflg_ = 0;
     mgba_log_enable_ = 0;
     halted_ = false;
     bios_latch_valid_ = false;
-    rom_latch_valid_ = false;
     last_access_ = AccessType::NonSequential;
-    bios_latch_ = 0;
+    rom_latch_valid_ = false;
     rom_latch_ = 0;
     rom_address_latch_ = 0;
     open_bus_ = 0;
-    sio_event_cycle_ = std::numeric_limits<u64>::max();
-    sio_active_ = false;
-    prefetch_ = {};
 #if GBA_TRACE_TIMERS
     trace_active_info_offset_ = kIwramSize;
 #endif
@@ -208,7 +219,7 @@ void Bus::update_timer_trace_context() {
 }
 #endif
 
-BusAccessResult Bus::read(u32 address, BusWidth width, AccessType access, u64 cycle_now) {
+BusAccessResult IRAM_ATTR Bus::read(u32 address, BusWidth width, AccessType access, u64 cycle_now) {
     BusAccessResult result{};
     result.cycles = region_cycles(address, width, access, cycle_now);
 
@@ -284,7 +295,6 @@ BusAccessResult Bus::read(u32 address, BusWidth width, AccessType access, u64 cy
             if (!prefetch_.active) {
                 return 0;
             }
-
             const auto half_duty_plus_one = (prefetch_.duty >> 1) + 1;
             const auto countdown = prefetch_.countdown;
             if (countdown == 1 || (prefetch_.opcode_width == 4 && countdown == half_duty_plus_one)) {
@@ -404,20 +414,6 @@ BusAccessResult IRAM_ATTR Bus::write(u32 address, u32 value, BusWidth width, Acc
         write_array(ewram_w, address - 0x02000000u, value, width);
     } else if ((address & 0x0F000000u) == 0x03000000u) {
         write_array(iwram_w, address - 0x03000000u, value, width);
-#if GBA_TRACE_TIMERS
-        if (trace_active_info_offset_ < kIwramSize) {
-            const auto info_field = 0x03000000u + trace_active_info_offset_ + 4u;
-            const auto write_end = address + static_cast<u32>(width);
-            if (address < info_field + 4u && write_end > info_field) {
-                const auto snapshot = read_active_test_info(std::span<const u8>{iwram_.get(), kIwramSize},
-                                                            trace_active_info_offset_);
-                std::fprintf(stderr,
-                             "INFO write addr=%08X width=%u value=%08X -> suite=%d test=%d sub=%d info=%08X\n",
-                             address, static_cast<unsigned>(width), value, snapshot.suite_id, snapshot.test_id,
-                             snapshot.subtest_id, snapshot.address);
-            }
-        }
-#endif
     } else if ((address & 0x0F000000u) == 0x04000000u) {
         auto io_result = write_io(address, value, width, cycle_now);
         last_access_ = access;
@@ -430,6 +426,7 @@ BusAccessResult IRAM_ATTR Bus::write(u32 address, u32 value, BusWidth width, Acc
         } else {
             write_array(palette_w, address - 0x05000000u, value, width);
         }
+        mark_video_dirty();
     } else if ((address & 0x0F000000u) == 0x06000000u) {
         auto offset = (address - 0x06000000u) & 0x1FFFFu;
         if (offset >= 0x18000u) {
@@ -446,9 +443,11 @@ BusAccessResult IRAM_ATTR Bus::write(u32 address, u32 value, BusWidth width, Acc
         } else {
             write_array(vram_w, offset, value, width);
         }
+        mark_video_dirty();
     } else if ((address & 0x0F000000u) == 0x07000000u) {
         if (width != BusWidth::Byte) {
             write_array(oam_w, address - 0x07000000u, value, width);
+            mark_video_dirty();
         }
     } else if (address >= 0x08000000u && address < 0x0E000000u) {
         result.breaks_fetch_burst = true;
@@ -473,6 +472,7 @@ BusAccessResult IRAM_ATTR Bus::write(u32 address, u32 value, BusWidth width, Acc
             }
         }
         prefetch_stop();
+        cartridge_.write_rom(address & 0x01FFFFFFu, value, width);
     } else if (address >= 0x0E000000u && address < 0x10000000u) {
         result.breaks_fetch_burst = true;
         if (prefetch_.active) {
@@ -497,6 +497,14 @@ BusAccessResult IRAM_ATTR Bus::write(u32 address, u32 value, BusWidth width, Acc
 
 std::span<const u8> Bus::vram() const {
     return {vram_.get(), kVramSize};
+}
+
+std::span<u8> Bus::vram_write() {
+    return {vram_.get(), kVramSize};
+}
+
+void Bus::mark_video_dirty() {
+    ppu_.mark_all_dirty();
 }
 
 std::span<const u8> Bus::palette() const {
@@ -540,6 +548,14 @@ bool Bus::has_bios() const {
     return cartridge_.has_bios();
 }
 
+void Bus::set_rom(std::span<const u8> rom) {
+    cartridge_.set_rom(std::vector<u8>(rom.begin(), rom.end()));
+}
+
+std::span<const u8> Bus::rom() const {
+    return cartridge_.rom();
+}
+
 bool Bus::halted() const {
     return halted_;
 }
@@ -548,13 +564,17 @@ void Bus::clear_halt() {
     halted_ = false;
 }
 
+u64 Bus::next_event_cycle() const {
+    return sio_active_ ? sio_event_cycle_ : std::numeric_limits<u64>::max();
+}
+
 void Bus::service_timers(u64 cycle_now) {
     timers_.advance_to(cycle_now, irq_, apu_);
     if (sio_active_ && cycle_now >= sio_event_cycle_) {
         sio_active_ = false;
         sio_event_cycle_ = std::numeric_limits<u64>::max();
-        siocnt_ = static_cast<u16>(siocnt_ & ~0x0080u);
-        if (test_bit(siocnt_, 14u)) {
+        sio_cnt_ = static_cast<u16>(sio_cnt_ & ~0x0080u);
+        if (test_bit(sio_cnt_, 14u)) {
             irq_.request(IrqSerial);
         }
     }
@@ -563,28 +583,6 @@ void Bus::service_timers(u64 cycle_now) {
     }
     if (apu_.take_fifo_request_b()) {
         dma_.request_fifo_b(cycle_now);
-    }
-}
-
-void Bus::prefetch_stop() {
-    prefetch_.active = false;
-    prefetch_.count = 0;
-    prefetch_.countdown = 0;
-}
-
-void Bus::prefetch_advance(int cycles) {
-    if (!prefetch_.active) {
-        return;
-    }
-    prefetch_.countdown -= cycles;
-    while (prefetch_.countdown <= 0) {
-        prefetch_.count++;
-        if (prefetch_.count < prefetch_.capacity) {
-            prefetch_.last_address += static_cast<u32>(prefetch_.opcode_width);
-            prefetch_.countdown += prefetch_.duty;
-        } else {
-            break;
-        }
     }
 }
 
@@ -615,11 +613,46 @@ u32 Bus::read_gamepak_rom(u32 address, BusWidth width, bool sequential) {
     return value;
 }
 
+void Bus::prefetch_stop() {
+    prefetch_.active = false;
+    prefetch_.count = 0;
+    prefetch_.countdown = 0;
+}
+
+void Bus::prefetch_advance(int cycles) {
+    if (!prefetch_.active) {
+        return;
+    }
+    prefetch_.countdown -= cycles;
+    while (prefetch_.countdown <= 0) {
+        prefetch_.count++;
+        if (prefetch_.count < prefetch_.capacity) {
+            prefetch_.last_address += static_cast<u32>(prefetch_.opcode_width);
+            prefetch_.countdown += prefetch_.duty;
+        } else {
+            break;
+        }
+    }
+}
+
 u32 Bus::service_dma(u64 cycle_now) {
     if (dma_.next_event_cycle() > cycle_now || !dma_.has_pending_transfer()) {
         return 0;
     }
     return dma_.service_due(cycle_now, *this, irq_);
+}
+
+u32 Bus::dma_rom_cycles(u32 address, bool is_word, bool sequential) const {
+    const auto page = static_cast<std::size_t>(address >> 24u);
+    if (is_word) {
+        return sequential ? wait32_[1][page] : wait32_[0][page];
+    }
+    return sequential ? wait16_[1][page] : wait16_[0][page];
+}
+
+u32 Bus::prefetch_region_cycles(u32 address, BusWidth width) const {
+    const auto page = static_cast<std::size_t>(address >> 24u);
+    return width == BusWidth::Word ? wait32_[1][page] : wait16_[1][page];
 }
 
 void Bus::update_wait_state_table() {
@@ -814,36 +847,14 @@ namespace {
 
 [[nodiscard]] bool is_write_only_ppu_halfword(u32 address) {
     switch (address) {
-    case 0x04000010u:
-    case 0x04000012u:
-    case 0x04000014u:
-    case 0x04000016u:
-    case 0x04000018u:
-    case 0x0400001Au:
-    case 0x0400001Cu:
-    case 0x0400001Eu:
-    case 0x04000020u:
-    case 0x04000022u:
-    case 0x04000024u:
-    case 0x04000026u:
-    case 0x04000028u:
-    case 0x0400002Au:
-    case 0x0400002Cu:
-    case 0x0400002Eu:
-    case 0x04000030u:
-    case 0x04000032u:
-    case 0x04000034u:
-    case 0x04000036u:
-    case 0x04000038u:
-    case 0x0400003Au:
-    case 0x0400003Cu:
-    case 0x0400003Eu:
-    case 0x04000040u:
-    case 0x04000042u:
-    case 0x04000044u:
-    case 0x04000046u:
-    case 0x0400004Cu:
-    case 0x04000054u:
+    case 0x04000010u: case 0x04000012u: case 0x04000014u: case 0x04000016u:
+    case 0x04000018u: case 0x0400001Au: case 0x0400001Cu: case 0x0400001Eu:
+    case 0x04000020u: case 0x04000022u: case 0x04000024u: case 0x04000026u:
+    case 0x04000028u: case 0x0400002Au: case 0x0400002Cu: case 0x0400002Eu:
+    case 0x04000030u: case 0x04000032u: case 0x04000034u: case 0x04000036u:
+    case 0x04000038u: case 0x0400003Au: case 0x0400003Cu: case 0x0400003Eu:
+    case 0x04000040u: case 0x04000042u: case 0x04000044u: case 0x04000046u:
+    case 0x0400004Cu: case 0x04000054u:
         return true;
     default:
         return false;
@@ -855,54 +866,24 @@ namespace {
         return true;
     }
     switch (address) {
-    case 0x0400004Eu:
-    case 0x04000056u:
-    case 0x04000058u:
-    case 0x0400005Au:
-    case 0x0400005Cu:
-    case 0x0400005Eu:
-    case 0x0400008Cu:
-    case 0x0400008Eu:
-    case kFifoA:
-    case kFifoA + 2u:
-    case kFifoB:
-    case kFifoB + 2u:
-    case 0x040000A8u:
-    case 0x040000AAu:
-    case 0x040000ACu:
-    case 0x040000AEu:
-    case kDma0Sad:
-    case kDma0Sad + 2u:
-    case kDma0Dad:
-    case kDma0Dad + 2u:
-    case kDma0Sad + 12u:
-    case kDma0Sad + 14u:
-    case kDma0Dad + 12u:
-    case kDma0Dad + 14u:
-    case kDma0Sad + 24u:
-    case kDma0Sad + 26u:
-    case kDma0Dad + 24u:
-    case kDma0Dad + 26u:
-    case kDma0Sad + 36u:
-    case kDma0Sad + 38u:
-    case kDma0Dad + 36u:
-    case kDma0Dad + 38u:
-    case 0x040000E0u:
-    case 0x040000E2u:
-    case 0x040000E4u:
-    case 0x040000E6u:
-    case 0x040000E8u:
-    case 0x040000EAu:
-    case 0x040000ECu:
-    case 0x040000EEu:
-    case 0x040000F0u:
-    case 0x040000F2u:
-    case 0x040000F4u:
-    case 0x040000F6u:
-    case 0x040000F8u:
-    case 0x040000FAu:
-    case 0x040000FCu:
-    case 0x040000FEu:
+    case 0x0400004Eu: case 0x04000056u: case 0x04000058u: case 0x0400005Au:
+    case 0x0400005Cu: case 0x0400005Eu:
+    case 0x0400008Cu: case 0x0400008Eu:
+    case kFifoA: case kFifoA + 2u:
+    case kFifoB: case kFifoB + 2u:
+    case 0x040000A8u: case 0x040000AAu: case 0x040000ACu: case 0x040000AEu:
+    case kDma0Sad: case kDma0Sad + 2u:
+    case kDma0Dad: case kDma0Dad + 2u:
+    case kDma0Sad + 12u: case kDma0Sad + 14u:
+    case kDma0Dad + 12u: case kDma0Dad + 14u:
+    case kDma0Sad + 24u: case kDma0Sad + 26u:
+    case kDma0Dad + 24u: case kDma0Dad + 26u:
+    case kDma0Sad + 36u: case kDma0Sad + 38u:
+    case kDma0Dad + 36u: case kDma0Dad + 38u:
+    case 0x040000E0u: case 0x040000E2u: case 0x040000E4u: case 0x040000E6u:
+    case 0x040000E8u: case 0x040000EAu: case 0x040000ECu: case 0x040000EEu:
+    case 0x040000F0u: case 0x040000F2u: case 0x040000F4u: case 0x040000F6u:
+    case 0x040000F8u: case 0x040000FAu: case 0x040000FCu: case 0x040000FEu:
     case 0x0400100Cu:
         return true;
     default:
@@ -912,12 +893,8 @@ namespace {
 
 [[nodiscard]] bool is_zero_read_io_halfword(u32 address) {
     switch (address) {
-    case 0x04000136u:
-    case 0x04000142u:
-    case 0x0400015Au:
-    case 0x04000206u:
-    case 0x0400020Au:
-    case 0x04000302u:
+    case 0x04000136u: case 0x04000142u: case 0x0400015Au:
+    case 0x04000206u: case 0x0400020Au: case 0x04000302u:
         return true;
     default:
         return false;
@@ -933,44 +910,24 @@ u32 Bus::region_cycles(u32 address, BusWidth width, AccessType access, u64 cycle
         return ppu_.is_video_memory_contended() ? 1u : 0u;
     };
 
-    if (address < 0x00004000u) {
-        return 1;
-    }
-    if ((address & 0x0F000000u) == 0x02000000u) {
-        return width == BusWidth::Word ? 6u : 3u;
-    }
-    if ((address & 0x0F000000u) == 0x03000000u) {
-        return 1;
-    }
-    if ((address & 0x0F000000u) == 0x04000000u) {
-        return 1;
-    }
+    if (address < 0x00004000u) return 1;
+    if ((address & 0x0F000000u) == 0x02000000u) return width == BusWidth::Word ? 6u : 3u;
+    if ((address & 0x0F000000u) == 0x03000000u) return 1;
+    if ((address & 0x0F000000u) == 0x04000000u) return 1;
     if ((address & 0x0F000000u) == 0x05000000u || (address & 0x0F000000u) == 0x06000000u) {
         const auto base = width == BusWidth::Word ? 2u : 1u;
         return base + contiguous_video_penalty();
     }
-    if ((address & 0x0F000000u) == 0x07000000u) {
-        return 1u + contiguous_video_penalty();
-    }
+    if ((address & 0x0F000000u) == 0x07000000u) return 1u + contiguous_video_penalty();
     if (address >= 0x08000000u && address < 0x0E000000u) {
-        auto sequential = has_access_flag(access, AccessType::Sequential);
-        if ((address & 0x1FFFFu) == 0u ||
-            (has_access_flag(last_access_, AccessType::Dma) && !has_access_flag(access, AccessType::Dma))) {
-            sequential = false;
-        }
         const auto page = static_cast<std::size_t>(address >> 24u);
+        auto sequential = has_access_flag(access, AccessType::Sequential);
+        if ((address & 0x1FFFFu) == 0u || (has_access_flag(last_access_, AccessType::Dma) && !has_access_flag(access, AccessType::Dma))) sequential = false;
         const auto seq_index = static_cast<std::size_t>(sequential ? 1u : 0u);
         return width == BusWidth::Word ? wait32_[seq_index][page] : wait16_[seq_index][page];
     }
-    if (address >= 0x0E000000u && address < 0x10000000u) {
-        return wait16_[0][0xEu];
-    }
+    if (address >= 0x0E000000u && address < 0x10000000u) return wait16_[0][0xEu];
     return 1;
-}
-
-u32 Bus::prefetch_region_cycles(u32 address, BusWidth width) const {
-    const auto page = static_cast<std::size_t>(address >> 24u);
-    return width == BusWidth::Word ? wait32_[1][page] : wait16_[1][page];
 }
 
 BusAccessResult Bus::read_io(u32 address, BusWidth width, AccessType access, u64 cycle_now) {
@@ -979,24 +936,37 @@ BusAccessResult Bus::read_io(u32 address, BusWidth width, AccessType access, u64
     result.cycles = 1;
     const auto io_address = width == BusWidth::Word ? align_down(address, 4u)
                                                     : (width == BusWidth::Half ? align_down(address, 2u) : address);
+    const auto half_to_check = width == BusWidth::Byte ? align_down(io_address, 2u) : io_address;
 
-    if (width == BusWidth::Half && is_open_bus_io_halfword(io_address)) {
+    if ((width == BusWidth::Half || width == BusWidth::Byte) && is_open_bus_io_halfword(half_to_check)) {
         result.value = narrow_open_bus(open_bus_, width, io_address);
         result.open_bus = true;
         result.dma_open_bus = has_access_flag(last_access_, AccessType::Dma);
         record_open_bus_read(result.value, width);
         return result;
     }
-    if (width == BusWidth::Half && is_zero_read_io_halfword(io_address)) {
+    if ((width == BusWidth::Half || width == BusWidth::Byte) && is_zero_read_io_halfword(half_to_check)) {
         result.value = 0;
         record_open_bus_read(result.value, width);
         return result;
+    }
+
+    if (sio_active_ && cycle_now >= sio_event_cycle_) {
+        sio_active_ = false;
+        sio_event_cycle_ = std::numeric_limits<u64>::max();
+        sio_cnt_ = static_cast<u16>(sio_cnt_ & ~0x0080u);
+        if (test_bit(sio_cnt_, 14u)) {
+            irq_.request(IrqSerial);
+        }
     }
 
     if ((io_address >= kDispcnt && io_address <= kBldCnt + 4u) || io_address == kVcount) {
         result.value = ppu_.read_register(io_address, width);
     } else if (io_address >= 0x04000060u && io_address <= kFifoB + 2u) {
         result.value = apu_.read_register(io_address, width);
+        if (io_address == kSoundCntX) {
+            result.value &= 0x0080u;
+        }
     } else if ((io_address >= kDma0Sad && io_address < kDma0Sad + 48u)) {
         result.value = dma_.read_register(io_address, width);
     } else if (io_address >= kTm0CntL && io_address <= kTm0CntH + 12u) {
@@ -1024,25 +994,32 @@ BusAccessResult Bus::read_io(u32 address, BusWidth width, AccessType access, u64
     } else if (io_address == kIe || io_address == kIf || io_address == kIme) {
         result.value = irq_.read_register(io_address, width);
     } else if (io_address >= kSioMulti0 && io_address <= kJoyStat + 2u) {
-        const auto read_sio_half = [&](u32 half_address) -> u16 {
-            const auto serial_mode = sio_mode(siocnt_, rcnt_);
+        const auto read_half = [&](u32 half_address) -> u16 {
+            const auto serial_mode = sio_mode(sio_cnt_, rcnt_);
             switch (half_address) {
             case kSioMulti0:
-                return serial_mode == 0x1000u ? siodata32_l_ : 0;
+                return serial_mode == 0x1000u ? sio_data32_lo_ : 0u;
             case kSioMulti0 + 2u:
-                return serial_mode == 0x1000u ? siodata32_h_ : 0;
+                return serial_mode == 0x1000u ? sio_data32_hi_ : 0u;
             case kSioMulti0 + 4u:
             case kSioMulti0 + 6u:
-                return 0;
+                return 0u;
             case kSioCnt:
-                return static_cast<u16>(siocnt_ & ((serial_mode == 0x3000u) ? 0x7FAFu : 0x7F8Fu));
+                return static_cast<u16>(sio_cnt_ & ((serial_mode == 0x3000u) ? 0x7FAFu : 0x7F8Fu));
             case kSioMltSend:
-                return serial_mode == 0x3000u ? 0 : siomlt_send_;
+                return serial_mode == 0x3000u ? 0u : sio_mlt_send_;
             case kRcnt: {
-                const auto rcnt_mode = rcnt_ & 0xC000u;
-                if (rcnt_mode == 0x8000u) return static_cast<u16>(rcnt_mode | 0x01FFu);
-                if (rcnt_mode == 0xC000u) return static_cast<u16>(rcnt_mode | 0x01FCu);
-                return serial_mode == 0x0000u || serial_mode == 0x1000u ? 0x01F5u : 0x01FFu;
+                const auto rcnt_mode = static_cast<u16>(rcnt_ & 0xC000u);
+                if (rcnt_mode == 0x8000u) {
+                    return static_cast<u16>(rcnt_mode | 0x01FFu);
+                }
+                if (rcnt_mode == 0xC000u) {
+                    return static_cast<u16>(rcnt_mode | 0x01FCu);
+                }
+                if (serial_mode == 0x0000u || serial_mode == 0x1000u) {
+                    return 0x01F5u;
+                }
+                return 0x01FFu;
             }
             case kJoyCnt:
                 return static_cast<u16>(joycnt_ & 0x0040u);
@@ -1052,45 +1029,34 @@ BusAccessResult Bus::read_io(u32 address, BusWidth width, AccessType access, u64
             case kJoyTrans + 2u:
             case kJoyStat:
             case kJoyStat + 2u:
-                return 0;
+                return 0u;
             default:
-                return 0;
+                return 0u;
             }
         };
-
         if (width == BusWidth::Byte) {
-            const auto aligned = align_down(address, 2u);
-            const auto shift = (address & 1u) * 8u;
-            result.value = (read_sio_half(aligned) >> shift) & 0xFFu;
+            const auto aligned = align_down(io_address, 2u);
+            const auto half = read_half(aligned);
+            const auto shift = (io_address & 1u) * 8u;
+            result.value = (half >> shift) & 0xFFu;
         } else if (width == BusWidth::Half) {
-            result.value = read_sio_half(io_address);
+            result.value = read_half(io_address);
         } else {
-            result.value = static_cast<u32>(read_sio_half(io_address)) |
-                           (static_cast<u32>(read_sio_half(io_address + 2u)) << 16u);
+            result.value = static_cast<u32>(read_half(io_address)) |
+                           (static_cast<u32>(read_half(io_address + 2u)) << 16u);
         }
     } else if (io_address == kWaitCnt) {
         result.value = waitcnt_;
     } else if (io_address == kPostFlg) {
         result.value = postflg_;
-    } else if (io_address == kHaltCnt) {
-        result.value = 0;
-    } else if (io_address >= kMgbaLogStringLo && io_address < kMgbaLogStringHi) {
-        result.value = 0;
-    } else if (io_address == kMgbaLogSend) {
-        result.value = 0;
-    } else if (io_address == kMgbaLogEnable || io_address == (kMgbaLogEnable + 1u)) {
-        if (width == BusWidth::Byte) {
-            const auto shift = (io_address - kMgbaLogEnable) * 8u;
-            result.value = (mgba_log_enable_ >> shift) & 0xFFu;
-        } else {
-            result.value = mgba_log_enable_;
-        }
+    } else if (io_address == kMgbaLogEnable) {
+        result.value = static_cast<u32>(mgba_log_enable_);
+    } else if (io_address == 0x04000206u || io_address == 0x0400020Au || io_address == 0x04000302u) {
+        result.value = 0u;
     } else {
         result.value = open_bus_;
         result.open_bus = true;
-        result.dma_open_bus = has_access_flag(last_access_, AccessType::Dma);
     }
-
     record_open_bus_read(result.value, width);
     return result;
 }
@@ -1101,7 +1067,6 @@ BusAccessResult Bus::write_io(u32 address, u32 value, BusWidth width, u64 cycle_
     result.cycles = 1;
     const auto io_address = width == BusWidth::Word ? align_down(address, 4u)
                                                     : (width == BusWidth::Half ? align_down(address, 2u) : address);
-
     if ((io_address >= kDispcnt && io_address <= kBldCnt + 4u) || io_address == kVcount) {
         ppu_.write_register(io_address, value, width);
     } else if (io_address >= 0x04000060u && io_address <= kFifoB + 2u) {
@@ -1110,9 +1075,6 @@ BusAccessResult Bus::write_io(u32 address, u32 value, BusWidth width, u64 cycle_
         dma_.write_register(io_address, value, width, cycle_now);
     } else if (io_address >= kTm0CntL && io_address <= kTm0CntH + 12u) {
         service_timers(cycle_now);
-#if GBA_TRACE_TIMERS
-        update_timer_trace_context();
-#endif
         timers_.write_register(io_address, value, width, cycle_now, irq_, apu_);
     } else if (io_address == kKeyCnt) {
         keycnt_ = static_cast<u16>(value & 0xFFFFu);
@@ -1120,24 +1082,36 @@ BusAccessResult Bus::write_io(u32 address, u32 value, BusWidth width, u64 cycle_
     } else if (io_address == kIe || io_address == kIf || io_address == kIme) {
         irq_.write_register(io_address, value, width, cycle_now);
     } else if (io_address >= kSioMulti0 && io_address <= kJoyStat + 2u) {
-        const auto write_sio_half = [&](u32 half_address, u16 half_value) {
+        const auto write_half = [&](u32 half_address, u16 half_value) {
             switch (half_address) {
             case kSioMulti0:
-                siodata32_l_ = half_value;
+                sio_data32_lo_ = half_value;
                 break;
             case kSioMulti0 + 2u:
-                siodata32_h_ = half_value;
+                sio_data32_hi_ = half_value;
+                break;
+            case kSioMulti0 + 4u:
+            case kSioMulti0 + 6u:
                 break;
             case kSioCnt:
-                siocnt_ = static_cast<u16>(half_value & 0x7FAFu);
-                if (test_bit(siocnt_, 7u)) {
-                    const auto serial_mode = sio_mode(siocnt_, rcnt_);
-                    const auto speed = siocnt_ & 0x0003u;
-                    if ((serial_mode == 0x0000u || serial_mode == 0x1000u) && (speed == 1u || speed == 3u)) {
+                sio_cnt_ = static_cast<u16>(half_value & 0x7FAFu);
+                if (test_bit(sio_cnt_, 7u)) {
+                    const auto serial_mode = sio_mode(sio_cnt_, rcnt_);
+                    const auto speed = static_cast<u16>(sio_cnt_ & 0x0003u);
+                    if ((serial_mode == 0x0000u || serial_mode == 0x1000u) &&
+                        (speed == 1u || speed == 3u)) {
                         const auto bits = serial_mode == 0x1000u ? 32u : 8u;
-                        const auto bit_cycles = speed == 3u ? 8u : 64u;
+                        static constexpr u64 kSioCycles[2][2] = {
+                            {524u, 2097u},
+                            {67u, 268u},
+                        };
+                        const auto spd = static_cast<std::size_t>(speed == 3u ? 1u : 0u);
+                        const auto nbits = static_cast<std::size_t>(bits == 32u ? 1u : 0u);
                         sio_active_ = true;
-                        sio_event_cycle_ = cycle_now + (bits * bit_cycles) + 11u;
+                        sio_event_cycle_ = cycle_now + kSioCycles[spd][nbits];
+                    } else {
+                        sio_active_ = false;
+                        sio_event_cycle_ = std::numeric_limits<u64>::max();
                     }
                 } else {
                     sio_active_ = false;
@@ -1145,30 +1119,33 @@ BusAccessResult Bus::write_io(u32 address, u32 value, BusWidth width, u64 cycle_
                 }
                 break;
             case kSioMltSend:
-                siomlt_send_ = half_value;
+                sio_mlt_send_ = half_value;
                 break;
             case kRcnt:
                 rcnt_ = static_cast<u16>(half_value & 0xC3FFu);
                 break;
-            case kJoyCnt:
-                joycnt_ = static_cast<u16>(half_value & 0x0040u);
+            case kJoyCnt: joycnt_ = static_cast<u16>(half_value & 0x0040u); break;
+            case kJoyRecv:
+            case kJoyRecv + 2u:
+            case kJoyTrans:
+            case kJoyTrans + 2u:
+            case kJoyStat:
                 break;
             default:
                 break;
             }
         };
-
         if (width == BusWidth::Byte) {
-            const auto aligned = align_down(address, 2u);
-            const auto shift = (address & 1u) * 8u;
-            const auto existing = static_cast<u16>(read_io(aligned, BusWidth::Half, AccessType::Io, cycle_now).value);
-            const auto merged = static_cast<u16>((existing & ~(0xFFu << shift)) | ((value & 0xFFu) << shift));
-            write_sio_half(aligned, merged);
+            const auto aligned = align_down(io_address, 2u);
+            const auto shift = (io_address & 1u) * 8u;
+            const auto current = static_cast<u16>(read_io(aligned, BusWidth::Half, AccessType::Io, cycle_now).value);
+            const auto merged = static_cast<u16>((current & ~(0xFFu << shift)) | ((value & 0xFFu) << shift));
+            write_half(aligned, merged);
         } else if (width == BusWidth::Half) {
-            write_sio_half(io_address, static_cast<u16>(value));
+            write_half(io_address, static_cast<u16>(value & 0xFFFFu));
         } else {
-            write_sio_half(io_address, static_cast<u16>(value & 0xFFFFu));
-            write_sio_half(io_address + 2u, static_cast<u16>((value >> 16u) & 0xFFFFu));
+            write_half(io_address, static_cast<u16>(value & 0xFFFFu));
+            write_half(io_address + 2u, static_cast<u16>((value >> 16u) & 0xFFFFu));
         }
     } else if (io_address == kWaitCnt) {
         const auto prefetch_was_enabled = test_bit(waitcnt_, 14u);
@@ -1190,38 +1167,25 @@ BusAccessResult Bus::write_io(u32 address, u32 value, BusWidth width, u64 cycle_
         halted_ = true;
     } else if (io_address >= kMgbaLogStringLo && io_address < kMgbaLogStringHi) {
         const auto offset = io_address - kMgbaLogStringLo;
+        // Write all bytes according to bus width
         if (width == BusWidth::Byte) {
-            if (offset < debug_string_.size()) {
-                debug_string_[offset] = static_cast<char>(value & 0xFFu);
-            }
+            if (offset < debug_string_.size()) debug_string_[offset] = static_cast<char>(value & 0xFFu);
         } else if (width == BusWidth::Half) {
-            const auto aligned = offset & ~1u;
-            if (aligned < debug_string_.size()) debug_string_[aligned] = static_cast<char>(value & 0xFFu);
-            if (aligned + 1 < debug_string_.size()) debug_string_[aligned + 1] = static_cast<char>((value >> 8u) & 0xFFu);
+            if (offset < debug_string_.size()) debug_string_[offset] = static_cast<char>(value & 0xFFu);
+            if (offset + 1u < debug_string_.size()) debug_string_[offset + 1u] = static_cast<char>((value >> 8u) & 0xFFu);
         } else {
-            const auto aligned = offset & ~3u;
-            if (aligned < debug_string_.size()) debug_string_[aligned] = static_cast<char>(value & 0xFFu);
-            if (aligned + 1 < debug_string_.size()) debug_string_[aligned + 1] = static_cast<char>((value >> 8u) & 0xFFu);
-            if (aligned + 2 < debug_string_.size()) debug_string_[aligned + 2] = static_cast<char>((value >> 16u) & 0xFFu);
-            if (aligned + 3 < debug_string_.size()) debug_string_[aligned + 3] = static_cast<char>((value >> 24u) & 0xFFu);
+            for (u32 i = 0; i < 4u; ++i) {
+                if (offset + i < debug_string_.size()) debug_string_[offset + i] = static_cast<char>((value >> (i * 8u)) & 0xFFu);
+            }
         }
     } else if (io_address == kMgbaLogSend) {
         if (mgba_log_enable_ != 0u && (value & 0x100u) != 0u && debug_callback_) {
-            debug_string_[255] = '\0';
             debug_callback_(debug_string_.data());
             debug_string_.fill('\0');
         }
     } else if (io_address == kMgbaLogEnable || io_address == (kMgbaLogEnable + 1u)) {
-        u16 enable_write = static_cast<u16>(value & 0xFFFFu);
-        if (width == BusWidth::Byte) {
-            const auto shift = (io_address - kMgbaLogEnable) * 8u;
-            enable_write = static_cast<u16>((mgba_log_enable_ & ~(0xFFu << shift)) | ((value & 0xFFu) << shift));
-        }
-        if (enable_write == 0xC0DEu) {
-            mgba_log_enable_ = 0x1DEAu;
-        }
+        if (value == 0xC0DEu) mgba_log_enable_ = 0x1DEAu;
     }
-
     return result;
 }
 

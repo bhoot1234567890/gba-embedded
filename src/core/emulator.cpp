@@ -89,6 +89,10 @@ const Ppu& Emulator::ppu() const {
     return ppu_;
 }
 
+Ppu& Emulator::ppu() {
+    return ppu_;
+}
+
 std::span<const u16> Emulator::framebuffer() const {
     return ppu_.framebuffer();
 }
@@ -110,6 +114,8 @@ void Emulator::refresh_schedule() {
     scheduler_.set_next_event(SchedulerSlot::Timers, timers_.next_event_cycle());
     scheduler_.set_next_event(SchedulerSlot::Dma, dma_.next_event_cycle());
     scheduler_.set_next_event(SchedulerSlot::Apu, apu_.next_event_cycle());
+    scheduler_.set_next_event(SchedulerSlot::Serial, bus_.next_event_cycle());
+    scheduler_.set_next_event(SchedulerSlot::Irq, irq_.next_event_cycle());
 }
 
 void Emulator::service_due_hardware() {
@@ -121,13 +127,8 @@ void Emulator::service_due_hardware() {
         const auto was_hblank = ppu_.is_hblank();
         const auto was_vblank = ppu_.is_vblank();
 
-        timers_.advance_to(stable_cycle, irq_, apu_);
-        if (apu_.take_fifo_request_a()) {
-            dma_.request_fifo_a(stable_cycle);
-        }
-        if (apu_.take_fifo_request_b()) {
-            dma_.request_fifo_b(stable_cycle);
-        }
+        irq_.advance(stable_cycle);
+        bus_.service_timers(stable_cycle);
 
         ppu_.advance_to(stable_cycle, irq_);
         if (!was_hblank && ppu_.is_hblank() && !ppu_.is_vblank()) {
@@ -138,7 +139,9 @@ void Emulator::service_due_hardware() {
         }
 
         while (const auto line = ppu_.consume_scanline_ready()) {
-            ppu_.render_scanline(*line, bus_.vram(), bus_.palette());
+            if (!skip_render_) {
+                ppu_.render_scanline(*line, bus_.vram(), bus_.palette(), bus_.oam());
+            }
         }
 
         apu_.advance_to(stable_cycle);

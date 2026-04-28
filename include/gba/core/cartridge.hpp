@@ -4,6 +4,8 @@
 #include <filesystem>
 #endif
 
+#include <array>
+
 #include "gba/core/types.hpp"
 
 namespace gba {
@@ -26,13 +28,21 @@ public:
     void set_rom(std::vector<u8> rom);
     void set_bios(std::vector<u8> bios);
     void set_save_type(SaveType save_type);
+    void auto_detect_save_type();
+    void set_rtc_enabled(bool enabled);
+    void load_save(std::vector<u8> save_data);
+    
+    [[nodiscard]] bool is_save_dirty() const;
+    void clear_save_dirty();
 
     [[nodiscard]] std::string title() const;
     [[nodiscard]] SaveType save_type() const;
+    [[nodiscard]] bool rtc_enabled() const;
     [[nodiscard]] bool has_bios() const;
 
     [[nodiscard]] u32 read_bios(u32 address, BusWidth width) const;
     [[nodiscard]] u32 read_rom(u32 address, BusWidth width) const;
+    void write_rom(u32 address, u32 value, BusWidth width);
     [[nodiscard]] u32 read_save(u32 address, BusWidth width) const;
     void write_save(u32 address, u32 value, BusWidth width);
 
@@ -42,8 +52,24 @@ public:
 
 private:
     void resize_save_storage();
+    void auto_detect_rtc();
     [[nodiscard]] u32 read_vector(std::span<const u8> bytes, u32 address, BusWidth width) const;
     void write_vector(std::vector<u8>& bytes, u32 address, u32 value, BusWidth width);
+
+    // Game Pak GPIO and S-3511-compatible RTC.
+    void reset_gpio_state();
+    [[nodiscard]] bool read_gpio_byte(u32 address, u8& value) const;
+    void write_gpio_byte(u32 address, u8 value);
+    [[nodiscard]] u8 gpio_data_read() const;
+    [[nodiscard]] u8 rtc_gpio_read() const;
+    void rtc_gpio_write(u8 value);
+    [[nodiscard]] bool rtc_read_sio_bit();
+    void rtc_receive_command();
+    void rtc_receive_buffer();
+    void rtc_transmit_buffer();
+    void rtc_read_register();
+    void rtc_write_register();
+    [[nodiscard]] int rtc_register_length() const;
 
     // Flash command state machine
     void flash_write(u32 address, u8 value);
@@ -55,6 +81,7 @@ private:
     std::vector<u8> rom_;
     std::vector<u8> save_;
     SaveType save_type_ = SaveType::None;
+    bool save_dirty_ = false;
 
     // Flash state
     int flash_phase_ = 0;
@@ -63,6 +90,29 @@ private:
     bool flash_write_enable_ = false;
     bool flash_bank_select_ = false;
     int flash_bank_ = 0;
+
+    bool gpio_rtc_present_ = false;
+    u8 gpio_data_ = 0;
+    u8 gpio_direction_ = 0;
+    u8 gpio_control_ = 0;
+
+    enum class RtcState : u8 {
+        Command,
+        Sending,
+        Receiving,
+        Complete,
+    };
+
+    RtcState rtc_state_ = RtcState::Complete;
+    u8 rtc_control_ = 0x40;
+    u8 rtc_register_ = 0;
+    u8 rtc_data_ = 0;
+    std::array<u8, 7> rtc_buffer_{};
+    int rtc_current_bit_ = 0;
+    int rtc_current_byte_ = 0;
+    u8 rtc_port_sck_ = 0;
+    u8 rtc_port_sio_ = 0;
+    u8 rtc_port_cs_ = 0;
 };
 
 }  // namespace gba

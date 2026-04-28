@@ -1,5 +1,7 @@
 #pragma once
 
+#include "gba_board_profile.h"
+
 #include "driver/gpio.h"
 #include "esp_err.h"
 
@@ -11,13 +13,13 @@
  * The ST7735 green-tab offset is configurable below.
  */
 
-/* ── GPIO pins (fill in your wiring) ── */
-#define DISPLAY_PIN_SCLK   GPIO_NUM_4
-#define DISPLAY_PIN_MOSI   GPIO_NUM_5
-#define DISPLAY_PIN_DC     GPIO_NUM_6
-#define DISPLAY_PIN_CS     GPIO_NUM_7
-#define DISPLAY_PIN_RST    GPIO_NUM_8
-#define DISPLAY_PIN_BL     GPIO_NUM_9
+/* ── GPIO pins (board profile defaults, override as needed) ── */
+#define DISPLAY_PIN_SCLK   GBA_DISPLAY_PIN_SCLK
+#define DISPLAY_PIN_MOSI   GBA_DISPLAY_PIN_MOSI
+#define DISPLAY_PIN_DC     GBA_DISPLAY_PIN_DC
+#define DISPLAY_PIN_CS     GBA_DISPLAY_PIN_CS
+#define DISPLAY_PIN_RST    GBA_DISPLAY_PIN_RST
+#define DISPLAY_PIN_BL     GBA_DISPLAY_PIN_BL
 
 /* ── Display dimensions ── */
 #define DISPLAY_WIDTH      128

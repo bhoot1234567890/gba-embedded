@@ -10,6 +10,7 @@ The runtime is tuned for an ESP32-S3 module with octal PSRAM, such as ESP32-S3-W
 - PSRAM: octal mode at 80 MHz.
 - WiFi and Bluetooth: disabled.
 - Display: 128x128 ST7735 over SPI.
+- Audio: MAX98357A over I2S, no MCLK.
 - Storage: SD card, defaulting to SDSPI in `platform/esp32s3/main/gba_board_profile.h`.
 - Input: active-low buttons with internal pull-ups, defined in the board profile.
 
@@ -26,6 +27,8 @@ Optional real BIOS locations:
 - `/sdcard/BIOS/gba_bios.bin`
 
 If a valid 16 KiB BIOS is found, the emulator boots through it. If no BIOS is found, the runtime uses skip-BIOS reset and starts execution at `0x08000000`.
+
+When debugging a real-BIOS boot, seeing the CPU PC inside low BIOS addresses such as `0x000001B4` is not automatically a hang. The real BIOS is also used by games for halt/interrupt wait routines, so framebuffer progress and cycle/IRQ state are better boot indicators than PC alone.
 
 ## Boot flow
 
@@ -77,6 +80,14 @@ Current defaults:
 
 Buttons are active-low. Wire one side of each button to the GPIO and the other side to ground. If your board uses different wiring, override the `GBA_INPUT_PIN_*` macros in the build or edit the board profile.
 
+Default MAX98357A audio pins:
+
+- BCLK: GPIO35
+- LRCLK/WS: GPIO36
+- DIN: GPIO37
+
+Wire MAX98357A `VIN` to 3.3V for modest volume or 5V for louder speaker output, `GND` to ground, and the speaker across the amplifier output terminals. Do not connect either speaker terminal to ground. The runtime sends 32768 Hz 16-bit stereo I2S; the MAX98357A board can select left, right, or mono mix in hardware.
+
 ## Build and flash
 
 From the ESP32-S3 project directory:
@@ -93,6 +104,6 @@ Run `idf.py reconfigure` after changing `sdkconfig.defaults`, especially after s
 ## Remaining hardware-dependent work
 
 - Verify the default GPIO map against the exact ESP32-S3 board before soldering.
-- Audio is still disabled by default until an I2S DAC or codec pinout is finalized.
+- If the MAX98357A breakout exposes shutdown/gain/channel-select pins, strap them on the board for the desired gain and mono behavior.
 - If a specific display module has color order or offset differences, adjust `gba_display.h`.
 - If PSRAM instability appears, test 40 MHz PSRAM as a diagnostic only. The performance target is 80 MHz octal PSRAM.

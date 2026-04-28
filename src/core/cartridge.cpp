@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <array>
 #include <ctime>
+#include <cstdio>
+#include <cstdlib>
 #include <string_view>
 #include <time.h>
 
@@ -512,14 +514,16 @@ void Cartridge::write_gpio_byte(u32 address, u8 value) {
     switch (address & 0x01FFFFFFu) {
     case kGpioData:
         gpio_data_ = static_cast<u8>((gpio_data_ & static_cast<u8>(~gpio_direction_)) | (value & gpio_direction_));
+        trace_rtc("gpio-data", static_cast<u8>(address), value, gpio_data_);
         rtc_gpio_write(gpio_data_);
         break;
     case kGpioDirection:
         gpio_direction_ = static_cast<u8>(value & 0x0Fu);
-        rtc_gpio_write(gpio_data_);
+        trace_rtc("gpio-dir", static_cast<u8>(address), value, gpio_direction_);
         break;
     case kGpioControl:
         gpio_control_ = static_cast<u8>(value & 1u);
+        trace_rtc("gpio-ctl", static_cast<u8>(address), value, gpio_control_);
         break;
     default:
         break;
@@ -550,6 +554,10 @@ void Cartridge::rtc_gpio_write(u8 value) {
     }
 
     if (rtc_port_cs_ == 0u) {
+        rtc_state_ = RtcState::Complete;
+        rtc_current_bit_ = 0;
+        rtc_current_byte_ = 0;
+        rtc_data_ = 0;
         return;
     }
 
@@ -558,6 +566,7 @@ void Cartridge::rtc_gpio_write(u8 value) {
         rtc_current_bit_ = 0;
         rtc_current_byte_ = 0;
         rtc_data_ = 0;
+        trace_rtc("start", value, 0, 0);
         return;
     }
 
@@ -602,11 +611,13 @@ void Cartridge::rtc_receive_command() {
     if ((command >> 4u) == 6u) {
         command = reverse_bits(command);
     } else if ((command & 0x0Fu) != 6u) {
+        trace_rtc("bad-command", rtc_data_, command, 0);
         rtc_state_ = RtcState::Complete;
         return;
     }
 
     rtc_register_ = static_cast<u8>((command >> 4u) & 7u);
+    trace_rtc("command", rtc_data_, command, rtc_register_);
     rtc_current_bit_ = 0;
     rtc_current_byte_ = 0;
     rtc_data_ = 0;
@@ -677,11 +688,13 @@ void Cartridge::rtc_read_register() {
         rtc_buffer_[4] = decimal_to_bcd(hour);
         rtc_buffer_[5] = decimal_to_bcd(now.tm_min);
         rtc_buffer_[6] = decimal_to_bcd(now.tm_sec);
+        trace_rtc("read-datetime", rtc_buffer_[0], rtc_buffer_[1], rtc_buffer_[2]);
         break;
     }
     case 4u:
         rtc_buffer_[0] = static_cast<u8>(rtc_control_ & 0xEAu);
         rtc_control_ = static_cast<u8>(rtc_control_ & ~0x80u);
+        trace_rtc("read-control", rtc_buffer_[0], 0, 0);
         break;
     case 6u: {
         auto now = local_time_now();
@@ -692,10 +705,12 @@ void Cartridge::rtc_read_register() {
         rtc_buffer_[0] = decimal_to_bcd(hour);
         rtc_buffer_[1] = decimal_to_bcd(now.tm_min);
         rtc_buffer_[2] = decimal_to_bcd(now.tm_sec);
+        trace_rtc("read-time", rtc_buffer_[0], rtc_buffer_[1], rtc_buffer_[2]);
         break;
     }
     default:
         rtc_buffer_.fill(0xFFu);
+        trace_rtc("read-unknown", rtc_register_, 0, 0);
         break;
     }
 }
@@ -716,6 +731,30 @@ void Cartridge::rtc_write_register() {
 
 int Cartridge::rtc_register_length() const {
     return kRtcRegisterLengths[static_cast<std::size_t>(rtc_register_ & 7u)];
+}
+
+void Cartridge::trace_rtc(const char* event, u8 a, u8 b, u8 c) const {
+#ifndef GBA_PLATFORM_ESP32
+    static const bool enabled = std::getenv("GBA_RTC_TRACE") != nullptr;
+    if (enabled) {
+        std::fprintf(stderr, "RTC %-13s %02X %02X %02X ctl=%02X dir=%02X data=%02X cs=%u sck=%u sio=%u\n",
+                     event,
+                     a,
+                     b,
+                     c,
+                     gpio_control_,
+                     gpio_direction_,
+                     gpio_data_,
+                     static_cast<unsigned>(rtc_port_cs_),
+                     static_cast<unsigned>(rtc_port_sck_),
+                     static_cast<unsigned>(rtc_port_sio_));
+    }
+#else
+    (void)event;
+    (void)a;
+    (void)b;
+    (void)c;
+#endif
 }
 
 u32 Cartridge::read_vector(std::span<const u8> bytes, u32 address, BusWidth width) const {

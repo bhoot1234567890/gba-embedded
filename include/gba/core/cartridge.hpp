@@ -70,6 +70,7 @@ private:
     void rtc_read_register();
     void rtc_write_register();
     [[nodiscard]] int rtc_register_length() const;
+    void trace_rtc(const char* event, u8 a = 0, u8 b = 0, u8 c = 0) const;
 
     // Flash command state machine
     void flash_write(u32 address, u8 value);

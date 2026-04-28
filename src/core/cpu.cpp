@@ -1,6 +1,8 @@
 #include "gba/core/cpu.hpp"
 
 #include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #include <limits>
 
 #ifndef GBA_PLATFORM_ESP32
@@ -27,6 +29,56 @@ namespace {
 
 constexpr u32 kFlagI = 1u << 7;
 constexpr u32 kFlagF = 1u << 6;
+
+[[nodiscard]] bool trace_rtc_pc_enabled() {
+#ifndef GBA_PLATFORM_ESP32
+    static const bool enabled = std::getenv("GBA_RTC_TRACE_PC") != nullptr;
+    return enabled;
+#else
+    return false;
+#endif
+}
+
+[[nodiscard]] bool is_gpio_trace_address(u32 address) {
+    const auto normalized = address & 0x0FFFFFFEu;
+    return normalized >= 0x080000C4u && normalized <= 0x080000C8u;
+}
+
+[[nodiscard]] const char* bus_width_name(BusWidth width) {
+    switch (width) {
+    case BusWidth::Byte:
+        return "8";
+    case BusWidth::Half:
+        return "16";
+    case BusWidth::Word:
+        return "32";
+    }
+    return "?";
+}
+
+void trace_gpio_cpu(const char* mode, const char* op, u32 instruction_pc, u32 visible_pc, u32 address, BusWidth width,
+                    u32 value) {
+#ifndef GBA_PLATFORM_ESP32
+    if (trace_rtc_pc_enabled() && is_gpio_trace_address(address)) {
+        std::fprintf(stderr, "GPIOCPU %s %s%s instr=%08X visible=%08X addr=%08X value=%08X\n",
+                     mode,
+                     op,
+                     bus_width_name(width),
+                     instruction_pc,
+                     visible_pc,
+                     address,
+                     value);
+    }
+#else
+    (void)mode;
+    (void)op;
+    (void)instruction_pc;
+    (void)visible_pc;
+    (void)address;
+    (void)width;
+    (void)value;
+#endif
+}
 
 // Precomputed condition-check LUT: index = (condition << 4) | NZCV flags
 constexpr auto kCondLut = [] {
@@ -361,7 +413,8 @@ void Arm7tdmi::reset(bool skip_bios) {
     hle_swi_enabled_ = true;
     if (!skip_bios && bus_.has_bios()) {
         const auto swi_vector = bus_.read(0x00000008u, BusWidth::Word, AccessType::CodeFetch, 0).value;
-        std::fprintf(stderr, "BIOS SWI vector at 0x08: 0x%08X (stub=0xEAFFFFFE, match=%d)\n", swi_vector, swi_vector == 0xEAFFFFFEu);
+        std::fprintf(stderr, "BIOS SWI vector at 0x08: 0x%08X (stub=0xEAFFFFFE, match=%d)\n",
+                     static_cast<unsigned>(swi_vector), swi_vector == 0xEAFFFFFEu);
         hle_swi_enabled_ = swi_vector == 0xEAFFFFFEu;
         return;
     }
@@ -888,25 +941,31 @@ u32 IRAM_ATTR Arm7tdmi::execute_arm(u32 instruction) {
     const auto resolve_arm_open_bus_word = [&](const BusAccessResult& result) -> u32 {
         return result.dma_open_bus ? result.value : arm_open_bus_word();
     };
+    const auto trace_arm_gpio = [&](const char* op, u32 address, BusWidth width, u32 value) {
+        trace_gpio_cpu("ARM", op, state_.regs[15] - 4u, pc_visible(), address, width, value);
+    };
     const auto read8 = [&](u32 address) -> u32 {
         const auto result = bus_.read(address, BusWidth::Byte, data_access(), current_cycle_);
         current_cycle_ += result.cycles;
         break_fetch_burst(result);
+        u32 value = result.value & 0xFFu;
         if (result.open_bus) {
-            return (resolve_arm_open_bus_word(result) >> ((address & 3u) * 8u)) & 0xFFu;
+            value = (resolve_arm_open_bus_word(result) >> ((address & 3u) * 8u)) & 0xFFu;
         }
-        return result.value & 0xFFu;
+        trace_arm_gpio("R", address, BusWidth::Byte, value);
+        return value;
     };
     const auto read16 = [&](u32 address) -> u32 {
         const auto result = bus_.read(address, BusWidth::Half, data_access(), current_cycle_);
         current_cycle_ += result.cycles;
         break_fetch_burst(result);
-        const auto value =
+        auto value =
             result.open_bus ? ((resolve_arm_open_bus_word(result) >> ((address & 2u) * 8u)) & 0xFFFFu)
                             : (result.value & 0xFFFFu);
         if ((address & 1u) != 0) {
-            return rotate_right(value, 8u);
+            value = rotate_right(value, 8u);
         }
+        trace_arm_gpio("R", address, BusWidth::Half, value);
         return value;
     };
     const auto read32 = [&](u32 address) -> u32 {
@@ -914,25 +973,30 @@ u32 IRAM_ATTR Arm7tdmi::execute_arm(u32 instruction) {
         current_cycle_ += result.cycles;
         break_fetch_burst(result);
         const auto value = result.open_bus ? resolve_arm_open_bus_word(result) : result.value;
-        return rotate_right(value, (address & 3u) * 8u);
+        const auto rotated = rotate_right(value, (address & 3u) * 8u);
+        trace_arm_gpio("R", address, BusWidth::Word, rotated);
+        return rotated;
     };
     const auto write8 = [&](u32 address, u32 value) {
         const auto result = bus_.write(address, value, BusWidth::Byte, AccessType::NonSequential, current_cycle_);
         current_cycle_ += result.cycles;
         break_fetch_burst(result);
         current_cycle_ += bus_.service_dma(current_cycle_);
+        trace_arm_gpio("W", address, BusWidth::Byte, value);
     };
     const auto write16 = [&](u32 address, u32 value) {
         const auto result = bus_.write(address, value, BusWidth::Half, AccessType::NonSequential, current_cycle_);
         current_cycle_ += result.cycles;
         break_fetch_burst(result);
         current_cycle_ += bus_.service_dma(current_cycle_);
+        trace_arm_gpio("W", address, BusWidth::Half, value);
     };
     const auto write32 = [&](u32 address, u32 value) {
         const auto result = bus_.write(address, value, BusWidth::Word, AccessType::NonSequential, current_cycle_);
         current_cycle_ += result.cycles;
         break_fetch_burst(result);
         current_cycle_ += bus_.service_dma(current_cycle_);
+        trace_arm_gpio("W", address, BusWidth::Word, value);
     };
 
     // Jump-table dispatch on bits 27:25 of ARM instruction
@@ -1536,52 +1600,63 @@ u32 IRAM_ATTR Arm7tdmi::execute_thumb(u16 instruction) {
     const auto resolve_thumb_open_bus_word = [&](const BusAccessResult& result) -> u32 {
         return result.dma_open_bus ? result.value : thumb_open_bus_word();
     };
+    const auto trace_thumb_gpio = [&](const char* op, u32 address, BusWidth width, u32 value) {
+        trace_gpio_cpu("THUMB", op, thumb_pc() - 4u, pc_visible(), address, width, value);
+    };
 
     const auto read32 = [&](u32 address) -> u32 {
         const auto result = bus_.read(address, BusWidth::Word, data_access(), current_cycle_);
         current_cycle_ += result.cycles;
         break_fetch_burst(result);
         const auto value = result.open_bus ? resolve_thumb_open_bus_word(result) : result.value;
-        return rotate_right(value, (address & 3u) * 8u);
+        const auto rotated = rotate_right(value, (address & 3u) * 8u);
+        trace_thumb_gpio("R", address, BusWidth::Word, rotated);
+        return rotated;
     };
     const auto read16 = [&](u32 address) -> u32 {
         const auto result = bus_.read(address, BusWidth::Half, data_access(), current_cycle_);
         current_cycle_ += result.cycles;
         break_fetch_burst(result);
-        const auto value =
+        auto value =
             result.open_bus ? ((resolve_thumb_open_bus_word(result) >> ((address & 2u) * 8u)) & 0xFFFFu)
                             : (result.value & 0xFFFFu);
         if ((address & 1u) != 0) {
-            return rotate_right(value, 8u);
+            value = rotate_right(value, 8u);
         }
+        trace_thumb_gpio("R", address, BusWidth::Half, value);
         return value;
     };
     const auto read8 = [&](u32 address) -> u32 {
         const auto result = bus_.read(address, BusWidth::Byte, data_access(), current_cycle_);
         current_cycle_ += result.cycles;
         break_fetch_burst(result);
+        u32 value = result.value & 0xFFu;
         if (result.open_bus) {
-            return (resolve_thumb_open_bus_word(result) >> ((address & 3u) * 8u)) & 0xFFu;
+            value = (resolve_thumb_open_bus_word(result) >> ((address & 3u) * 8u)) & 0xFFu;
         }
-        return result.value & 0xFFu;
+        trace_thumb_gpio("R", address, BusWidth::Byte, value);
+        return value;
     };
     const auto write32 = [&](u32 address, u32 value) {
         const auto result = bus_.write(address, value, BusWidth::Word, AccessType::NonSequential, current_cycle_);
         current_cycle_ += result.cycles;
         break_fetch_burst(result);
         current_cycle_ += bus_.service_dma(current_cycle_);
+        trace_thumb_gpio("W", address, BusWidth::Word, value);
     };
     const auto write16 = [&](u32 address, u32 value) {
         const auto result = bus_.write(address, value, BusWidth::Half, AccessType::NonSequential, current_cycle_);
         current_cycle_ += result.cycles;
         break_fetch_burst(result);
         current_cycle_ += bus_.service_dma(current_cycle_);
+        trace_thumb_gpio("W", address, BusWidth::Half, value);
     };
     const auto write8 = [&](u32 address, u32 value) {
         const auto result = bus_.write(address, value, BusWidth::Byte, AccessType::NonSequential, current_cycle_);
         current_cycle_ += result.cycles;
         break_fetch_burst(result);
         current_cycle_ += bus_.service_dma(current_cycle_);
+        trace_thumb_gpio("W", address, BusWidth::Byte, value);
     };
     const auto reg = [&](u32 index) -> u32& { return state_.regs[index]; };
 
@@ -1609,14 +1684,15 @@ u32 IRAM_ATTR Arm7tdmi::execute_thumb(u16 instruction) {
         const auto operand = immediate ? ((instruction >> 6u) & 0x7u) : reg((instruction >> 6u) & 0x7u);
         const auto rs = (instruction >> 3u) & 0x7u;
         const auto rd = instruction & 0x7u;
+        const auto lhs = reg(rs);
         if (subtract) {
-            const auto result = reg(rs) - operand;
+            const auto result = lhs - operand;
             reg(rd) = result;
-            update_nzc_sub(reg(rs), operand, static_cast<u64>(result));
+            update_nzc_sub(lhs, operand, static_cast<u64>(result));
         } else {
-            const auto wide = static_cast<u64>(reg(rs)) + operand;
+            const auto wide = static_cast<u64>(lhs) + operand;
             reg(rd) = static_cast<u32>(wide);
-            update_nzc_add(reg(rs), operand, wide);
+            update_nzc_add(lhs, operand, wide);
         }
         return 0;
     }
@@ -1635,17 +1711,17 @@ u32 IRAM_ATTR Arm7tdmi::execute_thumb(u16 instruction) {
             update_nzc_sub(reg(rd), imm, static_cast<u64>(reg(rd) - imm));
             break;
         case 2: {
-            const auto wide = static_cast<u64>(reg(rd)) + imm;
+            const auto lhs = reg(rd);
+            const auto wide = static_cast<u64>(lhs) + imm;
             reg(rd) = static_cast<u32>(wide);
-            update_nz(reg(rd));
-            assign_bit(state_.cpsr, 29, (wide >> 32u) != 0);
+            update_nzc_add(lhs, imm, wide);
             break;
         }
         case 3: {
-            const auto wide = static_cast<u64>(reg(rd)) - imm;
-            reg(rd) = static_cast<u32>(wide);
-            update_nz(reg(rd));
-            assign_bit(state_.cpsr, 29, reg(rd) <= imm);
+            const auto lhs = reg(rd);
+            const auto result = lhs - imm;
+            reg(rd) = result;
+            update_nzc_sub(lhs, imm, static_cast<u64>(result));
             break;
         }
         }
@@ -1722,9 +1798,10 @@ u32 IRAM_ATTR Arm7tdmi::execute_thumb(u16 instruction) {
             update_nz(reg(rd) & reg(rs));
             break;
         case 0x9: {
-            const auto result = 0 - reg(rs);
+            const auto rhs = reg(rs);
+            const auto result = 0 - rhs;
             reg(rd) = result;
-            update_nzc_sub(0, reg(rs), static_cast<u64>(result));
+            update_nzc_sub(0, rhs, static_cast<u64>(result));
             break;
         }
         case 0xA: {

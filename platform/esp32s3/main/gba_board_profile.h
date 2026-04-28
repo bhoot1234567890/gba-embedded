@@ -72,36 +72,36 @@
 #define GBA_SDSPI_PIN_CS GPIO_NUM_15
 #endif
 
-/* Input: default to disabled until board wiring is finalized */
+/* Input: active-low buttons with internal pull-ups. */
 #ifndef GBA_INPUT_PIN_A
-#define GBA_INPUT_PIN_A GPIO_NUM_NC
+#define GBA_INPUT_PIN_A GPIO_NUM_10
 #endif
 #ifndef GBA_INPUT_PIN_B
-#define GBA_INPUT_PIN_B GPIO_NUM_NC
+#define GBA_INPUT_PIN_B GPIO_NUM_11
 #endif
 #ifndef GBA_INPUT_PIN_SELECT
-#define GBA_INPUT_PIN_SELECT GPIO_NUM_NC
+#define GBA_INPUT_PIN_SELECT GPIO_NUM_16
 #endif
 #ifndef GBA_INPUT_PIN_START
-#define GBA_INPUT_PIN_START GPIO_NUM_NC
+#define GBA_INPUT_PIN_START GPIO_NUM_18
 #endif
 #ifndef GBA_INPUT_PIN_RIGHT
-#define GBA_INPUT_PIN_RIGHT GPIO_NUM_NC
+#define GBA_INPUT_PIN_RIGHT GPIO_NUM_38
 #endif
 #ifndef GBA_INPUT_PIN_LEFT
-#define GBA_INPUT_PIN_LEFT GPIO_NUM_NC
+#define GBA_INPUT_PIN_LEFT GPIO_NUM_39
 #endif
 #ifndef GBA_INPUT_PIN_UP
-#define GBA_INPUT_PIN_UP GPIO_NUM_NC
+#define GBA_INPUT_PIN_UP GPIO_NUM_40
 #endif
 #ifndef GBA_INPUT_PIN_DOWN
-#define GBA_INPUT_PIN_DOWN GPIO_NUM_NC
+#define GBA_INPUT_PIN_DOWN GPIO_NUM_41
 #endif
 #ifndef GBA_INPUT_PIN_R
-#define GBA_INPUT_PIN_R GPIO_NUM_NC
+#define GBA_INPUT_PIN_R GPIO_NUM_42
 #endif
 #ifndef GBA_INPUT_PIN_L
-#define GBA_INPUT_PIN_L GPIO_NUM_NC
+#define GBA_INPUT_PIN_L GPIO_NUM_21
 #endif
 
 /* Audio: default to disabled until codec wiring is finalized */
@@ -114,4 +114,3 @@
 #ifndef GBA_AUDIO_PIN_DOUT
 #define GBA_AUDIO_PIN_DOUT GPIO_NUM_NC
 #endif
-

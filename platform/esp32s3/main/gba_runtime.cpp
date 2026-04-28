@@ -9,7 +9,10 @@
 #include <vector>
 #include <fstream>
 #include <algorithm>
+#include <cstring>
+#include <new>
 #include <dirent.h>
+#include <strings.h>
 
 #include "gba_audio.h"
 #include "gba_board_profile.h"
@@ -34,12 +37,14 @@
 
 static const char* kTag = "gba_runtime";
 static constexpr int kDisplayChunkRows = 16;
+static constexpr int64_t kFrameBudgetUs = 16667;
 
 using namespace gba;
 
 struct RuntimeStats {
     uint64_t total_frame_us = 0;
     uint32_t total_frames = 0;
+    uint32_t skipped_frames = 0;
     uint32_t audio_chunks = 0;
     uint32_t audio_errors = 0;
 };
@@ -115,6 +120,55 @@ static void draw_string(int x, int y, const std::string& str, u16 color, u16* bu
     }
 }
 
+static bool read_binary_file(const std::string& path, std::vector<u8>& out) {
+    std::ifstream file(path, std::ios::binary | std::ios::ate);
+    if (!file) {
+        return false;
+    }
+
+    const std::streamsize size = file.tellg();
+    if (size <= 0) {
+        return false;
+    }
+    file.seekg(0, std::ios::beg);
+
+    out.resize(static_cast<std::size_t>(size));
+    return file.read(reinterpret_cast<char*>(out.data()), size).good();
+}
+
+static bool load_optional_bios(Emulator& emulator) {
+    static constexpr const char* kBiosPaths[] = {
+        "/sdcard/gba_bios.bin",
+        "/sdcard/bios/gba_bios.bin",
+        "/sdcard/BIOS/gba_bios.bin",
+    };
+
+    for (const char* path : kBiosPaths) {
+        std::vector<u8> bios;
+        if (!read_binary_file(path, bios)) {
+            continue;
+        }
+        if (bios.size() != kBiosSize) {
+            ESP_LOGW(kTag, "Ignoring BIOS %s: expected %u bytes, got %u",
+                     path, kBiosSize, static_cast<unsigned>(bios.size()));
+            continue;
+        }
+        emulator.load_bios(std::move(bios));
+        ESP_LOGI(kTag, "Loaded BIOS from %s", path);
+        return true;
+    }
+
+    ESP_LOGW(kTag, "No real BIOS found on SD; using skip-BIOS reset and integer BIOS HLE");
+    return false;
+}
+
+static void convert_rgb555_to_rgb565_inplace(u16* pixels, std::size_t count) {
+    for (std::size_t i = 0; i < count; ++i) {
+        const u16 p = pixels[i];
+        pixels[i] = static_cast<u16>(((p & 0x7C00u) << 1u) | ((p & 0x03E0u) << 1u) | (p & 0x001Fu));
+    }
+}
+
 static void cpu_task(void* arg) {
     auto* ctx = static_cast<RuntimeContext*>(arg);
 
@@ -124,6 +178,7 @@ static void cpu_task(void* arg) {
     }
 
     int64_t window_start_us = esp_timer_get_time();
+    bool skip_next_render = false;
     while (true) {
         const auto frame_start_us = esp_timer_get_time();
         (void)esp_task_wdt_reset();
@@ -131,21 +186,19 @@ static void cpu_task(void* arg) {
         uint16_t keys = input_enabled() ? input_read_keys() : 0x03FF;
         const auto pressed_mask = static_cast<u16>((~keys) & 0x03FFu);
         ctx->emulator->set_keys(pressed_mask);
+
+        const bool skip_render = skip_next_render;
+        skip_next_render = false;
+        ctx->emulator->set_skip_render(skip_render);
+        const int buf = ctx->back.load();
+        if (!skip_render) {
+            ctx->emulator->ppu().set_external_fb(ctx->display_bufs[buf]);
+            ctx->emulator->ppu().mark_all_dirty();
+        }
         ctx->emulator->run_frame();
 
-        /* Downscale 240x160 -> 128x128 into back buffer */
-        const auto fb = ctx->emulator->framebuffer();
-        const int buf = ctx->back.load();
-        
-        // Very basic nearest neighbor scale for 240x160 -> 128x128
-        for(int y=0; y<128; ++y) {
-            int src_y = (y * 160) / 128;
-            for(int x=0; x<128; ++x) {
-                int src_x = (x * 240) / 128;
-                u16 p = fb[src_y * 240 + src_x];
-                // RGB555 to RGB565
-                ctx->display_bufs[buf][y * 128 + x] = ((p & 0x7C00) << 1) | ((p & 0x03E0) << 1) | (p & 0x001F);
-            }
+        if (!skip_render) {
+            convert_rgb555_to_rgb565_inplace(ctx->display_bufs[buf], kOutputPixels);
         }
 
         if (audio_enabled() && ctx->emulator->apu().audio_chunk_ready()) {
@@ -160,27 +213,33 @@ static void cpu_task(void* arg) {
             }
         }
 
-        /* Swap buffers */
-        ctx->front.store(buf);
-        ctx->back.store(buf ^ 1);
+        if (!skip_render) {
+            ctx->front.store(buf);
+            ctx->back.store(buf ^ 1);
 
-        /* Notify Core 0 to draw */
-        xTaskNotifyGive(ctx->display_task);
+            xTaskNotifyGive(ctx->display_task);
+        } else {
+            ++ctx->stats.skipped_frames;
+        }
 
         const auto frame_end_us = esp_timer_get_time();
-        ctx->stats.total_frame_us += static_cast<uint64_t>(frame_end_us - frame_start_us);
+        const auto frame_us = frame_end_us - frame_start_us;
+        ctx->stats.total_frame_us += static_cast<uint64_t>(frame_us);
         ++ctx->stats.total_frames;
+        skip_next_render = frame_us > kFrameBudgetUs;
 
         if ((ctx->stats.total_frames % 60u) == 0u) {
             const auto window_us = frame_end_us - window_start_us;
             const auto avg_frame_us = static_cast<double>(ctx->stats.total_frame_us) /
                 static_cast<double>(ctx->stats.total_frames);
             const auto fps = window_us > 0 ? (60.0 * 1000000.0) / static_cast<double>(window_us) : 0.0;
-            ESP_LOGI(kTag, "Perf: avg_frame=%.2f ms fps=%.2f audio_chunks=%u audio_err=%u",
-                     avg_frame_us / 1000.0, fps, ctx->stats.audio_chunks, ctx->stats.audio_errors);
+            ESP_LOGI(kTag, "Perf: avg_frame=%.2f ms fps=%.2f skipped=%u audio_chunks=%u audio_err=%u",
+                     avg_frame_us / 1000.0, fps, ctx->stats.skipped_frames,
+                     ctx->stats.audio_chunks, ctx->stats.audio_errors);
             window_start_us = frame_end_us;
             ctx->stats.total_frame_us = 0;
             ctx->stats.total_frames = 0;
+            ctx->stats.skipped_frames = 0;
             ctx->stats.audio_chunks = 0;
             ctx->stats.audio_errors = 0;
         }
@@ -291,38 +350,24 @@ extern "C" void app_main() {
         ESP_LOGE(kTag, "Failed to allocate Emulator");
         return;
     }
-    emulator->reset();
+    const bool bios_loaded = load_optional_bios(*emulator);
 
-    std::ifstream file(selected_rom_path, std::ios::binary | std::ios::ate);
-    if (!file) {
-        ESP_LOGE(kTag, "Failed to open %s", selected_rom_path.c_str());
+    std::vector<u8> rom_data;
+    if (!read_binary_file(selected_rom_path, rom_data)) {
+        ESP_LOGE(kTag, "Failed to read ROM %s", selected_rom_path.c_str());
         return;
     }
-
-    std::streamsize size = file.tellg();
-    file.seekg(0, std::ios::beg);
-    std::vector<u8> rom_data(size);
-    if (!file.read(reinterpret_cast<char*>(rom_data.data()), size)) {
-        ESP_LOGE(kTag, "Failed to read ROM data");
-        return;
-    }
-    file.close();
 
     emulator->load_rom(std::move(rom_data));
     emulator->cartridge().auto_detect_save_type();
 
-    std::ifstream save_file(selected_sav_path, std::ios::binary | std::ios::ate);
-    if (save_file) {
-        std::streamsize save_size = save_file.tellg();
-        save_file.seekg(0, std::ios::beg);
-        if (save_size > 0) {
-            std::vector<u8> save_data(save_size);
-            if (save_file.read(reinterpret_cast<char*>(save_data.data()), save_size)) {
-                emulator->cartridge().load_save(std::move(save_data));
-            }
-        }
-        save_file.close();
+    std::vector<u8> save_data;
+    if (read_binary_file(selected_sav_path, save_data)) {
+        emulator->cartridge().load_save(std::move(save_data));
     }
+
+    emulator->ppu().set_direct_128x128(true);
+    emulator->reset(!bios_loaded);
 
     RuntimeContext ctx;
     ctx.emulator = emulator;

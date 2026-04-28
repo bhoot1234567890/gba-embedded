@@ -31,6 +31,7 @@
 
 #include "esp_vfs_fat.h"
 #include "sdmmc_cmd.h"
+#include "driver/spi_master.h"
 #include "driver/sdmmc_host.h"
 #include "driver/sdspi_host.h"
 #include "font5x7.h"
@@ -38,6 +39,8 @@
 static const char* kTag = "gba_runtime";
 static constexpr int kDisplayChunkRows = 16;
 static constexpr int64_t kFrameBudgetUs = 16667;
+static_assert(DISPLAY_WIDTH <= gba::kOutW && DISPLAY_HEIGHT <= gba::kOutH,
+              "ESP32 display must fit inside the direct 128x128 PPU output");
 
 using namespace gba;
 
@@ -63,7 +66,8 @@ static esp_err_t mount_sdcard(sdmmc_card_t** out_card) {
         .format_if_mount_failed = false,
         .max_files = 5,
         .allocation_unit_size = 16 * 1024,
-        .disk_status_check_enable = false
+        .disk_status_check_enable = false,
+        .use_one_fat = false
     };
 
 #if GBA_STORAGE_MODE == GBA_STORAGE_MODE_SDMMC
@@ -81,14 +85,28 @@ static esp_err_t mount_sdcard(sdmmc_card_t** out_card) {
     slot_config.flags |= SDMMC_SLOT_FLAG_INTERNAL_PULLUP;
     return esp_vfs_fat_sdmmc_mount("/sdcard", &host, &slot_config, &mount_config, out_card);
 #elif GBA_STORAGE_MODE == GBA_STORAGE_MODE_SDSPI
+    spi_bus_config_t bus_config = {};
+    bus_config.mosi_io_num = GBA_SDSPI_PIN_MOSI;
+    bus_config.miso_io_num = GBA_SDSPI_PIN_MISO;
+    bus_config.sclk_io_num = GBA_SDSPI_PIN_SCLK;
+    bus_config.quadwp_io_num = GPIO_NUM_NC;
+    bus_config.quadhd_io_num = GPIO_NUM_NC;
+    bus_config.max_transfer_sz = 16 * 1024;
+
+    esp_err_t spi_ret = spi_bus_initialize(static_cast<spi_host_device_t>(GBA_SDSPI_HOST),
+                                           &bus_config, SDSPI_DEFAULT_DMA);
+    if (spi_ret != ESP_OK && spi_ret != ESP_ERR_INVALID_STATE) {
+        return spi_ret;
+    }
+
     sdmmc_host_t host = SDSPI_HOST_DEFAULT();
     host.slot = GBA_SDSPI_HOST;
     sdspi_device_config_t slot_config = SDSPI_DEVICE_CONFIG_DEFAULT();
     slot_config.host_id = static_cast<spi_host_device_t>(GBA_SDSPI_HOST);
-    slot_config.gpio_miso = GBA_SDSPI_PIN_MISO;
-    slot_config.gpio_mosi = GBA_SDSPI_PIN_MOSI;
-    slot_config.gpio_sck = GBA_SDSPI_PIN_SCLK;
     slot_config.gpio_cs = GBA_SDSPI_PIN_CS;
+    slot_config.gpio_cd = SDSPI_SLOT_NO_CD;
+    slot_config.gpio_wp = SDSPI_SLOT_NO_WP;
+    slot_config.gpio_int = SDSPI_SLOT_NO_INT;
     return esp_vfs_fat_sdspi_mount("/sdcard", &host, &slot_config, &mount_config, out_card);
 #else
 #error Unsupported GBA_STORAGE_MODE
@@ -300,10 +318,15 @@ extern "C" void app_main() {
     int selected_idx = 0;
     bool rom_selected = false;
     
-    u16* ui_buf = static_cast<u16*>(heap_caps_malloc(128 * 128 * sizeof(u16), MALLOC_CAP_SPIRAM));
+    const size_t display_pixels = static_cast<size_t>(DISPLAY_WIDTH) * DISPLAY_HEIGHT;
+    u16* ui_buf = static_cast<u16*>(heap_caps_malloc(display_pixels * sizeof(u16), MALLOC_CAP_SPIRAM));
+    if (!ui_buf) {
+        ESP_LOGE(kTag, "Failed to allocate UI buffer");
+        return;
+    }
     
     while (!rom_selected) {
-        std::fill_n(ui_buf, 128 * 128, 0x0000);
+        std::fill_n(ui_buf, display_pixels, 0x0000);
         draw_string(4, 4, "ESP32 GBA EMULATOR", 0x07E0, ui_buf);
         draw_string(4, 14, "----------------", 0xFFFF, ui_buf);
         
@@ -318,7 +341,7 @@ extern "C" void app_main() {
             }
         }
         
-        display_draw(0, 0, 128, 128, ui_buf);
+        display_draw(0, 0, DISPLAY_WIDTH, DISPLAY_HEIGHT, ui_buf);
         
         uint16_t keys = input_enabled() ? input_read_keys() : 0x03FF;
         if ((keys & gba::kKeyA) == 0) {
@@ -339,10 +362,10 @@ extern "C" void app_main() {
     std::string selected_sav_path = selected_rom_path.substr(0, selected_rom_path.length() - 4) + ".sav";
     
     // UI Loading state
-    std::fill_n(ui_buf, 128 * 128, 0x0000);
+    std::fill_n(ui_buf, display_pixels, 0x0000);
     draw_string(4, 50, "LOADING...", 0x07E0, ui_buf);
     draw_string(4, 60, rom_files[selected_idx].substr(0, 18), 0xFFFF, ui_buf);
-    display_draw(0, 0, 128, 128, ui_buf);
+    display_draw(0, 0, DISPLAY_WIDTH, DISPLAY_HEIGHT, ui_buf);
     heap_caps_free(ui_buf);
 
     auto* emulator = new (std::nothrow) Emulator{};
@@ -371,8 +394,12 @@ extern "C" void app_main() {
 
     RuntimeContext ctx;
     ctx.emulator = emulator;
-    ctx.display_bufs[0] = static_cast<u16*>(heap_caps_malloc(128 * 128 * sizeof(u16), MALLOC_CAP_SPIRAM));
-    ctx.display_bufs[1] = static_cast<u16*>(heap_caps_malloc(128 * 128 * sizeof(u16), MALLOC_CAP_SPIRAM));
+    ctx.display_bufs[0] = static_cast<u16*>(heap_caps_malloc(kOutputPixels * sizeof(u16), MALLOC_CAP_SPIRAM));
+    ctx.display_bufs[1] = static_cast<u16*>(heap_caps_malloc(kOutputPixels * sizeof(u16), MALLOC_CAP_SPIRAM));
+    if (!ctx.display_bufs[0] || !ctx.display_bufs[1]) {
+        ESP_LOGE(kTag, "Failed to allocate display buffers");
+        return;
+    }
     ctx.front.store(0);
     ctx.back.store(1);
     ctx.display_task = xTaskGetCurrentTaskHandle();
@@ -387,7 +414,7 @@ extern "C" void app_main() {
         const int buf = ctx.front.load();
         for (int y = 0; y < DISPLAY_HEIGHT; y += kDisplayChunkRows) {
             const auto rows = std::min(kDisplayChunkRows, DISPLAY_HEIGHT - y);
-            const auto* pixels = ctx.display_bufs[buf] + (y * DISPLAY_WIDTH);
+            const auto* pixels = ctx.display_bufs[buf] + (y * kOutW);
             const auto draw_ret = display_draw(0, y, DISPLAY_WIDTH, rows, pixels);
             if (draw_ret != ESP_OK) {
                 ESP_LOGW(kTag, "display_draw failed at y=%d: %s", y, esp_err_to_name(draw_ret));

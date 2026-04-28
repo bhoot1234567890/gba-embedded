@@ -11,6 +11,7 @@
 
 #include "driver/i2s_std.h"
 #include "esp_log.h"
+#include "freertos/FreeRTOS.h"
 
 static const char* kTag = "gba_audio";
 static i2s_chan_handle_t s_tx_handle = NULL;

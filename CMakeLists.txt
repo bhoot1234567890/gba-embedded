@@ -14,6 +14,11 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 option(GBA_BUILD_TESTS "Build emulator tests" ON)
 option(GBA_BUILD_TOOLS "Build host-side emulator tools" ON)
 option(GBA_WARNINGS_AS_ERRORS "Treat warnings as errors" OFF)
+option(GBA_ENABLE_HLE_BIOS "Enable HLE BIOS (SWI) implementation" ON)
+
+if(GBA_ENABLE_HLE_BIOS)
+    add_compile_definitions(GBA_ENABLE_HLE_BIOS)
+endif()
 
 add_library(
     gba_core

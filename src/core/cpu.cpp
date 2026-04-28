@@ -397,6 +397,663 @@ template<bool sign_extend>
     return static_cast<u32>(angle) & 0xFFFFu;
 }
 
+#ifdef GBA_ENABLE_HLE_BIOS
+
+const std::array<s16, 512> kBgAffineSinLut = {{
+    0x0000, 0x0324, 0x0648, 0x096C, 0x0C8F, 0x0FB3, 0x12D5, 0x15F7,
+    0x1918, 0x1C38, 0x1F57, 0x2275, 0x2592, 0x28AE, 0x2BC8, 0x2EE1,
+    -0x7FFD, -0x7CDC, -0x79BC, -0x769E, -0x7382, -0x7067, -0x6D4E, -0x6A38,
+    -0x6723, -0x6412, -0x6102, -0x5DF5, -0x5AEB, -0x57E3, -0x54DF, -0x51DD,
+    0x4EE0, 0x4BE5, 0x48EE, 0x45FB, 0x430B, 0x4020, 0x3D39, 0x3A56,
+    0x3777, 0x349D, 0x31C7, 0x2EF6, 0x2C2A, 0x2962, 0x26A0, 0x23E2,
+    0x212A, 0x1E77, 0x1BC9, 0x1921, 0x167E, 0x13E1, 0x114A, 0x0EB8,
+    0x0C2D, 0x09A7, 0x0728, 0x04AF, 0x023C, -0x002B, -0x00F2, -0x01B2,
+    -0x026D, -0x0321, -0x03CF, -0x0476, -0x0517, -0x05B2, -0x0646, -0x06D4,
+    -0x075B, -0x07DB, -0x0855, -0x08C7, -0x0933, -0x0998, -0x09F6, -0x0A4C,
+    -0x0A9C, -0x0AE4, -0x0B25, -0x0B5E, -0x0B90, -0x0BBB, -0x0BDE, -0x0BFA,
+    -0x0C0E, -0x0C1B, -0x0C20, -0x0C1E, -0x0C15, -0x0C04, -0x0BEC, -0x0BCD,
+    -0x0BA6, -0x0B79, -0x0B44, -0x0B08, -0x0AC5, -0x0A7B, -0x0A2A, -0x09D2,
+    -0x0973, -0x090D, -0x08A0, -0x082D, -0x07B3, -0x0732, -0x06AB, -0x061D,
+    -0x0589, -0x04EF, -0x044F, -0x03A9, -0x02FD, -0x024C, -0x0195, -0x00D9,
+    -0x0018, 0x00A8, 0x01D3, 0x0303, 0x0438, 0x0572, 0x06B0, 0x07F3,
+    0x093A, 0x0A86, 0x0BD5, 0x0D29, 0x0E80, 0x0FDB, 0x113A, 0x129C,
+    0x1401, 0x1569, 0x16D4, 0x1842, 0x19B2, 0x1B25, 0x1C9A, 0x1E11,
+    0x1F8A, 0x2105, 0x2281, 0x23FF, 0x257E, 0x26FE, 0x287F, 0x2A01,
+    0x2B84, 0x2D07, 0x2E8B, 0x300E, 0x3192, 0x3316, 0x3499, 0x361C,
+    0x379F, 0x3921, 0x3AA2, 0x3C23, 0x3DA2, 0x3F20, 0x409D, 0x4219,
+    0x4394, 0x450D, 0x4684, 0x47FA, 0x496E, 0x4AE0, 0x4C51, 0x4DBF,
+    0x4F2B, 0x5096, 0x51FD, 0x5363, 0x54C6, 0x5626, 0x5784, 0x58DF,
+    0x5A38, 0x5B8D, 0x5CE0, 0x5E30, 0x5F7C, 0x60C6, 0x620C, 0x634F,
+    0x648F, 0x65CB, 0x6704, 0x683A, 0x696C, 0x6A9A, 0x6BC5, 0x6CEC,
+    0x6E10, 0x6F2F, 0x704B, 0x7163, 0x7277, 0x7387, 0x7493, 0x759B,
+    0x76A0, 0x77A0, 0x789C, 0x7994, 0x7A87, 0x686E, 0x686E, 0x686E,
+    0x686E, 0x686E, 0x686E, 0x686E, 0x686E, 0x686E, 0x686E, 0x686E,
+    -0x686E, -0x7994, -0x789C, -0x77A0, -0x76A0, -0x759B, -0x7493, -0x7387,
+    -0x7277, -0x7163, -0x704B, -0x6F2F, -0x6E10, -0x6CEC, -0x6BC5, -0x6A9A,
+    -0x696C, -0x683A, -0x6704, -0x65CB, -0x648F, -0x634F, -0x620C, -0x60C6,
+    -0x5F7C, -0x5E30, -0x5CE0, -0x5B8D, -0x5A38, -0x58DF, -0x5784, -0x5626,
+    -0x54C6, -0x5363, -0x51FD, -0x5096, -0x4F2B, -0x4DBF, -0x4C51, -0x4AE0,
+    -0x496E, -0x47FA, -0x4684, -0x450D, -0x4394, -0x4219, -0x409D, -0x3F20,
+    -0x3DA2, -0x3C23, -0x3AA2, -0x3921, -0x379F, -0x361C, -0x3499, -0x3316,
+    -0x3192, -0x300E, -0x2E8B, -0x2D07, -0x2B84, -0x2A01, -0x287F, -0x26FE,
+    -0x257E, -0x23FF, -0x2281, -0x2105, -0x1F8A, -0x1E11, -0x1C9A, -0x1B25,
+    -0x19B2, -0x1842, -0x16D4, -0x1569, -0x1401, -0x129C, -0x113A, -0x0FDB,
+    -0x0E80, -0x0D29, -0x0BD5, -0x0A86, -0x093A, -0x07F3, -0x06B0, -0x0572,
+    -0x0438, -0x0303, -0x01D3, -0x00A8, 0x0018, 0x00D9, 0x0195, 0x024C,
+    0x02FD, 0x03A9, 0x044F, 0x04EF, 0x0589, 0x061D, 0x06AB, 0x0732,
+    0x07B3, 0x082D, 0x08A0, 0x090D, 0x0973, 0x09D2, 0x0A2A, 0x0A7B,
+    0x0AC5, 0x0B08, 0x0B44, 0x0B79, 0x0BA6, 0x0BCD, 0x0BEC, 0x0C04,
+    0x0C15, 0x0C1E, 0x0C20, 0x0C1B, 0x0C0E, 0x0BFA, 0x0BDE, 0x0BBB,
+    0x0B90, 0x0B5E, 0x0B25, 0x0AE4, 0x0A9C, 0x0A4C, 0x09F6, 0x0998,
+    0x0933, 0x08C7, 0x0855, 0x07DB, 0x075B, 0x06D4, 0x0646, 0x05B2,
+    0x0517, 0x0476, 0x03CF, 0x0321, 0x026D, 0x01B2, 0x00F2, 0x002B,
+    -0x023C, -0x04AF, -0x0728, -0x09A7, -0x0C2D, -0x0EB8, -0x114A, -0x13E1,
+    -0x167E, -0x1921, -0x1BC9, -0x1E77, -0x212A, -0x23E2, -0x26A0, -0x2962,
+    -0x2C2A, -0x2EF6, -0x31C7, -0x349D, -0x3777, -0x3A56, -0x3D39, -0x4020,
+    -0x430B, -0x45FB, -0x48EE, -0x4BE5, -0x4EE0, 0x51DD, 0x54DF, 0x57E3,
+    0x5AEB, 0x5DF5, 0x6102, 0x6412, 0x6723, 0x6A38, 0x6D4E, 0x7067,
+    0x7382, 0x769E, 0x79BC, 0x7CDC, 0x7FFD, -0x2EE1, -0x2BC8, -0x28AE,
+    -0x2592, -0x2275, -0x1F57, -0x1C38, -0x1918, -0x15F7, -0x12D5, -0x0FB3,
+    -0x0C8F, -0x096C, -0x0648, -0x0324
+}};
+
+[[nodiscard]] constexpr u32 lz77_decompressed_size(u32 header) {
+    return header >> 8u;
+}
+
+[[nodiscard]] constexpr u32 rl_decompressed_size(u32 header) {
+    return header >> 8u;
+}
+
+[[nodiscard]] constexpr u32 diff_decompressed_size(u32 header) {
+    return header >> 8u;
+}
+
+[[nodiscard]] constexpr u32 huff_data_size_bits(u32 header) {
+    return header & 0xFu;
+}
+
+[[nodiscard]] constexpr u32 huff_decompressed_size(u32 header) {
+    return header >> 8u;
+}
+
+void hle_lz77_uncomp(Arm7tdmi& cpu, Bus& bus, bool vram_mode) {
+    u64 cycles = cpu.current_cycle();
+    const u32 src = cpu.state().regs[0];
+    u32 dst = cpu.state().regs[1];
+    if (vram_mode) dst &= ~1u;
+
+    const auto header = bus.read(src, BusWidth::Word, AccessType::NonSequential, cycles);
+    cycles += header.cycles;
+    const u32 size = lz77_decompressed_size(header.value);
+    if (size == 0) { cpu.set_current_cycle(cycles); return; }
+
+    u32 src_offset = src + 4u;
+    u32 bytes_written = 0;
+
+    while (bytes_written < size) {
+        const auto flag_result = bus.read(src_offset, BusWidth::Byte, AccessType::NonSequential, cycles);
+        cycles += flag_result.cycles;
+        u8 flags = static_cast<u8>(flag_result.value);
+        src_offset += 1u;
+
+        for (int bit = 0; bit < 8 && bytes_written < size; ++bit) {
+            if ((flags & 0x80u) == 0u) {
+                const auto data_result = bus.read(src_offset, BusWidth::Byte, AccessType::NonSequential, cycles);
+                cycles += data_result.cycles;
+                u8 byte_val = static_cast<u8>(data_result.value);
+                src_offset += 1u;
+
+                if (vram_mode) {
+                    u32 write_val;
+                    if (dst & 1u) {
+                        const auto prev_result = bus.read(dst & ~1u, BusWidth::Half, AccessType::NonSequential, cycles);
+                        cycles += prev_result.cycles;
+                        write_val = (prev_result.value & 0xFF00u) | byte_val;
+                    } else {
+                        write_val = byte_val | (byte_val << 8u);
+                    }
+                    const auto w = bus.write(dst & ~1u, write_val, BusWidth::Half, AccessType::NonSequential, cycles);
+                    cycles += w.cycles;
+                } else {
+                    const auto w = bus.write(dst, byte_val, BusWidth::Byte, AccessType::NonSequential, cycles);
+                    cycles += w.cycles;
+                }
+                dst += vram_mode ? 2u : 1u;
+                bytes_written += 1u;
+            } else {
+                const auto lo_result = bus.read(src_offset, BusWidth::Byte, AccessType::NonSequential, cycles);
+                cycles += lo_result.cycles;
+                const auto hi_result = bus.read(src_offset + 1u, BusWidth::Byte, AccessType::NonSequential, cycles);
+                cycles += hi_result.cycles;
+                u8 lo = static_cast<u8>(lo_result.value);
+                u8 hi = static_cast<u8>(hi_result.value);
+                src_offset += 2u;
+
+                u32 disp = lo | ((hi & 0xF0u) << 4u);
+                u32 count = (hi & 0x0Fu) + 3u;
+
+                if (count > size - bytes_written)
+                    count = size - bytes_written;
+
+                if (vram_mode) {
+                    const u32 copy_src = dst - (disp + 1u) * 2u;
+                    for (u32 i = 0; i < count; ++i) {
+                        const auto r = bus.read(copy_src + i * 2u, BusWidth::Byte, AccessType::NonSequential, cycles);
+                        cycles += r.cycles;
+                        u8 byte_val = static_cast<u8>(r.value);
+                        u32 write_val;
+                        if (dst & 1u) {
+                            const auto prev_result = bus.read(dst & ~1u, BusWidth::Half, AccessType::NonSequential, cycles);
+                            cycles += prev_result.cycles;
+                            write_val = (prev_result.value & 0xFF00u) | byte_val;
+                        } else {
+                            write_val = byte_val | (byte_val << 8u);
+                        }
+                        const auto w = bus.write(dst & ~1u, write_val, BusWidth::Half, AccessType::NonSequential, cycles);
+                        cycles += w.cycles;
+                        dst += 2u;
+                    }
+                } else {
+                    const u32 copy_src = dst - disp - 1u;
+                    for (u32 i = 0; i < count; ++i) {
+                        const auto r = bus.read(copy_src + i, BusWidth::Byte, AccessType::NonSequential, cycles);
+                        cycles += r.cycles;
+                        const auto w = bus.write(dst + i, r.value, BusWidth::Byte, AccessType::NonSequential, cycles);
+                        cycles += w.cycles;
+                    }
+                    dst += count;
+                }
+                bytes_written += count;
+            }
+            flags <<= 1u;
+        }
+    }
+    cpu.set_current_cycle(cycles);
+}
+
+void hle_rl_uncomp(Arm7tdmi& cpu, Bus& bus, bool vram_mode) {
+    u64 cycles = cpu.current_cycle();
+    const u32 src = cpu.state().regs[0];
+    u32 dst = cpu.state().regs[1];
+    if (vram_mode) dst &= ~1u;
+
+    const auto header = bus.read(src, BusWidth::Word, AccessType::NonSequential, cycles);
+    cycles += header.cycles;
+    const u32 size = rl_decompressed_size(header.value);
+    if (size == 0) { cpu.set_current_cycle(cycles); return; }
+
+    u32 src_offset = src + 4u;
+    u32 bytes_written = 0;
+
+    auto write_byte_vram = [&](u8 val) {
+        if (vram_mode) {
+            u32 write_val;
+            if (dst & 1u) {
+                const auto prev_result = bus.read(dst & ~1u, BusWidth::Half, AccessType::NonSequential, cycles);
+                cycles += prev_result.cycles;
+                write_val = (prev_result.value & 0xFF00u) | val;
+            } else {
+                write_val = val | (val << 8u);
+            }
+            const auto w = bus.write(dst & ~1u, write_val, BusWidth::Half, AccessType::NonSequential, cycles);
+            cycles += w.cycles;
+            dst += 2u;
+        } else {
+            const auto w = bus.write(dst, val, BusWidth::Byte, AccessType::NonSequential, cycles);
+            cycles += w.cycles;
+            dst += 1u;
+        }
+    };
+
+    while (bytes_written < size) {
+        const auto flag_result = bus.read(src_offset, BusWidth::Byte, AccessType::NonSequential, cycles);
+        cycles += flag_result.cycles;
+        const u8 flag = static_cast<u8>(flag_result.value);
+        src_offset += 1u;
+
+        const bool compressed = (flag & 0x80u) != 0u;
+        u32 length = (flag & 0x7Fu);
+
+        if (compressed) {
+            length += 3u;
+            const auto data_result = bus.read(src_offset, BusWidth::Byte, AccessType::NonSequential, cycles);
+            cycles += data_result.cycles;
+            u8 val = static_cast<u8>(data_result.value);
+            src_offset += 1u;
+
+            if (length > size - bytes_written)
+                length = size - bytes_written;
+
+            for (u32 i = 0; i < length; ++i) {
+                write_byte_vram(val);
+            }
+            bytes_written += length;
+        } else {
+            length += 1u;
+            if (length > size - bytes_written)
+                length = size - bytes_written;
+
+            for (u32 i = 0; i < length; ++i) {
+                const auto data_result = bus.read(src_offset + i, BusWidth::Byte, AccessType::NonSequential, cycles);
+                cycles += data_result.cycles;
+                u8 val = static_cast<u8>(data_result.value);
+                write_byte_vram(val);
+            }
+            src_offset += length;
+            bytes_written += length;
+        }
+    }
+    cpu.set_current_cycle(cycles);
+}
+
+void hle_huff_uncomp(Arm7tdmi& cpu, Bus& bus) {
+    u64 cycles = cpu.current_cycle();
+    const u32 src = cpu.state().regs[0];
+    const u32 dst_addr_base = cpu.state().regs[1];
+
+    const auto header = bus.read(src, BusWidth::Word, AccessType::NonSequential, cycles);
+    cycles += header.cycles;
+    const u32 data_size_bits = huff_data_size_bits(header.value);
+    const u32 size = huff_decompressed_size(header.value);
+    if (size == 0) { cpu.set_current_cycle(cycles); return; }
+
+    u32 src_offset = src + 4u;
+
+    const auto tree_size_result = bus.read(src_offset, BusWidth::Byte, AccessType::NonSequential, cycles);
+    cycles += tree_size_result.cycles;
+    const u32 tree_size = static_cast<u8>(tree_size_result.value);
+    src_offset += 1u;
+
+    u32 root_offset = src_offset;
+    u32 bitstream_offset = src_offset + static_cast<u32>(tree_size + 1u) * 2u;
+
+    u32 dest = dst_addr_base;
+    u32 dest_word = 0;
+    int dest_shift = 0;
+    u32 bytes_written = 0;
+
+    u32 bitstream_word = 0;
+    int bits_left = 0;
+    u32 bitstream_addr = bitstream_offset;
+
+    auto read_node = [&](u32 node_index) -> u32 {
+        const auto r = bus.read(root_offset + node_index * 2u, BusWidth::Half, AccessType::NonSequential, cycles);
+        cycles += r.cycles;
+        return r.value & 0xFFFFu;
+    };
+
+    auto next_bit = [&]() -> bool {
+        if (bits_left == 0) {
+            const auto r = bus.read(bitstream_addr, BusWidth::Word, AccessType::NonSequential, cycles);
+            cycles += r.cycles;
+            bitstream_word = r.value;
+            bits_left = 32;
+            bitstream_addr += 4u;
+        }
+        bool bit = (bitstream_word & 0x80000000u) != 0u;
+        bitstream_word <<= 1u;
+        --bits_left;
+        return bit;
+    };
+
+    while (bytes_written < size) {
+        u32 node_index = 0;
+        for (;;) {
+            u32 node = read_node(node_index);
+            bool bit = next_bit();
+            bool is_data;
+            u32 child_offset;
+
+            if (bit) {
+                is_data = (node & 0x4000u) != 0u;
+                child_offset = node & 0x3Fu;
+            } else {
+                is_data = (node & 0x8000u) != 0u;
+                child_offset = (node >> 6u) & 0x3Fu;
+            }
+
+            if (is_data) {
+                u8 data = static_cast<u8>(node & 0xFFu);
+                if (data_size_bits == 8) {
+                    dest_word |= static_cast<u32>(data) << dest_shift;
+                    dest_shift += 8;
+                    bytes_written += 1u;
+                } else {
+                    dest_word |= static_cast<u32>(data & 0xFu) << dest_shift;
+                    dest_shift += 4;
+                    bytes_written += 1u;
+                }
+
+                if (dest_shift >= 32 || bytes_written == size) {
+                    const auto w = bus.write(dest, dest_word, BusWidth::Word, AccessType::NonSequential, cycles);
+                    cycles += w.cycles;
+                    dest += 4u;
+                    dest_word = 0;
+                    dest_shift = 0;
+                }
+                break;
+            }
+            node_index = child_offset;
+        }
+    }
+
+    if (dest_shift > 0) {
+        const auto w = bus.write(dest, dest_word, BusWidth::Word, AccessType::NonSequential, cycles);
+        cycles += w.cycles;
+    }
+    cpu.set_current_cycle(cycles);
+}
+
+void hle_bit_unpack(Arm7tdmi& cpu, Bus& bus) {
+    u64 cycles = cpu.current_cycle();
+    const u32 src = cpu.state().regs[0];
+    const u32 dst_addr_base = cpu.state().regs[1];
+    const u32 info_addr = cpu.state().regs[2];
+
+    const auto info_len_result = bus.read(info_addr, BusWidth::Half, AccessType::NonSequential, cycles);
+    cycles += info_len_result.cycles;
+    const u32 src_len = info_len_result.value & 0xFFFFu;
+
+    const auto info_widths_result = bus.read(info_addr + 2u, BusWidth::Half, AccessType::NonSequential, cycles);
+    cycles += info_widths_result.cycles;
+    const u32 src_width = (info_widths_result.value & 0xFFu);
+    const u32 dst_width = ((info_widths_result.value >> 8u) & 0xFFu);
+
+    const auto info_offset_result = bus.read(info_addr + 4u, BusWidth::Word, AccessType::NonSequential, cycles);
+    cycles += info_offset_result.cycles;
+    u32 data_offset = info_offset_result.value & 0x7FFFFFFFu;
+    const bool zero_data = (info_offset_result.value & 0x80000000u) != 0u;
+
+    if (src_width == 0 || dst_width == 0) { cpu.set_current_cycle(cycles); return; }
+    if (src_len == 0) { cpu.set_current_cycle(cycles); return; }
+
+    u32 src_mask = (1u << src_width) - 1u;
+    u32 dst_mask = (1u << dst_width) - 1u;
+
+    u32 src_bit = 0;
+    u32 src_addr = src;
+    u32 src_word = 0;
+
+    u32 dst_word = 0;
+    u32 dst_bit = 0;
+    u32 dst_addr = dst_addr_base;
+
+    for (u32 i = 0; i < src_len; ++i) {
+        if (src_bit < src_width) {
+            const auto r = bus.read(src_addr, BusWidth::Word, AccessType::NonSequential, cycles);
+            cycles += r.cycles;
+            src_word = r.value;
+            src_addr += 4u;
+            src_bit = 32;
+        }
+
+        u32 unit = (src_word >> (32u - src_width)) & src_mask;
+        src_word <<= src_width;
+        src_bit -= src_width;
+
+        if (unit != 0 || zero_data)
+            unit += data_offset;
+        unit &= dst_mask;
+
+        dst_word |= unit << (32u - dst_width - dst_bit);
+        dst_bit += dst_width;
+
+        if (dst_bit >= 32) {
+            const auto w = bus.write(dst_addr, dst_word, BusWidth::Word, AccessType::NonSequential, cycles);
+            cycles += w.cycles;
+            dst_addr += 4u;
+            dst_word = 0;
+            dst_bit = 0;
+        }
+    }
+
+    if (dst_bit > 0) {
+        const auto w = bus.write(dst_addr, dst_word, BusWidth::Word, AccessType::NonSequential, cycles);
+        cycles += w.cycles;
+    }
+    cpu.set_current_cycle(cycles);
+}
+
+void hle_diff_8bit_unfilter(Arm7tdmi& cpu, Bus& bus, bool vram_mode) {
+    u64 cycles = cpu.current_cycle();
+    const u32 src = cpu.state().regs[0];
+    const u32 dst = cpu.state().regs[1];
+
+    const auto header = bus.read(src, BusWidth::Word, AccessType::NonSequential, cycles);
+    cycles += header.cycles;
+    const u32 size = diff_decompressed_size(header.value);
+    if (size == 0) { cpu.set_current_cycle(cycles); return; }
+
+    u32 src_offset = src + 4u;
+    u8 accumulator = 0;
+
+    for (u32 i = 0; i < size; ++i) {
+        const auto data_result = bus.read(src_offset, BusWidth::Byte, AccessType::NonSequential, cycles);
+        cycles += data_result.cycles;
+        u8 val = static_cast<u8>(data_result.value);
+        src_offset += 1u;
+
+        accumulator = static_cast<u8>(accumulator + val);
+
+        if (vram_mode) {
+            const u32 dest_addr = dst + i * 2u;
+            u32 write_val;
+            if (dest_addr & 1u) {
+                const auto prev_result = bus.read(dest_addr & ~1u, BusWidth::Half, AccessType::NonSequential, cycles);
+                cycles += prev_result.cycles;
+                write_val = (prev_result.value & 0xFF00u) | accumulator;
+            } else {
+                write_val = accumulator | (accumulator << 8u);
+            }
+            const auto w = bus.write(dest_addr & ~1u, write_val, BusWidth::Half, AccessType::NonSequential, cycles);
+            cycles += w.cycles;
+        } else {
+            const auto w = bus.write(dst + i, accumulator, BusWidth::Byte, AccessType::NonSequential, cycles);
+            cycles += w.cycles;
+        }
+    }
+    cpu.set_current_cycle(cycles);
+}
+
+void hle_diff_16bit_unfilter(Arm7tdmi& cpu, Bus& bus) {
+    u64 cycles = cpu.current_cycle();
+    const u32 src = cpu.state().regs[0];
+    const u32 dst = cpu.state().regs[1];
+
+    const auto header = bus.read(src, BusWidth::Word, AccessType::NonSequential, cycles);
+    cycles += header.cycles;
+    const u32 size = diff_decompressed_size(header.value);
+    if (size == 0) { cpu.set_current_cycle(cycles); return; }
+
+    u32 src_offset = src + 4u;
+    u16 accumulator = 0;
+
+    for (u32 i = 0; i < size; ++i) {
+        const auto data_result = bus.read(src_offset, BusWidth::Half, AccessType::NonSequential, cycles);
+        cycles += data_result.cycles;
+        u16 val = static_cast<u16>(data_result.value);
+        src_offset += 2u;
+
+        accumulator = static_cast<u16>(accumulator + val);
+
+        const auto w = bus.write(dst + i * 2u, accumulator, BusWidth::Half, AccessType::NonSequential, cycles);
+        cycles += w.cycles;
+    }
+    cpu.set_current_cycle(cycles);
+}
+
+void hle_bg_affine_set(Arm7tdmi& cpu, Bus& bus) {
+    u64 cycles = cpu.current_cycle();
+    const u32 src = cpu.state().regs[0];
+    const u32 dst = cpu.state().regs[1];
+    const u32 count = cpu.state().regs[2];
+
+    for (u32 i = 0; i < count; ++i) {
+        const u32 s = src + i * 20u;
+
+        auto read32 = [&](u32 addr) -> s32 {
+            const auto r = bus.read(addr, BusWidth::Word, AccessType::NonSequential, cycles);
+            cycles += r.cycles;
+            return static_cast<s32>(r.value);
+        };
+        auto read16s = [&](u32 addr) -> s32 {
+            const auto r = bus.read(addr, BusWidth::Half, AccessType::NonSequential, cycles);
+            cycles += r.cycles;
+            return sign_extend<16>(static_cast<u32>(r.value));
+        };
+        auto read16u = [&](u32 addr) -> u32 {
+            const auto r = bus.read(addr, BusWidth::Half, AccessType::NonSequential, cycles);
+            cycles += r.cycles;
+            return r.value & 0xFFFFu;
+        };
+        auto write16 = [&](u32 addr, s32 val) {
+            const auto w = bus.write(addr, static_cast<u32>(val & 0xFFFFu), BusWidth::Half, AccessType::NonSequential, cycles);
+            cycles += w.cycles;
+        };
+        auto write32 = [&](u32 addr, s32 val) {
+            const auto w = bus.write(addr, static_cast<u32>(val), BusWidth::Word, AccessType::NonSequential, cycles);
+            cycles += w.cycles;
+        };
+
+        const s32 cx = read32(s);
+        const s32 cy = read32(s + 4u);
+        const s32 dx = read16s(s + 8u);
+        const s32 dy = read16s(s + 10u);
+        const s32 sx = read16s(s + 12u);
+        const s32 sy = read16s(s + 14u);
+        const u32 angle_raw = read16u(s + 16u);
+        const u16 angle = static_cast<u16>((angle_raw >> 8u) & 0xFFu);
+
+        const auto sin_val = kBgAffineSinLut[static_cast<std::size_t>(angle * 2u)];
+        const auto cos_val = kBgAffineSinLut[static_cast<std::size_t>(angle * 2u + 128u)];
+
+        const s32 scaled_cos = (static_cast<s32>(cos_val) * sx) >> 14;
+        const s32 scaled_sin = (static_cast<s32>(sin_val) * sx) >> 14;
+        const s32 scaled_neg_sin = (static_cast<s32>(-sin_val) * sy) >> 14;
+        const s32 scaled_cos_y = (static_cast<s32>(cos_val) * sy) >> 14;
+
+        s32 pa = scaled_cos;
+        s32 pb = scaled_sin;
+        s32 pc = scaled_neg_sin;
+        s32 pd = scaled_cos_y;
+
+        s32 start_x = (cx << 8) - (pa * dx + pb * dy);
+        s32 start_y = (cy << 8) - (pc * dx + pd * dy);
+
+        const u32 d = dst + i * 20u;
+
+        write16(d, pa);
+        write16(d + 2u, pb);
+        write16(d + 4u, pc);
+        write16(d + 6u, pd);
+        write32(d + 8u, start_x);
+        write32(d + 12u, start_y);
+    }
+    cpu.set_current_cycle(cycles);
+}
+
+void hle_obj_affine_set(Arm7tdmi& cpu, Bus& bus) {
+    u64 cycles = cpu.current_cycle();
+    const u32 src = cpu.state().regs[0];
+    const u32 dst = cpu.state().regs[1];
+    const u32 count = cpu.state().regs[2];
+    const u32 offset = cpu.state().regs[3];
+
+    for (u32 i = 0; i < count; ++i) {
+        const u32 s = src + i * 8u;
+
+        auto read16s = [&](u32 addr) -> s32 {
+            const auto r = bus.read(addr, BusWidth::Half, AccessType::NonSequential, cycles);
+            cycles += r.cycles;
+            return sign_extend<16>(static_cast<u32>(r.value));
+        };
+        auto read16u = [&](u32 addr) -> u32 {
+            const auto r = bus.read(addr, BusWidth::Half, AccessType::NonSequential, cycles);
+            cycles += r.cycles;
+            return r.value & 0xFFFFu;
+        };
+        auto write16 = [&](u32 addr, s32 val) {
+            const auto w = bus.write(addr, static_cast<u32>(val & 0xFFFFu), BusWidth::Half, AccessType::NonSequential, cycles);
+            cycles += w.cycles;
+        };
+
+        const s32 sx = read16s(s);
+        const s32 sy = read16s(s + 2u);
+        const u32 angle_raw = read16u(s + 4u);
+        const u16 angle = static_cast<u16>((angle_raw >> 8u) & 0xFFu);
+
+        const auto sin_val = kBgAffineSinLut[static_cast<std::size_t>(angle * 2u)];
+        const auto cos_val = kBgAffineSinLut[static_cast<std::size_t>(angle * 2u + 128u)];
+
+        s32 pa = (static_cast<s32>(cos_val) * sx) >> 14;
+        s32 pb = (static_cast<s32>(sin_val) * sx) >> 14;
+        s32 pc = (static_cast<s32>(-sin_val) * sy) >> 14;
+        s32 pd = (static_cast<s32>(cos_val) * sy) >> 14;
+
+        const u32 d = dst + i * offset;
+
+        write16(d, pa);
+        write16(d + 2u, pb);
+        write16(d + 4u, pc);
+        write16(d + 6u, pd);
+    }
+    cpu.set_current_cycle(cycles);
+}
+
+void hle_sound_bias(Arm7tdmi& cpu, Bus& bus) {
+    u64 cycles = cpu.current_cycle();
+    const u32 bias_level = cpu.state().regs[0] & 0x3FFu;
+    const u32 ramp_to = (bias_level == 0) ? 0u : 0x200u;
+
+    const auto current_result = bus.read(kSoundBias, BusWidth::Half, AccessType::Io, cycles);
+    cycles += current_result.cycles;
+    u16 current = static_cast<u16>(current_result.value);
+    const u16 target = static_cast<u16>((current & 0xFF00u) | ramp_to);
+
+    constexpr u32 kDelay = 8;
+    u32 steps = 0;
+    const u32 max_steps = 512;
+
+    while ((current & 0x3FFu) != ramp_to && steps < max_steps) {
+        if ((current & 0x3FFu) < ramp_to)
+            current = static_cast<u16>(current + 1u);
+        else
+            current = static_cast<u16>(current - 1u);
+        cycles += kDelay;
+        ++steps;
+    }
+
+    current = target;
+    const auto w = bus.write(kSoundBias, current, BusWidth::Half, AccessType::Io, cycles);
+    cycles += w.cycles;
+    cpu.set_current_cycle(cycles);
+}
+
+void hle_midi_key2freq(Arm7tdmi& cpu, Bus& bus) {
+    u64 cycles = cpu.current_cycle();
+    const u32 wa = cpu.state().regs[0];
+    const u32 mk = cpu.state().regs[1] & 0xFFu;
+    const u32 fp = cpu.state().regs[2] & 0xFFu;
+
+    if (wa >= kBiosSize) {
+        cpu.state().regs[0] = 0;
+        return;
+    }
+
+    const auto data_result = bus.read(wa, BusWidth::Byte, AccessType::NonSequential, cycles);
+    cycles += data_result.cycles;
+    u32 a = data_result.value & 0xFFu;
+
+    const s32 key = (static_cast<s32>(mk) - 64) * 256 + static_cast<s32>(fp);
+    const s32 freq = (static_cast<s32>(a) * key) / 256;
+
+    cpu.state().regs[0] = static_cast<u32>(freq);
+    cpu.set_current_cycle(cycles);
+}
+
+#endif  // GBA_ENABLE_HLE_BIOS
+
 }  // namespace
 
 Arm7tdmi::Arm7tdmi(Bus& bus, IrqController& irq, TraceLogger* logger)
@@ -419,7 +1076,7 @@ void Arm7tdmi::reset(bool skip_bios) {
         return;
     }
 
-    state_.cpsr = static_cast<u32>(CpuMode::System) | kFlagI | kFlagF;
+    state_.cpsr = static_cast<u32>(CpuMode::System) | kFlagF;
     state_.regs[13] = 0x03007F00u;
     state_.regs[15] = 0x08000000u;
     state_.banked_svc_r13_r14[0] = 0x03007FE0u;
@@ -860,48 +1517,107 @@ bool Arm7tdmi::handle_hle_swi(u32 comment) {
         return true;
     }
     case 0x0Eu: {
-        // BgAffineSet - stub (games rarely call during init)
+#ifdef GBA_ENABLE_HLE_BIOS
+        hle_bg_affine_set(*this, bus_);
+#else
         current_cycle_ += 50;
+#endif
         return true;
     }
     case 0x0Fu: {
-        // ObjAffineSet - stub  
+#ifdef GBA_ENABLE_HLE_BIOS
+        hle_obj_affine_set(*this, bus_);
+#else
         current_cycle_ += 50;
+#endif
         return true;
     }
     case 0x10u: {
-        // BitUnPack - stub
+#ifdef GBA_ENABLE_HLE_BIOS
+        hle_bit_unpack(*this, bus_);
+#else
         current_cycle_ += 100;
+#endif
         return true;
     }
-    case 0x11u: case 0x12u: {
-        // LZ77UnComp - stub (LZ77 decompression, games use heavily)
+    case 0x11u: {
+#ifdef GBA_ENABLE_HLE_BIOS
+        hle_lz77_uncomp(*this, bus_, false);
+#else
         current_cycle_ += 200;
+#endif
+        return true;
+    }
+    case 0x12u: {
+#ifdef GBA_ENABLE_HLE_BIOS
+        hle_lz77_uncomp(*this, bus_, true);
+#else
+        current_cycle_ += 200;
+#endif
         return true;
     }
     case 0x13u: {
-        // HuffUnComp - stub
+#ifdef GBA_ENABLE_HLE_BIOS
+        hle_huff_uncomp(*this, bus_);
+#else
         current_cycle_ += 200;
+#endif
         return true;
     }
-    case 0x14u: case 0x15u: {
-        // RLUnComp - stub
+    case 0x14u: {
+#ifdef GBA_ENABLE_HLE_BIOS
+        hle_rl_uncomp(*this, bus_, false);
+#else
         current_cycle_ += 200;
+#endif
         return true;
     }
-    case 0x16u: case 0x17u: case 0x18u: {
-        // Diff8bitUnFilter / Diff16bitUnFilter - stubs
+    case 0x15u: {
+#ifdef GBA_ENABLE_HLE_BIOS
+        hle_rl_uncomp(*this, bus_, true);
+#else
+        current_cycle_ += 200;
+#endif
+        return true;
+    }
+    case 0x16u: {
+#ifdef GBA_ENABLE_HLE_BIOS
+        hle_diff_8bit_unfilter(*this, bus_, false);
+#else
         current_cycle_ += 100;
+#endif
+        return true;
+    }
+    case 0x17u: {
+#ifdef GBA_ENABLE_HLE_BIOS
+        hle_diff_8bit_unfilter(*this, bus_, true);
+#else
+        current_cycle_ += 100;
+#endif
+        return true;
+    }
+    case 0x18u: {
+#ifdef GBA_ENABLE_HLE_BIOS
+        hle_diff_16bit_unfilter(*this, bus_);
+#else
+        current_cycle_ += 100;
+#endif
         return true;
     }
     case 0x19u: {
-        // SoundBias - stub
+#ifdef GBA_ENABLE_HLE_BIOS
+        hle_sound_bias(*this, bus_);
+#else
         current_cycle_ += 10;
+#endif
         return true;
     }
     case 0x1Fu: {
-        // MidiKey2Freq - stub
+#ifdef GBA_ENABLE_HLE_BIOS
+        hle_midi_key2freq(*this, bus_);
+#else
         current_cycle_ += 10;
+#endif
         return true;
     }
     default:

@@ -38,6 +38,11 @@ void Emulator::reset(bool skip_bios) {
     bus_.reset();
     cpu_.reset(skip_bios);
     scheduler_.reset(0);
+
+    if (skip_bios) {
+        (void)bus_.write(kWaitCnt, 0x4317u, BusWidth::Half, AccessType::Io, 0);
+    }
+
     refresh_schedule();
 }
 

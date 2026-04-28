@@ -23,12 +23,13 @@ struct Options {
     u32 frames = 600;
     u32 capture_every = 60;
     bool use_stub_bios = false;
+    bool skip_bios = false;
 };
 
 void print_usage(const char* argv0) {
     std::fprintf(
         stderr,
-        "Usage: %s --rom <path> [--bios <path>] [--stub-bios] [--frames <count>] [--capture-every <count>] [--output-dir <dir>]\n",
+        "Usage: %s --rom <path> [--bios <path>] [--stub-bios] [--skip-bios] [--bios-boot] [--frames <count>] [--capture-every <count>] [--output-dir <dir>]\n",
         argv0
     );
 }
@@ -87,6 +88,10 @@ bool parse_args(int argc, char** argv, Options& options) {
             }
         } else if (arg == "--stub-bios") {
             options.use_stub_bios = true;
+        } else if (arg == "--skip-bios") {
+            options.skip_bios = true;
+        } else if (arg == "--bios-boot") {
+            options.skip_bios = false;
         } else if (arg == "--help" || arg == "-h") {
             print_usage(argv[0]);
             std::exit(EXIT_SUCCESS);
@@ -211,6 +216,7 @@ int main(int argc, char** argv) {
     }
     if (!loaded_real_bios) {
         emulator.load_bios(make_bios_stub());
+        options.skip_bios = true;
     }
 
     if (!emulator.load_rom_from_file(options.rom_path)) {
@@ -219,7 +225,7 @@ int main(int argc, char** argv) {
     }
 
     emulator.set_save_type(SaveType::Flash128K);
-    emulator.reset();
+    emulator.reset(options.skip_bios);
     emulator.cpu().pc_trace_enabled_ = true;
     std::filesystem::create_directories(options.output_dir);
 
@@ -232,6 +238,7 @@ int main(int argc, char** argv) {
     } else {
         std::printf("BIOS: stub\n");
     }
+    std::printf("RESET: %s\n", options.skip_bios ? "skip BIOS" : "BIOS boot");
 
     for (u32 frame = 1; frame <= options.frames; ++frame) {
         emulator.run_frame();

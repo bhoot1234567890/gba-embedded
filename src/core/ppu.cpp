@@ -638,15 +638,14 @@ IRAM_ATTR void Ppu::render_text_bg(int line, std::span<const u8> vram, std::span
             }
         }
 
-        const u32 out_x = screen_x - x_start;
         const u32 real_x = h_flip ? (7u - fine_x) : fine_x;
 
         const u8 color_idx = cached_pixels[real_x];
         if (color_idx != 0) {
             if (cnt.color_mode()) {
-                row[out_x] = read16(palette, static_cast<u32>(color_idx) * 2u);
+                row[screen_x] = read16(palette, static_cast<u32>(color_idx) * 2u);
             } else {
-                row[out_x] = read16(palette, (pal_bank + color_idx) * 2u);
+                row[screen_x] = read16(palette, (pal_bank + color_idx) * 2u);
             }
         }
     }
@@ -684,7 +683,7 @@ IRAM_ATTR void Ppu::render_affine_bg(int line, std::span<const u8> vram, std::sp
             const u32 data_addr = char_base + tile_num * 0x40u + (wrapped_y & 7u) * 8u + (wrapped_x & 7u);
             const u8 color_idx = vram[data_addr % vram.size()];
             if (color_idx != 0) {
-                row[out_x] = read16(palette, static_cast<u32>(color_idx) * 2u);
+                row[screen_x] = read16(palette, static_cast<u32>(color_idx) * 2u);
             }
         } else if (x >= 0 && x < static_cast<s32>(bg_size) && y >= 0 && y < static_cast<s32>(bg_size)) {
             const u32 tile_x = static_cast<u32>(x) / 8u;
@@ -695,7 +694,7 @@ IRAM_ATTR void Ppu::render_affine_bg(int line, std::span<const u8> vram, std::sp
             const u32 data_addr = char_base + (tile_num * 0x40u) + (static_cast<u32>(y) & 7u) * 8u + (static_cast<u32>(x) & 7u);
             const u8 color_idx = vram[data_addr % vram.size()];
             if (color_idx != 0) {
-                row[out_x] = read16(palette, static_cast<u32>(color_idx) * 2u);
+                row[screen_x] = read16(palette, static_cast<u32>(color_idx) * 2u);
             }
         }
     }
@@ -887,7 +886,7 @@ IRAM_ATTR void Ppu::render_objects(int line, std::span<const u8> vram, std::span
             }
 
             const u32 tile_num = (base_tile + tile_offset) & 0x3FFu;
-            const u32 out_x = static_cast<u32>(screen_x) - x_start;
+            const u32 out_x = static_cast<u32>(screen_x);
 
             if (color_8bpp) {
                 const u32 data_addr = obj_vram_base + (tile_num * 0x20u) + (pixel_y * 8u) + pixel_x;

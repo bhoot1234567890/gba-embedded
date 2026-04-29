@@ -34,11 +34,7 @@ struct CpuState {
     std::array<u32, 16> regs{};
     u32 cpsr = static_cast<u32>(CpuMode::System);
     std::array<u32, 5> banked_usr_r8_r12{};
-    std::array<u32, 2> banked_usr_r13_r14{};
-    std::array<u32, 2> banked_svc_r13_r14{};
-    std::array<u32, 2> banked_irq_r13_r14{};
-    std::array<u32, 2> banked_abt_r13_r14{};
-    std::array<u32, 2> banked_und_r13_r14{};
+    std::array<std::array<u32, 2>, 5> banked_r13_r14{};
     std::array<u32, 7> banked_fiq_r8_r14{};
     u32 spsr_svc = 0;
     u32 spsr_irq = 0;

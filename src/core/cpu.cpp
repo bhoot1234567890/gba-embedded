@@ -118,6 +118,25 @@ constexpr auto kCondLut = [] {
     return mode != CpuMode::User;
 }
 
+[[nodiscard]] constexpr std::size_t r13_r14_bank_index(CpuMode mode) {
+    switch (mode) {
+    case CpuMode::User:
+    case CpuMode::System:
+        return 0;
+    case CpuMode::Supervisor:
+        return 1;
+    case CpuMode::Irq:
+        return 2;
+    case CpuMode::Abort:
+        return 3;
+    case CpuMode::Undefined:
+        return 4;
+    case CpuMode::Fiq:
+        return 0;
+    }
+    return 0;
+}
+
 [[nodiscard]] u32& spsr_for_mode(CpuState& state, CpuMode mode) {
     switch (mode) {
     case CpuMode::Supervisor:
@@ -1079,8 +1098,8 @@ void Arm7tdmi::reset(bool skip_bios) {
     state_.cpsr = static_cast<u32>(CpuMode::System) | kFlagF;
     state_.regs[13] = 0x03007F00u;
     state_.regs[15] = 0x08000000u;
-    state_.banked_svc_r13_r14[0] = 0x03007FE0u;
-    state_.banked_irq_r13_r14[0] = 0x03007FA0u;
+    state_.banked_r13_r14[r13_r14_bank_index(CpuMode::Supervisor)][0] = 0x03007FE0u;
+    state_.banked_r13_r14[r13_r14_bank_index(CpuMode::Irq)][0] = 0x03007FA0u;
 }
 
 CpuState& Arm7tdmi::state() {
@@ -1108,7 +1127,9 @@ u64 IRAM_ATTR Arm7tdmi::cpu_run_until(u64 target_cycle) {
         if (service_countdown <= 0) {
             service_countdown = kHardwareServiceBatchInstructions;
             bus_.service_timers(current_cycle_);
-            current_cycle_ += bus_.service_dma(current_cycle_);
+            if (bus_.dma_next_event_cycle() <= current_cycle_) {
+                current_cycle_ += bus_.service_dma(current_cycle_);
+            }
             irq_.advance(current_cycle_);
         }
         --service_countdown;
@@ -1151,12 +1172,16 @@ u64 IRAM_ATTR Arm7tdmi::cpu_run_until(u64 target_cycle) {
         if (thumb_state()) {
             const auto instruction = fetch_thumb();
             last_fetch_cycle_ = current_cycle_;
-            current_cycle_ += bus_.service_dma(current_cycle_);
+            if (bus_.dma_next_event_cycle() <= current_cycle_) {
+                current_cycle_ += bus_.service_dma(current_cycle_);
+            }
             execute_thumb(instruction);
         } else {
             const auto instruction = fetch_arm();
             last_fetch_cycle_ = current_cycle_;
-            current_cycle_ += bus_.service_dma(current_cycle_);
+            if (bus_.dma_next_event_cycle() <= current_cycle_) {
+                current_cycle_ += bus_.service_dma(current_cycle_);
+            }
             execute_arm(instruction);
         }
     }
@@ -1166,7 +1191,9 @@ u64 IRAM_ATTR Arm7tdmi::cpu_run_until(u64 target_cycle) {
 u32 Arm7tdmi::step() {
     const auto start_cycle = current_cycle_;
     bus_.service_timers(current_cycle_);
-    current_cycle_ += bus_.service_dma(current_cycle_);
+    if (bus_.dma_next_event_cycle() <= current_cycle_) {
+        current_cycle_ += bus_.service_dma(current_cycle_);
+    }
     irq_.advance(current_cycle_);
 
     if (state_.halted || bus_.halted()) {
@@ -1195,12 +1222,16 @@ u32 Arm7tdmi::step() {
     if (thumb_state()) {
         const auto instruction = fetch_thumb();
         last_fetch_cycle_ = current_cycle_;
-        current_cycle_ += bus_.service_dma(current_cycle_);
+        if (bus_.dma_next_event_cycle() <= current_cycle_) {
+            current_cycle_ += bus_.service_dma(current_cycle_);
+        }
         execute_thumb(instruction);
     } else {
         const auto instruction = fetch_arm();
         last_fetch_cycle_ = current_cycle_;
-        current_cycle_ += bus_.service_dma(current_cycle_);
+        if (bus_.dma_next_event_cycle() <= current_cycle_) {
+            current_cycle_ += bus_.service_dma(current_cycle_);
+        }
         execute_arm(instruction);
     }
 
@@ -1703,21 +1734,27 @@ u32 IRAM_ATTR Arm7tdmi::execute_arm(u32 instruction) {
         const auto result = bus_.write(address, value, BusWidth::Byte, AccessType::NonSequential, current_cycle_);
         current_cycle_ += result.cycles;
         break_fetch_burst(result);
-        current_cycle_ += bus_.service_dma(current_cycle_);
+        if (bus_.dma_next_event_cycle() <= current_cycle_) {
+            current_cycle_ += bus_.service_dma(current_cycle_);
+        }
         trace_arm_gpio("W", address, BusWidth::Byte, value);
     };
     const auto write16 = [&](u32 address, u32 value) {
         const auto result = bus_.write(address, value, BusWidth::Half, AccessType::NonSequential, current_cycle_);
         current_cycle_ += result.cycles;
         break_fetch_burst(result);
-        current_cycle_ += bus_.service_dma(current_cycle_);
+        if (bus_.dma_next_event_cycle() <= current_cycle_) {
+            current_cycle_ += bus_.service_dma(current_cycle_);
+        }
         trace_arm_gpio("W", address, BusWidth::Half, value);
     };
     const auto write32 = [&](u32 address, u32 value) {
         const auto result = bus_.write(address, value, BusWidth::Word, AccessType::NonSequential, current_cycle_);
         current_cycle_ += result.cycles;
         break_fetch_burst(result);
-        current_cycle_ += bus_.service_dma(current_cycle_);
+        if (bus_.dma_next_event_cycle() <= current_cycle_) {
+            current_cycle_ += bus_.service_dma(current_cycle_);
+        }
         trace_arm_gpio("W", address, BusWidth::Word, value);
     };
 
@@ -2362,21 +2399,27 @@ u32 IRAM_ATTR Arm7tdmi::execute_thumb(u16 instruction) {
         const auto result = bus_.write(address, value, BusWidth::Word, AccessType::NonSequential, current_cycle_);
         current_cycle_ += result.cycles;
         break_fetch_burst(result);
-        current_cycle_ += bus_.service_dma(current_cycle_);
+        if (bus_.dma_next_event_cycle() <= current_cycle_) {
+            current_cycle_ += bus_.service_dma(current_cycle_);
+        }
         trace_thumb_gpio("W", address, BusWidth::Word, value);
     };
     const auto write16 = [&](u32 address, u32 value) {
         const auto result = bus_.write(address, value, BusWidth::Half, AccessType::NonSequential, current_cycle_);
         current_cycle_ += result.cycles;
         break_fetch_burst(result);
-        current_cycle_ += bus_.service_dma(current_cycle_);
+        if (bus_.dma_next_event_cycle() <= current_cycle_) {
+            current_cycle_ += bus_.service_dma(current_cycle_);
+        }
         trace_thumb_gpio("W", address, BusWidth::Half, value);
     };
     const auto write8 = [&](u32 address, u32 value) {
         const auto result = bus_.write(address, value, BusWidth::Byte, AccessType::NonSequential, current_cycle_);
         current_cycle_ += result.cycles;
         break_fetch_burst(result);
-        current_cycle_ += bus_.service_dma(current_cycle_);
+        if (bus_.dma_next_event_cycle() <= current_cycle_) {
+            current_cycle_ += bus_.service_dma(current_cycle_);
+        }
         trace_thumb_gpio("W", address, BusWidth::Byte, value);
     };
     const auto reg = [&](u32 index) -> u32& { return state_.regs[index]; };
@@ -2900,10 +2943,10 @@ u32 Arm7tdmi::read_user_reg(u32 reg) {
         return state_.banked_usr_r8_r12[reg - 8u];
     }
     if (reg == 13u) {
-        return state_.banked_usr_r13_r14[0];
+        return state_.banked_r13_r14[r13_r14_bank_index(CpuMode::User)][0];
     }
     if (reg == 14u) {
-        return state_.banked_usr_r13_r14[1];
+        return state_.banked_r13_r14[r13_r14_bank_index(CpuMode::User)][1];
     }
     return state_.regs[reg];
 }
@@ -2912,9 +2955,9 @@ void Arm7tdmi::write_user_reg(u32 reg, u32 value) {
     if (reg >= 8u && reg <= 12u) {
         state_.banked_usr_r8_r12[reg - 8u] = value;
     } else if (reg == 13u) {
-        state_.banked_usr_r13_r14[0] = value;
+        state_.banked_r13_r14[r13_r14_bank_index(CpuMode::User)][0] = value;
     } else if (reg == 14u) {
-        state_.banked_usr_r13_r14[1] = value;
+        state_.banked_r13_r14[r13_r14_bank_index(CpuMode::User)][1] = value;
     } else {
         state_.regs[reg] = value;
     }
@@ -2936,30 +2979,10 @@ void Arm7tdmi::switch_mode(CpuMode new_mode) {
         }
     }
 
-    switch (old_mode) {
-    case CpuMode::User:
-    case CpuMode::System:
-        state_.banked_usr_r13_r14[0] = state_.regs[13];
-        state_.banked_usr_r13_r14[1] = state_.regs[14];
-        break;
-    case CpuMode::Supervisor:
-        state_.banked_svc_r13_r14[0] = state_.regs[13];
-        state_.banked_svc_r13_r14[1] = state_.regs[14];
-        break;
-    case CpuMode::Irq:
-        state_.banked_irq_r13_r14[0] = state_.regs[13];
-        state_.banked_irq_r13_r14[1] = state_.regs[14];
-        break;
-    case CpuMode::Abort:
-        state_.banked_abt_r13_r14[0] = state_.regs[13];
-        state_.banked_abt_r13_r14[1] = state_.regs[14];
-        break;
-    case CpuMode::Undefined:
-        state_.banked_und_r13_r14[0] = state_.regs[13];
-        state_.banked_und_r13_r14[1] = state_.regs[14];
-        break;
-    case CpuMode::Fiq:
-        break;
+    if (old_mode != CpuMode::Fiq) {
+        auto& old_bank = state_.banked_r13_r14[r13_r14_bank_index(old_mode)];
+        old_bank[0] = state_.regs[13];
+        old_bank[1] = state_.regs[14];
     }
 
     state_.cpsr = (state_.cpsr & ~0x1Fu) | static_cast<u32>(new_mode);
@@ -2974,32 +2997,13 @@ void Arm7tdmi::switch_mode(CpuMode new_mode) {
         }
     }
 
-    switch (new_mode) {
-    case CpuMode::User:
-    case CpuMode::System:
-        state_.regs[13] = state_.banked_usr_r13_r14[0];
-        state_.regs[14] = state_.banked_usr_r13_r14[1];
-        break;
-    case CpuMode::Supervisor:
-        state_.regs[13] = state_.banked_svc_r13_r14[0];
-        state_.regs[14] = state_.banked_svc_r13_r14[1];
-        break;
-    case CpuMode::Irq:
-        state_.regs[13] = state_.banked_irq_r13_r14[0];
-        state_.regs[14] = state_.banked_irq_r13_r14[1];
-        break;
-    case CpuMode::Abort:
-        state_.regs[13] = state_.banked_abt_r13_r14[0];
-        state_.regs[14] = state_.banked_abt_r13_r14[1];
-        break;
-    case CpuMode::Undefined:
-        state_.regs[13] = state_.banked_und_r13_r14[0];
-        state_.regs[14] = state_.banked_und_r13_r14[1];
-        break;
-    case CpuMode::Fiq:
+    if (new_mode == CpuMode::Fiq) {
         state_.regs[13] = state_.banked_fiq_r8_r14[5];
         state_.regs[14] = state_.banked_fiq_r8_r14[6];
-        break;
+    } else {
+        const auto& new_bank = state_.banked_r13_r14[r13_r14_bank_index(new_mode)];
+        state_.regs[13] = new_bank[0];
+        state_.regs[14] = new_bank[1];
     }
 }
 

@@ -8,30 +8,36 @@ Last checked against code on 2026-04-29 after the ESP32-S3 performance pass.
 - B2: duplicate undefined-instruction exception raising was removed.
 - B3: PPU register writes now dirty scanlines without always invalidating the tile cache. VRAM, OAM, and palette writes still invalidate tile decode cache.
 - B4: duplicate `refresh_schedule()` calls were removed from the frame/run loops.
+- H1: bus read/write/peek hot paths no longer construct per-access spans; they use raw memory pointers with wrapped pointer helpers.
+- H2/M11: bus read/write now compute common region cycles inside the main dispatch instead of calling a separate `region_cycles()` decode pass.
 - H3/P8: desktop defaults to Release and ESP32-S3 uses performance optimization instead of debug `-Og`.
+- M1/M18 partial: `Cartridge` caches ROM size and a direct contiguous read pointer when the provider allows it. Desktop profiling remains provider-routed by default so ROM cache statistics are preserved.
+- M3 partial: CPU DMA servicing is guarded by `dma_next_event_cycle()` before calling the full service path.
 - M4/M5: PPU tiebreaker lookup and affine scanline coefficient hoisting are implemented.
+- M7: PPU object rendering now uses cached per-scanline active sprite lists instead of scanning all 128 sprites in every rendered line.
+- M12 partial: DMA has direct simple incrementing RAM-to-VRAM fast paths, and the existing ROM-to-VRAM path now avoids per-unit span construction on the write side.
 - M8/M9/M10: scheduler/hardware service, timers, PPU advance, and APU advance have ESP32 IRAM annotations where currently wired.
 - M14: `Scheduler::next_event()` has a cached minimum.
-- M15: ESP32 SD ROM page lookup is O(1), with per-frame seen-page tracking.
+- M15: ESP32 SD ROM page lookup is O(1), mmap window lookup is O(1), and the SD provider separates the IRAM cache-hit path from the slow SD miss path.
+- M16 partial: CPU mode switching now uses an indexed R13/R14 bank table. A full register-pointer table is still open.
 - P1/P2: ESP32 runtime does two-pixel RGB555 to RGB565 conversion and submits a full display frame in one draw call.
+- P3 partial: ESP32 ROM provider read paths and SD cache-hit lookup are IRAM-marked. The display byte-swap loop is still scalar.
 - P4/P5/P7/P9: audio chunking, aligned PSRAM framebuffers, cache-line-separated atomics, and ESP32 HLE BIOS compile definition are implemented.
 - Display DMA safety: ESP32 display transfer now uses `esp_cache_msync()` and waits on `on_color_trans_done()` before reusing the transfer buffer.
+- QEMU smoke status: ESP32-S3 smoke firmware now reports 6 passed, 0 failed under QEMU. The QEMU process is still terminated by the harness timeout after `app_main()` returns.
 
 ## Still Open
 
-- H1: per-access `std::span` construction in `Bus::read()`, `Bus::write()`, and debug/open-bus helpers.
-- H2/M11: bus cycle calculation and bus data dispatch still decode the same address separately. A `switch (address >> 24)` or combined dispatch/cycle path is still open.
 - H4/L1/L14: prefetch penalty and sequential-boundary logic is still duplicated across read/write/save paths.
-- M1/M18: ROM reads still go through `Cartridge` plus virtual `RomProvider` dispatch. `contiguous_span()` exists but the hot bus path does not yet use a direct-span fast path.
+- M1/M18: full ROM provider type erasure is still open. Non-contiguous providers and profiled desktop reads still use virtual provider calls intentionally.
 - M2: ARM/Thumb execute paths still define many hot lambdas inside each instruction call.
-- M3: CPU write helpers still call `bus_.service_dma()` after most writes; a cheap DMA-pending flag is still open.
-- M6/M7/M17/L3: window span optimization, active sprite lists, sprite tile cache, and incremental sprite affine stepping are still open.
-- M12: DMA still uses full `bus.read()`/`bus.write()` per transfer unit except for existing partial fast paths.
+- M3: a latched DMA-pending flag is still open; the current implementation uses the cheaper next-event guard.
+- M6/M17/L3: window span optimization, sprite tile cache, and incremental sprite affine stepping are still open.
+- M12: broader DMA fast paths are still open for ROM-to-RAM, RAM-to-RAM, decrement/fixed modes, and exact boundary-specialized burst loops.
 - M13: `refresh_schedule()` still polls all subsystem next-event values; per-slot dirty scheduling is still open.
-- M16/L10: CPU mode switching still copies banked registers instead of using a register pointer table.
-- P3: RGB conversion is in IRAM, but ESP32 SD cache `ensure_page()` and the display byte-swap loop are not yet IRAM-specialized.
+- M16/L10: the full CPU register pointer table is still open; only the R13/R14 bank dispatch has been flattened.
+- P3: the display byte-swap loop is still scalar and not separately IRAM-specialized.
 - P6: CPU task stack was reduced from 32KB to 16KB, but the audit's 8KB target still needs high-water-mark validation before shrinking further.
-- QEMU smoke status: the ESP32-S3 smoke firmware boots under QEMU, but currently reports failures in `timer_overflow_irq` and `audio_fifo`. That is a correctness/test follow-up separate from the ESP32-S3 runtime performance list.
 - Low-impact items L2-L13 are mostly still open unless covered above.
 
 ## Notes

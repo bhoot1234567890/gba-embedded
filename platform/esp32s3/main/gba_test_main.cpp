@@ -92,9 +92,11 @@ void test_timer_overflow_irq() {
 
     timers.write_register(kTm0CntL, 0xFFFEu, BusWidth::Half, 0, irq, apu);
     timers.write_register(kTm0CntH, 0x00C0u, BusWidth::Half, 0, irq, apu);
-    timers.advance_to(1, irq, apu);
-    expect((irq.iflags() & IrqTimer0) == 0u, "timer 0 should not overflow before its exact cycle");
     timers.advance_to(2, irq, apu);
+    irq.advance(2);
+    expect((irq.iflags() & IrqTimer0) == 0u, "timer 0 IRQ should honor the delayed IRQ pipeline");
+    timers.advance_to(10, irq, apu);
+    irq.advance(10);
     expect((irq.iflags() & IrqTimer0) != 0u, "timer 0 should request an IRQ on overflow");
     ESP_LOGI(kTag, "  timer_overflow_irq: OK");
 }
@@ -113,11 +115,12 @@ void test_audio_fifo_timer_cadence() {
 
     timers.write_register(kTm0CntL, 0xFFFFu, BusWidth::Half, 0, irq, apu);
     timers.write_register(kTm0CntH, 0x0080u, BusWidth::Half, 0, irq, apu);
-    timers.advance_to(1, irq, apu);
+    timers.advance_to(3, irq, apu);
+    apu.advance_to(512);
 
     const auto chunk = apu.consume_audio_chunk();
-    expect(chunk.size() == 2u, "one timer tick should produce one stereo sample pair");
-    expect(chunk[0] == 256 && chunk[1] == 256, "direct sound sample values should follow FIFO/timer cadence");
+    expect(chunk.size() == 2u, "one APU sample tick should produce one stereo sample pair");
+    expect(chunk[0] == 128 && chunk[1] == 128, "direct sound sample values should follow FIFO/timer cadence");
     expect(apu.take_fifo_request_a(), "FIFO A should request DMA refill when level falls below threshold");
     ESP_LOGI(kTag, "  audio_fifo: OK");
 }

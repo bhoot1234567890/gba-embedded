@@ -1,11 +1,14 @@
 #include "gba/platform/esp32_rom_provider.hpp"
 
 #include <algorithm>
+#include <array>
 #include <cstdio>
 #include <cstring>
 #include <limits>
 #include <memory>
 #include <vector>
+
+#include "gba/core/constants.hpp"
 
 #include "esp_heap_caps.h"
 #include "esp_log.h"
@@ -16,6 +19,9 @@ namespace gba {
 namespace {
 
 constexpr u32 kInvalidPage = std::numeric_limits<u32>::max();
+constexpr u64 kSdMissPenaltyUs = 700;
+constexpr u32 kHotPinThreshold = 96;
+constexpr std::size_t kSdReadAlignment = 512;
 const char* kTag = "rom_provider";
 
 struct HeapCapsDeleter {
@@ -27,11 +33,27 @@ struct HeapCapsDeleter {
 };
 
 [[nodiscard]] u8* alloc_rom_cache(std::size_t bytes) {
-    auto* ptr = static_cast<u8*>(heap_caps_malloc(bytes, MALLOC_CAP_SPIRAM | MALLOC_CAP_8BIT));
+    auto* ptr = static_cast<u8*>(
+        heap_caps_aligned_alloc(kSdReadAlignment, bytes, MALLOC_CAP_SPIRAM | MALLOC_CAP_8BIT));
     if (!ptr) {
-        ptr = static_cast<u8*>(heap_caps_malloc(bytes, MALLOC_CAP_8BIT));
+        ptr = static_cast<u8*>(heap_caps_aligned_alloc(kSdReadAlignment, bytes, MALLOC_CAP_8BIT));
     }
     return ptr;
+}
+
+[[nodiscard]] u64 miss_penalty_cycles(u64 misses) {
+    return (misses * kSdMissPenaltyUs * kSystemClockHz) / 1000000u;
+}
+
+[[nodiscard]] u16 load_le16(const u8* ptr) {
+    return static_cast<u16>(static_cast<u32>(ptr[0]) | (static_cast<u32>(ptr[1]) << 8u));
+}
+
+[[nodiscard]] u32 load_le32(const u8* ptr) {
+    return static_cast<u32>(ptr[0]) |
+           (static_cast<u32>(ptr[1]) << 8u) |
+           (static_cast<u32>(ptr[2]) << 16u) |
+           (static_cast<u32>(ptr[3]) << 24u);
 }
 
 class Esp32MmapRomProvider final : public RomProvider {
@@ -56,9 +78,41 @@ public:
     [[nodiscard]] std::size_t size() const override { return size_; }
 
     [[nodiscard]] u8 read_byte(u32 address) const override {
-        u8 value = 0xFF;
-        (void)read_bytes(address, std::span<u8>(&value, 1));
-        return value;
+        if (static_cast<std::size_t>(address) >= size_) {
+            return 0xFFu;
+        }
+        const auto* ptr = read_ptr(address, 1);
+        return ptr ? ptr[0] : 0xFFu;
+    }
+
+    [[nodiscard]] u16 read16(u32 address) const override {
+        if (static_cast<std::size_t>(address) + 2u > size_) {
+            return 0xFFFFu;
+        }
+        if ((static_cast<std::size_t>(address) % window_bytes_) + 2u > window_bytes_) {
+            std::array<u8, 2> scratch{};
+            return read_bytes(address, scratch) ? load_le16(scratch.data()) : 0xFFFFu;
+        }
+        const auto* ptr = read_ptr(address, 2);
+        if (!ptr) {
+            return 0xFFFFu;
+        }
+        return load_le16(ptr);
+    }
+
+    [[nodiscard]] u32 read32(u32 address) const override {
+        if (static_cast<std::size_t>(address) + 4u > size_) {
+            return 0xFFFFFFFFu;
+        }
+        if ((static_cast<std::size_t>(address) % window_bytes_) + 4u > window_bytes_) {
+            std::array<u8, 4> scratch{};
+            return read_bytes(address, scratch) ? load_le32(scratch.data()) : 0xFFFFFFFFu;
+        }
+        const auto* ptr = read_ptr(address, 4);
+        if (!ptr) {
+            return 0xFFFFFFFFu;
+        }
+        return load_le32(ptr);
     }
 
     [[nodiscard]] bool read_bytes(u32 address, std::span<u8> out) const override {
@@ -69,6 +123,7 @@ public:
             return false;
         }
 
+        const auto sequential = note_demand_access(address, out.size());
         frame_stats_.byte_reads += out.size();
         std::size_t copied = 0;
         while (copied < out.size()) {
@@ -76,7 +131,7 @@ public:
             const auto page = static_cast<u32>(absolute / window_bytes_);
             const auto offset_in_window = absolute % window_bytes_;
             const auto chunk = std::min(out.size() - copied, window_bytes_ - offset_in_window);
-            const auto* window = ensure_window(page, false);
+            const auto* window = ensure_window(page, false, sequential);
             if (!window) {
                 std::fill(out.begin() + static_cast<std::ptrdiff_t>(copied),
                           out.begin() + static_cast<std::ptrdiff_t>(copied + chunk),
@@ -97,21 +152,30 @@ public:
         frame_stats_.prefetch_bytes += bytes;
         const auto end = std::min<std::size_t>(size_, static_cast<std::size_t>(address) + bytes);
         for (auto cursor = static_cast<std::size_t>(address); cursor < end; cursor = ((cursor / window_bytes_) + 1u) * window_bytes_) {
-            (void)ensure_window(static_cast<u32>(cursor / window_bytes_), true);
+            (void)ensure_window(static_cast<u32>(cursor / window_bytes_), true, false);
         }
     }
 
     [[nodiscard]] RomAccessStats frame_stats() const override {
-        return frame_stats_;
+        auto stats = frame_stats_;
+        stats.unique_pages = static_cast<u32>(unique_pages_.size());
+        return stats;
     }
 
     void reset_frame_stats() const override {
         frame_stats_ = {};
+        unique_pages_.clear();
+        has_last_demand_ = false;
+        last_demand_end_ = 0;
+        for (auto& window : windows_) {
+            window.prefetched = false;
+        }
     }
 
 private:
     struct Window {
         bool valid = false;
+        bool prefetched = false;
         u32 page = kInvalidPage;
         const u8* data = nullptr;
         std::size_t mapped_size = 0;
@@ -119,16 +183,57 @@ private:
         esp_partition_mmap_handle_t handle = 0;
     };
 
-    [[nodiscard]] const u8* ensure_window(u32 page, bool) const {
+    [[nodiscard]] const u8* read_ptr(u32 address, std::size_t bytes) const {
+        const auto sequential = note_demand_access(address, bytes);
+        frame_stats_.byte_reads += bytes;
+        const auto absolute = static_cast<std::size_t>(address);
+        const auto page = static_cast<u32>(absolute / window_bytes_);
+        const auto offset_in_window = absolute % window_bytes_;
+        if (offset_in_window + bytes > window_bytes_) {
+            return nullptr;
+        }
+        const auto* window = ensure_window(page, false, sequential);
+        return window ? window + offset_in_window : nullptr;
+    }
+
+    [[nodiscard]] bool note_demand_access(u32 address, std::size_t bytes) const {
+        const auto page = static_cast<u32>(static_cast<std::size_t>(address) / window_bytes_);
+        if (std::find(unique_pages_.begin(), unique_pages_.end(), page) == unique_pages_.end()) {
+            unique_pages_.push_back(page);
+        }
+        const auto end = static_cast<u32>(static_cast<u64>(address) + bytes);
+        const auto sequential = has_last_demand_ && address == last_demand_end_;
+        has_last_demand_ = true;
+        last_demand_end_ = end;
+        return sequential;
+    }
+
+    [[nodiscard]] const u8* ensure_window(u32 page, bool prefetch, bool sequential) const {
+        if (!prefetch && std::find(unique_pages_.begin(), unique_pages_.end(), page) == unique_pages_.end()) {
+            unique_pages_.push_back(page);
+        }
         for (auto& window : windows_) {
             if (window.valid && window.page == page) {
-                ++frame_stats_.cache_hits;
+                if (!prefetch) {
+                    ++frame_stats_.cache_hits;
+                    if (sequential) {
+                        ++frame_stats_.sequential_hits;
+                    }
+                    if (window.prefetched) {
+                        ++frame_stats_.prefetch_hits;
+                        window.prefetched = false;
+                    }
+                }
                 window.age = ++clock_;
                 return window.data;
             }
         }
 
-        ++frame_stats_.cache_misses;
+        if (prefetch) {
+            ++frame_stats_.prefetch_misses;
+        } else {
+            ++frame_stats_.cache_misses;
+        }
         auto* victim = &windows_.front();
         for (auto& window : windows_) {
             if (!window.valid) {
@@ -164,6 +269,7 @@ private:
         }
 
         victim->valid = true;
+        victim->prefetched = prefetch;
         victim->page = page;
         victim->data = static_cast<const u8*>(ptr);
         victim->mapped_size = bytes;
@@ -176,6 +282,9 @@ private:
     std::size_t size_ = 0;
     std::size_t window_bytes_ = 64u * 1024u;
     mutable std::vector<Window> windows_;
+    mutable std::vector<u32> unique_pages_;
+    mutable bool has_last_demand_ = false;
+    mutable u32 last_demand_end_ = 0;
     mutable u64 clock_ = 0;
     mutable RomAccessStats frame_stats_{};
 };
@@ -191,7 +300,8 @@ public:
           size_(size),
           cache_(std::move(cache)),
           page_bytes_(page_bytes),
-          pages_(std::max<std::size_t>(1u, page_count)) {
+          pages_(std::max<std::size_t>(1u, page_count)),
+          max_pinned_pages_(std::max<std::size_t>(1u, std::max<std::size_t>(1u, page_count) / 4u)) {
         for (std::size_t index = 0; index < pages_.size(); ++index) {
             pages_[index].data = cache_.get() + index * page_bytes_;
         }
@@ -200,9 +310,41 @@ public:
     [[nodiscard]] std::size_t size() const override { return size_; }
 
     [[nodiscard]] u8 read_byte(u32 address) const override {
-        u8 value = 0xFF;
-        (void)read_bytes(address, std::span<u8>(&value, 1));
-        return value;
+        if (static_cast<std::size_t>(address) >= size_) {
+            return 0xFFu;
+        }
+        const auto* ptr = read_ptr(address, 1);
+        return ptr ? ptr[0] : 0xFFu;
+    }
+
+    [[nodiscard]] u16 read16(u32 address) const override {
+        if (static_cast<std::size_t>(address) + 2u > size_) {
+            return 0xFFFFu;
+        }
+        if ((static_cast<std::size_t>(address) % page_bytes_) + 2u > page_bytes_) {
+            std::array<u8, 2> scratch{};
+            return read_bytes(address, scratch) ? load_le16(scratch.data()) : 0xFFFFu;
+        }
+        const auto* ptr = read_ptr(address, 2);
+        if (!ptr) {
+            return 0xFFFFu;
+        }
+        return load_le16(ptr);
+    }
+
+    [[nodiscard]] u32 read32(u32 address) const override {
+        if (static_cast<std::size_t>(address) + 4u > size_) {
+            return 0xFFFFFFFFu;
+        }
+        if ((static_cast<std::size_t>(address) % page_bytes_) + 4u > page_bytes_) {
+            std::array<u8, 4> scratch{};
+            return read_bytes(address, scratch) ? load_le32(scratch.data()) : 0xFFFFFFFFu;
+        }
+        const auto* ptr = read_ptr(address, 4);
+        if (!ptr) {
+            return 0xFFFFFFFFu;
+        }
+        return load_le32(ptr);
     }
 
     [[nodiscard]] bool read_bytes(u32 address, std::span<u8> out) const override {
@@ -213,6 +355,8 @@ public:
             return false;
         }
 
+        const auto streaming = note_demand_access(address, out.size());
+        bool had_miss = false;
         frame_stats_.byte_reads += out.size();
         std::size_t copied = 0;
         while (copied < out.size()) {
@@ -220,7 +364,9 @@ public:
             const auto page = static_cast<u32>(absolute / page_bytes_);
             const auto offset_in_page = absolute % page_bytes_;
             const auto chunk = std::min(out.size() - copied, page_bytes_ - offset_in_page);
-            const auto* page_data = ensure_page(page, false);
+            const auto loaded = ensure_page(page, false, streaming);
+            const auto* page_data = loaded.data;
+            had_miss = had_miss || !loaded.hit;
             if (!page_data) {
                 std::fill(out.begin() + static_cast<std::ptrdiff_t>(copied),
                           out.begin() + static_cast<std::ptrdiff_t>(copied + chunk),
@@ -230,6 +376,7 @@ public:
             }
             copied += chunk;
         }
+        maybe_prefetch_after_read(address, out.size(), streaming, had_miss);
         return true;
     }
 
@@ -241,55 +388,168 @@ public:
         frame_stats_.prefetch_bytes += bytes;
         const auto end = std::min<std::size_t>(size_, static_cast<std::size_t>(address) + bytes);
         for (auto cursor = static_cast<std::size_t>(address); cursor < end; cursor = ((cursor / page_bytes_) + 1u) * page_bytes_) {
-            (void)ensure_page(static_cast<u32>(cursor / page_bytes_), true);
+            (void)ensure_page(static_cast<u32>(cursor / page_bytes_), true, false);
         }
     }
 
     [[nodiscard]] RomAccessStats frame_stats() const override {
-        return frame_stats_;
+        auto stats = frame_stats_;
+        stats.unique_pages = static_cast<u32>(unique_pages_.size());
+        stats.miss_penalty_us = stats.cache_misses * kSdMissPenaltyUs;
+        stats.miss_penalty_cycles = miss_penalty_cycles(stats.cache_misses);
+        return stats;
     }
 
     void reset_frame_stats() const override {
         frame_stats_ = {};
+        unique_pages_.clear();
+        has_last_demand_ = false;
+        last_demand_end_ = 0;
+        sequential_run_ = 0;
+        last_prefetch_base_page_ = kInvalidPage;
+        for (auto& page : pages_) {
+            page.prefetched = false;
+        }
     }
 
 private:
     struct Page {
         bool valid = false;
+        bool prefetched = false;
+        bool pinned = false;
         u32 index = kInvalidPage;
         u8* data = nullptr;
         u64 age = 0;
+        u32 hot_score = 0;
     };
 
-    [[nodiscard]] const u8* ensure_page(u32 page_index, bool) const {
+    struct PageLoad {
+        const u8* data = nullptr;
+        bool hit = false;
+    };
+
+    [[nodiscard]] const u8* read_ptr(u32 address, std::size_t bytes) const {
+        const auto streaming = note_demand_access(address, bytes);
+        frame_stats_.byte_reads += bytes;
+        const auto absolute = static_cast<std::size_t>(address);
+        const auto page = static_cast<u32>(absolute / page_bytes_);
+        const auto offset_in_page = absolute % page_bytes_;
+        if (offset_in_page + bytes > page_bytes_) {
+            return nullptr;
+        }
+        const auto loaded = ensure_page(page, false, streaming);
+        maybe_prefetch_after_read(address, bytes, streaming, !loaded.hit);
+        return loaded.data ? loaded.data + offset_in_page : nullptr;
+    }
+
+    [[nodiscard]] bool note_demand_access(u32 address, std::size_t bytes) const {
+        const auto page = static_cast<u32>(static_cast<std::size_t>(address) / page_bytes_);
+        if (std::find(unique_pages_.begin(), unique_pages_.end(), page) == unique_pages_.end()) {
+            unique_pages_.push_back(page);
+        }
+
+        const auto end = static_cast<u32>(static_cast<u64>(address) + bytes);
+        const auto sequential = has_last_demand_ && address == last_demand_end_;
+        sequential_run_ = sequential ? sequential_run_ + 1u : 0u;
+        has_last_demand_ = true;
+        last_demand_end_ = end;
+        return sequential;
+    }
+
+    void maybe_prefetch_after_read(u32 address, std::size_t bytes, bool streaming, bool had_miss) const {
+        if (!streaming && !had_miss) {
+            return;
+        }
+        const auto end = static_cast<std::size_t>(address) + bytes;
+        const auto current_page = static_cast<u32>((end == 0 ? 0 : end - 1u) / page_bytes_);
+        if (!had_miss && current_page == last_prefetch_base_page_) {
+            return;
+        }
+        last_prefetch_base_page_ = current_page;
+
+        const auto pages_ahead = sequential_run_ >= 4u ? 2u : 1u;
+        const auto start_page = current_page + 1u;
+        const auto end_page = start_page + pages_ahead;
+        for (u32 page = start_page; page < end_page; ++page) {
+            if (static_cast<std::size_t>(page) * page_bytes_ >= size_) {
+                break;
+            }
+            ++frame_stats_.prefetches;
+            frame_stats_.prefetch_bytes += page_bytes_;
+            (void)ensure_page(page, true, false);
+        }
+    }
+
+    void heat_page(Page& page) const {
+        if (page.hot_score < kHotPinThreshold) {
+            ++page.hot_score;
+        }
+        if (!page.pinned && page.hot_score >= kHotPinThreshold && pinned_pages_ < max_pinned_pages_) {
+            page.pinned = true;
+            ++pinned_pages_;
+        }
+    }
+
+    [[nodiscard]] PageLoad ensure_page(u32 page_index, bool prefetch, bool sequential) const {
+        if (!prefetch && std::find(unique_pages_.begin(), unique_pages_.end(), page_index) == unique_pages_.end()) {
+            unique_pages_.push_back(page_index);
+        }
         for (auto& page : pages_) {
             if (page.valid && page.index == page_index) {
-                ++frame_stats_.cache_hits;
+                if (!prefetch) {
+                    ++frame_stats_.cache_hits;
+                    if (sequential) {
+                        ++frame_stats_.sequential_hits;
+                    }
+                    if (page.prefetched) {
+                        ++frame_stats_.prefetch_hits;
+                        page.prefetched = false;
+                    }
+                    heat_page(page);
+                }
                 page.age = ++clock_;
-                return page.data;
+                return {page.data, true};
             }
         }
 
-        ++frame_stats_.cache_misses;
+        if (prefetch) {
+            ++frame_stats_.prefetch_misses;
+        } else {
+            ++frame_stats_.cache_misses;
+        }
         auto* victim = &pages_.front();
+        bool found_unpinned = false;
         for (auto& page : pages_) {
             if (!page.valid) {
                 victim = &page;
+                found_unpinned = true;
                 break;
             }
-            if (page.age < victim->age) {
+            if (page.pinned) {
+                continue;
+            }
+            if (!found_unpinned || page.age < victim->age) {
                 victim = &page;
+                found_unpinned = true;
+            }
+        }
+        if (!found_unpinned) {
+            victim = &pages_.front();
+            for (auto& page : pages_) {
+                if (page.age < victim->age) {
+                    victim = &page;
+                }
             }
         }
 
         const auto offset = static_cast<std::size_t>(page_index) * page_bytes_;
         if (offset >= size_) {
-            return nullptr;
+            return {};
         }
 
         if (std::fseek(file_.get(), static_cast<long>(offset), SEEK_SET) != 0) {
             ESP_LOGE(kTag, "ROM cache seek failed offset=%u", static_cast<unsigned>(offset));
-            return nullptr;
+            return {};
         }
 
         const auto remaining = std::min(page_bytes_, size_ - offset);
@@ -297,16 +557,22 @@ private:
         if (read != remaining && std::ferror(file_.get())) {
             ESP_LOGE(kTag, "ROM cache read failed page=%lu", static_cast<unsigned long>(page_index));
             std::clearerr(file_.get());
-            return nullptr;
+            return {};
         }
         if (read < page_bytes_) {
             std::memset(victim->data + read, 0xFF, page_bytes_ - read);
         }
 
+        if (victim->valid && victim->pinned && pinned_pages_ != 0) {
+            --pinned_pages_;
+        }
         victim->valid = true;
+        victim->prefetched = prefetch;
+        victim->pinned = false;
         victim->index = page_index;
         victim->age = ++clock_;
-        return victim->data;
+        victim->hot_score = prefetch ? 0 : 1;
+        return {victim->data, false};
     }
 
     std::unique_ptr<FILE, int (*)(FILE*)> file_;
@@ -314,7 +580,14 @@ private:
     std::unique_ptr<u8, HeapCapsDeleter> cache_;
     std::size_t page_bytes_ = 32u * 1024u;
     mutable std::vector<Page> pages_;
+    mutable std::vector<u32> unique_pages_;
     mutable u64 clock_ = 0;
+    mutable bool has_last_demand_ = false;
+    mutable u32 last_demand_end_ = 0;
+    mutable u32 sequential_run_ = 0;
+    mutable u32 last_prefetch_base_page_ = kInvalidPage;
+    mutable std::size_t pinned_pages_ = 0;
+    std::size_t max_pinned_pages_ = 0;
     mutable RomAccessStats frame_stats_{};
 };
 

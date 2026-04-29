@@ -246,15 +246,23 @@ u32 Cartridge::read_rom(u32 address, BusWidth width) const {
         return read_byte(address);
     case BusWidth::Half: {
         const auto aligned = align_down(address, 2u);
-        if (aligned + 2u > rom_->size() && !has_gpio_byte(aligned, 2u)) {
+        const bool touches_gpio = has_gpio_byte(aligned, 2u);
+        if (aligned + 2u > rom_->size() && !touches_gpio) {
             return 0xFFFFFFFFu;
+        }
+        if (!touches_gpio) {
+            return rom_->read16(aligned);
         }
         return read_byte(aligned) | (read_byte(aligned + 1u) << 8u);
     }
     case BusWidth::Word: {
         const auto aligned = align_down(address, 4u);
-        if (aligned + 4u > rom_->size() && !has_gpio_byte(aligned, 4u)) {
+        const bool touches_gpio = has_gpio_byte(aligned, 4u);
+        if (aligned + 4u > rom_->size() && !touches_gpio) {
             return 0xFFFFFFFFu;
+        }
+        if (!touches_gpio) {
+            return rom_->read32(aligned);
         }
         return read_byte(aligned) | (read_byte(aligned + 1u) << 8u) | (read_byte(aligned + 2u) << 16u) |
                (read_byte(aligned + 3u) << 24u);

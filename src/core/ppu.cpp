@@ -74,6 +74,13 @@ struct BgCnt {
     [[nodiscard]] u32 size() const { return raw >> 14u & 0x3u; }
 };
 
+constexpr u8 kSpriteWidths[3][4] = {
+    {8, 16, 32, 64}, {16, 32, 32, 64}, {8, 8, 16, 32}
+};
+constexpr u8 kSpriteHeights[3][4] = {
+    {8, 16, 32, 64}, {8, 8, 16, 32}, {16, 32, 32, 64}
+};
+
 }  // namespace
 
 void Ppu::reset() {
@@ -106,6 +113,8 @@ void Ppu::reset() {
     vblank_ = false;
     frame_ready_ = false;
     scanline_ready_.reset();
+    sprite_scanline_count_.fill(0);
+    sprite_cache_valid_ = false;
     mark_all_dirty();
     update_dispstat_flags();
 }
@@ -271,6 +280,7 @@ void Ppu::write_register(u32 address, u32 value, BusWidth width) {
     update_dispstat_flags();
     if (render_dirty) {
         mark_all_scanlines_dirty();
+        invalidate_sprite_cache();
     }
 }
 
@@ -298,7 +308,7 @@ IRAM_ATTR void Ppu::render_scanline(int line, std::span<const u8> vram, std::spa
         if (line < 0 || line >= static_cast<int>(kScreenHeight)) return;
     }
 
-    if (!all_dirty_ && !scanline_dirty_[static_cast<std::size_t>(line)]) return;
+    if (dirty_count_ == 0 || !scanline_dirty_[static_cast<std::size_t>(line)]) return;
     clear_dirty(line);
 
     u16* fb_base = external_fb_ ? external_fb_ : framebuffer_.get();
@@ -765,16 +775,101 @@ void Ppu::handle_vcount_compare(IrqController& irq, u64 cycle_now) {
     }
 }
 
-void Ppu::mark_all_dirty() { mark_all_scanlines_dirty(); ++tile_cache_epoch_; }
-void Ppu::mark_all_scanlines_dirty() { all_dirty_ = true; scanline_dirty_.fill(true); }
-void Ppu::mark_dirty(int line) { if (line >= 0 && line < static_cast<int>(kScreenHeight)) scanline_dirty_[static_cast<std::size_t>(line)] = true; }
-bool Ppu::is_dirty(int line) const { if (all_dirty_) return true; if (line < 0 || line >= static_cast<int>(kScreenHeight)) return false; return scanline_dirty_[static_cast<std::size_t>(line)]; }
-void Ppu::clear_dirty(int line) {
-    if (line >= 0 && line < static_cast<int>(kScreenHeight)) scanline_dirty_[static_cast<std::size_t>(line)] = false;
-    if (all_dirty_) {
-        all_dirty_ = false;
-        for (auto dirty : scanline_dirty_) if (dirty) { all_dirty_ = true; break; }
+void Ppu::mark_all_dirty() {
+    mark_all_scanlines_dirty();
+    invalidate_sprite_cache();
+    ++tile_cache_epoch_;
+}
+
+void Ppu::mark_all_scanlines_dirty() {
+    scanline_dirty_.fill(true);
+    dirty_count_ = kScreenHeight;
+    all_dirty_ = true;
+}
+
+void Ppu::mark_dirty(int line) {
+    if (line < 0 || line >= static_cast<int>(kScreenHeight)) {
+        return;
     }
+    auto& dirty = scanline_dirty_[static_cast<std::size_t>(line)];
+    if (!dirty) {
+        dirty = true;
+        ++dirty_count_;
+    }
+    all_dirty_ = dirty_count_ == kScreenHeight;
+}
+
+bool Ppu::is_dirty(int line) const {
+    if (line < 0 || line >= static_cast<int>(kScreenHeight)) {
+        return false;
+    }
+    return scanline_dirty_[static_cast<std::size_t>(line)];
+}
+
+void Ppu::clear_dirty(int line) {
+    if (line < 0 || line >= static_cast<int>(kScreenHeight)) {
+        return;
+    }
+    auto& dirty = scanline_dirty_[static_cast<std::size_t>(line)];
+    if (dirty) {
+        dirty = false;
+        if (dirty_count_ != 0) {
+            --dirty_count_;
+        }
+    }
+    all_dirty_ = dirty_count_ == kScreenHeight;
+}
+
+void Ppu::invalidate_sprite_cache() {
+    sprite_cache_valid_ = false;
+}
+
+void Ppu::rebuild_sprite_cache(std::span<const u8> oam) {
+    sprite_scanline_count_.fill(0);
+    if (oam.empty()) {
+        sprite_cache_valid_ = true;
+        return;
+    }
+
+    for (int i = 127; i >= 0; --i) {
+        const u32 obj_addr = static_cast<u32>(i) * 8u;
+        const u16 attr0 = read16(oam, obj_addr);
+        const u16 attr1 = read16(oam, obj_addr + 2u);
+
+        const u32 obj_mode = (attr0 >> 8u) & 3u;
+        if (obj_mode == 2u) {
+            continue;
+        }
+
+        const u32 gfx_mode = (attr0 >> 10u) & 3u;
+        if (gfx_mode == 3u) {
+            continue;
+        }
+
+        const u32 shape = (attr0 >> 14u) & 3u;
+        if (shape == 3u) {
+            continue;
+        }
+
+        const u32 size = (attr1 >> 14u) & 3u;
+        const bool double_size = obj_mode == 3u;
+        const int h = kSpriteHeights[shape][size];
+        const int bounding_h = double_size ? h * 2 : h;
+
+        int y = attr0 & 0xFF;
+        if (y >= 128) {
+            y -= 256;
+        }
+
+        const auto first = std::max(0, y);
+        const auto last = std::min(static_cast<int>(kScreenHeight), y + bounding_h);
+        for (int line = first; line < last; ++line) {
+            auto& count = sprite_scanline_count_[static_cast<std::size_t>(line)];
+            sprite_scanline_cache_[static_cast<std::size_t>(line)][count++] = static_cast<u8>(i);
+        }
+    }
+
+    sprite_cache_valid_ = true;
 }
 
 IRAM_ATTR void Ppu::render_objects(int line, std::span<const u8> vram, std::span<const u8> palette,
@@ -785,14 +880,14 @@ IRAM_ATTR void Ppu::render_objects(int line, std::span<const u8> vram, std::span
     const bool obj_1d = test_bit(dispcnt_, 6u);
     const u32 obj_vram_base = 0x10000;
 
-    static const u8 sprite_widths[3][4] = {
-        {8, 16, 32, 64}, {16, 32, 32, 64}, {8, 8, 16, 32}
-    };
-    static const u8 sprite_heights[3][4] = {
-        {8, 16, 32, 64}, {8, 8, 16, 32}, {16, 32, 32, 64}
-    };
+    if (!sprite_cache_valid_) {
+        rebuild_sprite_cache(oam);
+    }
+    const auto cache_line = static_cast<std::size_t>(line);
+    const auto active_count = sprite_scanline_count_[cache_line];
 
-    for (int i = 127; i >= 0; --i) {
+    for (u32 active = 0; active < active_count; ++active) {
+        const int i = sprite_scanline_cache_[cache_line][active];
         const u32 obj_addr = static_cast<u32>(i) * 8u;
         const u16 attr0 = read16(oam, obj_addr);
         const u16 attr1 = read16(oam, obj_addr + 2u);
@@ -811,8 +906,8 @@ IRAM_ATTR void Ppu::render_objects(int line, std::span<const u8> vram, std::span
         if (shape == 3) continue; // Prohibited
         const u32 size = (attr1 >> 14u) & 3u;
 
-        const int w = sprite_widths[shape][size];
-        const int h = sprite_heights[shape][size];
+        const int w = kSpriteWidths[shape][size];
+        const int h = kSpriteHeights[shape][size];
 
         const bool affine = (obj_mode == 1 || obj_mode == 3);
         const bool double_size = (obj_mode == 3);

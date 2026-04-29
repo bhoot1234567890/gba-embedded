@@ -59,6 +59,8 @@ private:
     void render_objects(int line, std::span<const u8> vram, std::span<const u8> palette,
                         std::span<const u8> oam, u16* obj_line, u8* obj_priority,
                         bool* obj_trans, bool* obj_win, u32 x_start = 0, u32 out_width = kScreenWidth);
+    void invalidate_sprite_cache();
+    void rebuild_sprite_cache(std::span<const u8> oam);
     void update_dispstat_flags();
     void enter_hblank(IrqController& irq, u64 cycle_now);
     void leave_hblank(IrqController& irq, u64 cycle_now);
@@ -100,6 +102,7 @@ private:
     /* Dirty tracking — which scanlines need re-render */
     std::array<bool, kScreenHeight> scanline_dirty_{};
     bool all_dirty_ = true;
+    u32 dirty_count_ = kScreenHeight;
 
     /* Tile row cache */
     static constexpr size_t kTileCacheEntries = 2048;
@@ -117,6 +120,9 @@ private:
     std::array<u8, kScreenWidth> obj_priority_buf_{};
     std::array<bool, kScreenWidth> obj_trans_buf_{};
     std::array<bool, kScreenWidth> obj_win_buf_{};
+    std::array<std::array<u8, 128>, kScreenHeight> sprite_scanline_cache_{};
+    std::array<u8, kScreenHeight> sprite_scanline_count_{};
+    bool sprite_cache_valid_ = false;
 
     bool direct_128x128_ = false;
     u16* external_fb_ = nullptr;

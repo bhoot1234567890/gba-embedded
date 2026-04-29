@@ -100,6 +100,8 @@ private:
 
     std::vector<u8> bios_;
     std::unique_ptr<RomProvider> rom_;
+    const u8* rom_data_ = nullptr;
+    std::size_t rom_size_ = 0;
     mutable RomFeatureScan rom_feature_scan_{};
     std::vector<u8> save_;
     SaveType save_type_ = SaveType::None;

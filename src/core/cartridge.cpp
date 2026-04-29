@@ -16,6 +16,14 @@
 
 #include "gba/core/constants.hpp"
 
+#ifdef GBA_PLATFORM_ESP32
+#include "esp_attr.h"
+#else
+#ifndef IRAM_ATTR
+#define IRAM_ATTR
+#endif
+#endif
+
 namespace gba {
 
 namespace {
@@ -109,6 +117,15 @@ void Cartridge::set_rom(std::vector<u8> rom) {
 
 void Cartridge::set_rom_provider(std::unique_ptr<RomProvider> rom) {
     rom_ = std::move(rom);
+    rom_data_ = nullptr;
+    rom_size_ = 0;
+    if (rom_) {
+        rom_size_ = rom_->size();
+        const auto direct = rom_->direct_read_span();
+        if (!direct.empty()) {
+            rom_data_ = direct.data();
+        }
+    }
     rom_feature_scan_ = {};
     auto_detect_rtc();
     reset_gpio_state();
@@ -215,8 +232,8 @@ u32 Cartridge::read_bios(u32 address, BusWidth width) const {
     return read_vector(bios_, address, width);
 }
 
-u32 Cartridge::read_rom(u32 address, BusWidth width) const {
-    if (!rom_ || rom_->empty()) {
+u32 IRAM_ATTR Cartridge::read_rom(u32 address, BusWidth width) const {
+    if (rom_size_ == 0 || !rom_) {
         return 0xFFFFFFFFu;
     }
 
@@ -225,7 +242,10 @@ u32 Cartridge::read_rom(u32 address, BusWidth width) const {
         if (read_gpio_byte(byte_address, gpio_value)) {
             return gpio_value;
         }
-        return byte_address < rom_->size() ? rom_->read_byte(byte_address) : 0xFFu;
+        if (byte_address >= rom_size_) {
+            return 0xFFu;
+        }
+        return rom_data_ ? rom_data_[byte_address] : rom_->read_byte(byte_address);
     };
 
     const auto has_gpio_byte = [&](u32 start, u32 count) -> bool {
@@ -240,17 +260,22 @@ u32 Cartridge::read_rom(u32 address, BusWidth width) const {
 
     switch (width) {
     case BusWidth::Byte:
-        if (address >= rom_->size() && !has_gpio_byte(address, 1u)) {
+        if (address >= rom_size_ && !has_gpio_byte(address, 1u)) {
             return 0xFFFFFFFFu;
         }
         return read_byte(address);
     case BusWidth::Half: {
         const auto aligned = align_down(address, 2u);
         const bool touches_gpio = has_gpio_byte(aligned, 2u);
-        if (aligned + 2u > rom_->size() && !touches_gpio) {
+        if (aligned + 2u > rom_size_ && !touches_gpio) {
             return 0xFFFFFFFFu;
         }
         if (!touches_gpio) {
+            if (rom_data_) {
+                u16 value = 0;
+                std::memcpy(&value, rom_data_ + aligned, sizeof(value));
+                return value;
+            }
             return rom_->read16(aligned);
         }
         return read_byte(aligned) | (read_byte(aligned + 1u) << 8u);
@@ -258,10 +283,15 @@ u32 Cartridge::read_rom(u32 address, BusWidth width) const {
     case BusWidth::Word: {
         const auto aligned = align_down(address, 4u);
         const bool touches_gpio = has_gpio_byte(aligned, 4u);
-        if (aligned + 4u > rom_->size() && !touches_gpio) {
+        if (aligned + 4u > rom_size_ && !touches_gpio) {
             return 0xFFFFFFFFu;
         }
         if (!touches_gpio) {
+            if (rom_data_) {
+                u32 value = 0;
+                std::memcpy(&value, rom_data_ + aligned, sizeof(value));
+                return value;
+            }
             return rom_->read32(aligned);
         }
         return read_byte(aligned) | (read_byte(aligned + 1u) << 8u) | (read_byte(aligned + 2u) << 16u) |
@@ -446,7 +476,7 @@ std::span<const u8> Cartridge::rom() const {
 }
 
 std::size_t Cartridge::rom_size() const {
-    return rom_ ? rom_->size() : 0;
+    return rom_size_;
 }
 
 RomAccessStats Cartridge::rom_frame_stats() const {

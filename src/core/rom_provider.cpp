@@ -8,6 +8,14 @@
 
 #include "gba/core/constants.hpp"
 
+#ifdef GBA_PLATFORM_ESP32
+#include "esp_attr.h"
+#else
+#ifndef IRAM_ATTR
+#define IRAM_ATTR
+#endif
+#endif
+
 namespace gba {
 
 namespace {
@@ -140,23 +148,27 @@ MemoryRomProvider::MemoryRomProvider(std::vector<u8> rom, std::size_t profile_ca
     }
 }
 
-u8 MemoryRomProvider::read_byte(u32 address) const {
+u8 IRAM_ATTR MemoryRomProvider::read_byte(u32 address) const {
     touch_range(address, 1, false);
     return rom_[address];
 }
 
-u16 MemoryRomProvider::read16(u32 address) const {
+u16 IRAM_ATTR MemoryRomProvider::read16(u32 address) const {
     touch_range(address, 2, false);
     return static_cast<u16>(static_cast<u32>(rom_[address]) |
                             (static_cast<u32>(rom_[address + 1u]) << 8u));
 }
 
-u32 MemoryRomProvider::read32(u32 address) const {
+u32 IRAM_ATTR MemoryRomProvider::read32(u32 address) const {
     touch_range(address, 4, false);
     return static_cast<u32>(rom_[address]) |
            (static_cast<u32>(rom_[address + 1u]) << 8u) |
            (static_cast<u32>(rom_[address + 2u]) << 16u) |
            (static_cast<u32>(rom_[address + 3u]) << 24u);
+}
+
+std::span<const u8> MemoryRomProvider::direct_read_span() const {
+    return profile_cache_pages_ == 0 ? std::span<const u8>{rom_} : std::span<const u8>{};
 }
 
 bool MemoryRomProvider::read_bytes(u32 address, std::span<u8> out) const {

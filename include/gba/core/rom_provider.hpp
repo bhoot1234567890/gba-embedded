@@ -34,6 +34,7 @@ public:
 
     [[nodiscard]] bool empty() const { return size() == 0; }
     [[nodiscard]] virtual std::span<const u8> contiguous_span() const { return {}; }
+    [[nodiscard]] virtual std::span<const u8> direct_read_span() const { return {}; }
     [[nodiscard]] virtual bool read_bytes(u32 address, std::span<u8> out) const;
     [[nodiscard]] bool contains(std::string_view needle) const;
 
@@ -51,6 +52,7 @@ public:
     [[nodiscard]] u16 read16(u32 address) const override;
     [[nodiscard]] u32 read32(u32 address) const override;
     [[nodiscard]] std::span<const u8> contiguous_span() const override { return rom_; }
+    [[nodiscard]] std::span<const u8> direct_read_span() const override;
     [[nodiscard]] bool read_bytes(u32 address, std::span<u8> out) const override;
     void prefetch(u32 address, std::size_t bytes) const override;
     [[nodiscard]] RomAccessStats frame_stats() const override;

@@ -300,6 +300,8 @@ public:
           size_(size),
           cache_(std::move(cache)),
           page_bytes_(page_bytes),
+          page_slots_((size + page_bytes - 1u) / page_bytes, -1),
+          frame_seen_pages_((size + page_bytes - 1u) / page_bytes, 0),
           pages_(std::max<std::size_t>(1u, page_count)),
           max_pinned_pages_(std::max<std::size_t>(1u, std::max<std::size_t>(1u, page_count) / 4u)) {
         for (std::size_t index = 0; index < pages_.size(); ++index) {
@@ -402,6 +404,11 @@ public:
 
     void reset_frame_stats() const override {
         frame_stats_ = {};
+        for (const auto page : unique_pages_) {
+            if (page < frame_seen_pages_.size()) {
+                frame_seen_pages_[page] = 0;
+            }
+        }
         unique_pages_.clear();
         has_last_demand_ = false;
         last_demand_end_ = 0;
@@ -444,9 +451,7 @@ private:
 
     [[nodiscard]] bool note_demand_access(u32 address, std::size_t bytes) const {
         const auto page = static_cast<u32>(static_cast<std::size_t>(address) / page_bytes_);
-        if (std::find(unique_pages_.begin(), unique_pages_.end(), page) == unique_pages_.end()) {
-            unique_pages_.push_back(page);
-        }
+        note_unique_page(page);
 
         const auto end = static_cast<u32>(static_cast<u64>(address) + bytes);
         const auto sequential = has_last_demand_ && address == last_demand_end_;
@@ -454,6 +459,19 @@ private:
         has_last_demand_ = true;
         last_demand_end_ = end;
         return sequential;
+    }
+
+    void note_unique_page(u32 page) const {
+        if (page < frame_seen_pages_.size()) {
+            if (frame_seen_pages_[page] == 0) {
+                frame_seen_pages_[page] = 1;
+                unique_pages_.push_back(page);
+            }
+            return;
+        }
+        if (std::find(unique_pages_.begin(), unique_pages_.end(), page) == unique_pages_.end()) {
+            unique_pages_.push_back(page);
+        }
     }
 
     void maybe_prefetch_after_read(u32 address, std::size_t bytes, bool streaming, bool had_miss) const {
@@ -491,8 +509,30 @@ private:
     }
 
     [[nodiscard]] PageLoad ensure_page(u32 page_index, bool prefetch, bool sequential) const {
-        if (!prefetch && std::find(unique_pages_.begin(), unique_pages_.end(), page_index) == unique_pages_.end()) {
-            unique_pages_.push_back(page_index);
+        if (!prefetch) {
+            note_unique_page(page_index);
+        }
+        if (page_index < page_slots_.size()) {
+            const int slot = page_slots_[page_index];
+            if (slot >= 0) {
+                auto& page = pages_[static_cast<std::size_t>(slot)];
+                if (page.valid && page.index == page_index) {
+                    if (!prefetch) {
+                        ++frame_stats_.cache_hits;
+                        if (sequential) {
+                            ++frame_stats_.sequential_hits;
+                        }
+                        if (page.prefetched) {
+                            ++frame_stats_.prefetch_hits;
+                            page.prefetched = false;
+                        }
+                        heat_page(page);
+                    }
+                    page.age = ++clock_;
+                    return {page.data, true};
+                }
+                page_slots_[page_index] = -1;
+            }
         }
         for (auto& page : pages_) {
             if (page.valid && page.index == page_index) {
@@ -547,6 +587,12 @@ private:
             return {};
         }
 
+        const auto victim_slot = static_cast<int>(victim - pages_.data());
+        if (victim->valid && victim->index < page_slots_.size() &&
+            page_slots_[victim->index] == victim_slot) {
+            page_slots_[victim->index] = -1;
+        }
+
         if (std::fseek(file_.get(), static_cast<long>(offset), SEEK_SET) != 0) {
             ESP_LOGE(kTag, "ROM cache seek failed offset=%u", static_cast<unsigned>(offset));
             return {};
@@ -572,6 +618,9 @@ private:
         victim->index = page_index;
         victim->age = ++clock_;
         victim->hot_score = prefetch ? 0 : 1;
+        if (page_index < page_slots_.size()) {
+            page_slots_[page_index] = victim_slot;
+        }
         return {victim->data, false};
     }
 
@@ -579,6 +628,8 @@ private:
     std::size_t size_ = 0;
     std::unique_ptr<u8, HeapCapsDeleter> cache_;
     std::size_t page_bytes_ = 32u * 1024u;
+    mutable std::vector<int> page_slots_;
+    mutable std::vector<u8> frame_seen_pages_;
     mutable std::vector<Page> pages_;
     mutable std::vector<u32> unique_pages_;
     mutable u64 clock_ = 0;

@@ -30,4 +30,5 @@ target_compile_options(${COMPONENT_LIB} PRIVATE
 
 target_compile_definitions(${COMPONENT_LIB} PUBLIC
     GBA_PLATFORM_ESP32=1
+    GBA_ENABLE_HLE_BIOS=1
 )

@@ -6,6 +6,7 @@
 #include <cstring>
 #include <limits>
 #include <memory>
+#include <queue>
 #include <vector>
 
 #include "gba/core/constants.hpp"
@@ -67,7 +68,12 @@ public:
           size_(size),
           window_bytes_(std::max<std::size_t>(4096u, window_bytes)),
           windows_(std::max<std::size_t>(1u, window_count)),
-          window_slots_((size + window_bytes_ - 1u) / window_bytes_, -1) {}
+          window_slots_((size + window_bytes_ - 1u) / window_bytes_, -1),
+          frame_seen_windows_((size + window_bytes_ - 1u) / window_bytes_, 0) {
+        for (std::size_t slot = windows_.size(); slot > 0; --slot) {
+            free_windows_.push_back(slot - 1u);
+        }
+    }
 
     ~Esp32MmapRomProvider() override {
         for (auto& window : windows_) {
@@ -177,6 +183,11 @@ public:
 
     void reset_frame_stats() const override {
         frame_stats_ = {};
+        for (const auto page : unique_pages_) {
+            if (page < frame_seen_windows_.size()) {
+                frame_seen_windows_[page] = 0;
+            }
+        }
         unique_pages_.clear();
         has_last_demand_ = false;
         last_demand_end_ = 0;
@@ -223,9 +234,7 @@ private:
 
     [[nodiscard]] bool note_demand_access(u32 address, std::size_t bytes) const {
         const auto page = static_cast<u32>(static_cast<std::size_t>(address) / window_bytes_);
-        if (std::find(unique_pages_.begin(), unique_pages_.end(), page) == unique_pages_.end()) {
-            unique_pages_.push_back(page);
-        }
+        note_unique_page(page);
         const auto end = static_cast<u32>(static_cast<u64>(address) + bytes);
         const auto sequential = has_last_demand_ && address == last_demand_end_;
         has_last_demand_ = true;
@@ -233,10 +242,20 @@ private:
         return sequential;
     }
 
-    [[nodiscard]] const u8* IRAM_ATTR ensure_window(u32 page, bool prefetch, bool sequential) const {
-        if (!prefetch && std::find(unique_pages_.begin(), unique_pages_.end(), page) == unique_pages_.end()) {
+    void note_unique_page(u32 page) const {
+        if (page < frame_seen_windows_.size()) {
+            if (frame_seen_windows_[page] == 0) {
+                frame_seen_windows_[page] = 1;
+                unique_pages_.push_back(page);
+            }
+            return;
+        }
+        if (std::find(unique_pages_.begin(), unique_pages_.end(), page) == unique_pages_.end()) {
             unique_pages_.push_back(page);
         }
+    }
+
+    [[nodiscard]] const u8* IRAM_ATTR ensure_window(u32 page, bool prefetch, bool sequential) const {
         if (page < window_slots_.size()) {
             const int slot = window_slots_[page];
             if (slot >= 0) {
@@ -251,30 +270,12 @@ private:
                             ++frame_stats_.prefetch_hits;
                             window.prefetched = false;
                         }
-                    }
-                    window.age = ++clock_;
-                    return window.data;
-                }
+	                    }
+	                    window.age = ++clock_;
+	                    lru_windows_.push({window.age, static_cast<std::size_t>(slot)});
+	                    return window.data;
+	                }
                 window_slots_[page] = -1;
-            }
-        }
-        for (auto& window : windows_) {
-            if (window.valid && window.page == page) {
-                if (!prefetch) {
-                    ++frame_stats_.cache_hits;
-                    if (sequential) {
-                        ++frame_stats_.sequential_hits;
-                    }
-                    if (window.prefetched) {
-                        ++frame_stats_.prefetch_hits;
-                        window.prefetched = false;
-                    }
-                }
-                window.age = ++clock_;
-                if (page < window_slots_.size()) {
-                    window_slots_[page] = static_cast<int>(&window - windows_.data());
-                }
-                return window.data;
             }
         }
 
@@ -283,16 +284,7 @@ private:
         } else {
             ++frame_stats_.cache_misses;
         }
-        auto* victim = &windows_.front();
-        for (auto& window : windows_) {
-            if (!window.valid) {
-                victim = &window;
-                break;
-            }
-            if (window.age < victim->age) {
-                victim = &window;
-            }
-        }
+	        auto* victim = select_victim_window();
 
         if (victim->valid) {
             if (victim->page < window_slots_.size()) {
@@ -324,21 +316,53 @@ private:
         victim->prefetched = prefetch;
         victim->page = page;
         victim->data = static_cast<const u8*>(ptr);
-        victim->mapped_size = bytes;
-        victim->age = ++clock_;
-        victim->handle = handle;
-        if (page < window_slots_.size()) {
-            window_slots_[page] = static_cast<int>(victim - windows_.data());
-        }
-        return victim->data;
-    }
+	        victim->mapped_size = bytes;
+	        victim->age = ++clock_;
+	        victim->handle = handle;
+	        lru_windows_.push({victim->age, static_cast<std::size_t>(victim - windows_.data())});
+	        if (page < window_slots_.size()) {
+	            window_slots_[page] = static_cast<int>(victim - windows_.data());
+	        }
+	        return victim->data;
+	    }
 
-    const esp_partition_t* partition_ = nullptr;
-    std::size_t size_ = 0;
-    std::size_t window_bytes_ = 64u * 1024u;
-    mutable std::vector<Window> windows_;
-    mutable std::vector<int> window_slots_;
-    mutable std::vector<u32> unique_pages_;
+	    struct WindowAge {
+	        u64 age = 0;
+	        std::size_t slot = 0;
+	    };
+
+	    struct WindowAgeGreater {
+	        bool operator()(const WindowAge& lhs, const WindowAge& rhs) const {
+	            return lhs.age > rhs.age;
+	        }
+	    };
+
+	    [[nodiscard]] Window* select_victim_window() const {
+	        if (!free_windows_.empty()) {
+	            const auto slot = free_windows_.back();
+	            free_windows_.pop_back();
+	            return &windows_[slot];
+	        }
+	        while (!lru_windows_.empty()) {
+	            const auto candidate = lru_windows_.top();
+	            lru_windows_.pop();
+	            auto& window = windows_[candidate.slot];
+	            if (window.valid && window.age == candidate.age) {
+	                return &window;
+	            }
+	        }
+	        return &windows_.front();
+	    }
+
+	    const esp_partition_t* partition_ = nullptr;
+	    std::size_t size_ = 0;
+	    std::size_t window_bytes_ = 64u * 1024u;
+	    mutable std::vector<Window> windows_;
+	    mutable std::vector<int> window_slots_;
+	    mutable std::vector<u8> frame_seen_windows_;
+	    mutable std::vector<std::size_t> free_windows_;
+	    mutable std::priority_queue<WindowAge, std::vector<WindowAge>, WindowAgeGreater> lru_windows_;
+	    mutable std::vector<u32> unique_pages_;
     mutable bool has_last_demand_ = false;
     mutable u32 last_demand_end_ = 0;
     mutable u64 clock_ = 0;

@@ -36,6 +36,9 @@
 #ifndef AUDIO_DMA_BUF_LEN
 #define AUDIO_DMA_BUF_LEN   256       /* Stereo frames per DMA buffer */
 #endif
+#ifndef AUDIO_WRITE_TIMEOUT_MS
+#define AUDIO_WRITE_TIMEOUT_MS GBA_AUDIO_WRITE_TIMEOUT_MS
+#endif
 
 #ifndef AUDIO_AMP_NAME
 #define AUDIO_AMP_NAME "MAX98357A"
@@ -53,7 +56,8 @@ esp_err_t audio_init(void);
 
 /**
  * Write interleaved stereo s16 samples to the I2S DMA buffer.
- * Blocks until all samples are written (natural backpressure).
+ * Uses AUDIO_WRITE_TIMEOUT_MS; default is 0 so audio can drop instead of
+ * blocking the emulator frame loop.
  * @param samples  Pointer to interleaved L/R s16 sample pairs.
  * @param count    Total number of s16 values (samples * 2 for stereo).
  * @return ESP_OK on success, ESP_ERR_NOT_SUPPORTED if audio disabled.

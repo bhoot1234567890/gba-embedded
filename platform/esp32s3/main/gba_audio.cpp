@@ -85,9 +85,13 @@ esp_err_t audio_write(const int16_t* samples, size_t count) {
     const size_t bytes = count * sizeof(int16_t);
     size_t bytes_written = 0;
 
-    /* i2s_channel_write blocks until all data is accepted by DMA */
-    esp_err_t ret = i2s_channel_write(s_tx_handle, samples, bytes, &bytes_written, portMAX_DELAY);
-    if (ret != ESP_OK) {
+    const TickType_t timeout_ticks =
+        AUDIO_WRITE_TIMEOUT_MS <= 0 ? 0 : pdMS_TO_TICKS(AUDIO_WRITE_TIMEOUT_MS);
+    esp_err_t ret = i2s_channel_write(s_tx_handle, samples, bytes, &bytes_written, timeout_ticks);
+    if (ret == ESP_OK && bytes_written != bytes) {
+        ret = ESP_ERR_TIMEOUT;
+    }
+    if (ret != ESP_OK && ret != ESP_ERR_TIMEOUT) {
         ESP_LOGW(kTag, "i2s_channel_write error: %s (wrote %zu/%zu)",
                  esp_err_to_name(ret), bytes_written, bytes);
     }

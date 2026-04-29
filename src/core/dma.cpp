@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cstdio>
+#include <cstring>
 
 #include "gba/core/apu.hpp"
 #include "gba/core/bus.hpp"
@@ -68,6 +69,81 @@ namespace {
     default:
         return address;
     }
+}
+
+[[nodiscard]] u32 wrap_offset(u32 offset, u32 size) {
+    return (size & (size - 1u)) == 0u ? (offset & (size - 1u)) : (offset % size);
+}
+
+[[nodiscard]] u32 read_raw_memory(const u8* data, u32 size, u32 offset, BusWidth width) {
+    const auto normalized = wrap_offset(offset, size);
+    switch (width) {
+    case BusWidth::Byte:
+        return data[normalized];
+    case BusWidth::Half: {
+        const auto aligned = align_down(normalized, 2u);
+        if (aligned + 2u <= size) {
+            u16 value = 0;
+            std::memcpy(&value, data + aligned, sizeof(value));
+            return value;
+        }
+        return static_cast<u32>(data[wrap_offset(aligned, size)]) |
+               (static_cast<u32>(data[wrap_offset(aligned + 1u, size)]) << 8u);
+    }
+    case BusWidth::Word: {
+        const auto aligned = align_down(normalized, 4u);
+        if (aligned + 4u <= size) {
+            u32 value = 0;
+            std::memcpy(&value, data + aligned, sizeof(value));
+            return value;
+        }
+        return static_cast<u32>(data[wrap_offset(aligned, size)]) |
+               (static_cast<u32>(data[wrap_offset(aligned + 1u, size)]) << 8u) |
+               (static_cast<u32>(data[wrap_offset(aligned + 2u, size)]) << 16u) |
+               (static_cast<u32>(data[wrap_offset(aligned + 3u, size)]) << 24u);
+    }
+    }
+    return 0xFFFFFFFFu;
+}
+
+void write_raw_memory(u8* data, u32 size, u32 offset, u32 value, BusWidth width) {
+    const auto normalized = wrap_offset(offset, size);
+    switch (width) {
+    case BusWidth::Byte:
+        data[normalized] = static_cast<u8>(value);
+        break;
+    case BusWidth::Half: {
+        const auto aligned = align_down(normalized, 2u);
+        if (aligned + 2u <= size) {
+            const auto half = static_cast<u16>(value & 0xFFFFu);
+            std::memcpy(data + aligned, &half, sizeof(half));
+            break;
+        }
+        data[wrap_offset(aligned, size)] = static_cast<u8>(value & 0xFFu);
+        data[wrap_offset(aligned + 1u, size)] = static_cast<u8>((value >> 8u) & 0xFFu);
+        break;
+    }
+    case BusWidth::Word: {
+        const auto aligned = align_down(normalized, 4u);
+        if (aligned + 4u <= size) {
+            std::memcpy(data + aligned, &value, sizeof(value));
+            break;
+        }
+        data[wrap_offset(aligned, size)] = static_cast<u8>(value & 0xFFu);
+        data[wrap_offset(aligned + 1u, size)] = static_cast<u8>((value >> 8u) & 0xFFu);
+        data[wrap_offset(aligned + 2u, size)] = static_cast<u8>((value >> 16u) & 0xFFu);
+        data[wrap_offset(aligned + 3u, size)] = static_cast<u8>((value >> 24u) & 0xFFu);
+        break;
+    }
+    }
+}
+
+[[nodiscard]] u32 vram_physical_offset(u32 address) {
+    auto offset = (address - 0x06000000u) & 0x1FFFFu;
+    if (offset >= 0x18000u) {
+        offset = 0x10000u + (offset & 0x7FFFu);
+    }
+    return offset;
 }
 
 }  // namespace
@@ -261,23 +337,54 @@ u32 IRAM_ATTR DmaEngine::service_due(u64 cycle_now, Bus& bus, IrqController& irq
                      index, source, destination, units, unit_bytes, channel.control, fifo_mode ? 1 : 0);
 #endif
 
+        const auto width = unit_bytes == 4u ? BusWidth::Word : BusWidth::Half;
+        const bool simple_increment = !fifo_mode && src_mode == 0u && dest_mode == 0u;
         const bool rom_to_vram = source >= 0x08000000u && source < 0x0E000000u &&
                                  destination >= 0x06000000u && destination < 0x06018000u &&
                                  !fifo_mode && unit_bytes == 2u;
-        if (rom_to_vram) {
+
+        const u8* fast_ram_source = nullptr;
+        u32 fast_ram_base = 0;
+        u32 fast_ram_size = 0;
+        u32 fast_ram_read_cycles = 0;
+        const auto source_region = source & 0x0F000000u;
+        if (simple_increment && source_region == 0x02000000u) {
+            fast_ram_source = bus.ewram_data();
+            fast_ram_base = 0x02000000u;
+            fast_ram_size = kEwramSize;
+            fast_ram_read_cycles = unit_bytes == 4u ? 6u : 3u;
+        } else if (simple_increment && source_region == 0x03000000u) {
+            fast_ram_source = bus.iwram_data();
+            fast_ram_base = 0x03000000u;
+            fast_ram_size = kIwramSize;
+            fast_ram_read_cycles = 1u;
+        }
+
+        const bool ram_to_vram = fast_ram_source != nullptr &&
+                                 destination >= 0x06000000u && destination < 0x06018000u;
+        if (rom_to_vram || ram_to_vram) {
             bus.mark_video_dirty();
         }
 
         bool did_access_rom = false;
+        auto* const fast_vram = ram_to_vram ? bus.vram_data() : nullptr;
+        const auto fast_vram_write_cycles = ram_to_vram ? bus.dma_vram_cycles(width) : 0u;
 
         for (u32 unit = 0; unit < units; ++unit) {
             const auto transfer_cycle = cycle_now + cycles_consumed;
-            const auto width = unit_bytes == 4u ? BusWidth::Word : BusWidth::Half;
 
             u32 read_value;
             u32 read_cycles = 0;
 
-            if (rom_to_vram) {
+            if (ram_to_vram) {
+                read_value = read_raw_memory(
+                    fast_ram_source, fast_ram_size, source - fast_ram_base, width);
+                channel.bus_latch = unit_bytes == 2u
+                    ? (read_value << 16u) | (read_value & 0xFFFFu)
+                    : read_value;
+                write_raw_memory(fast_vram, kVramSize, vram_physical_offset(destination), read_value, width);
+                cycles_consumed += fast_ram_read_cycles + fast_vram_write_cycles;
+            } else if (rom_to_vram) {
                 const auto seq = did_access_rom;
                 did_access_rom = true;
                 const auto read_access = seq ? (AccessType::Dma | AccessType::Sequential) : AccessType::Dma;
@@ -286,8 +393,8 @@ u32 IRAM_ATTR DmaEngine::service_due(u64 cycle_now, Bus& bus, IrqController& irq
                 read_value = read_result.value & 0xFFFFu;
                 channel.bus_latch = (read_value << 16u) | (read_value & 0xFFFFu);
 
-                auto vram = bus.vram_write();
-                auto vram_offset = (destination - 0x06000000u) & 0x1FFFFu;
+                auto* vram = bus.vram_data();
+                auto vram_offset = vram_physical_offset(destination);
                 vram[vram_offset] = static_cast<u8>(read_value);
                 vram[vram_offset + 1u] = static_cast<u8>(read_value >> 8u);
                 cycles_consumed += read_cycles + 1u;  // +1 for VRAM write

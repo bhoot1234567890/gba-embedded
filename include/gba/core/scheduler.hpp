@@ -26,7 +26,10 @@ public:
     [[nodiscard]] u64 next_event() const;
 
 private:
+    void recompute_next_event();
+
     u64 current_cycle_ = 0;
+    u64 next_event_ = std::numeric_limits<u64>::max();
     std::array<u64, static_cast<std::size_t>(SchedulerSlot::Count)> events_{
         std::numeric_limits<u64>::max(),
         std::numeric_limits<u64>::max(),

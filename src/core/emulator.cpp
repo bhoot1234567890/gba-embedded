@@ -2,6 +2,14 @@
 
 #include <algorithm>
 
+#ifdef GBA_PLATFORM_ESP32
+#include "esp_attr.h"
+#else
+#ifndef IRAM_ATTR
+#define IRAM_ATTR
+#endif
+#endif
+
 namespace gba {
 
 Emulator::Emulator(TraceLogger* logger)
@@ -52,7 +60,6 @@ void Emulator::reset(bool skip_bios) {
 
 void Emulator::run_until(u64 target_cycle) {
     while (cpu_.current_cycle() < target_cycle) {
-        refresh_schedule();
         auto next_cycle = scheduler_.next_event();
         next_cycle = std::min(next_cycle, target_cycle);
         if (next_cycle == std::numeric_limits<u64>::max()) {
@@ -67,7 +74,6 @@ void Emulator::run_until(u64 target_cycle) {
 void Emulator::run_frame() {
     cartridge_.reset_rom_frame_stats();
     while (!ppu_.frame_ready()) {
-        refresh_schedule();
         auto next_cycle = scheduler_.next_event();
         if (next_cycle == std::numeric_limits<u64>::max()) {
             next_cycle = cpu_.current_cycle() + 1;
@@ -119,7 +125,7 @@ void Emulator::step_scheduler_event() {
     service_due_hardware();
 }
 
-void Emulator::refresh_schedule() {
+void IRAM_ATTR Emulator::refresh_schedule() {
     scheduler_.set_current_cycle(cpu_.current_cycle());
     scheduler_.set_next_event(SchedulerSlot::Ppu, ppu_.next_event_cycle());
     scheduler_.set_next_event(SchedulerSlot::Timers, timers_.next_event_cycle());
@@ -129,7 +135,7 @@ void Emulator::refresh_schedule() {
     scheduler_.set_next_event(SchedulerSlot::Irq, irq_.next_event_cycle());
 }
 
-void Emulator::service_due_hardware() {
+void IRAM_ATTR Emulator::service_due_hardware() {
     auto stable_cycle = scheduler_.current_cycle();
     bool progress = true;
     while (progress) {

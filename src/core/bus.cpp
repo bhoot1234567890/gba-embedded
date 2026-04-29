@@ -577,7 +577,7 @@ u64 Bus::next_event_cycle() const {
     return sio_active_ ? sio_event_cycle_ : std::numeric_limits<u64>::max();
 }
 
-void Bus::service_timers(u64 cycle_now) {
+void IRAM_ATTR Bus::service_timers(u64 cycle_now) {
     timers_.advance_to(cycle_now, irq_, apu_);
     if (sio_active_ && cycle_now >= sio_event_cycle_) {
         sio_active_ = false;

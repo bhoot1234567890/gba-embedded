@@ -1102,10 +1102,16 @@ void Arm7tdmi::set_current_cycle(u64 cycle) {
 }
 
 u64 IRAM_ATTR Arm7tdmi::cpu_run_until(u64 target_cycle) {
-    int _sc = 0;
+    static constexpr int kHardwareServiceBatchInstructions = 16;
+    int service_countdown = 0;
     while (current_cycle_ < target_cycle) {
-        if (_sc <= 0) { _sc = 0; bus_.service_timers(current_cycle_); current_cycle_ += bus_.service_dma(current_cycle_); irq_.advance(current_cycle_); }
-        --_sc;
+        if (service_countdown <= 0) {
+            service_countdown = kHardwareServiceBatchInstructions;
+            bus_.service_timers(current_cycle_);
+            current_cycle_ += bus_.service_dma(current_cycle_);
+            irq_.advance(current_cycle_);
+        }
+        --service_countdown;
 
         if (last_fetch_cycle_ > current_cycle_) {
             last_fetch_cycle_ = current_cycle_;
@@ -2271,7 +2277,6 @@ u32 IRAM_ATTR Arm7tdmi::execute_arm(u32 instruction) {
     }
 
     arm_undefined:
-    raise_exception(ExceptionType::Undefined);
     if (logger_ != nullptr) {
 #ifndef GBA_PLATFORM_ESP32
         std::ostringstream message;
@@ -2877,7 +2882,6 @@ u32 IRAM_ATTR Arm7tdmi::execute_thumb(u16 instruction) {
 #pragma GCC diagnostic pop
 
     // Undefined Thumb instruction
-    raise_exception(ExceptionType::Undefined);
     if (logger_ != nullptr) {
 #ifndef GBA_PLATFORM_ESP32
         std::ostringstream message;

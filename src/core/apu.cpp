@@ -2,6 +2,14 @@
 
 #include <algorithm>
 
+#ifdef GBA_PLATFORM_ESP32
+#include "esp_attr.h"
+#else
+#ifndef IRAM_ATTR
+#define IRAM_ATTR
+#endif
+#endif
+
 #include "gba/core/constants.hpp"
 
 namespace gba {
@@ -206,7 +214,7 @@ void Apu::on_timer_overflow(int timer_index) {
     }
 }
 
-void Apu::advance_to(u64 cycle_now) {
+void IRAM_ATTR Apu::advance_to(u64 cycle_now) {
     if (!test_bit(soundcnt_x_, 7)) {
         next_sample_cycle_ = cycle_now + 512;
         frame_seq_cycle_ = cycle_now + 32768;

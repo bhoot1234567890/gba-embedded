@@ -45,12 +45,33 @@ static_assert(DISPLAY_WIDTH <= gba::kOutW && DISPLAY_HEIGHT <= gba::kOutH,
 
 using namespace gba;
 
+static bool valid_pin(gpio_num_t pin) {
+    return static_cast<int>(pin) >= 0;
+}
+
+static bool same_valid_pin(gpio_num_t lhs, gpio_num_t rhs) {
+    return valid_pin(lhs) && valid_pin(rhs) && lhs == rhs;
+}
+
+static bool conflicts_with_display_pin(gpio_num_t pin) {
+    return same_valid_pin(pin, GBA_DISPLAY_PIN_SCLK) ||
+           same_valid_pin(pin, GBA_DISPLAY_PIN_MOSI) ||
+           same_valid_pin(pin, GBA_DISPLAY_PIN_CS) ||
+           same_valid_pin(pin, GBA_DISPLAY_PIN_DC) ||
+           same_valid_pin(pin, GBA_DISPLAY_PIN_RST) ||
+           same_valid_pin(pin, GBA_DISPLAY_PIN_BL);
+}
+
 struct RuntimeStats {
     uint64_t total_frame_us = 0;
     uint32_t total_frames = 0;
     uint32_t skipped_frames = 0;
     uint32_t audio_chunks = 0;
     uint32_t audio_errors = 0;
+    uint64_t rom_cache_misses = 0;
+    uint64_t rom_prefetch_hits = 0;
+    uint64_t rom_prefetch_misses = 0;
+    uint64_t rom_miss_penalty_us = 0;
 };
 
 struct RuntimeContext {
@@ -72,6 +93,22 @@ struct RuntimeContext {
     };
 
 #if GBA_STORAGE_MODE == GBA_STORAGE_MODE_SDMMC
+    if (!valid_pin(GBA_SDMMC_PIN_CLK) || !valid_pin(GBA_SDMMC_PIN_CMD) ||
+        !valid_pin(GBA_SDMMC_PIN_D0) || !valid_pin(GBA_SDMMC_PIN_D1) ||
+        !valid_pin(GBA_SDMMC_PIN_D2) || !valid_pin(GBA_SDMMC_PIN_D3)) {
+        ESP_LOGE(kTag, "SDMMC pins are not configured");
+        return ESP_ERR_INVALID_ARG;
+    }
+    if (conflicts_with_display_pin(GBA_SDMMC_PIN_CLK) ||
+        conflicts_with_display_pin(GBA_SDMMC_PIN_CMD) ||
+        conflicts_with_display_pin(GBA_SDMMC_PIN_D0) ||
+        conflicts_with_display_pin(GBA_SDMMC_PIN_D1) ||
+        conflicts_with_display_pin(GBA_SDMMC_PIN_D2) ||
+        conflicts_with_display_pin(GBA_SDMMC_PIN_D3)) {
+        ESP_LOGE(kTag, "SDMMC pin map conflicts with display pins");
+        return ESP_ERR_INVALID_STATE;
+    }
+
     sdmmc_host_t host = SDMMC_HOST_DEFAULT();
     host.max_freq_khz = SDMMC_FREQ_DEFAULT;
 
@@ -86,6 +123,19 @@ struct RuntimeContext {
     slot_config.flags |= SDMMC_SLOT_FLAG_INTERNAL_PULLUP;
     return esp_vfs_fat_sdmmc_mount("/sdcard", &host, &slot_config, &mount_config, out_card);
 #elif GBA_STORAGE_MODE == GBA_STORAGE_MODE_SDSPI
+    if (!valid_pin(GBA_SDSPI_PIN_MISO) || !valid_pin(GBA_SDSPI_PIN_MOSI) ||
+        !valid_pin(GBA_SDSPI_PIN_SCLK) || !valid_pin(GBA_SDSPI_PIN_CS)) {
+        ESP_LOGE(kTag, "SDSPI pins are not configured");
+        return ESP_ERR_INVALID_ARG;
+    }
+    if (conflicts_with_display_pin(GBA_SDSPI_PIN_MISO) ||
+        conflicts_with_display_pin(GBA_SDSPI_PIN_MOSI) ||
+        conflicts_with_display_pin(GBA_SDSPI_PIN_SCLK) ||
+        conflicts_with_display_pin(GBA_SDSPI_PIN_CS)) {
+        ESP_LOGE(kTag, "SDSPI pin map conflicts with display pins");
+        return ESP_ERR_INVALID_STATE;
+    }
+
     spi_bus_config_t bus_config = {};
     bus_config.mosi_io_num = GBA_SDSPI_PIN_MOSI;
     bus_config.miso_io_num = GBA_SDSPI_PIN_MISO;
@@ -139,6 +189,50 @@ static void draw_string(int x, int y, const std::string& str, u16 color, u16* bu
     }
 }
 
+static void fill_rect(u16* buf, int x, int y, int w, int h, u16 color) {
+    const int x0 = std::max(0, x);
+    const int y0 = std::max(0, y);
+    const int x1 = std::min(DISPLAY_WIDTH, x + w);
+    const int y1 = std::min(DISPLAY_HEIGHT, y + h);
+    for (int row = y0; row < y1; ++row) {
+        std::fill(buf + row * DISPLAY_WIDTH + x0, buf + row * DISPLAY_WIDTH + x1, color);
+    }
+}
+
+static void draw_message(u16* buf,
+                         size_t display_pixels,
+                         const std::string& title,
+                         const std::string& detail) {
+    std::fill_n(buf, display_pixels, 0x0000);
+    fill_rect(buf, 0, 0, DISPLAY_WIDTH, 14, 0xF800);
+    fill_rect(buf, 0, DISPLAY_HEIGHT - 14, DISPLAY_WIDTH, 14, 0x001F);
+    draw_string(4, 4, "GBA ESP32", 0xFFFF, buf);
+    draw_string(4, 24, title.substr(0, 20), 0xFFE0, buf);
+    draw_string(4, 38, detail.substr(0, 20), 0xFFFF, buf);
+    draw_string(4, 60, "CHECK PIN CONFIG", 0x07E0, buf);
+}
+
+[[noreturn]] static void halt_with_message(u16* buf,
+                                           size_t display_pixels,
+                                           const std::string& title,
+                                           const std::string& detail) {
+    bool alternate = false;
+    while (true) {
+        draw_message(buf, display_pixels, title, detail);
+        if (alternate) {
+            fill_rect(buf, DISPLAY_WIDTH - 18, 18, 12, 12, 0xFFE0);
+        } else {
+            fill_rect(buf, DISPLAY_WIDTH - 18, 18, 12, 12, 0x07E0);
+        }
+        const auto ret = display_draw(0, 0, DISPLAY_WIDTH, DISPLAY_HEIGHT, buf);
+        if (ret != ESP_OK) {
+            ESP_LOGE(kTag, "display_draw message failed: %s", esp_err_to_name(ret));
+        }
+        alternate = !alternate;
+        vTaskDelay(pdMS_TO_TICKS(500));
+    }
+}
+
 static bool read_binary_file(const std::string& path, std::vector<u8>& out) {
     std::ifstream file(path, std::ios::binary | std::ios::ate);
     if (!file) {
@@ -189,7 +283,7 @@ static std::unique_ptr<RomProvider> open_rom_provider(const std::string& sd_rom_
         GBA_ROM_MMAP_WINDOW_BYTES,
         GBA_ROM_MMAP_WINDOW_COUNT);
     if (mmap_provider) {
-        ESP_LOGI(kTag, "Using flash mmap ROM backend");
+        ESP_LOGI(kTag, "ROM source: FLASH_MMAP");
         return mmap_provider;
     }
 #endif
@@ -200,7 +294,7 @@ static std::unique_ptr<RomProvider> open_rom_provider(const std::string& sd_rom_
         GBA_ROM_SD_CACHE_BYTES,
         GBA_ROM_SD_CACHE_PAGE_BYTES);
     if (sd_provider) {
-        ESP_LOGI(kTag, "Using SD cached ROM backend");
+        ESP_LOGI(kTag, "ROM source: SD_CACHE");
         return sd_provider;
     }
 #endif
@@ -242,6 +336,11 @@ static void cpu_task(void* arg) {
             ctx->emulator->ppu().mark_all_dirty();
         }
         ctx->emulator->run_frame();
+        const auto rom_stats = ctx->emulator->last_rom_stats();
+        ctx->stats.rom_cache_misses += rom_stats.cache_misses;
+        ctx->stats.rom_prefetch_hits += rom_stats.prefetch_hits;
+        ctx->stats.rom_prefetch_misses += rom_stats.prefetch_misses;
+        ctx->stats.rom_miss_penalty_us += rom_stats.miss_penalty_us;
 
         if (!skip_render) {
             convert_rgb555_to_rgb565_inplace(ctx->display_bufs[buf], kOutputPixels);
@@ -279,15 +378,23 @@ static void cpu_task(void* arg) {
             const auto avg_frame_us = static_cast<double>(ctx->stats.total_frame_us) /
                 static_cast<double>(ctx->stats.total_frames);
             const auto fps = window_us > 0 ? (60.0 * 1000000.0) / static_cast<double>(window_us) : 0.0;
-            ESP_LOGI(kTag, "Perf: avg_frame=%.2f ms fps=%.2f skipped=%u audio_chunks=%u audio_err=%u",
+            ESP_LOGI(kTag, "Perf: avg_frame=%.2f ms fps=%.2f skipped=%u audio_chunks=%u audio_err=%u rom_miss=%llu rom_pfh=%llu rom_pfm=%llu rom_miss_ms=%.2f",
                      avg_frame_us / 1000.0, fps, ctx->stats.skipped_frames,
-                     ctx->stats.audio_chunks, ctx->stats.audio_errors);
+                     ctx->stats.audio_chunks, ctx->stats.audio_errors,
+                     static_cast<unsigned long long>(ctx->stats.rom_cache_misses),
+                     static_cast<unsigned long long>(ctx->stats.rom_prefetch_hits),
+                     static_cast<unsigned long long>(ctx->stats.rom_prefetch_misses),
+                     static_cast<double>(ctx->stats.rom_miss_penalty_us) / 1000.0);
             window_start_us = frame_end_us;
             ctx->stats.total_frame_us = 0;
             ctx->stats.total_frames = 0;
             ctx->stats.skipped_frames = 0;
             ctx->stats.audio_chunks = 0;
             ctx->stats.audio_errors = 0;
+            ctx->stats.rom_cache_misses = 0;
+            ctx->stats.rom_prefetch_hits = 0;
+            ctx->stats.rom_prefetch_misses = 0;
+            ctx->stats.rom_miss_penalty_us = 0;
         }
     }
 }
@@ -335,8 +442,7 @@ extern "C" void app_main() {
     esp_err_t ret = mount_sdcard(&card);
     if (ret != ESP_OK) {
         ESP_LOGE(kTag, "Failed to mount SD card: %s", esp_err_to_name(ret));
-        heap_caps_free(ui_buf);
-        return;
+        halt_with_message(ui_buf, display_pixels, "SD MOUNT FAIL", esp_err_to_name(ret));
     }
 
     std::vector<std::string> rom_files;
@@ -354,8 +460,7 @@ extern "C" void app_main() {
 
     if (rom_files.empty()) {
         ESP_LOGE(kTag, "No .gba files found on SD card");
-        heap_caps_free(ui_buf);
-        return;
+        halt_with_message(ui_buf, display_pixels, "NO .GBA FILES", "COPY ROM TO SD");
     }
 
     std::sort(rom_files.begin(), rom_files.end());
@@ -418,6 +523,15 @@ extern "C" void app_main() {
     const bool bios_loaded = load_optional_bios(*emulator);
 #endif
 
+    u16* display_bufs[2] = {
+        static_cast<u16*>(heap_caps_malloc(kOutputPixels * sizeof(u16), MALLOC_CAP_SPIRAM)),
+        static_cast<u16*>(heap_caps_malloc(kOutputPixels * sizeof(u16), MALLOC_CAP_SPIRAM)),
+    };
+    if (!display_bufs[0] || !display_bufs[1]) {
+        ESP_LOGE(kTag, "Failed to allocate display buffers");
+        return;
+    }
+
     auto rom_provider = open_rom_provider(selected_rom_path);
     if (!rom_provider) {
         ESP_LOGE(kTag, "Failed to open ROM provider for %s", selected_rom_path.c_str());
@@ -437,12 +551,8 @@ extern "C" void app_main() {
 
     RuntimeContext ctx;
     ctx.emulator = emulator;
-    ctx.display_bufs[0] = static_cast<u16*>(heap_caps_malloc(kOutputPixels * sizeof(u16), MALLOC_CAP_SPIRAM));
-    ctx.display_bufs[1] = static_cast<u16*>(heap_caps_malloc(kOutputPixels * sizeof(u16), MALLOC_CAP_SPIRAM));
-    if (!ctx.display_bufs[0] || !ctx.display_bufs[1]) {
-        ESP_LOGE(kTag, "Failed to allocate display buffers");
-        return;
-    }
+    ctx.display_bufs[0] = display_bufs[0];
+    ctx.display_bufs[1] = display_bufs[1];
     ctx.front.store(0);
     ctx.back.store(1);
     ctx.display_task = xTaskGetCurrentTaskHandle();

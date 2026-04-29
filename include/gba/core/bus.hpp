@@ -26,6 +26,11 @@ class Timers;
 
 class Bus {
 public:
+    struct WaitStateTables {
+        std::array<std::array<u8, 16>, 2> wait16{};
+        std::array<std::array<u8, 16>, 2> wait32{};
+    };
+
     Bus(Cartridge& cartridge, Ppu& ppu, Timers& timers, DmaEngine& dma, Apu& apu, IrqController& irq);
 
     void reset();
@@ -100,6 +105,8 @@ private:
     std::unique_ptr<u8, void (*)(u8*)> vram_;
     std::unique_ptr<u8, void (*)(u8*)> oam_;
 
+    std::unique_ptr<WaitStateTables, void (*)(WaitStateTables*)> wait_tables_;
+
     struct PrefetchState {
         bool active = false;
         u32 head_address = 0;
@@ -143,8 +150,6 @@ private:
     bool rom_latch_valid_ = false;
     u32 bios_latch_ = 0;
     u32 open_bus_ = 0;
-    std::array<std::array<u8, 16>, 2> wait16_{};
-    std::array<std::array<u8, 16>, 2> wait32_{};
 #if GBA_TRACE_TIMERS
     u32 trace_active_info_offset_ = kIwramSize;
 #endif

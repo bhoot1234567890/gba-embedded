@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cstdio>
 #include <cstring>
+#include <new>
 
 #ifdef GBA_PLATFORM_ESP32
 #include "esp_heap_caps.h"
@@ -39,7 +40,7 @@ void free_memory(u8* ptr) {
 #endif
 }
 
-/* Allocate memory. Keep the hottest small blocks in internal SRAM on ESP32. */
+	/* Allocate memory. Keep the hottest small blocks in internal SRAM on ESP32. */
 u8* alloc_memory(size_t size, bool prefer_internal) {
 #ifdef GBA_PLATFORM_ESP32
     auto* ptr = static_cast<u8*>(heap_caps_malloc(
@@ -64,8 +65,31 @@ u8* alloc_memory(size_t size, bool prefer_internal) {
 #else
     (void)prefer_internal;
     return new u8[size]();
-#endif
-}
+	#endif
+	}
+
+	Bus::WaitStateTables* alloc_wait_tables() {
+	#ifdef GBA_PLATFORM_ESP32
+	    auto* memory = heap_caps_aligned_alloc(4, sizeof(Bus::WaitStateTables),
+	                                           MALLOC_CAP_INTERNAL | MALLOC_CAP_DMA | MALLOC_CAP_8BIT);
+	    if (memory) {
+	        return new (memory) Bus::WaitStateTables{};
+	    }
+	#endif
+	    return new Bus::WaitStateTables{};
+	}
+
+	void free_wait_tables(Bus::WaitStateTables* tables) {
+	    if (!tables) {
+	        return;
+	    }
+	    tables->~WaitStateTables();
+	#ifdef GBA_PLATFORM_ESP32
+	    heap_caps_free(tables);
+	#else
+	    ::operator delete(tables);
+	#endif
+	}
 
 [[nodiscard]] u32 gamepak_open_bus_value(u32 address, BusWidth width) {
     const auto half_at = [](u32 half_address) -> u32 {
@@ -153,7 +177,8 @@ Bus::Bus(Cartridge& cartridge, Ppu& ppu, Timers& timers, DmaEngine& dma, Apu& ap
       iwram_(alloc_memory(kIwramSize, true), free_memory),
       palette_(alloc_memory(kPaletteSize, true), free_memory),
       vram_(alloc_memory(kVramSize, false), free_memory),
-      oam_(alloc_memory(kOamSize, true), free_memory) {}
+      oam_(alloc_memory(kOamSize, true), free_memory),
+      wait_tables_(alloc_wait_tables(), free_wait_tables) {}
 
 void Bus::reset() {
     if (ewram_) std::memset(ewram_.get(), 0, kEwramSize);
@@ -309,7 +334,7 @@ BusAccessResult IRAM_ATTR Bus::read(u32 address, BusWidth width, AccessType acce
             if (has_access_flag(access, AccessType::Dma)) {
                 return prefetch_.duty == prefetch_.opcode_width ? 1u : 0u;
             }
-            const auto penalty = static_cast<u32>(wait16_[0][page] - wait16_[1][page]);
+            const auto penalty = static_cast<u32>(wait_tables_->wait16[0][page] - wait_tables_->wait16[1][page]);
             const auto stop_penalty =
                 width == BusWidth::Word && address < prefetch_.head_address ? stop_prefetch_penalty() : 0u;
             return penalty + stop_penalty;
@@ -336,11 +361,11 @@ BusAccessResult IRAM_ATTR Bus::read(u32 address, BusWidth width, AccessType acce
             prefetch_.count = 0;
         } else {
             const auto penalty = is_code_fetch ? stop_prefetch_penalty() : data_prefetch_penalty();
-            result.cycles = width == BusWidth::Word ? wait32_[seq_index][page] : wait16_[seq_index][page];
+            result.cycles = width == BusWidth::Word ? wait_tables_->wait32[seq_index][page] : wait_tables_->wait16[seq_index][page];
             prefetch_stop();
 
             if (is_code_fetch && prefetch_.was_disabled) {
-                result.cycles = width == BusWidth::Word ? wait32_[0][page] : wait16_[0][page];
+                result.cycles = width == BusWidth::Word ? wait_tables_->wait32[0][page] : wait_tables_->wait16[0][page];
                 prefetch_.was_disabled = false;
             }
             result.cycles += penalty;
@@ -372,7 +397,7 @@ BusAccessResult IRAM_ATTR Bus::read(u32 address, BusWidth width, AccessType acce
                 prefetch_.count = 0;
                 prefetch_.opcode_width = static_cast<int>(width_bytes);
                 prefetch_.capacity = width == BusWidth::Word ? 4 : 8;
-                prefetch_.duty = width == BusWidth::Word ? wait32_[1][page] : wait16_[1][page];
+                prefetch_.duty = width == BusWidth::Word ? wait_tables_->wait32[1][page] : wait_tables_->wait16[1][page];
                 prefetch_.countdown = prefetch_.duty;
                 prefetch_.last_address = address + width_bytes;
                 prefetch_.head_address = prefetch_.last_address;
@@ -385,7 +410,7 @@ BusAccessResult IRAM_ATTR Bus::read(u32 address, BusWidth width, AccessType acce
         }
     } else if (address >= 0x0E000000u && address < 0x10000000u) {
         result.breaks_fetch_burst = true;
-        result.cycles = wait16_[0][0xEu];
+        result.cycles = wait_tables_->wait16[0][0xEu];
         if (prefetch_.active) {
             result.cycles += ((prefetch_.countdown == 1 ||
                                (prefetch_.opcode_width == 4 && prefetch_.countdown == ((prefetch_.duty >> 1) + 1)))
@@ -465,7 +490,7 @@ BusAccessResult IRAM_ATTR Bus::write(u32 address, u32 value, BusWidth width, Acc
         }
         const auto seq_index = static_cast<std::size_t>(sequential ? 1u : 0u);
 
-        result.cycles = width == BusWidth::Word ? wait32_[seq_index][page] : wait16_[seq_index][page];
+        result.cycles = width == BusWidth::Word ? wait_tables_->wait32[seq_index][page] : wait_tables_->wait16[seq_index][page];
         if (prefetch_.active) {
             if (has_access_flag(access, AccessType::Dma)) {
                 result.cycles += prefetch_.duty > prefetch_.opcode_width ? 1u : 0u;
@@ -481,7 +506,7 @@ BusAccessResult IRAM_ATTR Bus::write(u32 address, u32 value, BusWidth width, Acc
         cartridge_.write_rom(address & 0x01FFFFFFu, value, width);
     } else if (address >= 0x0E000000u && address < 0x10000000u) {
         result.breaks_fetch_burst = true;
-        result.cycles = wait16_[0][0xEu];
+        result.cycles = wait_tables_->wait16[0][0xEu];
         if (prefetch_.active) {
             const auto half_duty_plus_one = (prefetch_.duty >> 1) + 1;
             if (prefetch_.countdown == 1 ||
@@ -668,14 +693,14 @@ u32 Bus::dma_vram_cycles(BusWidth width) const {
 u32 Bus::dma_rom_cycles(u32 address, bool is_word, bool sequential) const {
     const auto page = static_cast<std::size_t>(address >> 24u);
     if (is_word) {
-        return sequential ? wait32_[1][page] : wait32_[0][page];
+        return sequential ? wait_tables_->wait32[1][page] : wait_tables_->wait32[0][page];
     }
-    return sequential ? wait16_[1][page] : wait16_[0][page];
+    return sequential ? wait_tables_->wait16[1][page] : wait_tables_->wait16[0][page];
 }
 
 u32 Bus::prefetch_region_cycles(u32 address, BusWidth width) const {
     const auto page = static_cast<std::size_t>(address >> 24u);
-    return width == BusWidth::Word ? wait32_[1][page] : wait16_[1][page];
+    return width == BusWidth::Word ? wait_tables_->wait32[1][page] : wait_tables_->wait16[1][page];
 }
 
 void Bus::update_wait_state_table() {
@@ -698,26 +723,26 @@ void Bus::update_wait_state_table() {
         const auto ws2_page = 0xCu + mirror;
         const auto sram_page = 0xEu + mirror;
 
-        wait16_[0][ws0_page] = nseq[ws0_n];
-        wait16_[0][ws1_page] = nseq[ws1_n];
-        wait16_[0][ws2_page] = nseq[ws2_n];
+        wait_tables_->wait16[0][ws0_page] = nseq[ws0_n];
+        wait_tables_->wait16[0][ws1_page] = nseq[ws1_n];
+        wait_tables_->wait16[0][ws2_page] = nseq[ws2_n];
 
-        wait16_[1][ws0_page] = seq0[ws0_s];
-        wait16_[1][ws1_page] = seq1[ws1_s];
-        wait16_[1][ws2_page] = seq2[ws2_s];
+        wait_tables_->wait16[1][ws0_page] = seq0[ws0_s];
+        wait_tables_->wait16[1][ws1_page] = seq1[ws1_s];
+        wait_tables_->wait16[1][ws2_page] = seq2[ws2_s];
 
-        wait32_[0][ws0_page] = static_cast<u8>(wait16_[0][ws0_page] + wait16_[1][ws0_page]);
-        wait32_[0][ws1_page] = static_cast<u8>(wait16_[0][ws1_page] + wait16_[1][ws1_page]);
-        wait32_[0][ws2_page] = static_cast<u8>(wait16_[0][ws2_page] + wait16_[1][ws2_page]);
+        wait_tables_->wait32[0][ws0_page] = static_cast<u8>(wait_tables_->wait16[0][ws0_page] + wait_tables_->wait16[1][ws0_page]);
+        wait_tables_->wait32[0][ws1_page] = static_cast<u8>(wait_tables_->wait16[0][ws1_page] + wait_tables_->wait16[1][ws1_page]);
+        wait_tables_->wait32[0][ws2_page] = static_cast<u8>(wait_tables_->wait16[0][ws2_page] + wait_tables_->wait16[1][ws2_page]);
 
-        wait32_[1][ws0_page] = static_cast<u8>(wait16_[1][ws0_page] * 2u);
-        wait32_[1][ws1_page] = static_cast<u8>(wait16_[1][ws1_page] * 2u);
-        wait32_[1][ws2_page] = static_cast<u8>(wait16_[1][ws2_page] * 2u);
+        wait_tables_->wait32[1][ws0_page] = static_cast<u8>(wait_tables_->wait16[1][ws0_page] * 2u);
+        wait_tables_->wait32[1][ws1_page] = static_cast<u8>(wait_tables_->wait16[1][ws1_page] * 2u);
+        wait_tables_->wait32[1][ws2_page] = static_cast<u8>(wait_tables_->wait16[1][ws2_page] * 2u);
 
-        wait16_[0][sram_page] = sram;
-        wait16_[1][sram_page] = sram;
-        wait32_[0][sram_page] = sram;
-        wait32_[1][sram_page] = sram;
+        wait_tables_->wait16[0][sram_page] = sram;
+        wait_tables_->wait16[1][sram_page] = sram;
+        wait_tables_->wait32[0][sram_page] = sram;
+        wait_tables_->wait32[1][sram_page] = sram;
     }
 }
 

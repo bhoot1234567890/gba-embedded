@@ -5,7 +5,9 @@
 #endif
 
 #include <array>
+#include <memory>
 
+#include "gba/core/rom_provider.hpp"
 #include "gba/core/types.hpp"
 
 namespace gba {
@@ -26,6 +28,7 @@ public:
 #endif
 
     void set_rom(std::vector<u8> rom);
+    void set_rom_provider(std::unique_ptr<RomProvider> rom);
     void set_bios(std::vector<u8> bios);
     void set_save_type(SaveType save_type);
     void auto_detect_save_type();
@@ -42,17 +45,34 @@ public:
 
     [[nodiscard]] u32 read_bios(u32 address, BusWidth width) const;
     [[nodiscard]] u32 read_rom(u32 address, BusWidth width) const;
+    void prefetch_rom(u32 address, std::size_t bytes) const;
     void write_rom(u32 address, u32 value, BusWidth width);
     [[nodiscard]] u32 read_save(u32 address, BusWidth width) const;
     void write_save(u32 address, u32 value, BusWidth width);
 
     [[nodiscard]] std::span<const u8> bios() const;
     [[nodiscard]] std::span<const u8> rom() const;
+    [[nodiscard]] std::size_t rom_size() const;
+    [[nodiscard]] RomAccessStats rom_frame_stats() const;
+    void reset_rom_frame_stats() const;
     [[nodiscard]] std::span<const u8> save() const;
 
 private:
+    struct RomFeatureScan {
+        bool valid = false;
+        bool sram = false;
+        bool eeprom = false;
+        bool flash1m = false;
+        bool flash512 = false;
+        bool flash = false;
+        bool rtc_v = false;
+        bool siirtc = false;
+        bool irtc_v = false;
+    };
+
     void resize_save_storage();
     void auto_detect_rtc();
+    [[nodiscard]] RomFeatureScan scan_rom_features() const;
     [[nodiscard]] u32 read_vector(std::span<const u8> bytes, u32 address, BusWidth width) const;
     void write_vector(std::vector<u8>& bytes, u32 address, u32 value, BusWidth width);
 
@@ -79,7 +99,8 @@ private:
     [[nodiscard]] u32 flash_physical(u32 address) const;
 
     std::vector<u8> bios_;
-    std::vector<u8> rom_;
+    std::unique_ptr<RomProvider> rom_;
+    mutable RomFeatureScan rom_feature_scan_{};
     std::vector<u8> save_;
     SaveType save_type_ = SaveType::None;
     bool save_dirty_ = false;

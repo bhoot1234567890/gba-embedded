@@ -279,7 +279,7 @@ BusAccessResult IRAM_ATTR Bus::read(u32 address, BusWidth width, AccessType acce
     } else if (address >= 0x08000000u && address < 0x0E000000u) {
         const auto is_code_fetch = has_access_flag(access, AccessType::CodeFetch);
         const auto offset = address & 0x01FFFFFFu;
-        const auto rom = cartridge_.rom();
+        const auto rom_size = cartridge_.rom_size();
         const auto aligned = align_down(offset, static_cast<u32>(width));
         const auto width_bytes = static_cast<u32>(width);
         const auto page = static_cast<std::size_t>(address >> 24u);
@@ -318,7 +318,7 @@ BusAccessResult IRAM_ATTR Bus::read(u32 address, BusWidth width, AccessType acce
         if (is_code_fetch && prefetch_.active && prefetch_.count != 0 &&
             address == prefetch_.head_address && prefetch_.opcode_width == static_cast<int>(width_bytes)) {
             result.cycles = 1;
-            result.value = aligned + width_bytes <= rom.size()
+            result.value = aligned + width_bytes <= rom_size
                 ? cartridge_.read_rom(offset, width)
                 : gamepak_open_bus_value(address, width);
             prefetch_.count--;
@@ -328,7 +328,7 @@ BusAccessResult IRAM_ATTR Bus::read(u32 address, BusWidth width, AccessType acce
                    address == prefetch_.last_address &&
                    prefetch_.opcode_width == static_cast<int>(width_bytes)) {
             result.cycles = static_cast<u32>(prefetch_.countdown);
-            result.value = aligned + width_bytes <= rom.size()
+            result.value = aligned + width_bytes <= rom_size
                 ? cartridge_.read_rom(offset, width)
                 : gamepak_open_bus_value(address, width);
             prefetch_advance(prefetch_.countdown);
@@ -351,11 +351,11 @@ BusAccessResult IRAM_ATTR Bus::read(u32 address, BusWidth width, AccessType acce
                     rom_latch_ = expand_bus_latch(result.value, width);
                     rom_latch_valid_ = true;
                 }
-            } else if (aligned + width_bytes <= rom.size()) {
+            } else if (aligned + width_bytes <= rom_size) {
                 result.value = cartridge_.read_rom(offset, width);
                 if (!is_code_fetch) {
                     const auto word_base = align_down(aligned, 4u);
-                    if (word_base + 4u <= rom.size()) {
+                    if (word_base + 4u <= rom_size) {
                         rom_latch_ = cartridge_.read_rom(word_base, BusWidth::Word);
                         rom_latch_valid_ = true;
                     } else {
@@ -377,6 +377,11 @@ BusAccessResult IRAM_ATTR Bus::read(u32 address, BusWidth width, AccessType acce
                 prefetch_.last_address = address + width_bytes;
                 prefetch_.head_address = prefetch_.last_address;
             }
+        }
+
+        const auto next_offset = (offset + width_bytes) & 0x01FFFFFFu;
+        if (sequential && (next_offset & 0x7FFFu) >= 0x7F00u) {
+            cartridge_.prefetch_rom((next_offset + 0x100u) & ~0x7FFFu, 32u * 1024u);
         }
     } else if (address >= 0x0E000000u && address < 0x10000000u) {
         result.breaks_fetch_burst = true;
@@ -556,6 +561,10 @@ std::span<const u8> Bus::rom() const {
     return cartridge_.rom();
 }
 
+std::size_t Bus::rom_size() const {
+    return cartridge_.rom_size();
+}
+
 bool Bus::halted() const {
     return halted_;
 }
@@ -595,21 +604,24 @@ u32 Bus::read_gamepak_rom(u32 address, BusWidth width, bool sequential) {
 
     const auto read_offset = rom_address_latch_;
     const auto full_latch_address = 0x08000000u + read_offset;
-    const auto rom = cartridge_.rom();
+    const auto rom_size = cartridge_.rom_size();
 
     u32 value = 0;
     if (width == BusWidth::Word) {
-        value = read_offset + 4u <= rom.size()
+        value = read_offset + 4u <= rom_size
             ? cartridge_.read_rom(read_offset, BusWidth::Word)
             : gamepak_open_bus_value(full_latch_address, BusWidth::Word);
     } else {
-        const auto half = read_offset + 2u <= rom.size()
+        const auto half = read_offset + 2u <= rom_size
             ? cartridge_.read_rom(read_offset, BusWidth::Half)
             : gamepak_open_bus_value(full_latch_address, BusWidth::Half);
         value = width == BusWidth::Byte ? ((half >> ((address & 1u) * 8u)) & 0xFFu) : half;
     }
 
     rom_address_latch_ = (rom_address_latch_ + step) & 0x01FFFFFFu;
+    if (sequential && (rom_address_latch_ & 0x7FFFu) >= 0x7F00u) {
+        cartridge_.prefetch_rom((rom_address_latch_ + 0x100u) & ~0x7FFFu, 32u * 1024u);
+    }
     return value;
 }
 

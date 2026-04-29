@@ -20,6 +20,7 @@
 #include "gba_input.h"
 #include "gba/core/constants.hpp"
 #include "gba/core/emulator.hpp"
+#include "gba/platform/esp32_rom_provider.hpp"
 
 #include "esp_heap_caps.h"
 #include "esp_log.h"
@@ -61,7 +62,7 @@ struct RuntimeContext {
     RuntimeStats stats{};
 };
 
-static esp_err_t mount_sdcard(sdmmc_card_t** out_card) {
+[[maybe_unused]] static esp_err_t mount_sdcard(sdmmc_card_t** out_card) {
     esp_vfs_fat_sdmmc_mount_config_t mount_config = {
         .format_if_mount_failed = false,
         .max_files = 5,
@@ -154,7 +155,7 @@ static bool read_binary_file(const std::string& path, std::vector<u8>& out) {
     return file.read(reinterpret_cast<char*>(out.data()), size).good();
 }
 
-static bool load_optional_bios(Emulator& emulator) {
+[[maybe_unused]] static bool load_optional_bios(Emulator& emulator) {
     static constexpr const char* kBiosPaths[] = {
         "/sdcard/gba_bios.bin",
         "/sdcard/bios/gba_bios.bin",
@@ -178,6 +179,33 @@ static bool load_optional_bios(Emulator& emulator) {
 
     ESP_LOGW(kTag, "No real BIOS found on SD; using skip-BIOS reset and integer BIOS HLE");
     return false;
+}
+
+static std::unique_ptr<RomProvider> open_rom_provider(const std::string& sd_rom_path) {
+#if GBA_ROM_BACKEND == GBA_ROM_BACKEND_FLASH_MMAP || GBA_ROM_BACKEND == GBA_ROM_BACKEND_AUTO
+    auto mmap_provider = make_esp32_mmap_rom_provider(
+        GBA_ROM_MMAP_PARTITION_LABEL,
+        kMaxRomSize,
+        GBA_ROM_MMAP_WINDOW_BYTES,
+        GBA_ROM_MMAP_WINDOW_COUNT);
+    if (mmap_provider) {
+        ESP_LOGI(kTag, "Using flash mmap ROM backend");
+        return mmap_provider;
+    }
+#endif
+
+#if GBA_ROM_BACKEND == GBA_ROM_BACKEND_SD_CACHE || GBA_ROM_BACKEND == GBA_ROM_BACKEND_AUTO
+    auto sd_provider = make_esp32_sd_cache_rom_provider(
+        sd_rom_path.c_str(),
+        GBA_ROM_SD_CACHE_BYTES,
+        GBA_ROM_SD_CACHE_PAGE_BYTES);
+    if (sd_provider) {
+        ESP_LOGI(kTag, "Using SD cached ROM backend");
+        return sd_provider;
+    }
+#endif
+
+    return nullptr;
 }
 
 static void convert_rgb555_to_rgb565_inplace(u16* pixels, std::size_t count) {
@@ -288,10 +316,26 @@ extern "C" void app_main() {
         ESP_LOGE(kTag, "Audio init failed: %s", esp_err_to_name(audio_ret));
     }
 
+    const size_t display_pixels = static_cast<size_t>(DISPLAY_WIDTH) * DISPLAY_HEIGHT;
+    u16* ui_buf = static_cast<u16*>(heap_caps_malloc(display_pixels * sizeof(u16), MALLOC_CAP_SPIRAM));
+    if (!ui_buf) {
+        ESP_LOGE(kTag, "Failed to allocate UI buffer");
+        return;
+    }
+
+    std::string selected_rom_path;
+    std::string selected_sav_path;
+    std::string selected_display_name;
+
+#if GBA_ROM_BACKEND == GBA_ROM_BACKEND_FLASH_MMAP
+    selected_rom_path = GBA_ROM_MMAP_PARTITION_LABEL;
+    selected_display_name = std::string("flash:") + GBA_ROM_MMAP_PARTITION_LABEL;
+#else
     sdmmc_card_t* card = nullptr;
     esp_err_t ret = mount_sdcard(&card);
     if (ret != ESP_OK) {
         ESP_LOGE(kTag, "Failed to mount SD card: %s", esp_err_to_name(ret));
+        heap_caps_free(ui_buf);
         return;
     }
 
@@ -307,9 +351,10 @@ extern "C" void app_main() {
         }
         closedir(dir);
     }
-    
+
     if (rom_files.empty()) {
         ESP_LOGE(kTag, "No .gba files found on SD card");
+        heap_caps_free(ui_buf);
         return;
     }
 
@@ -317,14 +362,6 @@ extern "C" void app_main() {
 
     int selected_idx = 0;
     bool rom_selected = false;
-    
-    const size_t display_pixels = static_cast<size_t>(DISPLAY_WIDTH) * DISPLAY_HEIGHT;
-    u16* ui_buf = static_cast<u16*>(heap_caps_malloc(display_pixels * sizeof(u16), MALLOC_CAP_SPIRAM));
-    if (!ui_buf) {
-        ESP_LOGE(kTag, "Failed to allocate UI buffer");
-        return;
-    }
-    
     while (!rom_selected) {
         std::fill_n(ui_buf, display_pixels, 0x0000);
         draw_string(4, 4, "ESP32 GBA EMULATOR", 0x07E0, ui_buf);
@@ -357,14 +394,15 @@ extern "C" void app_main() {
         }
         vTaskDelay(pdMS_TO_TICKS(16));
     }
-    
-    std::string selected_rom_path = "/sdcard/" + rom_files[selected_idx];
-    std::string selected_sav_path = selected_rom_path.substr(0, selected_rom_path.length() - 4) + ".sav";
-    
-    // UI Loading state
+
+    selected_rom_path = "/sdcard/" + rom_files[selected_idx];
+    selected_sav_path = selected_rom_path.substr(0, selected_rom_path.length() - 4) + ".sav";
+    selected_display_name = rom_files[selected_idx];
+#endif
+
     std::fill_n(ui_buf, display_pixels, 0x0000);
     draw_string(4, 50, "LOADING...", 0x07E0, ui_buf);
-    draw_string(4, 60, rom_files[selected_idx].substr(0, 18), 0xFFFF, ui_buf);
+    draw_string(4, 60, selected_display_name.substr(0, 18), 0xFFFF, ui_buf);
     display_draw(0, 0, DISPLAY_WIDTH, DISPLAY_HEIGHT, ui_buf);
     heap_caps_free(ui_buf);
 
@@ -373,19 +411,24 @@ extern "C" void app_main() {
         ESP_LOGE(kTag, "Failed to allocate Emulator");
         return;
     }
+#if GBA_ROM_BACKEND == GBA_ROM_BACKEND_FLASH_MMAP
+    const bool bios_loaded = false;
+    ESP_LOGW(kTag, "Flash ROM backend selected; using skip-BIOS reset and integer BIOS HLE");
+#else
     const bool bios_loaded = load_optional_bios(*emulator);
+#endif
 
-    std::vector<u8> rom_data;
-    if (!read_binary_file(selected_rom_path, rom_data)) {
-        ESP_LOGE(kTag, "Failed to read ROM %s", selected_rom_path.c_str());
+    auto rom_provider = open_rom_provider(selected_rom_path);
+    if (!rom_provider) {
+        ESP_LOGE(kTag, "Failed to open ROM provider for %s", selected_rom_path.c_str());
         return;
     }
 
-    emulator->load_rom(std::move(rom_data));
+    emulator->set_rom_provider(std::move(rom_provider));
     emulator->cartridge().auto_detect_save_type();
 
     std::vector<u8> save_data;
-    if (read_binary_file(selected_sav_path, save_data)) {
+    if (!selected_sav_path.empty() && read_binary_file(selected_sav_path, save_data)) {
         emulator->cartridge().load_save(std::move(save_data));
     }
 
@@ -425,8 +468,10 @@ extern "C" void app_main() {
         // Debounced Save Data Write-Back
         if (ctx.emulator->cartridge().is_save_dirty()) {
             ctx.emulator->cartridge().clear_save_dirty();
-            last_save_dirty_time = esp_timer_get_time();
-            save_pending = true;
+            if (!selected_sav_path.empty()) {
+                last_save_dirty_time = esp_timer_get_time();
+                save_pending = true;
+            }
         } else if (save_pending && (esp_timer_get_time() - last_save_dirty_time > 2000000)) { // 2 seconds
             auto save_data = ctx.emulator->cartridge().save();
             if (!save_data.empty()) {

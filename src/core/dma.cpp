@@ -278,17 +278,12 @@ u32 IRAM_ATTR DmaEngine::service_due(u64 cycle_now, Bus& bus, IrqController& irq
             u32 read_cycles = 0;
 
             if (rom_to_vram) {
-                const auto rom = bus.rom();
-                const auto rom_offset = source & 0x01FFFFFFu;
                 const auto seq = did_access_rom;
                 did_access_rom = true;
-                read_cycles = bus.dma_rom_cycles(source, false, seq);
-                if (rom_offset + 2u <= rom.size()) {
-                    read_value = static_cast<u32>(rom[rom_offset]) |
-                                 (static_cast<u32>(rom[rom_offset + 1u]) << 8u);
-                } else {
-                    read_value = 0;
-                }
+                const auto read_access = seq ? (AccessType::Dma | AccessType::Sequential) : AccessType::Dma;
+                const auto read_result = bus.read(source, BusWidth::Half, read_access, transfer_cycle);
+                read_cycles = read_result.cycles;
+                read_value = read_result.value & 0xFFFFu;
                 channel.bus_latch = (read_value << 16u) | (read_value & 0xFFFFu);
 
                 auto vram = bus.vram_write();

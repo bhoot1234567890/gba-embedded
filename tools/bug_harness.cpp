@@ -86,6 +86,7 @@ struct Metrics {
     double dominant_ratio = 0.0;
     double white_ratio = 0.0;
     double black_ratio = 0.0;
+    RomAccessStats rom_stats{};
     u16 input_mask = 0;
     std::string input_label;
 };
@@ -453,6 +454,7 @@ Metrics collect_metrics(Emulator& emulator, u32 frame, u16 input_mask, const std
     metrics.apu_next = emulator.apu_.next_event_cycle();
     metrics.serial_next = emulator.bus_.next_event_cycle();
     metrics.irq_next = emulator.irq_.next_event_cycle();
+    metrics.rom_stats = emulator.last_rom_stats_;
     analyze_framebuffer(emulator.framebuffer(), metrics);
     return metrics;
 }
@@ -481,12 +483,14 @@ std::string hex_u64(u64 value) {
 void write_csv_header(std::ofstream& out) {
     out << "frame,cycle,pc,cpsr,halted,bus_halted,keyinput,dispcnt,dispstat,vcount,ie,if,ime,waitcnt,"
            "next,ppu_next,timers_next,dma_next,apu_next,serial_next,irq_next,"
+           "rom_reads,rom_misses,rom_hits,rom_unique_pages,rom_prefetches,"
            "frame_hash,unique_colors,dominant_color,dominant_ratio,white_ratio,black_ratio,input_mask,input_label\n";
 }
 
 void write_event_csv_header(std::ofstream& out) {
     out << "frame,event,cycle,pc,cpsr,halted,bus_halted,keyinput,dispcnt,dispstat,vcount,ie,if,ime,waitcnt,"
            "next,ppu_next,timers_next,dma_next,apu_next,serial_next,irq_next,"
+           "rom_reads,rom_misses,rom_hits,rom_unique_pages,rom_prefetches,"
            "frame_hash,unique_colors,dominant_color,dominant_ratio,white_ratio,black_ratio,input_mask,input_label\n";
 }
 
@@ -512,6 +516,11 @@ void write_csv_row(std::ofstream& out, const Metrics& m) {
         << hex_u64(m.apu_next) << ','
         << hex_u64(m.serial_next) << ','
         << hex_u64(m.irq_next) << ','
+        << m.rom_stats.byte_reads << ','
+        << m.rom_stats.cache_misses << ','
+        << m.rom_stats.cache_hits << ','
+        << m.rom_stats.unique_pages << ','
+        << m.rom_stats.prefetches << ','
         << m.frame_hash << ','
         << m.unique_colors << ','
         << hex_u16(m.dominant_color) << ','
@@ -546,6 +555,11 @@ void write_event_csv_row(std::ofstream& out, u32 event_index, const Metrics& m) 
         << hex_u64(m.apu_next) << ','
         << hex_u64(m.serial_next) << ','
         << hex_u64(m.irq_next) << ','
+        << m.rom_stats.byte_reads << ','
+        << m.rom_stats.cache_misses << ','
+        << m.rom_stats.cache_hits << ','
+        << m.rom_stats.unique_pages << ','
+        << m.rom_stats.prefetches << ','
         << m.frame_hash << ','
         << m.unique_colors << ','
         << hex_u16(m.dominant_color) << ','
@@ -570,6 +584,8 @@ void print_metrics(const Metrics& m, const char* prefix) {
               << " DISPCNT=" << hex_u16(m.dispcnt)
               << " DISPSTAT=" << hex_u16(m.dispstat)
               << " VCOUNT=" << m.vcount
+              << " rom_miss=" << m.rom_stats.cache_misses
+              << " rom_pages=" << m.rom_stats.unique_pages
               << " hash=" << m.frame_hash
               << " colors=" << m.unique_colors
               << " dom=" << hex_u16(m.dominant_color)
@@ -690,6 +706,7 @@ bool run_frame_with_event_trace(Emulator& emulator,
                                 const std::string& input_label,
                                 std::ofstream& event_csv) {
     u32 events = 0;
+    emulator.cartridge_.reset_rom_frame_stats();
     while (!emulator.ppu_.frame_ready()) {
         emulator.step_scheduler_event();
         ++events;
@@ -701,6 +718,7 @@ bool run_frame_with_event_trace(Emulator& emulator,
             return false;
         }
     }
+    emulator.last_rom_stats_ = emulator.cartridge_.rom_frame_stats();
     emulator.ppu_.consume_frame_ready();
     return true;
 }

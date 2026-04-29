@@ -11,12 +11,10 @@ CONFIG_SPIRAM_MODE_QUAD=y
 CONFIG_SPIRAM_SPEED_80M=y
 # CONFIG_SPIRAM_SPEED_40M is not set
 CONFIG_SPIRAM_USE_MALLOC=y
-CONFIG_ESP32S3_SPIRAM_SUPPORT=y
 CONFIG_SPIRAM_BOOT_INIT=y
 
-# Keep the emulator profile deterministic and leave radio RAM/IRAM unused.
+# Keep the emulator profile deterministic. Radio stacks are excluded by the
+# root CMake MINIMAL_BUILD setting unless explicitly added to main dependencies.
 # CONFIG_PM_ENABLE is not set
 CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ_240=y
 CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ=240
-# CONFIG_ESP_WIFI_ENABLED is not set
-# CONFIG_BT_ENABLED is not set

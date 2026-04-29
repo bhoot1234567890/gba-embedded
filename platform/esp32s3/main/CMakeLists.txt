@@ -5,17 +5,17 @@ set(GBA_BUILD_DISPLAY_TEST OFF CACHE BOOL "Build display hardware test")
 if(GBA_BUILD_DISPLAY_TEST)
     idf_component_register(
         SRCS gba_display.cpp gba_display_test_main.cpp
-        REQUIRES driver esp_lcd esp_driver_gpio esp_timer
+        REQUIRES driver esp_lcd esp_driver_gpio esp_timer heap
     )
 elseif(GBA_BUILD_RUNTIME)
     idf_component_register(
         SRCS gba_audio.cpp gba_display.cpp gba_input.cpp gba_runtime.cpp
-        REQUIRES gba_core driver esp_lcd esp_driver_gpio esp_driver_i2s esp_timer fatfs sdmmc vfs
+        REQUIRES gba_core driver esp_lcd esp_driver_gpio esp_driver_i2s esp_psram esp_timer fatfs heap sdmmc vfs
     )
 else()
     idf_component_register(
         SRCS gba_test_main.cpp
-        REQUIRES gba_core driver esp_lcd esp_driver_gpio esp_timer fatfs sdmmc vfs
+        REQUIRES gba_core driver esp_lcd esp_driver_gpio esp_timer fatfs heap sdmmc vfs
     )
 endif()
 
@@ -60,6 +60,11 @@ set(GBA_BOARD_COMPILE_DEFS
     GBA_AUDIO_PIN_BCK
     GBA_AUDIO_PIN_WS
     GBA_AUDIO_PIN_DOUT
+    GBA_ROM_BACKEND
+    GBA_ROM_SD_CACHE_BYTES
+    GBA_ROM_SD_CACHE_PAGE_BYTES
+    GBA_ROM_MMAP_WINDOW_BYTES
+    GBA_ROM_MMAP_WINDOW_COUNT
 )
 
 foreach(def IN LISTS GBA_BOARD_COMPILE_DEFS)

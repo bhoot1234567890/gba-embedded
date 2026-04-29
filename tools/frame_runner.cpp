@@ -262,8 +262,9 @@ int main(int argc, char** argv) {
         const auto& cpu = emulator.cpu();
         const auto& state = cpu.state();
         const auto& irq = emulator.irq();
+        const auto rom_stats = emulator.last_rom_stats();
         std::printf(
-            "frame=%u file=%s pc=0x%08X cpsr=0x%08X halted=%d IE=0x%04X IF=0x%04X DISPSTAT=0x%04X IME=%d cycle=%llu\n",
+            "frame=%u file=%s pc=0x%08X cpsr=0x%08X halted=%d IE=0x%04X IF=0x%04X DISPSTAT=0x%04X IME=%d cycle=%llu rom_reads=%llu rom_misses=%llu rom_hits=%llu rom_unique_pages=%u rom_prefetches=%llu\n",
             frame,
             output_path.c_str(),
             state.regs[15],
@@ -273,7 +274,12 @@ int main(int argc, char** argv) {
             irq.iflags(),
             emulator.ppu().dispstat(),
             irq.ime(),
-            static_cast<unsigned long long>(cpu.current_cycle())
+            static_cast<unsigned long long>(cpu.current_cycle()),
+            static_cast<unsigned long long>(rom_stats.byte_reads),
+            static_cast<unsigned long long>(rom_stats.cache_misses),
+            static_cast<unsigned long long>(rom_stats.cache_hits),
+            rom_stats.unique_pages,
+            static_cast<unsigned long long>(rom_stats.prefetches)
         );
     }
 

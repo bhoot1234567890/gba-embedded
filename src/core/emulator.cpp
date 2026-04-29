@@ -21,6 +21,10 @@ void Emulator::load_rom(std::vector<u8> rom) {
     cartridge_.set_rom(std::move(rom));
 }
 
+void Emulator::set_rom_provider(std::unique_ptr<RomProvider> rom) {
+    cartridge_.set_rom_provider(std::move(rom));
+}
+
 void Emulator::load_bios(std::vector<u8> bios) {
     cartridge_.set_bios(std::move(bios));
 }
@@ -61,6 +65,7 @@ void Emulator::run_until(u64 target_cycle) {
 }
 
 void Emulator::run_frame() {
+    cartridge_.reset_rom_frame_stats();
     while (!ppu_.frame_ready()) {
         refresh_schedule();
         auto next_cycle = scheduler_.next_event();
@@ -71,6 +76,7 @@ void Emulator::run_frame() {
         scheduler_.set_current_cycle(cpu_.current_cycle());
         service_due_hardware();
     }
+    last_rom_stats_ = cartridge_.rom_frame_stats();
     ppu_.consume_frame_ready();
 }
 

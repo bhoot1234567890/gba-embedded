@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <cstddef>
 #include <functional>
 #include <memory>
 #include <span>
@@ -41,6 +42,7 @@ public:
 
     void set_rom(std::span<const u8> rom);
     [[nodiscard]] std::span<const u8> rom() const;
+    [[nodiscard]] std::size_t rom_size() const;
 
     void set_keyinput(u16 value);
     void set_debug_output(DebugOutputCallback callback);

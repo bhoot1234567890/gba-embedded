@@ -5,6 +5,7 @@
 #include <ctime>
 #include <cstdio>
 #include <cstdlib>
+#include <cstring>
 #include <string_view>
 #include <time.h>
 
@@ -25,6 +26,7 @@ constexpr u32 kGpioControl = 0xC8u;
 constexpr u8 kRtcPinSck = 1u << 0u;
 constexpr u8 kRtcPinSio = 1u << 1u;
 constexpr u8 kRtcPinCs = 1u << 2u;
+constexpr std::size_t kRomFeatureScanChunkSize = 16u * 1024u;
 constexpr std::array<int, 8> kRtcRegisterLengths = {
     0,  // Force reset
     0,  // Unused
@@ -35,13 +37,6 @@ constexpr std::array<int, 8> kRtcRegisterLengths = {
     3,  // Time
     0,  // Free
 };
-
-[[nodiscard]] bool rom_contains(std::span<const u8> rom, std::string_view needle) {
-    const auto it = std::search(rom.begin(), rom.end(), needle.begin(), needle.end(), [](u8 lhs, char rhs) {
-        return lhs == static_cast<u8>(rhs);
-    });
-    return it != rom.end();
-}
 
 [[nodiscard]] u8 decimal_to_bcd(int value) {
     value %= 100;
@@ -106,10 +101,15 @@ bool Cartridge::load_bios_from_file(const std::filesystem::path& path) {
 #endif
 
 void Cartridge::set_rom(std::vector<u8> rom) {
-    rom_ = std::move(rom);
-    if (rom_.size() > kMaxRomSize) {
-        rom_.resize(kMaxRomSize);
+    if (rom.size() > kMaxRomSize) {
+        rom.resize(kMaxRomSize);
     }
+    set_rom_provider(std::make_unique<MemoryRomProvider>(std::move(rom)));
+}
+
+void Cartridge::set_rom_provider(std::unique_ptr<RomProvider> rom) {
+    rom_ = std::move(rom);
+    rom_feature_scan_ = {};
     auto_detect_rtc();
     reset_gpio_state();
 }
@@ -123,16 +123,17 @@ void Cartridge::set_bios(std::vector<u8> bios) {
 
 void Cartridge::auto_detect_save_type() {
     save_type_ = SaveType::None;
-    if (rom_.empty()) return;
-    auto_detect_rtc();
+    if (!rom_ || rom_->empty()) return;
+    const auto features = scan_rom_features();
+    gpio_rtc_present_ = features.rtc_v || features.siirtc || features.irtc_v;
 
-    if (rom_contains(rom_, "SRAM_V")) {
+    if (features.sram) {
         set_save_type(SaveType::Sram);
-    } else if (rom_contains(rom_, "EEPROM_V")) {
+    } else if (features.eeprom) {
         set_save_type(SaveType::Eeprom);
-    } else if (rom_contains(rom_, "FLASH1M_V")) {
+    } else if (features.flash1m) {
         set_save_type(SaveType::Flash128K);
-    } else if (rom_contains(rom_, "FLASH512_V") || rom_contains(rom_, "FLASH_V")) {
+    } else if (features.flash512 || features.flash) {
         set_save_type(SaveType::Flash64K);
     } else {
         // Default to SRAM if nothing found (common fallback)
@@ -183,13 +184,13 @@ void Cartridge::set_save_type(SaveType save_type) {
 }
 
 std::string Cartridge::title() const {
-    if (rom_.size() < 0x00AC) {
+    if (!rom_ || rom_->size() < 0x00AC) {
         return {};
     }
 
     std::string title;
-    for (std::size_t index = 0x00A0; index < 0x00AC && index < rom_.size(); ++index) {
-        const auto byte = rom_[index];
+    for (u32 index = 0x00A0; index < 0x00AC && index < rom_->size(); ++index) {
+        const auto byte = rom_->read_byte(index);
         if (byte == 0) {
             break;
         }
@@ -215,7 +216,7 @@ u32 Cartridge::read_bios(u32 address, BusWidth width) const {
 }
 
 u32 Cartridge::read_rom(u32 address, BusWidth width) const {
-    if (rom_.empty()) {
+    if (!rom_ || rom_->empty()) {
         return 0xFFFFFFFFu;
     }
 
@@ -224,7 +225,7 @@ u32 Cartridge::read_rom(u32 address, BusWidth width) const {
         if (read_gpio_byte(byte_address, gpio_value)) {
             return gpio_value;
         }
-        return byte_address < rom_.size() ? rom_[byte_address] : 0xFFu;
+        return byte_address < rom_->size() ? rom_->read_byte(byte_address) : 0xFFu;
     };
 
     const auto has_gpio_byte = [&](u32 start, u32 count) -> bool {
@@ -239,20 +240,20 @@ u32 Cartridge::read_rom(u32 address, BusWidth width) const {
 
     switch (width) {
     case BusWidth::Byte:
-        if (address >= rom_.size() && !has_gpio_byte(address, 1u)) {
+        if (address >= rom_->size() && !has_gpio_byte(address, 1u)) {
             return 0xFFFFFFFFu;
         }
         return read_byte(address);
     case BusWidth::Half: {
         const auto aligned = align_down(address, 2u);
-        if (aligned + 2u > rom_.size() && !has_gpio_byte(aligned, 2u)) {
+        if (aligned + 2u > rom_->size() && !has_gpio_byte(aligned, 2u)) {
             return 0xFFFFFFFFu;
         }
         return read_byte(aligned) | (read_byte(aligned + 1u) << 8u);
     }
     case BusWidth::Word: {
         const auto aligned = align_down(address, 4u);
-        if (aligned + 4u > rom_.size() && !has_gpio_byte(aligned, 4u)) {
+        if (aligned + 4u > rom_->size() && !has_gpio_byte(aligned, 4u)) {
             return 0xFFFFFFFFu;
         }
         return read_byte(aligned) | (read_byte(aligned + 1u) << 8u) | (read_byte(aligned + 2u) << 16u) |
@@ -260,6 +261,12 @@ u32 Cartridge::read_rom(u32 address, BusWidth width) const {
     }
     }
     return 0xFFFFFFFFu;
+}
+
+void Cartridge::prefetch_rom(u32 address, std::size_t bytes) const {
+    if (rom_) {
+        rom_->prefetch(address, bytes);
+    }
 }
 
 void Cartridge::write_rom(u32 address, u32 value, BusWidth width) {
@@ -427,7 +434,21 @@ std::span<const u8> Cartridge::bios() const {
 }
 
 std::span<const u8> Cartridge::rom() const {
-    return rom_;
+    return rom_ ? rom_->contiguous_span() : std::span<const u8>{};
+}
+
+std::size_t Cartridge::rom_size() const {
+    return rom_ ? rom_->size() : 0;
+}
+
+RomAccessStats Cartridge::rom_frame_stats() const {
+    return rom_ ? rom_->frame_stats() : RomAccessStats{};
+}
+
+void Cartridge::reset_rom_frame_stats() const {
+    if (rom_) {
+        rom_->reset_frame_stats();
+    }
 }
 
 std::span<const u8> Cartridge::save() const {
@@ -453,12 +474,82 @@ void Cartridge::resize_save_storage() {
 }
 
 void Cartridge::auto_detect_rtc() {
-    if (rom_.empty()) {
+    if (!rom_ || rom_->empty()) {
         gpio_rtc_present_ = false;
         return;
     }
 
-    gpio_rtc_present_ = rom_contains(rom_, "RTC_V") || rom_contains(rom_, "SIIRTC") || rom_contains(rom_, "IRTC_V");
+    const auto features = scan_rom_features();
+    gpio_rtc_present_ = features.rtc_v || features.siirtc || features.irtc_v;
+}
+
+Cartridge::RomFeatureScan Cartridge::scan_rom_features() const {
+    if (rom_feature_scan_.valid) {
+        return rom_feature_scan_;
+    }
+
+    RomFeatureScan scan{};
+    struct Needle {
+        std::string_view text;
+        bool RomFeatureScan::*field;
+    };
+    static constexpr std::array<Needle, 8> kNeedles = {{
+        {"SRAM_V", &RomFeatureScan::sram},
+        {"EEPROM_V", &RomFeatureScan::eeprom},
+        {"FLASH1M_V", &RomFeatureScan::flash1m},
+        {"FLASH512_V", &RomFeatureScan::flash512},
+        {"FLASH_V", &RomFeatureScan::flash},
+        {"RTC_V", &RomFeatureScan::rtc_v},
+        {"SIIRTC", &RomFeatureScan::siirtc},
+        {"IRTC_V", &RomFeatureScan::irtc_v},
+    }};
+
+    std::size_t max_needle = 0;
+    for (const auto& needle : kNeedles) {
+        max_needle = std::max(max_needle, needle.text.size());
+    }
+
+    if (rom_ && max_needle != 0) {
+        std::vector<u8> buffer(kRomFeatureScanChunkSize + max_needle - 1u);
+        std::size_t carry = 0;
+        for (std::size_t offset = 0; offset < rom_->size();) {
+            const auto chunk = std::min(kRomFeatureScanChunkSize, rom_->size() - offset);
+            if (!rom_->read_bytes(static_cast<u32>(offset), std::span<u8>(buffer.data() + carry, chunk))) {
+                break;
+            }
+
+            const auto valid = carry + chunk;
+            for (const auto& needle : kNeedles) {
+                if (scan.*(needle.field)) {
+                    continue;
+                }
+                if (std::search(buffer.begin(), buffer.begin() + static_cast<std::ptrdiff_t>(valid),
+                                needle.text.begin(), needle.text.end(), [](u8 lhs, char rhs) {
+                                    return lhs == static_cast<u8>(rhs);
+                                }) != buffer.begin() + static_cast<std::ptrdiff_t>(valid)) {
+                    scan.*(needle.field) = true;
+                }
+            }
+
+            bool complete = true;
+            for (const auto& needle : kNeedles) {
+                complete = complete && scan.*(needle.field);
+            }
+            if (complete) {
+                break;
+            }
+
+            carry = std::min(max_needle - 1u, valid);
+            if (carry != 0) {
+                std::memmove(buffer.data(), buffer.data() + valid - carry, carry);
+            }
+            offset += chunk;
+        }
+    }
+
+    scan.valid = true;
+    rom_feature_scan_ = scan;
+    return scan;
 }
 
 void Cartridge::reset_gpio_state() {

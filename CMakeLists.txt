@@ -32,6 +32,7 @@ add_library(
     src/core/irq.cpp
     src/core/log.cpp
     src/core/ppu.cpp
+    src/core/rom_provider.cpp
     src/core/scheduler.cpp
     src/core/timers.cpp
 )

@@ -30,6 +30,7 @@ public:
     [[nodiscard]] bool load_bios_from_file(const std::filesystem::path& path);
 #endif
     void load_rom(std::vector<u8> rom);
+    void set_rom_provider(std::unique_ptr<RomProvider> rom);
     void load_bios(std::vector<u8> bios);
     void set_save_type(SaveType save_type);
 
@@ -47,6 +48,7 @@ public:
     [[nodiscard]] const Ppu& ppu() const;
     [[nodiscard]] Ppu& ppu();
     [[nodiscard]] Apu& apu() { return apu_; }
+    [[nodiscard]] RomAccessStats last_rom_stats() const { return last_rom_stats_; }
     [[nodiscard]] std::span<const u16> framebuffer() const;
 
     void step_scheduler_event();
@@ -65,6 +67,7 @@ private:
     Arm7tdmi cpu_;
     Scheduler scheduler_{};
     bool skip_render_ = false;
+    RomAccessStats last_rom_stats_{};
 };
 
 }  // namespace gba

@@ -483,14 +483,16 @@ std::string hex_u64(u64 value) {
 void write_csv_header(std::ofstream& out) {
     out << "frame,cycle,pc,cpsr,halted,bus_halted,keyinput,dispcnt,dispstat,vcount,ie,if,ime,waitcnt,"
            "next,ppu_next,timers_next,dma_next,apu_next,serial_next,irq_next,"
-           "rom_reads,rom_misses,rom_hits,rom_unique_pages,rom_prefetches,"
+           "rom_reads,rom_misses,rom_hits,rom_seq_hits,rom_unique_pages,rom_prefetches,"
+           "rom_prefetch_misses,rom_prefetch_hits,rom_prefetch_bytes,rom_miss_us,rom_miss_cycles,"
            "frame_hash,unique_colors,dominant_color,dominant_ratio,white_ratio,black_ratio,input_mask,input_label\n";
 }
 
 void write_event_csv_header(std::ofstream& out) {
     out << "frame,event,cycle,pc,cpsr,halted,bus_halted,keyinput,dispcnt,dispstat,vcount,ie,if,ime,waitcnt,"
            "next,ppu_next,timers_next,dma_next,apu_next,serial_next,irq_next,"
-           "rom_reads,rom_misses,rom_hits,rom_unique_pages,rom_prefetches,"
+           "rom_reads,rom_misses,rom_hits,rom_seq_hits,rom_unique_pages,rom_prefetches,"
+           "rom_prefetch_misses,rom_prefetch_hits,rom_prefetch_bytes,rom_miss_us,rom_miss_cycles,"
            "frame_hash,unique_colors,dominant_color,dominant_ratio,white_ratio,black_ratio,input_mask,input_label\n";
 }
 
@@ -519,8 +521,14 @@ void write_csv_row(std::ofstream& out, const Metrics& m) {
         << m.rom_stats.byte_reads << ','
         << m.rom_stats.cache_misses << ','
         << m.rom_stats.cache_hits << ','
+        << m.rom_stats.sequential_hits << ','
         << m.rom_stats.unique_pages << ','
         << m.rom_stats.prefetches << ','
+        << m.rom_stats.prefetch_misses << ','
+        << m.rom_stats.prefetch_hits << ','
+        << m.rom_stats.prefetch_bytes << ','
+        << m.rom_stats.miss_penalty_us << ','
+        << m.rom_stats.miss_penalty_cycles << ','
         << m.frame_hash << ','
         << m.unique_colors << ','
         << hex_u16(m.dominant_color) << ','
@@ -558,8 +566,14 @@ void write_event_csv_row(std::ofstream& out, u32 event_index, const Metrics& m) 
         << m.rom_stats.byte_reads << ','
         << m.rom_stats.cache_misses << ','
         << m.rom_stats.cache_hits << ','
+        << m.rom_stats.sequential_hits << ','
         << m.rom_stats.unique_pages << ','
         << m.rom_stats.prefetches << ','
+        << m.rom_stats.prefetch_misses << ','
+        << m.rom_stats.prefetch_hits << ','
+        << m.rom_stats.prefetch_bytes << ','
+        << m.rom_stats.miss_penalty_us << ','
+        << m.rom_stats.miss_penalty_cycles << ','
         << m.frame_hash << ','
         << m.unique_colors << ','
         << hex_u16(m.dominant_color) << ','
@@ -585,7 +599,12 @@ void print_metrics(const Metrics& m, const char* prefix) {
               << " DISPSTAT=" << hex_u16(m.dispstat)
               << " VCOUNT=" << m.vcount
               << " rom_miss=" << m.rom_stats.cache_misses
+              << " rom_hit=" << m.rom_stats.cache_hits
+              << " rom_seq=" << m.rom_stats.sequential_hits
               << " rom_pages=" << m.rom_stats.unique_pages
+              << " rom_pfh=" << m.rom_stats.prefetch_hits
+              << " rom_pfm=" << m.rom_stats.prefetch_misses
+              << " rom_miss_us=" << m.rom_stats.miss_penalty_us
               << " hash=" << m.frame_hash
               << " colors=" << m.unique_colors
               << " dom=" << hex_u16(m.dominant_color)

@@ -220,16 +220,11 @@ void Bus::update_timer_trace_context() {
 #endif
 
 BusAccessResult IRAM_ATTR Bus::read(u32 address, BusWidth width, AccessType access, u64 cycle_now) {
+    (void)cycle_now;
     BusAccessResult result{};
-    result.cycles = region_cycles(address, width, access, cycle_now);
-
-    const auto ewram_span = std::span<const u8>{ewram_.get(), kEwramSize};
-    const auto iwram_span = std::span<const u8>{iwram_.get(), kIwramSize};
-    const auto palette_span = std::span<const u8>{palette_.get(), kPaletteSize};
-    const auto vram_span = std::span<const u8>{vram_.get(), kVramSize};
-    const auto oam_span = std::span<const u8>{oam_.get(), kOamSize};
 
     if (address < 0x00004000u) {
+        result.cycles = 1;
         const auto bios = cartridge_.bios();
         const auto aligned = align_down(address, static_cast<u32>(width));
         const auto width_bytes = static_cast<u32>(width);
@@ -259,23 +254,28 @@ BusAccessResult IRAM_ATTR Bus::read(u32 address, BusWidth width, AccessType acce
             result.open_bus = true;
         }
     } else if ((address & 0x0F000000u) == 0x02000000u) {
-        result.value = read_array(ewram_span, address - 0x02000000u, width);
+        result.cycles = width == BusWidth::Word ? 6u : 3u;
+        result.value = read_array(ewram_.get(), kEwramSize, address - 0x02000000u, width);
     } else if ((address & 0x0F000000u) == 0x03000000u) {
-        result.value = read_array(iwram_span, address - 0x03000000u, width);
+        result.cycles = 1;
+        result.value = read_array(iwram_.get(), kIwramSize, address - 0x03000000u, width);
     } else if ((address & 0x0F000000u) == 0x04000000u) {
         auto io_result = read_io(address, width, access, cycle_now);
         last_access_ = access;
         return io_result;
     } else if ((address & 0x0F000000u) == 0x05000000u) {
-        result.value = read_array(palette_span, address - 0x05000000u, width);
+        result.cycles = dma_vram_cycles(width);
+        result.value = read_array(palette_.get(), kPaletteSize, address - 0x05000000u, width);
     } else if ((address & 0x0F000000u) == 0x06000000u) {
+        result.cycles = dma_vram_cycles(width);
         auto offset = (address - 0x06000000u) & 0x1FFFFu;
         if (offset >= 0x18000u) {
             offset = 0x10000u + (offset & 0x7FFFu);
         }
-        result.value = read_array(vram_span, offset, width);
+        result.value = read_array(vram_.get(), kVramSize, offset, width);
     } else if ((address & 0x0F000000u) == 0x07000000u) {
-        result.value = read_array(oam_span, address - 0x07000000u, width);
+        result.cycles = 1u + (ppu_.is_video_memory_contended() ? 1u : 0u);
+        result.value = read_array(oam_.get(), kOamSize, address - 0x07000000u, width);
     } else if (address >= 0x08000000u && address < 0x0E000000u) {
         const auto is_code_fetch = has_access_flag(access, AccessType::CodeFetch);
         const auto offset = address & 0x01FFFFFFu;
@@ -385,6 +385,7 @@ BusAccessResult IRAM_ATTR Bus::read(u32 address, BusWidth width, AccessType acce
         }
     } else if (address >= 0x0E000000u && address < 0x10000000u) {
         result.breaks_fetch_burst = true;
+        result.cycles = wait16_[0][0xEu];
         if (prefetch_.active) {
             result.cycles += ((prefetch_.countdown == 1 ||
                                (prefetch_.opcode_width == 4 && prefetch_.countdown == ((prefetch_.duty >> 1) + 1)))
@@ -394,6 +395,7 @@ BusAccessResult IRAM_ATTR Bus::read(u32 address, BusWidth width, AccessType acce
         result.value = cartridge_.read_save(address - 0x0E000000u, width);
         prefetch_stop();
     } else {
+        result.cycles = 1;
         result.value = open_bus_;
         result.open_bus = true;
         result.dma_open_bus = has_access_flag(last_access_, AccessType::Dma);
@@ -407,32 +409,30 @@ BusAccessResult IRAM_ATTR Bus::read(u32 address, BusWidth width, AccessType acce
 BusAccessResult IRAM_ATTR Bus::write(u32 address, u32 value, BusWidth width, AccessType access, u64 cycle_now) {
     BusAccessResult result{};
     result.value = value;
-    result.cycles = region_cycles(address, width, access, cycle_now);
-
-    const auto ewram_w = std::span<u8>{ewram_.get(), kEwramSize};
-    const auto iwram_w = std::span<u8>{iwram_.get(), kIwramSize};
-    const auto palette_w = std::span<u8>{palette_.get(), kPaletteSize};
-    const auto vram_w = std::span<u8>{vram_.get(), kVramSize};
-    const auto oam_w = std::span<u8>{oam_.get(), kOamSize};
+    result.cycles = 1;
 
     if ((address & 0x0F000000u) == 0x02000000u) {
-        write_array(ewram_w, address - 0x02000000u, value, width);
+        result.cycles = width == BusWidth::Word ? 6u : 3u;
+        write_array(ewram_.get(), kEwramSize, address - 0x02000000u, value, width);
     } else if ((address & 0x0F000000u) == 0x03000000u) {
-        write_array(iwram_w, address - 0x03000000u, value, width);
+        result.cycles = 1;
+        write_array(iwram_.get(), kIwramSize, address - 0x03000000u, value, width);
     } else if ((address & 0x0F000000u) == 0x04000000u) {
         auto io_result = write_io(address, value, width, cycle_now);
         last_access_ = access;
         return io_result;
     } else if ((address & 0x0F000000u) == 0x05000000u) {
+        result.cycles = dma_vram_cycles(width);
         if (width == BusWidth::Byte) {
             const auto aligned = align_down(address - 0x05000000u, 2u);
             const auto replicated = static_cast<u16>((value & 0xFFu) * 0x0101u);
-            write_array(palette_w, aligned, replicated, BusWidth::Half);
+            write_array(palette_.get(), kPaletteSize, aligned, replicated, BusWidth::Half);
         } else {
-            write_array(palette_w, address - 0x05000000u, value, width);
+            write_array(palette_.get(), kPaletteSize, address - 0x05000000u, value, width);
         }
         mark_video_dirty();
     } else if ((address & 0x0F000000u) == 0x06000000u) {
+        result.cycles = dma_vram_cycles(width);
         auto offset = (address - 0x06000000u) & 0x1FFFFu;
         if (offset >= 0x18000u) {
             offset = 0x10000u + (offset & 0x7FFFu);
@@ -444,14 +444,15 @@ BusAccessResult IRAM_ATTR Bus::write(u32 address, u32 value, BusWidth width, Acc
             }
             const auto aligned = align_down(offset, 2u);
             const auto replicated = static_cast<u16>((value & 0xFFu) * 0x0101u);
-            write_array(vram_w, aligned, replicated, BusWidth::Half);
+            write_array(vram_.get(), kVramSize, aligned, replicated, BusWidth::Half);
         } else {
-            write_array(vram_w, offset, value, width);
+            write_array(vram_.get(), kVramSize, offset, value, width);
         }
         mark_video_dirty();
     } else if ((address & 0x0F000000u) == 0x07000000u) {
+        result.cycles = 1u + (ppu_.is_video_memory_contended() ? 1u : 0u);
         if (width != BusWidth::Byte) {
-            write_array(oam_w, address - 0x07000000u, value, width);
+            write_array(oam_.get(), kOamSize, address - 0x07000000u, value, width);
             mark_video_dirty();
         }
     } else if (address >= 0x08000000u && address < 0x0E000000u) {
@@ -480,6 +481,7 @@ BusAccessResult IRAM_ATTR Bus::write(u32 address, u32 value, BusWidth width, Acc
         cartridge_.write_rom(address & 0x01FFFFFFu, value, width);
     } else if (address >= 0x0E000000u && address < 0x10000000u) {
         result.breaks_fetch_burst = true;
+        result.cycles = wait16_[0][0xEu];
         if (prefetch_.active) {
             const auto half_duty_plus_one = (prefetch_.duty >> 1) + 1;
             if (prefetch_.countdown == 1 ||
@@ -654,6 +656,15 @@ u32 Bus::service_dma(u64 cycle_now) {
     return dma_.service_due(cycle_now, *this, irq_);
 }
 
+u64 Bus::dma_next_event_cycle() const {
+    return dma_.next_event_cycle();
+}
+
+u32 Bus::dma_vram_cycles(BusWidth width) const {
+    const auto base = width == BusWidth::Word ? 2u : 1u;
+    return base + (ppu_.is_video_memory_contended() ? 1u : 0u);
+}
+
 u32 Bus::dma_rom_cycles(u32 address, bool is_word, bool sequential) const {
     const auto page = static_cast<std::size_t>(address >> 24u);
     if (is_word) {
@@ -731,23 +742,36 @@ void Bus::update_keypad_irq() {
     }
 }
 
-u32 Bus::read_array(std::span<const u8> bytes, u32 address, BusWidth width) {
-    if (bytes.empty()) {
+u32 IRAM_ATTR Bus::read_array(const u8* bytes, u32 size, u32 address, BusWidth width) {
+    if (bytes == nullptr || size == 0) {
         return 0xFFFFFFFFu;
     }
 
-    const auto normalized = address % static_cast<u32>(bytes.size());
-    const auto get = [&](u32 offset) { return bytes[offset % static_cast<u32>(bytes.size())]; };
+    const auto wrap = [size](u32 offset) -> u32 {
+        return (size & (size - 1u)) == 0u ? (offset & (size - 1u)) : (offset % size);
+    };
+    const auto normalized = wrap(address);
+    const auto get = [&](u32 offset) { return bytes[wrap(offset)]; };
 
     switch (width) {
     case BusWidth::Byte:
         return get(normalized);
     case BusWidth::Half: {
         const auto aligned = align_down(normalized, 2u);
+        if (aligned + 2u <= size) {
+            u16 value = 0;
+            std::memcpy(&value, bytes + aligned, sizeof(value));
+            return value;
+        }
         return static_cast<u32>(get(aligned)) | (static_cast<u32>(get(aligned + 1u)) << 8u);
     }
     case BusWidth::Word: {
         const auto aligned = align_down(normalized, 4u);
+        if (aligned + 4u <= size) {
+            u32 value = 0;
+            std::memcpy(&value, bytes + aligned, sizeof(value));
+            return value;
+        }
         return static_cast<u32>(get(aligned)) | (static_cast<u32>(get(aligned + 1u)) << 8u) |
                (static_cast<u32>(get(aligned + 2u)) << 16u) | (static_cast<u32>(get(aligned + 3u)) << 24u);
     }
@@ -755,24 +779,36 @@ u32 Bus::read_array(std::span<const u8> bytes, u32 address, BusWidth width) {
     return 0xFFFFFFFFu;
 }
 
-void Bus::write_array(std::span<u8> bytes, u32 address, u32 value, BusWidth width) {
-    if (bytes.empty()) {
+void IRAM_ATTR Bus::write_array(u8* bytes, u32 size, u32 address, u32 value, BusWidth width) {
+    if (bytes == nullptr || size == 0) {
         return;
     }
 
-    const auto put = [&](u32 offset, u8 byte) { bytes[offset % static_cast<u32>(bytes.size())] = byte; };
+    const auto wrap = [size](u32 offset) -> u32 {
+        return (size & (size - 1u)) == 0u ? (offset & (size - 1u)) : (offset % size);
+    };
+    const auto put = [&](u32 offset, u8 byte) { bytes[wrap(offset)] = byte; };
     switch (width) {
     case BusWidth::Byte:
         put(address, static_cast<u8>(value));
         break;
     case BusWidth::Half: {
-        const auto aligned = align_down(address, 2u);
+        const auto aligned = align_down(wrap(address), 2u);
+        if (aligned + 2u <= size) {
+            const auto half = static_cast<u16>(value & 0xFFFFu);
+            std::memcpy(bytes + aligned, &half, sizeof(half));
+            break;
+        }
         put(aligned, static_cast<u8>(value & 0xFFu));
         put(aligned + 1u, static_cast<u8>((value >> 8u) & 0xFFu));
         break;
     }
     case BusWidth::Word: {
-        const auto aligned = align_down(address, 4u);
+        const auto aligned = align_down(wrap(address), 4u);
+        if (aligned + 4u <= size) {
+            std::memcpy(bytes + aligned, &value, sizeof(value));
+            break;
+        }
         put(aligned, static_cast<u8>(value & 0xFFu));
         put(aligned + 1u, static_cast<u8>((value >> 8u) & 0xFFu));
         put(aligned + 2u, static_cast<u8>((value >> 16u) & 0xFFu));
@@ -783,33 +819,28 @@ void Bus::write_array(std::span<u8> bytes, u32 address, u32 value, BusWidth widt
 }
 
 u32 Bus::peek_word(u32 address) const {
-    const auto ewram_span = std::span<const u8>{ewram_.get(), kEwramSize};
-    const auto iwram_span = std::span<const u8>{iwram_.get(), kIwramSize};
-    const auto palette_span = std::span<const u8>{palette_.get(), kPaletteSize};
-    const auto vram_span = std::span<const u8>{vram_.get(), kVramSize};
-    const auto oam_span = std::span<const u8>{oam_.get(), kOamSize};
     const auto peek_byte = [&](u32 byte_address) -> u8 {
         if (byte_address < 0x00004000u) {
             return static_cast<u8>(cartridge_.read_bios(byte_address, BusWidth::Byte) & 0xFFu);
         }
         if ((byte_address & 0x0F000000u) == 0x02000000u) {
-            return static_cast<u8>(read_array(ewram_span, byte_address - 0x02000000u, BusWidth::Byte) & 0xFFu);
+            return static_cast<u8>(read_array(ewram_.get(), kEwramSize, byte_address - 0x02000000u, BusWidth::Byte) & 0xFFu);
         }
         if ((byte_address & 0x0F000000u) == 0x03000000u) {
-            return static_cast<u8>(read_array(iwram_span, byte_address - 0x03000000u, BusWidth::Byte) & 0xFFu);
+            return static_cast<u8>(read_array(iwram_.get(), kIwramSize, byte_address - 0x03000000u, BusWidth::Byte) & 0xFFu);
         }
         if ((byte_address & 0x0F000000u) == 0x05000000u) {
-            return static_cast<u8>(read_array(palette_span, byte_address - 0x05000000u, BusWidth::Byte) & 0xFFu);
+            return static_cast<u8>(read_array(palette_.get(), kPaletteSize, byte_address - 0x05000000u, BusWidth::Byte) & 0xFFu);
         }
         if ((byte_address & 0x0F000000u) == 0x06000000u) {
             auto offset = (byte_address - 0x06000000u) & 0x1FFFFu;
             if (offset >= 0x18000u) {
                 offset = 0x10000u + (offset & 0x7FFFu);
             }
-            return static_cast<u8>(read_array(vram_span, offset, BusWidth::Byte) & 0xFFu);
+            return static_cast<u8>(read_array(vram_.get(), kVramSize, offset, BusWidth::Byte) & 0xFFu);
         }
         if ((byte_address & 0x0F000000u) == 0x07000000u) {
-            return static_cast<u8>(read_array(oam_span, byte_address - 0x07000000u, BusWidth::Byte) & 0xFFu);
+            return static_cast<u8>(read_array(oam_.get(), kOamSize, byte_address - 0x07000000u, BusWidth::Byte) & 0xFFu);
         }
         if (byte_address >= 0x08000000u && byte_address < 0x0E000000u) {
             return static_cast<u8>(cartridge_.read_rom(byte_address & 0x01FFFFFFu, BusWidth::Byte) & 0xFFu);
@@ -914,33 +945,6 @@ namespace {
 }
 
 }  // namespace
-
-u32 Bus::region_cycles(u32 address, BusWidth width, AccessType access, u64 cycle_now) const {
-    (void)cycle_now;
-
-    const auto contiguous_video_penalty = [&]() -> u32 {
-        return ppu_.is_video_memory_contended() ? 1u : 0u;
-    };
-
-    if (address < 0x00004000u) return 1;
-    if ((address & 0x0F000000u) == 0x02000000u) return width == BusWidth::Word ? 6u : 3u;
-    if ((address & 0x0F000000u) == 0x03000000u) return 1;
-    if ((address & 0x0F000000u) == 0x04000000u) return 1;
-    if ((address & 0x0F000000u) == 0x05000000u || (address & 0x0F000000u) == 0x06000000u) {
-        const auto base = width == BusWidth::Word ? 2u : 1u;
-        return base + contiguous_video_penalty();
-    }
-    if ((address & 0x0F000000u) == 0x07000000u) return 1u + contiguous_video_penalty();
-    if (address >= 0x08000000u && address < 0x0E000000u) {
-        const auto page = static_cast<std::size_t>(address >> 24u);
-        auto sequential = has_access_flag(access, AccessType::Sequential);
-        if ((address & 0x1FFFFu) == 0u || (has_access_flag(last_access_, AccessType::Dma) && !has_access_flag(access, AccessType::Dma))) sequential = false;
-        const auto seq_index = static_cast<std::size_t>(sequential ? 1u : 0u);
-        return width == BusWidth::Word ? wait32_[seq_index][page] : wait16_[seq_index][page];
-    }
-    if (address >= 0x0E000000u && address < 0x10000000u) return wait16_[0][0xEu];
-    return 1;
-}
 
 BusAccessResult Bus::read_io(u32 address, BusWidth width, AccessType access, u64 cycle_now) {
     (void)access;

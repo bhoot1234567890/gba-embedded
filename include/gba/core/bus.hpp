@@ -39,6 +39,12 @@ public:
     [[nodiscard]] std::span<u8> vram_write();
     [[nodiscard]] std::span<const u8> palette() const;
     [[nodiscard]] std::span<const u8> oam() const;
+    [[nodiscard]] u8* ewram_data() { return ewram_.get(); }
+    [[nodiscard]] const u8* ewram_data() const { return ewram_.get(); }
+    [[nodiscard]] u8* iwram_data() { return iwram_.get(); }
+    [[nodiscard]] const u8* iwram_data() const { return iwram_.get(); }
+    [[nodiscard]] u8* vram_data() { return vram_.get(); }
+    [[nodiscard]] const u8* vram_data() const { return vram_.get(); }
 
     void set_rom(std::span<const u8> rom);
     [[nodiscard]] std::span<const u8> rom() const;
@@ -58,18 +64,19 @@ public:
     void clear_halt();
     void service_timers(u64 cycle_now);
     [[nodiscard]] u32 service_dma(u64 cycle_now);
+    [[nodiscard]] u64 dma_next_event_cycle() const;
+    [[nodiscard]] u32 dma_vram_cycles(BusWidth width) const;
     void prefetch_advance(int cycles);
     [[nodiscard]] u32 dma_rom_cycles(u32 address, bool is_word, bool sequential) const;
     [[nodiscard]] u64 next_event_cycle() const;
 
 private:
-    [[nodiscard]] static u32 read_array(std::span<const u8> bytes, u32 address, BusWidth width);
-    static void write_array(std::span<u8> bytes, u32 address, u32 value, BusWidth width);
+    [[nodiscard]] static u32 read_array(const u8* bytes, u32 size, u32 address, BusWidth width);
+    static void write_array(u8* bytes, u32 size, u32 address, u32 value, BusWidth width);
     [[nodiscard]] static u32 expand_bus_latch(u32 value, BusWidth width);
     void record_open_bus_read(u32 value, BusWidth width);
     void update_keypad_irq();
     void update_wait_state_table();
-    [[nodiscard]] u32 region_cycles(u32 address, BusWidth width, AccessType access, u64 cycle_now) const;
     [[nodiscard]] u32 prefetch_region_cycles(u32 address, BusWidth width) const;
     [[nodiscard]] u32 read_gamepak_rom(u32 address, BusWidth width, bool sequential);
     [[nodiscard]] BusAccessResult read_io(u32 address, BusWidth width, AccessType access, u64 cycle_now);

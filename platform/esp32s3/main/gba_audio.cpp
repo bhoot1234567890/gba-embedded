@@ -7,6 +7,7 @@
 
 #include "gba_audio.h"
 
+#include <algorithm>
 #include <string.h>
 
 #include "driver/i2s_std.h"
@@ -82,20 +83,28 @@ esp_err_t audio_write(const int16_t* samples, size_t count) {
         return ESP_ERR_NOT_SUPPORTED;
     }
 
-    const size_t bytes = count * sizeof(int16_t);
-    size_t bytes_written = 0;
-
     const TickType_t timeout_ticks =
         AUDIO_WRITE_TIMEOUT_MS <= 0 ? 0 : pdMS_TO_TICKS(AUDIO_WRITE_TIMEOUT_MS);
-    esp_err_t ret = i2s_channel_write(s_tx_handle, samples, bytes, &bytes_written, timeout_ticks);
-    if (ret == ESP_OK && bytes_written != bytes) {
-        ret = ESP_ERR_TIMEOUT;
+
+    size_t offset = 0;
+    while (offset < count) {
+        const size_t samples_this_write = std::min(count - offset, static_cast<size_t>(AUDIO_DMA_BUF_LEN) * 2u);
+        const size_t bytes = samples_this_write * sizeof(int16_t);
+        size_t bytes_written = 0;
+        esp_err_t ret = i2s_channel_write(s_tx_handle, samples + offset, bytes, &bytes_written, timeout_ticks);
+        if (ret == ESP_OK && bytes_written != bytes) {
+            ret = ESP_ERR_TIMEOUT;
+        }
+        if (ret != ESP_OK) {
+            if (ret != ESP_ERR_TIMEOUT) {
+                ESP_LOGW(kTag, "i2s_channel_write error: %s (wrote %zu/%zu)",
+                         esp_err_to_name(ret), bytes_written, bytes);
+            }
+            return ret;
+        }
+        offset += samples_this_write;
     }
-    if (ret != ESP_OK && ret != ESP_ERR_TIMEOUT) {
-        ESP_LOGW(kTag, "i2s_channel_write error: %s (wrote %zu/%zu)",
-                 esp_err_to_name(ret), bytes_written, bytes);
-    }
-    return ret;
+    return ESP_OK;
 }
 
 void audio_deinit(void) {

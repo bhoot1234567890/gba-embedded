@@ -10,17 +10,21 @@
 #include <cstdint>
 
 #include "driver/spi_master.h"
+#include "esp_attr.h"
 #include "esp_check.h"
+#include "esp_cache.h"
 #include "esp_heap_caps.h"
 #include "esp_lcd_panel_io.h"
 #include "esp_log.h"
 #include "freertos/FreeRTOS.h"
+#include "freertos/semphr.h"
 #include "freertos/task.h"
 
 static const char* kTag = "display";
 static esp_lcd_panel_io_handle_t s_io = nullptr;
 static uint16_t* s_swap_buf = nullptr;
 static size_t s_swap_pixels = 0;
+static SemaphoreHandle_t s_color_done = nullptr;
 
 static bool valid_gpio(gpio_num_t pin) {
     return static_cast<int>(pin) >= 0;
@@ -33,6 +37,13 @@ static uint64_t gpio_mask(gpio_num_t pin) {
 
 static void cmd(uint8_t command, const uint8_t* params = nullptr, int param_len = 0) {
     esp_lcd_panel_io_tx_param(s_io, command, params, param_len);
+}
+
+static bool IRAM_ATTR color_trans_done_cb(esp_lcd_panel_io_handle_t, esp_lcd_panel_io_event_data_t*, void* user_ctx) {
+    auto sem = static_cast<SemaphoreHandle_t>(user_ctx);
+    BaseType_t high_task_woken = pdFALSE;
+    xSemaphoreGiveFromISR(sem, &high_task_woken);
+    return high_task_woken == pdTRUE;
 }
 
 static void hardware_reset() {
@@ -50,6 +61,11 @@ static void hardware_reset() {
 }
 
 static esp_err_t tx_pixels(uint8_t ram_cmd, const void* rgb565_data, size_t pixels) {
+    if (!s_color_done) {
+        return ESP_ERR_INVALID_STATE;
+    }
+    xSemaphoreTake(s_color_done, 0);
+
 #if GBA_DISPLAY_SWAP_BYTES
     if (!s_swap_buf || s_swap_pixels < pixels) {
         return ESP_ERR_NO_MEM;
@@ -60,10 +76,23 @@ static esp_err_t tx_pixels(uint8_t ram_cmd, const void* rgb565_data, size_t pixe
         const uint16_t p = src[i];
         s_swap_buf[i] = static_cast<uint16_t>((p << 8) | (p >> 8));
     }
-    return esp_lcd_panel_io_tx_color(s_io, ram_cmd, s_swap_buf, pixels * sizeof(uint16_t));
+    const size_t bytes = pixels * sizeof(uint16_t);
+    ESP_RETURN_ON_ERROR(esp_cache_msync(s_swap_buf, bytes,
+                                        ESP_CACHE_MSYNC_FLAG_DIR_C2M | ESP_CACHE_MSYNC_FLAG_UNALIGNED),
+                        kTag, "display swap cache sync failed");
+    const esp_err_t ret = esp_lcd_panel_io_tx_color(s_io, ram_cmd, s_swap_buf, bytes);
 #else
-    return esp_lcd_panel_io_tx_color(s_io, ram_cmd, rgb565_data, pixels * sizeof(uint16_t));
+    const size_t bytes = pixels * sizeof(uint16_t);
+    ESP_RETURN_ON_ERROR(esp_cache_msync(const_cast<void*>(rgb565_data), bytes,
+                                        ESP_CACHE_MSYNC_FLAG_DIR_C2M | ESP_CACHE_MSYNC_FLAG_UNALIGNED),
+                        kTag, "display source cache sync failed");
+    const esp_err_t ret = esp_lcd_panel_io_tx_color(s_io, ram_cmd, rgb565_data, bytes);
 #endif
+    if (ret != ESP_OK) {
+        return ret;
+    }
+    xSemaphoreTake(s_color_done, portMAX_DELAY);
+    return ESP_OK;
 }
 
 #if GBA_DISPLAY_DRIVER == GBA_DISPLAY_DRIVER_ST7735
@@ -302,6 +331,12 @@ esp_err_t display_init(void) {
     }
 #endif
 
+    s_color_done = xSemaphoreCreateBinary();
+    if (!s_color_done) {
+        ESP_LOGE(kTag, "failed to allocate display completion semaphore");
+        return ESP_ERR_NO_MEM;
+    }
+
     spi_bus_config_t buscfg = {};
     buscfg.mosi_io_num = DISPLAY_PIN_MOSI;
     buscfg.miso_io_num = -1;
@@ -318,8 +353,8 @@ esp_err_t display_init(void) {
     io_config.spi_mode = 0;
     io_config.pclk_hz = DISPLAY_SPI_CLK_HZ;
     io_config.trans_queue_depth = 10;
-    io_config.on_color_trans_done = nullptr;
-    io_config.user_ctx = nullptr;
+    io_config.on_color_trans_done = color_trans_done_cb;
+    io_config.user_ctx = s_color_done;
     io_config.lcd_cmd_bits = 8;
     io_config.lcd_param_bits = 8;
     io_config.flags.dc_low_on_data = 0;

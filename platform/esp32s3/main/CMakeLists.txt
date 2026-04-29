@@ -6,11 +6,13 @@ if(GBA_BUILD_DISPLAY_TEST)
     idf_component_register(
         SRCS gba_display.cpp gba_display_test_main.cpp
         REQUIRES driver esp_lcd esp_driver_gpio esp_timer heap
+        PRIV_REQUIRES esp_mm
     )
 elseif(GBA_BUILD_RUNTIME)
     idf_component_register(
         SRCS gba_audio.cpp gba_display.cpp gba_input.cpp gba_runtime.cpp
         REQUIRES gba_core driver esp_lcd esp_driver_gpio esp_driver_i2s esp_psram esp_timer fatfs heap sdmmc vfs
+        PRIV_REQUIRES esp_mm
     )
 else()
     idf_component_register(
@@ -73,3 +75,5 @@ foreach(def IN LISTS GBA_BOARD_COMPILE_DEFS)
         target_compile_definitions(${COMPONENT_LIB} PRIVATE ${def}=${${def}})
     endif()
 endforeach()
+
+target_link_libraries(${COMPONENT_LIB} PRIVATE idf::esp_mm)

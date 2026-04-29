@@ -23,6 +23,7 @@
 #include "gba/platform/esp32_rom_provider.hpp"
 
 #include "esp_heap_caps.h"
+#include "esp_attr.h"
 #include "esp_log.h"
 #include "esp_timer.h"
 #include "freertos/FreeRTOS.h"
@@ -38,8 +39,9 @@
 #include "font5x7.h"
 
 static const char* kTag = "gba_runtime";
-static constexpr int kDisplayChunkRows = 16;
 static constexpr int64_t kFrameBudgetUs = 16667;
+static constexpr std::size_t kCacheLineBytes = 64;
+static constexpr uint32_t kCpuTaskStackBytes = 16 * 1024;
 static_assert(DISPLAY_WIDTH <= gba::kOutW && DISPLAY_HEIGHT <= gba::kOutH,
               "ESP32 display must fit inside the direct 128x128 PPU output");
 
@@ -77,11 +79,22 @@ struct RuntimeStats {
 struct RuntimeContext {
     Emulator* emulator;
     u16* display_bufs[2];        /* ping-pong buffers in PSRAM */
-    std::atomic<int> front{0};   /* index Core 0 is reading from */
-    std::atomic<int> back{1};    /* index Core 1 is writing to */
+    alignas(kCacheLineBytes) std::atomic<int> front{0};   /* index Core 0 is reading from */
+    alignas(kCacheLineBytes) std::atomic<int> back{1};    /* index Core 1 is writing to */
+    alignas(kCacheLineBytes) std::atomic<TaskHandle_t> cpu_task{nullptr};
     TaskHandle_t display_task;
     RuntimeStats stats{};
 };
+
+static u16* alloc_aligned_psram_u16(std::size_t count) {
+    auto* ptr = static_cast<u16*>(heap_caps_aligned_alloc(
+        kCacheLineBytes, count * sizeof(u16), MALLOC_CAP_SPIRAM | MALLOC_CAP_8BIT));
+    if (!ptr) {
+        ptr = static_cast<u16*>(heap_caps_aligned_alloc(
+            kCacheLineBytes, count * sizeof(u16), MALLOC_CAP_8BIT));
+    }
+    return ptr;
+}
 
 [[maybe_unused]] static esp_err_t mount_sdcard(sdmmc_card_t** out_card) {
     esp_vfs_fat_sdmmc_mount_config_t mount_config = {
@@ -302,15 +315,22 @@ static std::unique_ptr<RomProvider> open_rom_provider(const std::string& sd_rom_
     return nullptr;
 }
 
-static void convert_rgb555_to_rgb565_inplace(u16* pixels, std::size_t count) {
-    for (std::size_t i = 0; i < count; ++i) {
-        const u16 p = pixels[i];
-        pixels[i] = static_cast<u16>(((p & 0x7C00u) << 1u) | ((p & 0x03E0u) << 1u) | (p & 0x001Fu));
+static void IRAM_ATTR convert_rgb555_to_rgb565_inplace(u16* pixels, std::size_t count) {
+    auto* words = reinterpret_cast<u32*>(pixels);
+    const auto word_count = count / 2u;
+    for (std::size_t i = 0; i < word_count; ++i) {
+        const u32 p = words[i];
+        words[i] = ((p & 0x7C007C00u) << 1u) | ((p & 0x03E003E0u) << 1u) | (p & 0x001F001Fu);
+    }
+    if ((count & 1u) != 0u) {
+        const u16 p = pixels[count - 1u];
+        pixels[count - 1u] = static_cast<u16>(((p & 0x7C00u) << 1u) | ((p & 0x03E0u) << 1u) | (p & 0x001Fu));
     }
 }
 
 static void cpu_task(void* arg) {
     auto* ctx = static_cast<RuntimeContext*>(arg);
+    ctx->cpu_task.store(xTaskGetCurrentTaskHandle(), std::memory_order_release);
 
     ESP_LOGI(kTag, "CPU task started on core %d", xPortGetCoreID());
     if (esp_task_wdt_add(nullptr) != ESP_OK) {
@@ -319,6 +339,7 @@ static void cpu_task(void* arg) {
 
     int64_t window_start_us = esp_timer_get_time();
     bool skip_next_render = false;
+    bool frame_in_flight = false;
     while (true) {
         const auto frame_start_us = esp_timer_get_time();
         (void)esp_task_wdt_reset();
@@ -330,10 +351,10 @@ static void cpu_task(void* arg) {
         const bool skip_render = skip_next_render;
         skip_next_render = false;
         ctx->emulator->set_skip_render(skip_render);
-        const int buf = ctx->back.load();
+        const int buf = ctx->back.load(std::memory_order_acquire);
         if (!skip_render) {
             ctx->emulator->ppu().set_external_fb(ctx->display_bufs[buf]);
-            ctx->emulator->ppu().mark_all_dirty();
+            ctx->emulator->ppu().mark_all_scanlines_dirty();
         }
         ctx->emulator->run_frame();
         const auto rom_stats = ctx->emulator->last_rom_stats();
@@ -359,10 +380,15 @@ static void cpu_task(void* arg) {
         }
 
         if (!skip_render) {
-            ctx->front.store(buf);
-            ctx->back.store(buf ^ 1);
+            if (frame_in_flight) {
+                ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+            }
+
+            ctx->front.store(buf, std::memory_order_release);
+            ctx->back.store(buf ^ 1, std::memory_order_release);
 
             xTaskNotifyGive(ctx->display_task);
+            frame_in_flight = true;
         } else {
             ++ctx->stats.skipped_frames;
         }
@@ -424,7 +450,7 @@ extern "C" void app_main() {
     }
 
     const size_t display_pixels = static_cast<size_t>(DISPLAY_WIDTH) * DISPLAY_HEIGHT;
-    u16* ui_buf = static_cast<u16*>(heap_caps_malloc(display_pixels * sizeof(u16), MALLOC_CAP_SPIRAM));
+    u16* ui_buf = alloc_aligned_psram_u16(display_pixels);
     if (!ui_buf) {
         ESP_LOGE(kTag, "Failed to allocate UI buffer");
         return;
@@ -524,8 +550,8 @@ extern "C" void app_main() {
 #endif
 
     u16* display_bufs[2] = {
-        static_cast<u16*>(heap_caps_malloc(kOutputPixels * sizeof(u16), MALLOC_CAP_SPIRAM)),
-        static_cast<u16*>(heap_caps_malloc(kOutputPixels * sizeof(u16), MALLOC_CAP_SPIRAM)),
+        alloc_aligned_psram_u16(kOutputPixels),
+        alloc_aligned_psram_u16(kOutputPixels),
     };
     if (!display_bufs[0] || !display_bufs[1]) {
         ESP_LOGE(kTag, "Failed to allocate display buffers");
@@ -553,26 +579,24 @@ extern "C" void app_main() {
     ctx.emulator = emulator;
     ctx.display_bufs[0] = display_bufs[0];
     ctx.display_bufs[1] = display_bufs[1];
-    ctx.front.store(0);
-    ctx.back.store(1);
+    ctx.front.store(0, std::memory_order_release);
+    ctx.back.store(1, std::memory_order_release);
     ctx.display_task = xTaskGetCurrentTaskHandle();
 
-    xTaskCreatePinnedToCore(cpu_task, "gba_cpu", 32768, &ctx, 5, nullptr, 1);
+    xTaskCreatePinnedToCore(cpu_task, "gba_cpu", kCpuTaskStackBytes, &ctx, 5, nullptr, 1);
 
     int64_t last_save_dirty_time = 0;
     bool save_pending = false;
 
     while (true) {
         ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
-        const int buf = ctx.front.load();
-        for (int y = 0; y < DISPLAY_HEIGHT; y += kDisplayChunkRows) {
-            const auto rows = std::min(kDisplayChunkRows, DISPLAY_HEIGHT - y);
-            const auto* pixels = ctx.display_bufs[buf] + (y * kOutW);
-            const auto draw_ret = display_draw(0, y, DISPLAY_WIDTH, rows, pixels);
-            if (draw_ret != ESP_OK) {
-                ESP_LOGW(kTag, "display_draw failed at y=%d: %s", y, esp_err_to_name(draw_ret));
-                break;
-            }
+        const int buf = ctx.front.load(std::memory_order_acquire);
+        const auto draw_ret = display_draw(0, 0, DISPLAY_WIDTH, DISPLAY_HEIGHT, ctx.display_bufs[buf]);
+        if (draw_ret != ESP_OK) {
+            ESP_LOGW(kTag, "display_draw failed: %s", esp_err_to_name(draw_ret));
+        }
+        if (const auto cpu_handle = ctx.cpu_task.load(std::memory_order_acquire)) {
+            xTaskNotifyGive(cpu_handle);
         }
 
         // Debounced Save Data Write-Back

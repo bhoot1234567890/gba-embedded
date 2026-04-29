@@ -65,6 +65,30 @@ constexpr u64 kDefaultMissPenaltyUs = 700;
     return (misses * penalty_us * kSystemClockHz) / 1000000u;
 }
 
+[[nodiscard]] u8 IRAM_ATTR provider_fast_read_byte(const void* context, u32 address) {
+    return static_cast<const RomProvider*>(context)->read_byte(address);
+}
+
+[[nodiscard]] u16 IRAM_ATTR provider_fast_read16(const void* context, u32 address) {
+    return static_cast<const RomProvider*>(context)->read16(address);
+}
+
+[[nodiscard]] u32 IRAM_ATTR provider_fast_read32(const void* context, u32 address) {
+    return static_cast<const RomProvider*>(context)->read32(address);
+}
+
+[[nodiscard]] u8 IRAM_ATTR memory_fast_read_byte(const void* context, u32 address) {
+    return static_cast<const MemoryRomProvider*>(context)->read_byte(address);
+}
+
+[[nodiscard]] u16 IRAM_ATTR memory_fast_read16(const void* context, u32 address) {
+    return static_cast<const MemoryRomProvider*>(context)->read16(address);
+}
+
+[[nodiscard]] u32 IRAM_ATTR memory_fast_read32(const void* context, u32 address) {
+    return static_cast<const MemoryRomProvider*>(context)->read32(address);
+}
+
 }  // namespace
 
 u16 RomProvider::read16(u32 address) const {
@@ -77,6 +101,17 @@ u32 RomProvider::read32(u32 address) const {
            (static_cast<u32>(read_byte(address + 1u)) << 8u) |
            (static_cast<u32>(read_byte(address + 2u)) << 16u) |
            (static_cast<u32>(read_byte(address + 3u)) << 24u);
+}
+
+RomFastAccess RomProvider::fast_access() const {
+    return {
+        this,
+        &provider_fast_read_byte,
+        &provider_fast_read16,
+        &provider_fast_read32,
+        nullptr,
+        0,
+    };
 }
 
 bool RomProvider::read_bytes(u32 address, std::span<u8> out) const {
@@ -169,6 +204,22 @@ u32 IRAM_ATTR MemoryRomProvider::read32(u32 address) const {
 
 std::span<const u8> MemoryRomProvider::direct_read_span() const {
     return profile_cache_pages_ == 0 ? std::span<const u8>{rom_} : std::span<const u8>{};
+}
+
+RomFastAccess MemoryRomProvider::fast_access() const {
+    auto access = RomFastAccess{
+        this,
+        &memory_fast_read_byte,
+        &memory_fast_read16,
+        &memory_fast_read32,
+        nullptr,
+        0,
+    };
+    if (profile_cache_pages_ == 0 && !rom_.empty()) {
+        access.direct_data = rom_.data();
+        access.direct_size = rom_.size();
+    }
+    return access;
 }
 
 bool MemoryRomProvider::read_bytes(u32 address, std::span<u8> out) const {

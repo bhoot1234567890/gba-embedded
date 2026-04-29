@@ -117,13 +117,17 @@ void Cartridge::set_rom(std::vector<u8> rom) {
 
 void Cartridge::set_rom_provider(std::unique_ptr<RomProvider> rom) {
     rom_ = std::move(rom);
+    rom_fast_ = {};
     rom_data_ = nullptr;
     rom_size_ = 0;
     if (rom_) {
         rom_size_ = rom_->size();
+        rom_fast_ = rom_->fast_access();
         const auto direct = rom_->direct_read_span();
         if (!direct.empty()) {
             rom_data_ = direct.data();
+        } else if (rom_fast_.has_direct_data()) {
+            rom_data_ = rom_fast_.direct_data;
         }
     }
     rom_feature_scan_ = {};
@@ -245,7 +249,13 @@ u32 IRAM_ATTR Cartridge::read_rom(u32 address, BusWidth width) const {
         if (byte_address >= rom_size_) {
             return 0xFFu;
         }
-        return rom_data_ ? rom_data_[byte_address] : rom_->read_byte(byte_address);
+        if (rom_data_) {
+            return rom_data_[byte_address];
+        }
+        if (rom_fast_.read_byte != nullptr) {
+            return rom_fast_.read_byte(rom_fast_.context, byte_address);
+        }
+        return rom_->read_byte(byte_address);
     };
 
     const auto has_gpio_byte = [&](u32 start, u32 count) -> bool {
@@ -276,6 +286,9 @@ u32 IRAM_ATTR Cartridge::read_rom(u32 address, BusWidth width) const {
                 std::memcpy(&value, rom_data_ + aligned, sizeof(value));
                 return value;
             }
+            if (rom_fast_.read16 != nullptr) {
+                return rom_fast_.read16(rom_fast_.context, aligned);
+            }
             return rom_->read16(aligned);
         }
         return read_byte(aligned) | (read_byte(aligned + 1u) << 8u);
@@ -291,6 +304,9 @@ u32 IRAM_ATTR Cartridge::read_rom(u32 address, BusWidth width) const {
                 u32 value = 0;
                 std::memcpy(&value, rom_data_ + aligned, sizeof(value));
                 return value;
+            }
+            if (rom_fast_.read32 != nullptr) {
+                return rom_fast_.read32(rom_fast_.context, aligned);
             }
             return rom_->read32(aligned);
         }

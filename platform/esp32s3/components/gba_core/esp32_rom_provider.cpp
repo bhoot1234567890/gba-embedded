@@ -117,6 +117,17 @@ public:
         return load_le32(ptr);
     }
 
+    [[nodiscard]] RomFastAccess fast_access() const override {
+        return {
+            this,
+            &fast_read_byte,
+            &fast_read16,
+            &fast_read32,
+            nullptr,
+            0,
+        };
+    }
+
     [[nodiscard]] bool read_bytes(u32 address, std::span<u8> out) const override {
         if (out.empty()) {
             return true;
@@ -184,6 +195,18 @@ private:
         u64 age = 0;
         esp_partition_mmap_handle_t handle = 0;
     };
+
+    [[nodiscard]] static u8 IRAM_ATTR fast_read_byte(const void* context, u32 address) {
+        return static_cast<const Esp32MmapRomProvider*>(context)->read_byte(address);
+    }
+
+    [[nodiscard]] static u16 IRAM_ATTR fast_read16(const void* context, u32 address) {
+        return static_cast<const Esp32MmapRomProvider*>(context)->read16(address);
+    }
+
+    [[nodiscard]] static u32 IRAM_ATTR fast_read32(const void* context, u32 address) {
+        return static_cast<const Esp32MmapRomProvider*>(context)->read32(address);
+    }
 
     [[nodiscard]] const u8* IRAM_ATTR read_ptr(u32 address, std::size_t bytes) const {
         const auto sequential = note_demand_access(address, bytes);
@@ -382,6 +405,17 @@ public:
         return load_le32(ptr);
     }
 
+    [[nodiscard]] RomFastAccess fast_access() const override {
+        return {
+            this,
+            &fast_read_byte,
+            &fast_read16,
+            &fast_read32,
+            nullptr,
+            0,
+        };
+    }
+
     [[nodiscard]] bool read_bytes(u32 address, std::span<u8> out) const override {
         if (out.empty()) {
             return true;
@@ -467,6 +501,18 @@ private:
         const u8* data = nullptr;
         bool hit = false;
     };
+
+    [[nodiscard]] static u8 IRAM_ATTR fast_read_byte(const void* context, u32 address) {
+        return static_cast<const Esp32SdCacheRomProvider*>(context)->read_byte(address);
+    }
+
+    [[nodiscard]] static u16 IRAM_ATTR fast_read16(const void* context, u32 address) {
+        return static_cast<const Esp32SdCacheRomProvider*>(context)->read16(address);
+    }
+
+    [[nodiscard]] static u32 IRAM_ATTR fast_read32(const void* context, u32 address) {
+        return static_cast<const Esp32SdCacheRomProvider*>(context)->read32(address);
+    }
 
     [[nodiscard]] const u8* IRAM_ATTR read_ptr(u32 address, std::size_t bytes) const {
         const auto streaming = note_demand_access(address, bytes);

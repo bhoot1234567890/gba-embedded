@@ -23,6 +23,22 @@ struct RomAccessStats {
     u32 unique_pages = 0;
 };
 
+struct RomFastAccess {
+    using ReadByteFn = u8 (*)(const void* context, u32 address);
+    using Read16Fn = u16 (*)(const void* context, u32 address);
+    using Read32Fn = u32 (*)(const void* context, u32 address);
+
+    const void* context = nullptr;
+    ReadByteFn read_byte = nullptr;
+    Read16Fn read16 = nullptr;
+    Read32Fn read32 = nullptr;
+    const u8* direct_data = nullptr;
+    std::size_t direct_size = 0;
+
+    [[nodiscard]] bool has_functions() const { return context != nullptr && read_byte != nullptr; }
+    [[nodiscard]] bool has_direct_data() const { return direct_data != nullptr && direct_size != 0; }
+};
+
 class RomProvider {
 public:
     virtual ~RomProvider() = default;
@@ -35,6 +51,7 @@ public:
     [[nodiscard]] bool empty() const { return size() == 0; }
     [[nodiscard]] virtual std::span<const u8> contiguous_span() const { return {}; }
     [[nodiscard]] virtual std::span<const u8> direct_read_span() const { return {}; }
+    [[nodiscard]] virtual RomFastAccess fast_access() const;
     [[nodiscard]] virtual bool read_bytes(u32 address, std::span<u8> out) const;
     [[nodiscard]] bool contains(std::string_view needle) const;
 
@@ -53,6 +70,7 @@ public:
     [[nodiscard]] u32 read32(u32 address) const override;
     [[nodiscard]] std::span<const u8> contiguous_span() const override { return rom_; }
     [[nodiscard]] std::span<const u8> direct_read_span() const override;
+    [[nodiscard]] RomFastAccess fast_access() const override;
     [[nodiscard]] bool read_bytes(u32 address, std::span<u8> out) const override;
     void prefetch(u32 address, std::size_t bytes) const override;
     [[nodiscard]] RomAccessStats frame_stats() const override;

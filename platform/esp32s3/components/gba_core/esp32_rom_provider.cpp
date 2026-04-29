@@ -11,6 +11,7 @@
 #include "gba/core/constants.hpp"
 
 #include "esp_heap_caps.h"
+#include "esp_attr.h"
 #include "esp_log.h"
 #include "esp_partition.h"
 
@@ -45,11 +46,11 @@ struct HeapCapsDeleter {
     return (misses * kSdMissPenaltyUs * kSystemClockHz) / 1000000u;
 }
 
-[[nodiscard]] u16 load_le16(const u8* ptr) {
+[[nodiscard]] u16 IRAM_ATTR load_le16(const u8* ptr) {
     return static_cast<u16>(static_cast<u32>(ptr[0]) | (static_cast<u32>(ptr[1]) << 8u));
 }
 
-[[nodiscard]] u32 load_le32(const u8* ptr) {
+[[nodiscard]] u32 IRAM_ATTR load_le32(const u8* ptr) {
     return static_cast<u32>(ptr[0]) |
            (static_cast<u32>(ptr[1]) << 8u) |
            (static_cast<u32>(ptr[2]) << 16u) |
@@ -65,7 +66,8 @@ public:
         : partition_(partition),
           size_(size),
           window_bytes_(std::max<std::size_t>(4096u, window_bytes)),
-          windows_(std::max<std::size_t>(1u, window_count)) {}
+          windows_(std::max<std::size_t>(1u, window_count)),
+          window_slots_((size + window_bytes_ - 1u) / window_bytes_, -1) {}
 
     ~Esp32MmapRomProvider() override {
         for (auto& window : windows_) {
@@ -77,7 +79,7 @@ public:
 
     [[nodiscard]] std::size_t size() const override { return size_; }
 
-    [[nodiscard]] u8 read_byte(u32 address) const override {
+    [[nodiscard]] u8 IRAM_ATTR read_byte(u32 address) const override {
         if (static_cast<std::size_t>(address) >= size_) {
             return 0xFFu;
         }
@@ -85,7 +87,7 @@ public:
         return ptr ? ptr[0] : 0xFFu;
     }
 
-    [[nodiscard]] u16 read16(u32 address) const override {
+    [[nodiscard]] u16 IRAM_ATTR read16(u32 address) const override {
         if (static_cast<std::size_t>(address) + 2u > size_) {
             return 0xFFFFu;
         }
@@ -100,7 +102,7 @@ public:
         return load_le16(ptr);
     }
 
-    [[nodiscard]] u32 read32(u32 address) const override {
+    [[nodiscard]] u32 IRAM_ATTR read32(u32 address) const override {
         if (static_cast<std::size_t>(address) + 4u > size_) {
             return 0xFFFFFFFFu;
         }
@@ -183,7 +185,7 @@ private:
         esp_partition_mmap_handle_t handle = 0;
     };
 
-    [[nodiscard]] const u8* read_ptr(u32 address, std::size_t bytes) const {
+    [[nodiscard]] const u8* IRAM_ATTR read_ptr(u32 address, std::size_t bytes) const {
         const auto sequential = note_demand_access(address, bytes);
         frame_stats_.byte_reads += bytes;
         const auto absolute = static_cast<std::size_t>(address);
@@ -208,9 +210,30 @@ private:
         return sequential;
     }
 
-    [[nodiscard]] const u8* ensure_window(u32 page, bool prefetch, bool sequential) const {
+    [[nodiscard]] const u8* IRAM_ATTR ensure_window(u32 page, bool prefetch, bool sequential) const {
         if (!prefetch && std::find(unique_pages_.begin(), unique_pages_.end(), page) == unique_pages_.end()) {
             unique_pages_.push_back(page);
+        }
+        if (page < window_slots_.size()) {
+            const int slot = window_slots_[page];
+            if (slot >= 0) {
+                auto& window = windows_[static_cast<std::size_t>(slot)];
+                if (window.valid && window.page == page) {
+                    if (!prefetch) {
+                        ++frame_stats_.cache_hits;
+                        if (sequential) {
+                            ++frame_stats_.sequential_hits;
+                        }
+                        if (window.prefetched) {
+                            ++frame_stats_.prefetch_hits;
+                            window.prefetched = false;
+                        }
+                    }
+                    window.age = ++clock_;
+                    return window.data;
+                }
+                window_slots_[page] = -1;
+            }
         }
         for (auto& window : windows_) {
             if (window.valid && window.page == page) {
@@ -225,6 +248,9 @@ private:
                     }
                 }
                 window.age = ++clock_;
+                if (page < window_slots_.size()) {
+                    window_slots_[page] = static_cast<int>(&window - windows_.data());
+                }
                 return window.data;
             }
         }
@@ -246,6 +272,9 @@ private:
         }
 
         if (victim->valid) {
+            if (victim->page < window_slots_.size()) {
+                window_slots_[victim->page] = -1;
+            }
             esp_partition_munmap(victim->handle);
             *victim = {};
         }
@@ -275,6 +304,9 @@ private:
         victim->mapped_size = bytes;
         victim->age = ++clock_;
         victim->handle = handle;
+        if (page < window_slots_.size()) {
+            window_slots_[page] = static_cast<int>(victim - windows_.data());
+        }
         return victim->data;
     }
 
@@ -282,6 +314,7 @@ private:
     std::size_t size_ = 0;
     std::size_t window_bytes_ = 64u * 1024u;
     mutable std::vector<Window> windows_;
+    mutable std::vector<int> window_slots_;
     mutable std::vector<u32> unique_pages_;
     mutable bool has_last_demand_ = false;
     mutable u32 last_demand_end_ = 0;
@@ -311,7 +344,7 @@ public:
 
     [[nodiscard]] std::size_t size() const override { return size_; }
 
-    [[nodiscard]] u8 read_byte(u32 address) const override {
+    [[nodiscard]] u8 IRAM_ATTR read_byte(u32 address) const override {
         if (static_cast<std::size_t>(address) >= size_) {
             return 0xFFu;
         }
@@ -319,7 +352,7 @@ public:
         return ptr ? ptr[0] : 0xFFu;
     }
 
-    [[nodiscard]] u16 read16(u32 address) const override {
+    [[nodiscard]] u16 IRAM_ATTR read16(u32 address) const override {
         if (static_cast<std::size_t>(address) + 2u > size_) {
             return 0xFFFFu;
         }
@@ -334,7 +367,7 @@ public:
         return load_le16(ptr);
     }
 
-    [[nodiscard]] u32 read32(u32 address) const override {
+    [[nodiscard]] u32 IRAM_ATTR read32(u32 address) const override {
         if (static_cast<std::size_t>(address) + 4u > size_) {
             return 0xFFFFFFFFu;
         }
@@ -435,7 +468,7 @@ private:
         bool hit = false;
     };
 
-    [[nodiscard]] const u8* read_ptr(u32 address, std::size_t bytes) const {
+    [[nodiscard]] const u8* IRAM_ATTR read_ptr(u32 address, std::size_t bytes) const {
         const auto streaming = note_demand_access(address, bytes);
         frame_stats_.byte_reads += bytes;
         const auto absolute = static_cast<std::size_t>(address);
@@ -444,7 +477,10 @@ private:
         if (offset_in_page + bytes > page_bytes_) {
             return nullptr;
         }
-        const auto loaded = ensure_page(page, false, streaming);
+        auto loaded = ensure_page_fast(page, false, streaming);
+        if (loaded.data == nullptr) {
+            loaded = ensure_page_slow(page, false);
+        }
         maybe_prefetch_after_read(address, bytes, streaming, !loaded.hit);
         return loaded.data ? loaded.data + offset_in_page : nullptr;
     }
@@ -509,6 +545,14 @@ private:
     }
 
     [[nodiscard]] PageLoad ensure_page(u32 page_index, bool prefetch, bool sequential) const {
+        const auto hit = ensure_page_fast(page_index, prefetch, sequential);
+        if (hit.data != nullptr) {
+            return hit;
+        }
+        return ensure_page_slow(page_index, prefetch);
+    }
+
+    [[nodiscard]] PageLoad IRAM_ATTR ensure_page_fast(u32 page_index, bool prefetch, bool sequential) const {
         if (!prefetch) {
             note_unique_page(page_index);
         }
@@ -534,24 +578,10 @@ private:
                 page_slots_[page_index] = -1;
             }
         }
-        for (auto& page : pages_) {
-            if (page.valid && page.index == page_index) {
-                if (!prefetch) {
-                    ++frame_stats_.cache_hits;
-                    if (sequential) {
-                        ++frame_stats_.sequential_hits;
-                    }
-                    if (page.prefetched) {
-                        ++frame_stats_.prefetch_hits;
-                        page.prefetched = false;
-                    }
-                    heat_page(page);
-                }
-                page.age = ++clock_;
-                return {page.data, true};
-            }
-        }
+        return {};
+    }
 
+    [[nodiscard]] PageLoad ensure_page_slow(u32 page_index, bool prefetch) const {
         if (prefetch) {
             ++frame_stats_.prefetch_misses;
         } else {

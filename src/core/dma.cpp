@@ -344,10 +344,15 @@ u32 IRAM_ATTR DmaEngine::service_due(u64 cycle_now, Bus& bus, IrqController& irq
                                  !fifo_mode && unit_bytes == 2u;
 
         const u8* fast_ram_source = nullptr;
+        u8* fast_ram_destination = nullptr;
         u32 fast_ram_base = 0;
+        u32 fast_ram_dest_base = 0;
         u32 fast_ram_size = 0;
+        u32 fast_ram_dest_size = 0;
         u32 fast_ram_read_cycles = 0;
+        u32 fast_ram_write_cycles = 0;
         const auto source_region = source & 0x0F000000u;
+        const auto destination_region = destination & 0x0F000000u;
         if (simple_increment && source_region == 0x02000000u) {
             fast_ram_source = bus.ewram_data();
             fast_ram_base = 0x02000000u;
@@ -359,9 +364,29 @@ u32 IRAM_ATTR DmaEngine::service_due(u64 cycle_now, Bus& bus, IrqController& irq
             fast_ram_size = kIwramSize;
             fast_ram_read_cycles = 1u;
         }
+        if (simple_increment && destination_region == 0x02000000u) {
+            fast_ram_destination = bus.ewram_data();
+            fast_ram_dest_base = 0x02000000u;
+            fast_ram_dest_size = kEwramSize;
+            fast_ram_write_cycles = unit_bytes == 4u ? 6u : 3u;
+        } else if (simple_increment && destination_region == 0x03000000u) {
+            fast_ram_destination = bus.iwram_data();
+            fast_ram_dest_base = 0x03000000u;
+            fast_ram_dest_size = kIwramSize;
+            fast_ram_write_cycles = 1u;
+        }
 
         const bool ram_to_vram = fast_ram_source != nullptr &&
                                  destination >= 0x06000000u && destination < 0x06018000u;
+        const auto burst_bytes = static_cast<std::size_t>(units) * unit_bytes;
+        const auto source_offset = source - fast_ram_base;
+        const auto destination_offset = destination - fast_ram_dest_base;
+        const bool ram_to_ram_burst = fast_ram_source != nullptr && fast_ram_destination != nullptr &&
+                                      source_offset + burst_bytes <= fast_ram_size &&
+                                      destination_offset + burst_bytes <= fast_ram_dest_size &&
+                                      (fast_ram_source != fast_ram_destination ||
+                                       source_offset + burst_bytes <= destination_offset ||
+                                       destination_offset + burst_bytes <= source_offset);
         if (rom_to_vram || ram_to_vram) {
             bus.mark_video_dirty();
         }
@@ -370,7 +395,15 @@ u32 IRAM_ATTR DmaEngine::service_due(u64 cycle_now, Bus& bus, IrqController& irq
         auto* const fast_vram = ram_to_vram ? bus.vram_data() : nullptr;
         const auto fast_vram_write_cycles = ram_to_vram ? bus.dma_vram_cycles(width) : 0u;
 
-        for (u32 unit = 0; unit < units; ++unit) {
+        if (ram_to_ram_burst) {
+            std::memcpy(fast_ram_destination + destination_offset, fast_ram_source + source_offset, burst_bytes);
+            const auto last_source_offset = source_offset + static_cast<u32>(burst_bytes) - unit_bytes;
+            const auto last_value = read_raw_memory(fast_ram_source, fast_ram_size, last_source_offset, width);
+            channel.bus_latch = unit_bytes == 2u ? (last_value << 16u) | (last_value & 0xFFFFu) : last_value;
+            cycles_consumed += units * (fast_ram_read_cycles + fast_ram_write_cycles);
+            source += static_cast<u32>(burst_bytes);
+            destination += static_cast<u32>(burst_bytes);
+        } else for (u32 unit = 0; unit < units; ++unit) {
             const auto transfer_cycle = cycle_now + cycles_consumed;
 
             u32 read_value;

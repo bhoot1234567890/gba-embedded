@@ -46,6 +46,7 @@ public:
 
     /* Dirty scanline tracking — mark lines that need re-render */
     void mark_all_dirty();
+    void mark_all_scanlines_dirty();
     void mark_dirty(int line);
     [[nodiscard]] bool is_dirty(int line) const;
     void clear_dirty(int line);

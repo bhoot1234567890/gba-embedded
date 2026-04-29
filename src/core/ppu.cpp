@@ -187,88 +187,91 @@ u32 Ppu::read_register(u32 address, BusWidth width) const {
 }
 
 void Ppu::write_register(u32 address, u32 value, BusWidth width) {
-    auto write_half = [&](u32 half_address, u16 half_value) {
+    auto write_half = [&](u32 half_address, u16 half_value) -> bool {
         switch (half_address) {
-        case kDispcnt: dispcnt_ = half_value; break;
-        case kDispcnt + 2u: greenswp_ = half_value; break;
-        case kDispstat: dispstat_ = static_cast<u16>((dispstat_ & 0x0007u) | (half_value & 0xFFF8u)); break;
+        case kDispcnt: dispcnt_ = half_value; return true;
+        case kDispcnt + 2u: greenswp_ = half_value; return true;
+        case kDispstat: dispstat_ = static_cast<u16>((dispstat_ & 0x0007u) | (half_value & 0xFFF8u)); return false;
         case kBg0Cnt:
         case kBg0Cnt + 2u:
         case kBg0Cnt + 4u:
-        case kBg0Cnt + 6u: bgcnt_[(half_address - kBg0Cnt) / 2u] = half_value; break;
+        case kBg0Cnt + 6u: bgcnt_[(half_address - kBg0Cnt) / 2u] = half_value; return true;
         case 0x04000010u:
         case 0x04000014u:
         case 0x04000018u:
-        case 0x0400001Cu: bghofs_[(half_address - 0x04000010u) / 4u] = half_value; break;
+        case 0x0400001Cu: bghofs_[(half_address - 0x04000010u) / 4u] = half_value; return true;
         case 0x04000012u:
         case 0x04000016u:
         case 0x0400001Au:
-        case 0x0400001Eu: bgvofs_[(half_address - 0x04000012u) / 4u] = half_value; break;
+        case 0x0400001Eu: bgvofs_[(half_address - 0x04000012u) / 4u] = half_value; return true;
         case kWin0H:
-        case kWin0H + 2u: winh_[(half_address - kWin0H) / 2u] = half_value; break;
+        case kWin0H + 2u: winh_[(half_address - kWin0H) / 2u] = half_value; return true;
         case 0x04000044u:
-        case 0x04000046u: winv_[(half_address - 0x04000044u) / 2u] = half_value; break;
-        case 0x04000048u: winin_ = half_value; break;
-        case 0x0400004Au: winout_ = half_value; break;
-        case kMosaic: mosaic_ = half_value; break;
-        case kBldCnt: bldcnt_ = half_value; break;
-        case kBldCnt + 2u: bldalpha_ = half_value; break;
-        case kBldCnt + 4u: bldy_ = half_value; break;
+        case 0x04000046u: winv_[(half_address - 0x04000044u) / 2u] = half_value; return true;
+        case 0x04000048u: winin_ = half_value; return true;
+        case 0x0400004Au: winout_ = half_value; return true;
+        case kMosaic: mosaic_ = half_value; return true;
+        case kBldCnt: bldcnt_ = half_value; return true;
+        case kBldCnt + 2u: bldalpha_ = half_value; return true;
+        case kBldCnt + 4u: bldy_ = half_value; return true;
         case kBg2Pa:
-        case 0x04000030u: bg_pa_[(half_address - kBg2Pa) / 0x10u] = static_cast<s16>(half_value); break;
+        case 0x04000030u: bg_pa_[(half_address - kBg2Pa) / 0x10u] = static_cast<s16>(half_value); return true;
         case kBg2Pa + 2u:
-        case 0x04000032u: bg_pb_[(half_address - kBg2Pa - 2u) / 0x10u] = static_cast<s16>(half_value); break;
+        case 0x04000032u: bg_pb_[(half_address - kBg2Pa - 2u) / 0x10u] = static_cast<s16>(half_value); return true;
         case kBg2Pa + 4u:
-        case 0x04000034u: bg_pc_[(half_address - kBg2Pa - 4u) / 0x10u] = static_cast<s16>(half_value); break;
+        case 0x04000034u: bg_pc_[(half_address - kBg2Pa - 4u) / 0x10u] = static_cast<s16>(half_value); return true;
         case kBg2Pa + 6u:
-        case 0x04000036u: bg_pd_[(half_address - kBg2Pa - 6u) / 0x10u] = static_cast<s16>(half_value); break;
+        case 0x04000036u: bg_pd_[(half_address - kBg2Pa - 6u) / 0x10u] = static_cast<s16>(half_value); return true;
         case kBg2X:
         case 0x04000038u: {
             const auto idx = static_cast<std::size_t>((half_address - kBg2X) / 0x10u);
             const auto raw = static_cast<u32>(bg_ref_x_[idx]);
             bg_ref_x_[idx] = static_cast<s32>((raw & 0xFFFF0000u) | half_value);
-            break;
+            return true;
         }
         case kBg2X + 2u:
         case 0x0400003Au: {
             const auto idx = static_cast<std::size_t>((half_address - kBg2X - 2u) / 0x10u);
             const auto raw = static_cast<u32>(bg_ref_x_[idx]);
             bg_ref_x_[idx] = static_cast<s32>((static_cast<u32>(static_cast<s16>(half_value)) << 16u) | (raw & 0x0000FFFFu));
-            break;
+            return true;
         }
         case kBg2X + 4u:
         case 0x0400003Cu: {
             const auto idx = static_cast<std::size_t>((half_address - kBg2X - 4u) / 0x10u);
             const auto raw = static_cast<u32>(bg_ref_y_[idx]);
             bg_ref_y_[idx] = static_cast<s32>((raw & 0xFFFF0000u) | half_value);
-            break;
+            return true;
         }
         case kBg2X + 6u:
         case 0x0400003Eu: {
             const auto idx = static_cast<std::size_t>((half_address - kBg2X - 6u) / 0x10u);
             const auto raw = static_cast<u32>(bg_ref_y_[idx]);
             bg_ref_y_[idx] = static_cast<s32>((static_cast<u32>(static_cast<s16>(half_value)) << 16u) | (raw & 0x0000FFFFu));
-            break;
+            return true;
         }
-        default: break;
+        default: return false;
         }
     };
 
+    bool render_dirty = false;
     if (width == BusWidth::Byte) {
         const auto aligned = align_down(address, 2u);
         const auto existing = static_cast<u16>(read_register(aligned, BusWidth::Half));
         const auto shift = (address & 1u) * 8u;
         const auto merged = static_cast<u16>((existing & ~(0xFFu << shift)) | ((value & 0xFFu) << shift));
-        write_half(aligned, merged);
+        render_dirty |= write_half(aligned, merged);
     } else if (width == BusWidth::Half) {
-        write_half(address, static_cast<u16>(value));
+        render_dirty |= write_half(address, static_cast<u16>(value));
     } else {
-        write_half(address, static_cast<u16>(value & 0xFFFFu));
-        write_half(address + 2u, static_cast<u16>((value >> 16u) & 0xFFFFu));
+        render_dirty |= write_half(address, static_cast<u16>(value & 0xFFFFu));
+        render_dirty |= write_half(address + 2u, static_cast<u16>((value >> 16u) & 0xFFFFu));
     }
 
     update_dispstat_flags();
-    mark_all_dirty();
+    if (render_dirty) {
+        mark_all_scanlines_dirty();
+    }
 }
 
 void IRAM_ATTR Ppu::advance_to(u64 cycle_now, IrqController& irq) {
@@ -479,15 +482,7 @@ IRAM_ATTR void Ppu::render_scanline(int line, std::span<const u8> vram, std::spa
             }
         }
         
-        // Find top 2 layers
-        // Sort criteria: priority (lower is better), then id (4(OBJ)>0>1>2>3>5)
-        // Since id 4>0>1>2>3>5, let's map id to a tiebreaker value (lower is better)
-        // Tiebreakers: OBJ=0, BG0=1, BG1=2, BG2=3, BG3=4, Backdrop=5
-        auto tiebreaker = [](u8 id) -> u8 {
-            if (id == 4) return 0;
-            if (id <= 3) return id + 1;
-            return 5;
-        };
+        static constexpr std::array<u8, 6> kLayerTiebreaker{{1, 2, 3, 4, 0, 5}};
 
         Layer top = layers[0];
         Layer second = {5, 4, backdrop_color};
@@ -495,7 +490,8 @@ IRAM_ATTR void Ppu::render_scanline(int line, std::span<const u8> vram, std::spa
         for (int i = 1; i < num_layers; ++i) {
             bool is_better = false;
             if (layers[i].priority < top.priority) is_better = true;
-            else if (layers[i].priority == top.priority && tiebreaker(layers[i].id) < tiebreaker(top.id)) is_better = true;
+            else if (layers[i].priority == top.priority &&
+                     kLayerTiebreaker[layers[i].id] < kLayerTiebreaker[top.id]) is_better = true;
             
             if (is_better) {
                 second = top;
@@ -503,7 +499,8 @@ IRAM_ATTR void Ppu::render_scanline(int line, std::span<const u8> vram, std::spa
             } else {
                 bool is_better_than_second = false;
                 if (layers[i].priority < second.priority) is_better_than_second = true;
-                else if (layers[i].priority == second.priority && tiebreaker(layers[i].id) < tiebreaker(second.id)) is_better_than_second = true;
+                else if (layers[i].priority == second.priority &&
+                         kLayerTiebreaker[layers[i].id] < kLayerTiebreaker[second.id]) is_better_than_second = true;
                 
                 if (is_better_than_second) {
                     second = layers[i];
@@ -662,15 +659,15 @@ IRAM_ATTR void Ppu::render_affine_bg(int line, std::span<const u8> vram, std::sp
     static const u32 size_pixels[] = {128, 256, 512, 1024};
     const u32 bg_size = size_pixels[cnt.size()];
 
-    const s32 ref_x = bg_ref_x_[affine_index];
-    const s32 ref_y = bg_ref_y_[affine_index];
+    const s32 ref_x = bg_ref_x_[affine_index] + line * bg_pb_[affine_index];
+    const s32 ref_y = bg_ref_y_[affine_index] + line * bg_pd_[affine_index];
     const s16 pa = bg_pa_[affine_index];
     const s16 pc = bg_pc_[affine_index];
 
     for (u32 out_x = 0; out_x < out_width; out_x++) {
         const u32 screen_x = out_x + x_start;
-        const s32 x = (ref_x + static_cast<s32>(screen_x) * pa + line * bg_pb_[affine_index]) >> 8;
-        const s32 y = (ref_y + static_cast<s32>(screen_x) * pc + line * bg_pd_[affine_index]) >> 8;
+        const s32 x = (ref_x + static_cast<s32>(screen_x) * pa) >> 8;
+        const s32 y = (ref_y + static_cast<s32>(screen_x) * pc) >> 8;
 
         if (cnt.wraparound()) {
             const u32 wrapped_x = static_cast<u32>(x) % bg_size;
@@ -768,7 +765,8 @@ void Ppu::handle_vcount_compare(IrqController& irq, u64 cycle_now) {
     }
 }
 
-void Ppu::mark_all_dirty() { all_dirty_ = true; scanline_dirty_.fill(true); ++tile_cache_epoch_; }
+void Ppu::mark_all_dirty() { mark_all_scanlines_dirty(); ++tile_cache_epoch_; }
+void Ppu::mark_all_scanlines_dirty() { all_dirty_ = true; scanline_dirty_.fill(true); }
 void Ppu::mark_dirty(int line) { if (line >= 0 && line < static_cast<int>(kScreenHeight)) scanline_dirty_[static_cast<std::size_t>(line)] = true; }
 bool Ppu::is_dirty(int line) const { if (all_dirty_) return true; if (line < 0 || line >= static_cast<int>(kScreenHeight)) return false; return scanline_dirty_[static_cast<std::size_t>(line)]; }
 void Ppu::clear_dirty(int line) {
